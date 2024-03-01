@@ -14,13 +14,13 @@ class Funfact extends Component {
 			      <div className="row">
 			        <div className="col-lg-8 mb-5 mb-lg-0">
 			          <div className="section-title mb-0">
-			            <h6 className="sub-title right-line">Funfact</h6>
-			            <h2 className="title">Strength in Numbers</h2>
-			            <p className="content pb-3">The quick, brown fox jumps over a lazy dog. DJs flock by when MTV ax quiz prog. Junk MTV quiz graced by fox whelps. Bawds jog, flick quartz, vex nymphs. Waltz, bad nymph, for quick jigs vex! Fox nymphs grab quick-jived waltz. Brick quiz whangs jumpy</p>
+			            <h6 className="sub-title right-line">Cơ Hội Du Học</h6>
+			            <h2 className="title">Tương Lai Rộng Mở</h2>
+			            <p className="content pb-3">Khám phá cơ hội du học tại Mỹ với hệ thống quản lý chuyên nghiệp, cung cấp thông tin đầy đủ và kết nối học sinh Việt Nam với các chương trình du học hàng đầu. Mở rộng tầm nhìn, đạt được ước mơ học tập và phát triển bản thân tại một trong những quốc gia giáo dục hàng đầu thế giới.</p>
 			            <div className="btn-counter bg-base mt-4">
-			              <h3 className="left-val align-self-center"><span className="counter">2.4</span>k+</h3>
+			              <h3 className="left-val align-self-center"><span className="counter">5.6</span>k+</h3>
 			              <div className="right-val align-self-center">
-			                Successful <br /> students
+			                Học Sinh <br /> Thành Công
 			              </div>
 			            </div>
 			          </div>
@@ -33,8 +33,8 @@ class Funfact extends Component {
 			                  <img src={publicUrl+"assets/img/icon/1.png"} alt="img" />
 			                </div>
 			                <div className="media-body align-self-center">
-			                  <h5><span className="counter">1200</span>+</h5>
-			                  <p>Learners &amp; counting</p>
+			                  <h5><span className="counter">2000</span>+</h5>
+			                  <p>Học Sinh Đang Học</p>
 			                </div>
 			              </div>
 			            </li>
@@ -44,8 +44,8 @@ class Funfact extends Component {
 			                  <img src={publicUrl+"assets/img/icon/2.png"} alt="img" />
 			                </div>
 			                <div className="media-body align-self-center">
-			                  <h5><span className="counter">320</span>+</h5>
-			                  <p>Total courses</p>
+			                  <h5><span className="counter">450</span>+</h5>
+			                  <p>Số Khóa Học Được Cung Cấp</p>
 			                </div>
 			              </div>
 			            </li>
@@ -55,8 +55,8 @@ class Funfact extends Component {
 			                  <img src={publicUrl+"assets/img/icon/3.png"} alt="img" />
 			                </div>
 			                <div className="media-body align-self-center">
-			                  <h5><span className="counter">1340</span>+</h5>
-			                  <p>Successful students</p>
+			                  <h5><span className="counter">1600</span>+</h5>
+			                  <p>Học Sinh Thành Công</p>
 			                </div>
 			              </div>
 			            </li>
@@ -68,5 +68,6 @@ class Funfact extends Component {
 			</div>
         }
 }
+
 
 export default Funfact

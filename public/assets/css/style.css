@@ -44,9 +44,9 @@ Version: 1.0.3
     # Typography
 -----------------*/
 @import url("https://fonts.googleapis.com/css?family=Rubik:300,400,400i,500,600,700i&display=swap");
-
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 :root {
-  --main-color: #FDC800;
+  --main-color: #489DF9;
   --heading-color: #002147;
   --paragraph-color: #565872;
   --body-font: "Rubik", sans-serif;
@@ -654,6 +654,8 @@ ul {
 .section-title {
   margin-bottom: 45px;
   position: relative;
+  font-family: "Roboto", sans-serif;
+  
 }
 
 .section-title .sub-title {
@@ -2770,6 +2772,7 @@ ul {
 .banner-inner {
   position: relative;
   z-index: 2;
+
 }
 
 .banner-inner .banner-btn {
@@ -2789,6 +2792,9 @@ ul {
   position: relative;
   display: inline-block;
   margin-bottom: 20px;
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  font-style: normal;
 }
 
 .banner-inner .sub-title:after {
@@ -2803,6 +2809,9 @@ ul {
 
 .banner-inner .title {
   margin-bottom: 32px;
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  font-style: normal;
 }
 
 .banner-inner.style-white .sub-title {
@@ -2899,6 +2908,8 @@ ul {
   padding: 20px;
   border-radius: 7px;
   transition: 0.4s;
+  font-family: "Roboto", sans-serif;
+
 }
 
 .single-intro-inner .thumb {
@@ -3220,6 +3231,9 @@ ul {
   background-size: cover !important;
   background-position: center center !important;
   border-radius: 7px;
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+
 }
 
 .about-thumb-wrap.style-two {

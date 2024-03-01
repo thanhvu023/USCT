@@ -8,8 +8,8 @@ class Testimonial extends Component {
 
         let publicUrl = process.env.PUBLIC_URL+'/'
 
-    return  <div className="testimonial-area pd-top-100">
-			  <div className="container">
+    return  <div className="testimonial-area ">
+			  {/* <div className="container">
 			    <div className="testimonial-area-inner bg-cover" style={{backgroundImage: 'url("'+publicUrl+'assets/img/other/2.png")'}}>
 			      <img className="testimonial-right-img" src={publicUrl+"assets/img/other/3.png"} alt="img" />
 			      <div className="testimonial-slider owl-carousel">
@@ -47,7 +47,7 @@ class Testimonial extends Component {
 			        </div>
 			      </div>
 			    </div>
-			  </div>
+			  </div> */}
 			</div>
 
         }

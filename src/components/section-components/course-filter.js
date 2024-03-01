@@ -1,803 +1,389 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import parse from 'html-react-parser';
 
-class CourseFilter extends Component {
-
-    render() {
-
-        let publicUrl = process.env.PUBLIC_URL+'/'
-
-    return  <div className="course-area pd-top-100 pd-bottom-90">
-			  <div className="container">
-			    <div className="row justify-content-center">
-			      <div className="col-xl-8 col-lg-10 col-md-11">
-			        <div className="section-title style-white text-center">
-			          <h2 className="title">Top Featured Courses</h2>
-			        </div>
-			      </div>
-			    </div>
-			    <div className="edmt-nav-tab style-white text-center">
-			      <ul className="nav nav-tabs" id="myTab" role="tablist">
-			        <li className="nav-item">
-			          <a className="nav-link active" id="tab1-tab" data-toggle="tab" href="#tab1" role="tab" aria-controls="tab1" aria-selected="true">Graphics &amp; Design</a>
-			        </li>
-			        <li className="nav-item">
-			          <a className="nav-link" id="tab2-tab" data-toggle="tab" href="#tab2" role="tab" aria-controls="tab2" aria-selected="false">Digital Marketing</a>
-			        </li>
-			        <li className="nav-item">
-			          <a className="nav-link" id="tab3-tab" data-toggle="tab" href="#tab3" role="tab" aria-controls="tab3" aria-selected="false">Writing &amp; Translation</a>
-			        </li>
-			        <li className="nav-item">
-			          <a className="nav-link" id="tab4-tab" data-toggle="tab" href="#tab4" role="tab" aria-controls="tab4" aria-selected="false">Music &amp; Audio</a>
-			        </li>
-			      </ul>
-			    </div>
-			    <div className="tab-content go-top" id="myTabContent">
-			      <div className="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1-tab">
-			        <div className="row">
-			          <div className="col-lg-4 col-md-6">
-			            <div className="single-course-inner">
-			              <div className="thumb">
-			                <img src={publicUrl+"assets/img/course/1.png"} alt="img" />
-			              </div>
-			              <div className="details">
-			                <div className="details-inner">
-			                  <div className="emt-user">
-			                    <span className="u-thumb"><img src={publicUrl+"assets/img/author/1.png"} alt="img" /></span>
-			                    <span className="align-self-center">Nancy Reyes</span>
-			                  </div>
-			                  <h6><Link to="/course-details">Fox nymphs grab quick-jived waltz. Brick quiz whangs</Link></h6>
-			                </div>
-			                <div className="emt-course-meta">
-			                  <div className="row">
-			                    <div className="col-6">
-			                      <div className="rating">
-			                        <i className="fa fa-star" /> 4.3
-			                        <span>(23)</span>
-			                      </div>
-			                    </div>
-			                    <div className="col-6">
-			                      <div className="price text-right">
-			                        Price: <span>$54.00</span>
-			                      </div>
-			                    </div>
-			                  </div>
-			                </div>
-			              </div>
-			            </div>
-			          </div>
-			          <div className="col-lg-4 col-md-6">
-			            <div className="single-course-inner">
-			              <div className="thumb">
-			                <img src={publicUrl+"assets/img/course/2.png"} alt="img" />
-			              </div>
-			              <div className="details">
-			                <div className="details-inner">
-			                  <div className="emt-user">
-			                    <span className="u-thumb"><img src={publicUrl+"assets/img/author/2.png"} alt="img" /></span>
-			                    <span className="align-self-center">Joe Powell</span>
-			                  </div>
-			                  <h6><Link to="/course-details">Aenean sed nibh a magna posuere tempo faucib</Link></h6>
-			                </div>
-			                <div className="emt-course-meta">
-			                  <div className="row">
-			                    <div className="col-6">
-			                      <div className="rating">
-			                        <i className="fa fa-star" /> 4.3
-			                        <span>(23)</span>
-			                      </div>
-			                    </div>
-			                    <div className="col-6">
-			                      <div className="price text-right">
-			                        Price: <span>$54.00</span>
-			                      </div>
-			                    </div>
-			                  </div>
-			                </div>
-			              </div>
-			            </div>
-			          </div>
-			          <div className="col-lg-4 col-md-6">
-			            <div className="single-course-inner">
-			              <div className="thumb">
-			                <img src={publicUrl+"assets/img/course/3.png"} alt="img" />
-			              </div>
-			              <div className="details">
-			                <div className="details-inner">
-			                  <div className="emt-user">
-			                    <span className="u-thumb"><img src={publicUrl+"assets/img/author/3.png"} alt="img" /></span>
-			                    <span className="align-self-center">Timothy Willis</span>
-			                  </div>
-			                  <h6><Link to="/course-details">Praesent eu dolor eu orci vehicula euismod</Link></h6>
-			                </div>
-			                <div className="emt-course-meta">
-			                  <div className="row">
-			                    <div className="col-6">
-			                      <div className="rating">
-			                        <i className="fa fa-star" /> 4.9
-			                        <span>(73)</span>
-			                      </div>
-			                    </div>
-			                    <div className="col-lg-6">
-			                      <div className="price text-right">
-			                        Price: <span>$74.00</span>
-			                      </div>
-			                    </div>
-			                  </div>
-			                </div>
-			              </div>
-			            </div>
-			          </div>
-			          <div className="col-lg-4 col-md-6">
-			            <div className="single-course-inner">
-			              <div className="thumb">
-			                <img src={publicUrl+"assets/img/course/4.png"} alt="img" />
-			              </div>
-			              <div className="details">
-			                <div className="details-inner">
-			                  <div className="emt-user">
-			                    <span className="u-thumb"><img src={publicUrl+"assets/img/author/4.png"} alt="img" /></span>
-			                    <span className="align-self-center">Walter Griffin</span>
-			                  </div>
-			                  <h6><Link to="/course-details">Duis vestibulum elit vel neque pharetra vulputate</Link></h6>
-			                </div>
-			                <div className="emt-course-meta">
-			                  <div className="row">
-			                    <div className="col-6">
-			                      <div className="rating">
-			                        <i className="fa fa-star" /> 4.8
-			                        <span>(53)</span>
-			                      </div>
-			                    </div>
-			                    <div className="col-6">
-			                      <div className="price text-right">
-			                        Price: <span>$64.00</span>
-			                      </div>
-			                    </div>
-			                  </div>
-			                </div>
-			              </div>
-			            </div>
-			          </div>
-			          <div className="col-lg-4 col-md-6">
-			            <div className="single-course-inner">
-			              <div className="thumb">
-			                <img src={publicUrl+"assets/img/course/5.png"} alt="img" />
-			              </div>
-			              <div className="details">
-			                <div className="details-inner">
-			                  <div className="emt-user">
-			                    <span className="u-thumb"><img src={publicUrl+"assets/img/author/5.png"} alt="img" /></span>
-			                    <span className="align-self-center">Aaron Powell</span>
-			                  </div>
-			                  <h6><Link to="/course-details">Quisque suscipit ipsum est, eu venenatis leo ornare eget</Link></h6>
-			                </div>
-			                <div className="emt-course-meta">
-			                  <div className="row">
-			                    <div className="col-6">
-			                      <div className="rating">
-			                        <i className="fa fa-star" /> 4.5
-			                        <span>(21)</span>
-			                      </div>
-			                    </div>
-			                    <div className="col-6">
-			                      <div className="price text-right">
-			                        Price: <span>$34.00</span>
-			                      </div>
-			                    </div>
-			                  </div>
-			                </div>
-			              </div>
-			            </div>
-			          </div>
-			          <div className="col-lg-4 col-md-6">
-			            <div className="single-course-inner">
-			              <div className="thumb">
-			                <img src={publicUrl+"assets/img/course/6.png"} alt="img" />
-			              </div>
-			              <div className="details">
-			                <div className="details-inner">
-			                  <div className="emt-user">
-			                    <span className="u-thumb"><img src={publicUrl+"assets/img/author/6.png"} alt="img" /></span>
-			                    <span className="align-self-center">Randy Hart</span>
-			                  </div>
-			                  <h6><Link to="/course-details">Duis rhoncus dui venenatis consequat porttito</Link></h6>
-			                </div>
-			                <div className="emt-course-meta">
-			                  <div className="row">
-			                    <div className="col-6">
-			                      <div className="rating">
-			                        <i className="fa fa-star" /> 4.4
-			                        <span>(20)</span>
-			                      </div>
-			                    </div>
-			                    <div className="col-6">
-			                      <div className="price text-right">
-			                        Price: <span>$55.00</span>
-			                      </div>
-			                    </div>
-			                  </div>
-			                </div>
-			              </div>
-			            </div>
-			          </div>
-			        </div>
-			      </div>
-			      <div className="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
-			        <div className="row">
-			          <div className="col-lg-4 col-md-6">
-			            <div className="single-course-inner">
-			              <div className="thumb">
-			                <img src={publicUrl+"assets/img/course/3.png"} alt="img" />
-			              </div>
-			              <div className="details">
-			                <div className="details-inner">
-			                  <div className="emt-user">
-			                    <span className="u-thumb"><img src={publicUrl+"assets/img/author/3.png"} alt="img" /></span>
-			                    <span className="align-self-center">Timothy Willis</span>
-			                  </div>
-			                  <h6><Link to="/course-details">Praesent eu dolor eu orci vehicula euismod</Link></h6>
-			                </div>
-			                <div className="emt-course-meta">
-			                  <div className="row">
-			                    <div className="col-6">
-			                      <div className="rating">
-			                        <i className="fa fa-star" /> 4.9
-			                        <span>(73)</span>
-			                      </div>
-			                    </div>
-			                    <div className="col-6">
-			                      <div className="price text-right">
-			                        Price: <span>$74.00</span>
-			                      </div>
-			                    </div>
-			                  </div>
-			                </div>
-			              </div>
-			            </div>
-			          </div>
-			          <div className="col-lg-4 col-md-6">
-			            <div className="single-course-inner">
-			              <div className="thumb">
-			                <img src={publicUrl+"assets/img/course/4.png"} alt="img" />
-			              </div>
-			              <div className="details">
-			                <div className="details-inner">
-			                  <div className="emt-user">
-			                    <span className="u-thumb"><img src={publicUrl+"assets/img/author/4.png"} alt="img" /></span>
-			                    <span className="align-self-center">Walter Griffin</span>
-			                  </div>
-			                  <h6><Link to="/course-details">Duis vestibulum elit vel neque pharetra vulputate</Link></h6>
-			                </div>
-			                <div className="emt-course-meta">
-			                  <div className="row">
-			                    <div className="col-6">
-			                      <div className="rating">
-			                        <i className="fa fa-star" /> 4.8
-			                        <span>(53)</span>
-			                      </div>
-			                    </div>
-			                    <div className="col-6">
-			                      <div className="price text-right">
-			                        Price: <span>$64.00</span>
-			                      </div>
-			                    </div>
-			                  </div>
-			                </div>
-			              </div>
-			            </div>
-			          </div>
-			          <div className="col-lg-4 col-md-6">
-			            <div className="single-course-inner">
-			              <div className="thumb">
-			                <img src={publicUrl+"assets/img/course/5.png"} alt="img" />
-			              </div>
-			              <div className="details">
-			                <div className="details-inner">
-			                  <div className="emt-user">
-			                    <span className="u-thumb"><img src={publicUrl+"assets/img/author/5.png"} alt="img" /></span>
-			                    <span className="align-self-center">Aaron Powell</span>
-			                  </div>
-			                  <h6><Link to="/course-details">Quisque suscipit ipsum est, eu venenatis leo ornare eget</Link></h6>
-			                </div>
-			                <div className="emt-course-meta">
-			                  <div className="row">
-			                    <div className="col-6">
-			                      <div className="rating">
-			                        <i className="fa fa-star" /> 4.5
-			                        <span>(21)</span>
-			                      </div>
-			                    </div>
-			                    <div className="col-6">
-			                      <div className="price text-right">
-			                        Price: <span>$34.00</span>
-			                      </div>
-			                    </div>
-			                  </div>
-			                </div>
-			              </div>
-			            </div>
-			          </div>
-			          <div className="col-lg-4 col-md-6">
-			            <div className="single-course-inner">
-			              <div className="thumb">
-			                <img src={publicUrl+"assets/img/course/6.png"} alt="img" />
-			              </div>
-			              <div className="details">
-			                <div className="details-inner">
-			                  <div className="emt-user">
-			                    <span className="u-thumb"><img src={publicUrl+"assets/img/author/6.png"} alt="img" /></span>
-			                    <span className="align-self-center">Randy Hart</span>
-			                  </div>
-			                  <h6><Link to="/course-details">Duis rhoncus dui venenatis consequat porttito</Link></h6>
-			                </div>
-			                <div className="emt-course-meta">
-			                  <div className="row">
-			                    <div className="col-6">
-			                      <div className="rating">
-			                        <i className="fa fa-star" /> 4.4
-			                        <span>(20)</span>
-			                      </div>
-			                    </div>
-			                    <div className="col-6">
-			                      <div className="price text-right">
-			                        Price: <span>$55.00</span>
-			                      </div>
-			                    </div>
-			                  </div>
-			                </div>
-			              </div>
-			            </div>
-			          </div>
-			          <div className="col-lg-4 col-md-6">
-			            <div className="single-course-inner">
-			              <div className="thumb">
-			                <img src={publicUrl+"assets/img/course/1.png"} alt="img" />
-			              </div>
-			              <div className="details">
-			                <div className="details-inner">
-			                  <div className="emt-user">
-			                    <span className="u-thumb"><img src={publicUrl+"assets/img/author/1.png"} alt="img" /></span>
-			                    <span className="align-self-center">Nancy Reyes</span>
-			                  </div>
-			                  <h6><Link to="/course-details">Fox nymphs grab quick-jived waltz. Brick quiz whangs</Link></h6>
-			                </div>
-			                <div className="emt-course-meta">
-			                  <div className="row">
-			                    <div className="col-6">
-			                      <div className="rating">
-			                        <i className="fa fa-star" /> 4.3
-			                        <span>(23)</span>
-			                      </div>
-			                    </div>
-			                    <div className="col-6">
-			                      <div className="price text-right">
-			                        Price: <span>$54.00</span>
-			                      </div>
-			                    </div>
-			                  </div>
-			                </div>
-			              </div>
-			            </div>
-			          </div>
-			          <div className="col-lg-4 col-md-6">
-			            <div className="single-course-inner">
-			              <div className="thumb">
-			                <img src={publicUrl+"assets/img/course/2.png"} alt="img" />
-			              </div>
-			              <div className="details">
-			                <div className="details-inner">
-			                  <div className="emt-user">
-			                    <span className="u-thumb"><img src={publicUrl+"assets/img/author/2.png"} alt="img" /></span>
-			                    <span className="align-self-center">Joe Powell</span>
-			                  </div>
-			                  <h6><Link to="/course-details">Aenean sed nibh a magna posuere tempo faucib</Link></h6>
-			                </div>
-			                <div className="emt-course-meta">
-			                  <div className="row">
-			                    <div className="col-6">
-			                      <div className="rating">
-			                        <i className="fa fa-star" /> 4.3
-			                        <span>(23)</span>
-			                      </div>
-			                    </div>
-			                    <div className="col-6">
-			                      <div className="price text-right">
-			                        Price: <span>$54.00</span>
-			                      </div>
-			                    </div>
-			                  </div>
-			                </div>
-			              </div>
-			            </div>
-			          </div>
-			        </div>
-			      </div>
-			      <div className="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3-tab">
-			        <div className="row">
-			          <div className="col-lg-4 col-md-6">
-			            <div className="single-course-inner">
-			              <div className="thumb">
-			                <img src={publicUrl+"assets/img/course/4.png"} alt="img" />
-			              </div>
-			              <div className="details">
-			                <div className="details-inner">
-			                  <div className="emt-user">
-			                    <span className="u-thumb"><img src={publicUrl+"assets/img/author/4.png"} alt="img" /></span>
-			                    <span className="align-self-center">Walter Griffin</span>
-			                  </div>
-			                  <h6><Link to="/course-details">Duis vestibulum elit vel neque pharetra vulputate</Link></h6>
-			                </div>
-			                <div className="emt-course-meta">
-			                  <div className="row">
-			                    <div className="col-6">
-			                      <div className="rating">
-			                        <i className="fa fa-star" /> 4.8
-			                        <span>(53)</span>
-			                      </div>
-			                    </div>
-			                    <div className="col-6">
-			                      <div className="price text-right">
-			                        Price: <span>$64.00</span>
-			                      </div>
-			                    </div>
-			                  </div>
-			                </div>
-			              </div>
-			            </div>
-			          </div>
-			          <div className="col-lg-4 col-md-6">
-			            <div className="single-course-inner">
-			              <div className="thumb">
-			                <img src={publicUrl+"assets/img/course/1.png"} alt="img" />
-			              </div>
-			              <div className="details">
-			                <div className="details-inner">
-			                  <div className="emt-user">
-			                    <span className="u-thumb"><img src={publicUrl+"assets/img/author/1.png"} alt="img" /></span>
-			                    <span className="align-self-center">Nancy Reyes</span>
-			                  </div>
-			                  <h6><Link to="/course-details">Fox nymphs grab quick-jived waltz. Brick quiz whangs</Link></h6>
-			                </div>
-			                <div className="emt-course-meta">
-			                  <div className="row">
-			                    <div className="col-6">
-			                      <div className="rating">
-			                        <i className="fa fa-star" /> 4.3
-			                        <span>(23)</span>
-			                      </div>
-			                    </div>
-			                    <div className="col-6">
-			                      <div className="price text-right">
-			                        Price: <span>$54.00</span>
-			                      </div>
-			                    </div>
-			                  </div>
-			                </div>
-			              </div>
-			            </div>
-			          </div>
-			          <div className="col-lg-4 col-md-6">
-			            <div className="single-course-inner">
-			              <div className="thumb">
-			                <img src={publicUrl+"assets/img/course/5.png"} alt="img" />
-			              </div>
-			              <div className="details">
-			                <div className="details-inner">
-			                  <div className="emt-user">
-			                    <span className="u-thumb"><img src={publicUrl+"assets/img/author/5.png"} alt="img" /></span>
-			                    <span className="align-self-center">Aaron Powell</span>
-			                  </div>
-			                  <h6><Link to="/course-details">Quisque suscipit ipsum est, eu venenatis leo ornare eget</Link></h6>
-			                </div>
-			                <div className="emt-course-meta">
-			                  <div className="row">
-			                    <div className="col-6">
-			                      <div className="rating">
-			                        <i className="fa fa-star" /> 4.5
-			                        <span>(21)</span>
-			                      </div>
-			                    </div>
-			                    <div className="col-6">
-			                      <div className="price text-right">
-			                        Price: <span>$34.00</span>
-			                      </div>
-			                    </div>
-			                  </div>
-			                </div>
-			              </div>
-			            </div>
-			          </div>
-			          <div className="col-lg-4 col-md-6">
-			            <div className="single-course-inner">
-			              <div className="thumb">
-			                <img src={publicUrl+"assets/img/course/2.png"} alt="img" />
-			              </div>
-			              <div className="details">
-			                <div className="details-inner">
-			                  <div className="emt-user">
-			                    <span className="u-thumb"><img src={publicUrl+"assets/img/author/2.png"} alt="img" /></span>
-			                    <span className="align-self-center">Joe Powell</span>
-			                  </div>
-			                  <h6><Link to="/course-details">Aenean sed nibh a magna posuere tempo faucib</Link></h6>
-			                </div>
-			                <div className="emt-course-meta">
-			                  <div className="row">
-			                    <div className="col-6">
-			                      <div className="rating">
-			                        <i className="fa fa-star" /> 4.3
-			                        <span>(23)</span>
-			                      </div>
-			                    </div>
-			                    <div className="col-6">
-			                      <div className="price text-right">
-			                        Price: <span>$54.00</span>
-			                      </div>
-			                    </div>
-			                  </div>
-			                </div>
-			              </div>
-			            </div>
-			          </div>
-			          <div className="col-lg-4 col-md-6">
-			            <div className="single-course-inner">
-			              <div className="thumb">
-			                <img src={publicUrl+"assets/img/course/3.png"} alt="img" />
-			              </div>
-			              <div className="details">
-			                <div className="details-inner">
-			                  <div className="emt-user">
-			                    <span className="u-thumb"><img src={publicUrl+"assets/img/author/3.png"} alt="img" /></span>
-			                    <span className="align-self-center">Timothy Willis</span>
-			                  </div>
-			                  <h6><Link to="/course-details">Praesent eu dolor eu orci vehicula euismod</Link></h6>
-			                </div>
-			                <div className="emt-course-meta">
-			                  <div className="row">
-			                    <div className="col-6">
-			                      <div className="rating">
-			                        <i className="fa fa-star" /> 4.9
-			                        <span>(73)</span>
-			                      </div>
-			                    </div>
-			                    <div className="col-6">
-			                      <div className="price text-right">
-			                        Price: <span>$74.00</span>
-			                      </div>
-			                    </div>
-			                  </div>
-			                </div>
-			              </div>
-			            </div>
-			          </div>
-			          <div className="col-lg-4 col-md-6">
-			            <div className="single-course-inner">
-			              <div className="thumb">
-			                <img src={publicUrl+"assets/img/course/6.png"} alt="img" />
-			              </div>
-			              <div className="details">
-			                <div className="details-inner">
-			                  <div className="emt-user">
-			                    <span className="u-thumb"><img src={publicUrl+"assets/img/author/6.png"} alt="img" /></span>
-			                    <span className="align-self-center">Randy Hart</span>
-			                  </div>
-			                  <h6><Link to="/course-details">Duis rhoncus dui venenatis consequat porttito</Link></h6>
-			                </div>
-			                <div className="emt-course-meta">
-			                  <div className="row">
-			                    <div className="col-6">
-			                      <div className="rating">
-			                        <i className="fa fa-star" /> 4.4
-			                        <span>(20)</span>
-			                      </div>
-			                    </div>
-			                    <div className="col-6">
-			                      <div className="price text-right">
-			                        Price: <span>$55.00</span>
-			                      </div>
-			                    </div>
-			                  </div>
-			                </div>
-			              </div>
-			            </div>
-			          </div>
-			        </div>
-			      </div>
-			      <div className="tab-pane fade" id="tab4" role="tabpanel" aria-labelledby="tab4-tab">
-			        <div className="row">
-			          <div className="col-lg-4 col-md-6">
-			            <div className="single-course-inner">
-			              <div className="thumb">
-			                <img src={publicUrl+"assets/img/course/3.png"} alt="img" />
-			              </div>
-			              <div className="details">
-			                <div className="details-inner">
-			                  <div className="emt-user">
-			                    <span className="u-thumb"><img src={publicUrl+"assets/img/author/3.png"} alt="img" /></span>
-			                    <span className="align-self-center">Timothy Willis</span>
-			                  </div>
-			                  <h6><Link to="/course-details">Praesent eu dolor eu orci vehicula euismod</Link></h6>
-			                </div>
-			                <div className="emt-course-meta">
-			                  <div className="row">
-			                    <div className="col-6">
-			                      <div className="rating">
-			                        <i className="fa fa-star" /> 4.9
-			                        <span>(73)</span>
-			                      </div>
-			                    </div>
-			                    <div className="col-6">
-			                      <div className="price text-right">
-			                        Price: <span>$74.00</span>
-			                      </div>
-			                    </div>
-			                  </div>
-			                </div>
-			              </div>
-			            </div>
-			          </div>
-			          <div className="col-lg-4 col-md-6">
-			            <div className="single-course-inner">
-			              <div className="thumb">
-			                <img src={publicUrl+"assets/img/course/6.png"} alt="img" />
-			              </div>
-			              <div className="details">
-			                <div className="details-inner">
-			                  <div className="emt-user">
-			                    <span className="u-thumb"><img src={publicUrl+"assets/img/author/6.png"} alt="img" /></span>
-			                    <span className="align-self-center">Randy Hart</span>
-			                  </div>
-			                  <h6><Link to="/course-details">Duis rhoncus dui venenatis consequat porttito</Link></h6>
-			                </div>
-			                <div className="emt-course-meta">
-			                  <div className="row">
-			                    <div className="col-6">
-			                      <div className="rating">
-			                        <i className="fa fa-star" /> 4.4
-			                        <span>(20)</span>
-			                      </div>
-			                    </div>
-			                    <div className="col-6">
-			                      <div className="price text-right">
-			                        Price: <span>$55.00</span>
-			                      </div>
-			                    </div>
-			                  </div>
-			                </div>
-			              </div>
-			            </div>
-			          </div>
-			          <div className="col-lg-4 col-md-6">
-			            <div className="single-course-inner">
-			              <div className="thumb">
-			                <img src={publicUrl+"assets/img/course/4.png"} alt="img" />
-			              </div>
-			              <div className="details">
-			                <div className="details-inner">
-			                  <div className="emt-user">
-			                    <span className="u-thumb"><img src={publicUrl+"assets/img/author/4.png"} alt="img" /></span>
-			                    <span className="align-self-center">Walter Griffin</span>
-			                  </div>
-			                  <h6><Link to="/course-details">Duis vestibulum elit vel neque pharetra vulputate</Link></h6>
-			                </div>
-			                <div className="emt-course-meta">
-			                  <div className="row">
-			                    <div className="col-6">
-			                      <div className="rating">
-			                        <i className="fa fa-star" /> 4.8
-			                        <span>(53)</span>
-			                      </div>
-			                    </div>
-			                    <div className="col-6">
-			                      <div className="price text-right">
-			                        Price: <span>$64.00</span>
-			                      </div>
-			                    </div>
-			                  </div>
-			                </div>
-			              </div>
-			            </div>
-			          </div>
-			          <div className="col-lg-4 col-md-6">
-			            <div className="single-course-inner">
-			              <div className="thumb">
-			                <img src={publicUrl+"assets/img/course/1.png"} alt="img" />
-			              </div>
-			              <div className="details">
-			                <div className="details-inner">
-			                  <div className="emt-user">
-			                    <span className="u-thumb"><img src={publicUrl+"assets/img/author/1.png"} alt="img" /></span>
-			                    <span className="align-self-center">Nancy Reyes</span>
-			                  </div>
-			                  <h6><Link to="/course-details">Fox nymphs grab quick-jived waltz. Brick quiz whangs</Link></h6>
-			                </div>
-			                <div className="emt-course-meta">
-			                  <div className="row">
-			                    <div className="col-6">
-			                      <div className="rating">
-			                        <i className="fa fa-star" /> 4.3
-			                        <span>(23)</span>
-			                      </div>
-			                    </div>
-			                    <div className="col-6">
-			                      <div className="price text-right">
-			                        Price: <span>$54.00</span>
-			                      </div>
-			                    </div>
-			                  </div>
-			                </div>
-			              </div>
-			            </div>
-			          </div>
-			          <div className="col-lg-4 col-md-6">
-			            <div className="single-course-inner">
-			              <div className="thumb">
-			                <img src={publicUrl+"assets/img/course/5.png"} alt="img" />
-			              </div>
-			              <div className="details">
-			                <div className="details-inner">
-			                  <div className="emt-user">
-			                    <span className="u-thumb"><img src={publicUrl+"assets/img/author/5.png"} alt="img" /></span>
-			                    <span className="align-self-center">Aaron Powell</span>
-			                  </div>
-			                  <h6><Link to="/course-details">Quisque suscipit ipsum est, eu venenatis leo ornare eget</Link></h6>
-			                </div>
-			                <div className="emt-course-meta">
-			                  <div className="row">
-			                    <div className="col-6">
-			                      <div className="rating">
-			                        <i className="fa fa-star" /> 4.5
-			                        <span>(21)</span>
-			                      </div>
-			                    </div>
-			                    <div className="col-6">
-			                      <div className="price text-right">
-			                        Price: <span>$34.00</span>
-			                      </div>
-			                    </div>
-			                  </div>
-			                </div>
-			              </div>
-			            </div>
-			          </div>
-			          <div className="col-lg-4 col-md-6">
-			            <div className="single-course-inner">
-			              <div className="thumb">
-			                <img src={publicUrl+"assets/img/course/2.png"} alt="img" />
-			              </div>
-			              <div className="details">
-			                <div className="details-inner">
-			                  <div className="emt-user">
-			                    <span className="u-thumb"><img src={publicUrl+"assets/img/author/2.png"} alt="img" /></span>
-			                    <span className="align-self-center">Joe Powell</span>
-			                  </div>
-			                  <h6><Link to="/course-details">Aenean sed nibh a magna posuere tempo faucib</Link></h6>
-			                </div>
-			                <div className="emt-course-meta">
-			                  <div className="row">
-			                    <div className="col-6">
-			                      <div className="rating">
-			                        <i className="fa fa-star" /> 4.3
-			                        <span>(23)</span>
-			                      </div>
-			                    </div>
-			                    <div className="col-6">
-			                      <div className="price text-right">
-			                        Price: <span>$54.00</span>
-			                      </div>
-			                    </div>
-			                  </div>
-			                </div>
-			              </div>
-			            </div>
-			          </div>
-			        </div>
-			      </div>
-			    </div>
+const Course = ({ course }) => (
+	<div className="col-lg-4 col-md-6">
+	  <div className="single-course-inner">
+		<div className="thumb">
+		  <img src={course.image} alt="img" />
+		</div>
+		<div className="details">
+		  <div className="details-inner">
+			<div className="emt-user">
+			  <span className="u-thumb"><img src={course.authorImage} alt="img" /></span>
+			  <span className="align-self-center">{course.authorName}</span>
+			</div>
+			<h6><Link to="/course-details">{course.title}</Link></h6>
+		  </div>
+		  <div className="emt-course-meta">
+			<div className="row">
+			  <div className="col-6">
+				<div className="rating">
+				  <i className="fa fa-star" /> {course.rating}
+				  <span>({course.reviewCount})</span>
+				</div>
+			  </div>
+			  <div className="col-6">
+				<div className="price text-right">
+				  Price: <span>{course.price}</span>
+				</div>
 			  </div>
 			</div>
-        }
+		  </div>
+		</div>
+	  </div>
+	</div>
+  );
+class CourseFilter extends Component {
+  state = {
+   
+	
+		courses: [
+		  {
+			id: 1,
+			category: 'Graphics & Design',
+			image: `${process.env.PUBLIC_URL}/assets/img/course/1.png`,
+			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/1.png`,
+			authorName: 'Nancy Reyes',
+			title: 'Fox nymphs grab quick-jived waltz. Brick quiz whangs',
+			rating: '4.3',
+			reviewCount: 23,
+			price: '$54.00'
+		  },
+		  {
+			id: 2,
+			category: 'Graphics & Design',
+			image: `${process.env.PUBLIC_URL}/assets/img/course/2.png`,
+			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/2.png`,
+			authorName: 'John Doe',
+			title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
+			rating: '4.5',
+			reviewCount: 17,
+			price: '$49.99'
+		  },
+		  {
+			id: 3,
+			category: 'Graphics & Design',
+			image: `${process.env.PUBLIC_URL}/assets/img/course/3.png`,
+			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/3.png`,
+			authorName: 'Jane Smith',
+			title: 'Etiam vehicula sapien ac turpis hendrerit, a malesuada justo eleifend',
+			rating: '4.0',
+			reviewCount: 30,
+			price: '$39.99'
+		  },
+		  {
+			id: 4,
+			category: 'Graphics & Design',
+			image: `${process.env.PUBLIC_URL}/assets/img/course/4.png`,
+			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/4.png`,
+			authorName: 'Michael Johnson',
+			title: 'Vestibulum vel nisi in elit accumsan eleifend nec vitae est',
+			rating: '4.8',
+			reviewCount: 42,
+			price: '$59.99'
+		  },
+		  {
+			id: 5,
+			category: 'Graphics & Design',
+			image: `${process.env.PUBLIC_URL}/assets/img/course/5.png`,
+			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/5.png`,
+			authorName: 'Emily Wilson',
+			title: 'Aliquam sollicitudin eros nec semper blandit',
+			rating: '4.2',
+			reviewCount: 28,
+			price: '$29.99'
+		  },
+		  {
+			id: 6,
+			category: 'Graphics & Design',
+			image: `${process.env.PUBLIC_URL}/assets/img/course/6.png`,
+			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
+			authorName: 'David Brown',
+			title: 'Praesent vel augue a elit interdum laoreet',
+			rating: '4.6',
+			reviewCount: 36,
+			price: '$45.00'
+		  },
+		  {
+			id: 7,
+			category: 'Digital Marketing',
+			image: `${process.env.PUBLIC_URL}/assets/img/course/7.png`,
+			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/7.png`,
+			authorName: 'Sarah Martinez',
+			title: 'Duis id velit aliquam, laoreet magna ac, vehicula orci',
+			rating: '4.1',
+			reviewCount: 20,
+			price: '$39.00'
+		  },
+		  {
+			id: 8,
+			category: 'Digital Marketing',
+			image: `${process.env.PUBLIC_URL}/assets/img/course/8.png`,
+			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/7.png`,
+			authorName: 'Christopher Lee',
+			title: 'Curabitur sed neque nec eros dignissim gravida',
+			rating: '4.7',
+			reviewCount: 39,
+			price: '$55.00'
+		  },
+		  {
+			id: 9,
+			category: 'Digital Marketing',
+			image: `${process.env.PUBLIC_URL}/assets/img/course/9.png`,
+			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/7.png`,
+			authorName: 'Jessica Taylor',
+			title: 'Nam eget metus sit amet sem faucibus facilisis id at mi',
+			rating: '4.4',
+			reviewCount: 25,
+			price: '$42.00'
+		  },
+		  {
+			id: 10,
+			category: 'Digital Marketing',
+			image: `${process.env.PUBLIC_URL}/assets/img/course/9.png`,
+			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
+			authorName: 'Kevin White',
+			title: 'Integer sit amet nisi vitae orci volutpat commodo',
+			rating: '4.9',
+			reviewCount: 48,
+			price: '$60.00'
+		  },
+		  {
+			id: 11,
+			category: 'Digital Marketing',
+			image: `${process.env.PUBLIC_URL}/assets/img/course/9.png`,
+			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
+			authorName: 'Amanda Harris',
+			title: 'Vivamus rutrum quam non turpis ullamcorper, vitae aliquet arcu tincidunt',
+			rating: '4.3',
+			reviewCount: 29,
+			price: '$48.00'
+		  },
+		  {
+			id: 12,
+			category: 'Digital Marketing',
+			image: `${process.env.PUBLIC_URL}/assets/img/course/9.png`,
+			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
+			authorName: 'Matthew Rodriguez',
+			title: 'Proin sagittis ligula vel ante tincidunt, in finibus ligula interdum',
+			rating: '4.6',
+			reviewCount: 35,
+			price: '$47.50'
+		  },
+		  {
+			id: 13,
+			category: 'Writing & Translation',
+			image: `${process.env.PUBLIC_URL}/assets/img/course/9.png`,
+			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
+			authorName: 'Stephanie Clark',
+			title: 'Sed fermentum dui at congue fermentum',
+			rating: '4.2',
+			reviewCount: 27,
+			price: '$38.50'
+		  },
+		  {
+			id: 14,
+			category: 'Writing & Translation',
+			image: `${process.env.PUBLIC_URL}/assets/img/course/9.png`,
+			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
+			authorName: 'Ryan Moore',
+			title: 'Fusce a elit non diam condimentum aliquam',
+			rating: '4.7',
+			reviewCount: 40,
+			price: '$57.00'
+		  },
+		  {
+			id: 15,
+			category: 'Writing & Translation',
+			image: `${process.env.PUBLIC_URL}/assets/img/course/9.png`,
+			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
+			authorName: 'Laura King',
+			title: 'Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas',
+			rating: '4.5',
+			reviewCount: 31,
+			price: '$53.00'
+		  },
+		  {
+			id: 16,
+			category: 'Writing & Translation',
+			image: `${process.env.PUBLIC_URL}/assets/img/course/9.png`,
+			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
+			authorName: 'Justin Turner',
+			title: 'Quisque sed tortor at tellus ullamcorper dapibus',
+			rating: '4.4',
+			reviewCount: 26,
+			price: '$44.99'
+		  },
+		  {
+			id: 17,
+			category: 'Writing & Translation',
+			image: `${process.env.PUBLIC_URL}/assets/img/course/9.png`,
+			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
+			authorName: 'Maria Garcia',
+			title: 'Morbi vel urna nec ligula gravida auctor',
+			rating: '4.8',
+			reviewCount: 44,
+			price: '$62.00'
+		  },
+		  {
+			id: 18,
+			category: 'Writing & Translation',
+			image: `${process.env.PUBLIC_URL}/assets/img/course/9.png`,
+			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
+			authorName: 'Daniel Anderson',
+			title: 'Vestibulum eu risus at ipsum lacinia vehicula',
+			rating: '4.3',
+			reviewCount: 24,
+			price: '$46.00'
+		  },
+		  {
+			id: 19,
+			category: 'Music & Audio',
+			image: `${process.env.PUBLIC_URL}/assets/img/course/9.png`,
+			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
+			authorName: 'Karen Lopez',
+			title: 'Curabitur ornare nisl id justo tincidunt, ut tincidunt odio laoreet',
+			rating: '4.6',
+			reviewCount: 37,
+			price: '$51.50'
+		  },
+		  {
+			id: 20,
+			category: 'Music & Audio',
+			image: `${process.env.PUBLIC_URL}/assets/img/course/9.png`,
+			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
+			authorName: 'Jason Taylor',
+			title: 'Phasellus ullamcorper magna nec sagittis dapibus',
+			rating: '4.5',
+			reviewCount: 32,
+			price: '$52.00'
+		  },
+		  {
+			id: 21,
+			category: 'Music & Audio',
+			image: `${process.env.PUBLIC_URL}/assets/img/course/9.png`,
+			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
+			authorName: 'Jason Taylor',
+			title: 'Phasellus ullamcorper magna nec sagittis dapibus',
+			rating: '4.5',
+			reviewCount: 32,
+			price: '$52.00'
+		  },
+		  {
+			id: 22,
+			category: 'Music & Audio',
+			image: `${process.env.PUBLIC_URL}/assets/img/course/9.png`,
+			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
+			authorName: 'Jason Taylor',
+			title: 'Phasellus ullamcorper magna nec sagittis dapibus',
+			rating: '4.5',
+			reviewCount: 32,
+			price: '$52.00'
+		  },
+		  {
+			id: 23,
+			category: 'Music & Audio',
+			image: `${process.env.PUBLIC_URL}/assets/img/course/9.png`,
+			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
+			authorName: 'Jason Taylor',
+			title: 'Phasellus ullamcorper magna nec sagittis dapibus',
+			rating: '4.5',
+			reviewCount: 32,
+			price: '$52.00'
+		  },
+		  {
+			id: 24,
+			category: 'Music & Audio',
+			image: `${process.env.PUBLIC_URL}/assets/img/course/9.png`,
+			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
+			authorName: 'Jason Taylor',
+			title: 'Phasellus ullamcorper magna nec sagittis dapibus',
+			rating: '4.5',
+			reviewCount: 32,
+			price: '$52.00'
+		  }
+		],
+
+	  
+    // Define your tabs structure here
+    tabs: [
+      { id: 'tab1', title: 'Graphics & Design', category: 'Graphics & Design' },
+      { id: 'tab2', title: 'Digital Marketing', category: 'Digital Marketing' },
+      { id: 'tab3', title: 'Writing & Translation', category: 'Writing & Translation' },
+      { id: 'tab4', title: 'Music & Audio', category: 'Music & Audio' },
+    ]
+  };
+
+  renderCourseList = (category) => {
+    // Filter courses by category and map them to Course components
+    return this.state.courses
+      .filter(course => course.category === category)
+      .map(course => <Course key={course.id} course={course} />);
+  }
+
+  renderTabs = () => {
+    // Map through tabs and create tab panes
+    return this.state.tabs.map(tab => (
+      <div
+        key={tab.id}
+        className={`tab-pane fade ${tab.id === 'tab1' ? 'show active' : ''}`}
+        id={tab.id}
+        role="tabpanel"
+        aria-labelledby={`${tab.id}-tab`}
+      >
+        <div className="row">
+          {this.renderCourseList(tab.category)}
+        </div>
+      </div>
+    ));
+  }
+
+  renderTabList = () => {
+    // Create tab list headings
+    return this.state.tabs.map(tab => (
+      <li key={tab.id} className="nav-item">
+        <a
+          className={`nav-link ${tab.id === 'tab1' ? 'active' : ''}`}
+          id={`${tab.id}-tab`}
+          data-toggle="tab"
+          href={`#${tab.id}`}
+          role="tab"
+          aria-controls={tab.id}
+          aria-selected={tab.id === 'tab1' ? 'true' : 'false'}
+        >
+          {tab.title}
+        </a>
+      </li>
+    ));
+  }
+
+  render() {
+    let publicUrl = process.env.PUBLIC_URL + '/';
+
+    return (
+      <div className="course-area pd-top-100 pd-bottom-90">
+        <div className="container">
+          <div className="row justify-content-center">
+            <div className="col-xl-8 col-lg-10 col-md-11">
+              <div className="section-title style-white text-center">
+                <h2 className="title">Các Khóa Học Nổi Bật</h2>
+                <p>Khám phá các khóa học đặc sắc giúp bạn mở rộng cánh cửa học thuật tại Mỹ.</p>
+              </div>
+            </div>
+          </div>
+          <div className="edmt-nav-tab style-white text-center">
+            <ul className="nav nav-tabs" id="myTab" role="tablist">
+              {this.renderTabList()}
+            </ul>
+          </div>
+          <div className="tab-content go-top" id="myTabContent">
+            {this.renderTabs()}
+          </div>
+        </div>
+      </div>
+    );
+  }
 }
 
-export default CourseFilter
+export default CourseFilter;

@@ -22,7 +22,7 @@ class NavbarV4 extends Component {
             <div className="row">
               <div className="col-md-8 text-md-left text-center">
                 <ul>
-                  <li><p><i className="fa fa-map-marker" /> 2072 Pinnickinick Street, WA 98370</p></li>
+                <li><p><i className="fa fa-map-marker" /> 2024  Long Thạnh Mỹ, Thành Phố Thủ Đức, Thành phố Hồ Chí Minh</p></li>
                   <li><p><i className="fa fa-envelope-o" />  info@website.com</p></li>
                 </ul>
               </div>

@@ -9,7 +9,7 @@ class Contact extends Component {
         let publicUrl = process.env.PUBLIC_URL+'/'
 
     return  <div className="contact-area bg-overlay mt-200 pd-bottom-90" style={{backgroundImage: 'url("'+publicUrl+'assets/img/banner/2.png")'}}>
-			  <div className="container">
+			  {/* <div className="container">
 			    <div className="row">
 			      <div className="col-lg-8">
 			        <form className="contact-form-inner mt-mn-200 style-shadow">
@@ -98,7 +98,7 @@ class Contact extends Component {
 			        </div>
 			      </div>
 			    </div>
-			  </div>
+			  </div> */}
 			</div>
 
         }

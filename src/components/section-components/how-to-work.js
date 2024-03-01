@@ -13,11 +13,11 @@ class HowToWork extends Component {
 			    <div className="section-title">
 			      <div className="row">
 			        <div className="col-lg-6 align-self-center">
-			          <h6 className="sub-title right-line">What we do</h6>
-			          <h2 className="title">How it works?</h2>
+			          <h6 className="sub-title right-line">Cách Thức Hoạt Động</h6>
+			          <h2 className="title">Quy Trình Làm Việc</h2>
 			        </div>
 			        <div className="col-lg-6 align-self-center">
-			          <p className="content mt-lg-0">The quick, brown fox jumps over a lazy dog. DJs flock by when MTV ax quiz prog. Junk MTV quiz graced by fox whelps. Bawds jog, flick quartz, vex nymphs when MTV ax quiz</p>
+			          <p className="content mt-lg-0">Hệ thống của chúng tôi được thiết kế để giúp học sinh Việt Nam dễ dàng tìm kiếm, so sánh và đăng ký các chương trình du học tại Mỹ, từ bước đầu tiên đến khi bạn sẵn sàng cho cuộc sống học thuật mới.</p>
 			        </div>
 			      </div>
 			    </div>
@@ -29,9 +29,9 @@ class HowToWork extends Component {
 			            <div className="intro-count">1</div>
 			          </div>
 			          <div className="details">
-			            <h5>Sign up</h5>
-			            <p>Ipsum yorem dolor amet sit  elit. Duis at est id leosco for it</p>
-			            <Link className="read-more-text" to="/course-details">Read More <i className="fa fa-angle-right" /></Link>
+			            <h5>Đăng Ký</h5>
+			            <p>Đăng ký tài khoản để bắt đầu quá trình tìm kiếm và so sánh các chương trình du học phù hợp với bạn.</p>
+			            <Link className="read-more-text" to="/course-details">Xem Thêm <i className="fa fa-angle-right" /></Link>
 			          </div>
 			        </div>
 			      </div>
@@ -42,9 +42,9 @@ class HowToWork extends Component {
 			            <div className="intro-count">2</div>
 			          </div>
 			          <div className="details">
-			            <h5>Select course</h5>
-			            <p>Ipsum yorem dolor amet sit  elit. Duis at est id leosco for it</p>
-			            <Link className="read-more-text" to="/course-details">Read More <i className="fa fa-angle-right" /></Link>
+			            <h5>Chọn Chương Trình</h5>
+			            <p>Khám phá và so sánh các chương trình để tìm ra lựa chọn du học tốt nhất dành cho bạn.</p>
+			            <Link className="read-more-text" to="/course-details">Xem Thêm <i className="fa fa-angle-right" /></Link>
 			          </div>
 			        </div>
 			      </div>
@@ -55,9 +55,9 @@ class HowToWork extends Component {
 			            <div className="intro-count">3</div>
 			          </div>
 			          <div className="details">
-			            <h5>Start Learning</h5>
-			            <p>Ipsum yorem dolor amet sit  elit. Duis at est id leosco for it</p>
-			            <Link className="read-more-text" to="/course-details">Read More <i className="fa fa-angle-right" /></Link>
+			            <h5>Bắt Đầu Học</h5>
+			            <p>Đăng ký chương trình và bắt đầu hành trình du học của bạn với sự hỗ trợ từ đội ngũ chuyên gia của chúng tôi.</p>
+			            <Link className="read-more-text" to="/course-details">Xem Thêm <i className="fa fa-angle-right" /></Link>
 			          </div>
 			        </div>
 			      </div>
@@ -68,9 +68,9 @@ class HowToWork extends Component {
 			            <div className="intro-count">4</div>
 			          </div>
 			          <div className="details">
-			            <h5>Get Certificate</h5>
-			            <p>Ipsum yorem dolor amet sit  elit. Duis at est id leosco for it</p>
-			            <Link className="read-more-text" to="/course-details">Read More <i className="fa fa-angle-right" /></Link>
+			            <h5>Nhận Chứng Chỉ</h5>
+			            <p>Hoàn thành chương trình và nhận chứng chỉ du học, mở ra cơ hội nghề nghiệp và phát triển cá nhân.</p>
+			            <Link className="read-more-text" to="/course-details">Xem Thêm <i className="fa fa-angle-right" /></Link>
 			          </div>
 			        </div>
 			      </div>

@@ -13,8 +13,8 @@ class Team extends Component {
 				    <div className="row justify-content-center">
 				      <div className="col-xl-6 col-lg-7">
 				        <div className="section-title text-center">
-				          <h6 className="sub-title double-line">Meet Our Team</h6>
-				          <h2 className="title">Our Creative Team</h2>
+				          <h6 className="sub-title double-line">Gặp Gỡ Đội Ngũ Của Chúng Tôi</h6>
+				          <h2 className="title">Đội Ngũ Tư Vấn Chuyên Nghiệp</h2>
 				        </div>
 				      </div>
 				    </div>
@@ -23,21 +23,10 @@ class Team extends Component {
 				        <div className="single-team-inner">
 				          <div className="thumb">
 				            <img src={publicUrl+"assets/img/team/1.png"} alt="img" />
-				            <div className="social-wrap">  
-				              <div className="social-wrap-inner">
-				                <a className="social-share" href="#"><i className="fa fa-share-alt" /></a>
-				                <ul>
-				                  <li><a href="#"><i className="fa fa-facebook" /></a></li>
-				                  <li><a href="#"><i className="fa fa-twitter" /></a></li>
-				                  <li><a href="#"><i className="fa fa-pinterest" /></a></li>
-				                  <li><a href="#"><i className="fa fa-linkedin" /></a></li>
-				                </ul>
-				              </div>
-				            </div>
 				          </div>
 				          <div className="details"> 
-				            <h4><Link to="/instructor-details">Doris Jordan</Link></h4>
-				            <span>Design Expert</span>
+				            <h4><Link to="/instructor-details">Nguyễn Văn A</Link></h4>
+				            <span>Chuyên Gia Tư Vấn Du Học Mỹ</span>
 				          </div>  
 				        </div>
 				      </div>
@@ -45,21 +34,10 @@ class Team extends Component {
 				        <div className="single-team-inner">
 				          <div className="thumb">
 				            <img src={publicUrl+"assets/img/team/2.png"} alt="img" />
-				            <div className="social-wrap">  
-				              <div className="social-wrap-inner">
-				                <a className="social-share" href="#"><i className="fa fa-share-alt" /></a>
-				                <ul>
-				                  <li><a href="#"><i className="fa fa-facebook" /></a></li>
-				                  <li><a href="#"><i className="fa fa-twitter" /></a></li>
-				                  <li><a href="#"><i className="fa fa-pinterest" /></a></li>
-				                  <li><a href="#"><i className="fa fa-linkedin" /></a></li>
-				                </ul>
-				              </div>
-				            </div>
 				          </div>
 				          <div className="details"> 
-				            <h4><Link to="/instructor-details">Eugen Freman</Link></h4>
-				            <span>Executive</span>
+				            <h4><Link to="/instructor-details">Trần Thị B</Link></h4>
+				            <span>Chuyên Viên Hỗ Trợ Học Bổng</span>
 				          </div>  
 				        </div>
 				      </div>
@@ -67,21 +45,10 @@ class Team extends Component {
 				        <div className="single-team-inner">
 				          <div className="thumb">
 				            <img src={publicUrl+"assets/img/team/3.png"} alt="img" />
-				            <div className="social-wrap">  
-				              <div className="social-wrap-inner">
-				                <a className="social-share" href="#"><i className="fa fa-share-alt" /></a>
-				                <ul>
-				                  <li><a href="#"><i className="fa fa-facebook" /></a></li>
-				                  <li><a href="#"><i className="fa fa-twitter" /></a></li>
-				                  <li><a href="#"><i className="fa fa-pinterest" /></a></li>
-				                  <li><a href="#"><i className="fa fa-linkedin" /></a></li>
-				                </ul>
-				              </div>
-				            </div>
 				          </div>
 				          <div className="details"> 
-				            <h4><Link to="/instructor-details">Jaction Leo</Link></h4>
-				            <span>Developer</span>
+				            <h4><Link to="/instructor-details">Lê C</Link></h4>
+				            <span>Chuyên Gia Xử Lý Hồ Sơ</span>
 				          </div>  
 				        </div>
 				      </div>
@@ -89,21 +56,10 @@ class Team extends Component {
 				        <div className="single-team-inner">
 				          <div className="thumb">
 				            <img src={publicUrl+"assets/img/team/4.png"} alt="img" />
-				            <div className="social-wrap">  
-				              <div className="social-wrap-inner">
-				                <a className="social-share" href="#"><i className="fa fa-share-alt" /></a>
-				                <ul>
-				                  <li><a href="#"><i className="fa fa-facebook" /></a></li>
-				                  <li><a href="#"><i className="fa fa-twitter" /></a></li>
-				                  <li><a href="#"><i className="fa fa-pinterest" /></a></li>
-				                  <li><a href="#"><i className="fa fa-linkedin" /></a></li>
-				                </ul>
-				              </div>
-				            </div>
 				          </div>
 				          <div className="details"> 
-				            <h4><Link to="/instructor-details">Jordan Feg</Link></h4>
-				            <span>Marketing Expert</span>
+				            <h4><Link to="/instructor-details">Phạm D</Link></h4>
+				            <span>Chuyên Viên Tư Vấn Visa</span>
 				          </div>  
 				        </div>
 				      </div>
@@ -111,21 +67,10 @@ class Team extends Component {
 				        <div className="single-team-inner">
 				          <div className="thumb">
 				            <img src={publicUrl+"assets/img/team/5.png"} alt="img" />
-				            <div className="social-wrap">  
-				              <div className="social-wrap-inner">
-				                <a className="social-share" href="#"><i className="fa fa-share-alt" /></a>
-				                <ul>
-				                  <li><a href="#"><i className="fa fa-facebook" /></a></li>
-				                  <li><a href="#"><i className="fa fa-twitter" /></a></li>
-				                  <li><a href="#"><i className="fa fa-pinterest" /></a></li>
-				                  <li><a href="#"><i className="fa fa-linkedin" /></a></li>
-				                </ul>
-				              </div>
-				            </div>
 				          </div>
 				          <div className="details"> 
-				            <h4><Link to="/instructor-details">Walson Jordan</Link></h4>
-				            <span>Ui/Ux Expert</span>
+				            <h4><Link to="/instructor-details">Đỗ E</Link></h4>
+				            <span>Giáo Viên Tiếng Anh</span>
 				          </div>  
 				        </div>
 				      </div>
@@ -135,5 +80,6 @@ class Team extends Component {
 
         }
 }
+
 
 export default Team
