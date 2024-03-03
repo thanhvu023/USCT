@@ -74,6 +74,13 @@ class Navbar extends Component {
                       </ul>
                     </li>
                     <li className="menu-item-has-children">
+                      <Link to="/blog">Trường học</Link>
+                      {/* <ul className="sub-menu">
+                        <li><Link to="/blog">Blog</Link></li>
+                        <li><Link to="/blog-details">Blog Details</Link></li>
+                      </ul> */}
+                    </li>
+                    <li className="menu-item-has-children">
                       <a href="#">Danh mục khác</a>
                       <ul className="sub-menu">
                         <li><Link to="/about">About Us</Link></li>
@@ -85,13 +92,6 @@ class Navbar extends Component {
                         <li><Link to="/gallery">Gallery</Link></li>
                         <li><Link to="/sign-in">Sign In</Link></li>
                         <li><Link to="/sign-up">Sign Up</Link></li>
-                      </ul>
-                    </li>
-                    <li className="menu-item-has-children">
-                      <Link to="/blog">Bài viết</Link>
-                      <ul className="sub-menu">
-                        <li><Link to="/blog">Blog</Link></li>
-                        <li><Link to="/blog-details">Blog Details</Link></li>
                       </ul>
                     </li>
                     <li><Link to="/contact">Liên hệ</Link></li>
