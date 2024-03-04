@@ -41,7 +41,7 @@ class Navbar extends Component {
               </div>
             </div>
             <nav className="navbar navbar-area-1 navbar-area navbar-expand-lg">
-              <div className="container nav-container">
+              <div className="container nav-container w-1/2">
                 <div className="responsive-mobile-menu">
                   <button className="menu toggle-btn d-block d-lg-none" data-target="#edumint_main_menu" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="icon-left" />
@@ -60,11 +60,11 @@ class Navbar extends Component {
                   <ul className="navbar-nav menu-open">
                     <li className="menu-item-has-children current-menu-item">
                       <Link to="/">Trang chủ</Link>
-                      <ul className="sub-menu">
+                      {/* <ul className="sub-menu">
                         <li><Link to="/">Home 01</Link></li>
                         <li><Link to="/home-v2">Home 02</Link></li>
                         <li><Link to="/home-v3">Home 03</Link></li>
-                      </ul>
+                      </ul> */}
                     </li>
                     <li className="menu-item-has-children">
                       <Link to="/course">Khóa học</Link>

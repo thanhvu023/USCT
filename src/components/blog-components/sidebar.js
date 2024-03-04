@@ -2,8 +2,22 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
 
-
 class Sidebar extends Component {
+
+  state = {
+    minPrice: 100000,
+    maxPrice: 2000000,
+    currentValue: 100000 // Giá trị khởi tạo ban đầu
+  }
+
+  handleSliderChange = (event) => {
+    this.setState({ currentValue: event.target.value });
+  }
+
+  formatCurrency = (value) => {
+    // Chia số tiền thành các đơn vị và thêm dấu '.' sau mỗi 3 chữ số
+    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  }
   render() {
    let anchor = '#'
    let imagealt = 'image'
@@ -20,70 +34,53 @@ class Sidebar extends Component {
                 </form>
               </div> 
               <div className="widget widget_catagory">
-                <h4 className="widget-title">Catagory</h4>                                 
-                <ul className="catagory-items go-top">
-                  <li><Link to="/blog">Tempor lorem interdum <i className="fa fa-caret-right" /></Link></li>
-                  <li><Link to="/blog">Auctor mattis lacus  <i className="fa fa-caret-right" /></Link></li>
-                  <li><Link to="/blog">Dolor proin  <i className="fa fa-caret-right" /></Link></li>
-                  <li><Link to="/blog">Pharetra amet <i className="fa fa-caret-right" /></Link></li>
-                </ul>
-              </div>                  
-              <div className="widget widget-recent-post">                            
-                <h4 className="widget-title">Recent News</h4>
-                <ul>
-                  <li>
-                    <div className="media">
-                      <div className="media-left">
-                        <img src={publicUrl+"assets/img/widget/1.png"} alt="blog" />
-                      </div>
-                      <div className="media-body align-self-center">
-                        <h5 className="title"><Link to="/blog-details">Integer at faucibus urna. Nullam condtum</Link></h5>
-                        <div className="post-info"><i className="fa fa-calendar" /><span>15 October</span></div>                             
-                      </div>
-                    </div>
-                  </li>
-                  <li>
-                    <div className="media">
-                      <div className="media-left">
-                        <img src={publicUrl+"assets/img/widget/2.png"} alt="blog" />
-                      </div>
-                      <div className="media-body align-self-center">
-                        <h5 className="title"><Link to="/blog-details">Custom Platform for an Audit Insurance</Link></h5>
-                        <div className="post-info"><i className="fa fa-calendar" /><span>15 October</span></div>                             
-                      </div>
-                    </div>
-                  </li>
-                  <li>
-                    <div className="media">
-                      <div className="media-left">
-                        <img src={publicUrl+"assets/img/widget/3.png"} alt="blog" />
-                      </div>
-                      <div className="media-body align-self-center">
-                        <h5 className="title"><Link to="/blog-details">Famous app Developers and Designer</Link></h5>
-                        <div className="post-info"><i className="fa fa-calendar" /><span>15 October</span></div>                            
-                      </div>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-              <div className="widget widget_price">
-                <h4 className="widget-title">Price</h4> 
-                <label className="single-checkbox">
-                  <input type="checkbox" defaultChecked="checked" />
-                  <span className="checkmark" />
-                  Free Courses
-                </label> 
-                <label className="single-checkbox">
-                  <input type="checkbox" defaultChecked="checked" />
-                  <span className="checkmark" />
-                  Paid Courses
-                </label> 
-                <label className="single-checkbox">
-                  <input type="checkbox" defaultChecked="checked" />
-                  <span className="checkmark" />
-                  Only Subscription
-                </label>  
-              </div> 
+            <h4 className="widget-title">Loại Trường</h4>                                 
+            <ul className="catagory-items go-top">
+              <li><Link to="/university-type">Research University <i className="fa fa-caret-right" /></Link></li>
+              <li><Link to="/university-type">Liberal Arts College <i className="fa fa-caret-right" /></Link></li>
+              <li><Link to="/university-type">National University <i className="fa fa-caret-right" /></Link></li>
+              <li><Link to="/university-type">Regional College <i className="fa fa-caret-right" /></Link></li>
+            </ul>
+          </div>                 
+       
+<div className="widget widget_price">
+            <h4 className="widget-title">Chi Phí Du Học</h4>
+            <input
+              type="range"
+              min="100000"
+              max="2000000"
+              value={this.state.currentValue}
+              className="custom-range"
+              onChange={this.handleSliderChange}
+              style={{
+                width: '100%',
+                height: '25px',
+                background: '#ddd',
+                outline: 'none',
+                opacity: '0.7',
+                transition: 'opacity .2s',
+                position: 'relative',
+                backgroundColor: '#007bff',
+                border: '2px solid #007bff'
+              }}
+            />
+            <div className="d-flex justify-content-between" style={{ color: '#007bff' }}>
+              <span>$100k</span>
+              <span>$2M</span>
+            </div>
+            <div
+              style={{
+                position: 'absolute',
+                top: '470px',
+                left: `${(this.state.currentValue - 100000) / (2000000 - 100000) * 100}%`,
+                transform: 'translateX(-10%)',
+                whiteSpace: 'nowrap',
+                fontWeight:'bold'
+              }}
+            >
+              {this.formatCurrency(this.state.currentValue)}$
+            </div>
+          </div>
               <div className="widget widget_level">
                 <h4 className="widget-title">Level</h4> 
                 <label className="single-checkbox">
@@ -103,18 +100,14 @@ class Sidebar extends Component {
                 </label>  
               </div> 
               <div className="widget widget_tags mb-0">
-                <h4 className="widget-title">Tags</h4>
-                <div className="tagcloud go-top">
-                  <Link to="/blog">Art</Link>
-                  <Link to="/blog">Creative</Link>
-                  <Link to="/blog">Article</Link>
-                  <Link to="/blog">Designer</Link>
-                  <Link to="/blog">Portfolio</Link>
-                  <Link to="/blog">Project</Link>
-                  <Link to="/blog">Personal</Link>
-                  <Link to="/blog">Landing</Link>
-                </div>
-              </div>
+            <h4 className="widget-title">Tags</h4>
+            <div className="tagcloud go-top">
+              <Link to="/tag">Du học Mỹ</Link>
+              <Link to="/tag">Visa</Link>
+              <Link to="/tag">Học bổng</Link>
+              {/* Thêm các tags khác liên quan */}
+            </div>
+          </div>
             </div>
           </div>
     )

@@ -1,0 +1,49 @@
+/* Tùy chỉnh style cho slider */
+.custom-range {
+    width: 100%; /* Đặt chiều rộng tối đa cho slider */
+    height: 25px; /* Tùy chỉnh chiều cao nếu cần */
+    background: #ddd; /* Màu nền cho slider */
+    outline: none; /* Loại bỏ đường viền khi focus */
+    opacity: 0.7; /* Đặt độ trong suốt cho slider */
+    -webkit-transition: .2s; /* Thêm hiệu ứng chuyển đổi khi thay đổi giá trị */
+    transition: opacity .2s;
+  }
+  
+  .custom-range:hover {
+    opacity: 1; /* Đổi độ trong suốt khi hover */
+  }
+  
+  /* Tùy chỉnh thumb của slider */
+  .custom-range::-webkit-slider-thumb {
+    width: 25px; /* Chiều rộng của thumb */
+    height: 25px; /* Chiều cao của thumb */
+    background: #4CAF50; /* Màu nền cho thumb */
+    cursor: pointer; /* Con trỏ chuột khi hover */
+    -webkit-appearance: none; /* Gỡ bỏ style mặc định của webkit */
+    margin-top: -9px; /* Cần chỉnh sửa để thumb nằm đúng vị trí trên track */
+  }
+  
+  .custom-range::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    background: #4CAF50;
+    cursor: pointer;
+  }
+  
+  /* Tùy chỉnh track của slider */
+  .custom-range::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 8px;
+    cursor: pointer;
+    background: #3071a9;
+    border-radius: 1.3px;
+  }
+  
+  .custom-range::-moz-range-track {
+    width: 100%;
+    height: 8px;
+    cursor: pointer;
+    background: #3071a9;
+    border-radius: 1.3px;
+  }
+  

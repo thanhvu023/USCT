@@ -18,6 +18,7 @@ import SignUp from './components/sign-up';
 import Contact from './components/contact';
 import Blog from './components/blog';
 import BlogDetails from './components/blog-details';
+import UniversityDetails from './components/university-components/university-details';
 
 
 
@@ -45,6 +46,8 @@ class Root extends Component {
                         <Route path="/contact" component={Contact} />
                         <Route path="/blog" component={Blog} />
                         <Route path="/blog-details" component={BlogDetails} />
+                        <Route path="/university-details" component={UniversityDetails} />
+
 	                </Switch>
 	                </div>
                 </HashRouter>
