@@ -23,7 +23,7 @@ const Home_V1 = () => {
         <HowToWork />
         <Testimonial />
         <Team />
-        <LatestPost />
+  
         <Contact />
         <Footer />
     </div>

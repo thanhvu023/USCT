@@ -7,7 +7,7 @@ import Footer from './global-components/footer';
 const InstructorPage = () => {
     return <div>
         <Navbar />
-        <PageHeader headertitle="Instructor Details"  />
+        <PageHeader headertitle="Chi tiết trường đại học"  />
         <Instructor />
         <Footer />
     </div>

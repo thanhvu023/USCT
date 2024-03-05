@@ -33,22 +33,22 @@ class NavbarV3 extends Component {
 			      <div className="collapse navbar-collapse go-top" id="edumint_main_menu">
 			        <ul className="navbar-nav menu-open">
 			          <li className="menu-item-has-children current-menu-item">
-			            <Link to="/">Home</Link>
+			            <Link to="/">Trang chủ</Link>
 			            <ul className="sub-menu">
 				            <li><Link to="/">Home 01</Link></li>
 	                        <li><Link to="/home-v2">Home 02</Link></li>
 	                        <li><Link to="/home-v3">Home 03</Link></li>
 			            </ul>
 			          </li>
+					  <li className="menu-item-has-children">
+                      <Link to="/course">Khóa học</Link>
+                      <ul className="sub-menu">
+                        <li><Link to="/course">Các nhóm khóa học chính</Link></li>
+                        <li><Link to="/course-details">Khoá học lẻ</Link></li>
+                      </ul>
+                    </li>
 			          <li className="menu-item-has-children">
-			            <Link to="/course">Course</Link>
-			            <ul className="sub-menu">
-			              <li><Link to="/course">Course</Link></li>
-                          <li><Link to="/course-details">Course Single</Link></li>
-			            </ul>
-			          </li>
-			          <li className="menu-item-has-children">
-			            <a href="#">Pages</a>
+					  <a href="#">Danh mục khác</a>
 			            <ul className="sub-menu">
 				            <li><Link to="/about">About Us</Link></li>
 	                        <li><Link to="/event">Event</Link></li>
@@ -62,13 +62,13 @@ class NavbarV3 extends Component {
 			            </ul>
 			          </li>
 			          <li className="menu-item-has-children">
-			            <Link to="/blog">Blog</Link>
+					  <Link to="/university">Trường học</Link>
 			            <ul className="sub-menu">
 				           <li><Link to="/blog">Blog</Link></li>
 	                       <li><Link to="/blog-details">Blog Details</Link></li>
 			            </ul>
 			          </li>
-			          <li><Link to="/contact">Contact Us</Link></li>
+					  <li><Link to="/">Liên hệ</Link></li>
 			        </ul>
 			      </div>
 			      <div className="nav-right-part nav-right-part-desktop style-black">
@@ -76,7 +76,7 @@ class NavbarV3 extends Component {
 			          <div className="emt-phone">
 			            <i className="fa fa-phone" />
 			            <div className="phone-number align-self-center">
-			              Call Us <br />
+			            Điện thoại <br />
 			              <span>860 -272 -9738</span>
 			            </div>
 			          </div>

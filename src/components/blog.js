@@ -7,7 +7,7 @@ import Footer from './global-components/footer';
 const SingUpPage = () => {
     return <div>
         <Navbar />
-        <PageHeader headertitle="Blog"  />
+        <PageHeader headertitle="Trường Đại Học"  />
         <Blog />
         <Footer />
     </div>

@@ -22,14 +22,21 @@ class InstructorDetails extends Component {
 			            <h3>Tên Trường Đại Học</h3>
 			            <span className="designation">National University</span>
 			            <span className="designation">Bang: California, Hoa Kỳ</span>
-			            <p className="mt-4">Mô tả về trường đại học. Mô tả này có thể được hiển thị bằng cách sử dụng thẻ .</p>
+			            <p className="mt-4">Chương trình đào tạo của trường Đại học FPT được thiết kế dựa trên sự tham vấn của chuyên gia, 
+						chú trọng thực hành, phù hợp với nhu cầu mà nhà tuyển dụng tìm kiếm ở nguồn nhân lực thế hệ mới.
+
+</p>
 			          </div>
 			        </div>
 			      </div>
 			      <div className="details-inner mt-4 pt-xl-3">
-			        <span>Mô tả về trường đại học tiếp tục ở đây.</span>
-			        <p className="mt-3">Thông tin chi tiết về trường đại học và các chương trình chính có thể được mô tả ở đây. Đây có thể là một đoạn văn miêu tả chi tiết về mục tiêu, phương pháp giảng dạy, cơ sở vật chất, vị trí, và nhiều hơn nữa.</p>
-			      </div>
+			
+					<div className="widget widget_catagory">
+		            <h4 className="widget-title">Location</h4>                                 
+		            <div className="widget-g-map">
+					<iframe  src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15678.743238387186!2d106.7547486!3d10.8532152!3m2!1i1024!2i768!4f13.1!4m3!3e0!4m0!4m0!5e0!3m2!1svi!2s!4v1646447852855!5m2!1svi!2s"/>
+		            </div>
+		          </div> 			      </div>
 			    </div>
 			    <div className="course-area pd-top-90">
 			      <h4 className="mb-4">Các Chuyên Ngành Chính</h4>

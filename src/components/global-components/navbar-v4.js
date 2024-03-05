@@ -48,7 +48,7 @@ class NavbarV4 extends Component {
               </button>
             </div>
             <div className="logo">
-              <Link to="/"><img src={publicUrl+"assets/img/logo.png"} alt="img" /></Link>
+              <Link to="/"><img src={publicUrl+""} alt="img" /></Link>
             </div>
             <div className="nav-right-part nav-right-part-mobile">
               <Link className="signin-btn" to="/sign-in">Sign In</Link>
@@ -59,21 +59,17 @@ class NavbarV4 extends Component {
               <ul className="navbar-nav menu-open">
                 <li className="menu-item-has-children current-menu-item">
                   <Link to="/">Home</Link>
-                  <ul className="sub-menu">
-                    <li><Link to="/">Home 01</Link></li>
-                    <li><Link to="/home-v2">Home 02</Link></li>
-                    <li><Link to="/home-v3">Home 03</Link></li>
-                  </ul>
+               
                 </li>
                 <li className="menu-item-has-children">
-                  <Link to="/course">Course</Link>
-                  <ul className="sub-menu">
-                    <li><Link to="/course">Course</Link></li>
-                    <li><Link to="/course-details">Course Single</Link></li>
-                  </ul>
-                </li>
+                      <Link to="/course">Khóa học</Link>
+                      <ul className="sub-menu">
+                        <li><Link to="/course">Các nhóm khóa học chính</Link></li>
+                        <li><Link to="/course-details">Khoá học lẻ</Link></li>
+                      </ul>
+                    </li>
                 <li className="menu-item-has-children">
-                  <a href="#">Pages</a>
+                  <a href="#">Danh mục khác</a>
                   <ul className="sub-menu">
                     <li><Link to="/about">About Us</Link></li>
                     <li><Link to="/event">Event</Link></li>
@@ -87,18 +83,14 @@ class NavbarV4 extends Component {
                   </ul>
                 </li>
                 <li className="menu-item-has-children">
-                  <Link to="/blog">Blog</Link>
-                  <ul className="sub-menu">
-                    <li><Link to="/blog">Blog</Link></li>
-                    <li><Link to="/blog-details">Blog Details</Link></li>
-                  </ul>
+                  <Link to="/university">Trường học</Link>
                 </li>
-                <li><Link to="/contact">Contact Us</Link></li>
+                <li><Link to="/contact">Liên hệ</Link></li>
               </ul>
             </div>
             <div className="nav-right-part nav-right-part-desktop">
-              <Link className="signin-btn" to="/sign-in">Sign In</Link>
-              <Link className="btn btn-base" to="/sign-up">Sign Up</Link>
+              <Link className="signin-btn" to="/sign-in">Đăng nhập</Link>
+              <Link className="btn btn-base" to="/sign-up">Đăng ký</Link>
               <a className="search-bar" href="#"><i className="fa fa-search" /></a>
             </div>
           </div>

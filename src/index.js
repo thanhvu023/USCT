@@ -26,7 +26,7 @@ import UniversityDetails from './components/university-components/university-det
 class Root extends Component {
     render() {
         return(
-                <HashRouter basename="/">
+                <HashRouter basename="/haha">
 	                <div>
 	                <Switch>
                         <Route exact path="/" component={HomeV1} />
@@ -44,7 +44,7 @@ class Root extends Component {
                         <Route path="/sign-in" component={SignIn} />
                         <Route path="/sign-up" component={SignUp} />
                         <Route path="/contact" component={Contact} />
-                        <Route path="/blog" component={Blog} />
+                        <Route path="/university" component={Blog} />
                         <Route path="/blog-details" component={BlogDetails} />
                         <Route path="/university-details" component={UniversityDetails} />
 

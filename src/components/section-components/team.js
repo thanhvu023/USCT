@@ -22,7 +22,7 @@ class Team extends Component {
 				      <div className="item">
 				        <div className="single-team-inner">
 				          <div className="thumb">
-				            <img src={publicUrl+"assets/img/team/1.png"} alt="img" />
+				            <img src={publicUrl+"assets/img/team/9.jpg"} alt="img" />
 				          </div>
 				          <div className="details"> 
 				            <h4><Link to="/instructor-details">Nguyễn Văn A</Link></h4>
@@ -33,7 +33,7 @@ class Team extends Component {
 				      <div className="item">
 				        <div className="single-team-inner">
 				          <div className="thumb">
-				            <img src={publicUrl+"assets/img/team/2.png"} alt="img" />
+				            <img src={publicUrl+"assets/img/team/10.jpg"} alt="img" />
 				          </div>
 				          <div className="details"> 
 				            <h4><Link to="/instructor-details">Trần Thị B</Link></h4>
@@ -44,7 +44,7 @@ class Team extends Component {
 				      <div className="item">
 				        <div className="single-team-inner">
 				          <div className="thumb">
-				            <img src={publicUrl+"assets/img/team/3.png"} alt="img" />
+				            <img src={publicUrl+"assets/img/team/10.jpg"} alt="img" />
 				          </div>
 				          <div className="details"> 
 				            <h4><Link to="/instructor-details">Lê C</Link></h4>
@@ -55,7 +55,7 @@ class Team extends Component {
 				      <div className="item">
 				        <div className="single-team-inner">
 				          <div className="thumb">
-				            <img src={publicUrl+"assets/img/team/4.png"} alt="img" />
+				            <img src={publicUrl+"assets/img/team/9.jpg"} alt="img" />
 				          </div>
 				          <div className="details"> 
 				            <h4><Link to="/instructor-details">Phạm D</Link></h4>
