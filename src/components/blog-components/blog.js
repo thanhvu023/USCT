@@ -37,9 +37,9 @@ function Blog() {
                     <li><i className="fa fa-university" /> Research University</li>
                     <li><i className="fa fa-map-marker" /> California, Hoa Kỳ</li>
                   </ul>
-                  <h3 className="title"><Link to="/university-details">Chương trình Kinh doanh Quốc tế tại Stanford</Link></h3>
+                  <h3 className="title"><Link to="/instructor-details">Chương trình Kinh doanh Quốc tế tại Stanford</Link></h3>
                   <p>Trường Đại Học Stanford không chỉ nổi tiếng với chất lượng giảng dạy xuất sắc mà còn là nơi khởi nguồn của nhiều startup thành công.</p>
-                  <Link className="read-more-text" to="/university-details">XEM THÊM <i className="fa fa-angle-right" /></Link>
+                  <Link className="read-more-text" to="/instructor-details">XEM THÊM <i className="fa fa-angle-right" /></Link>
                 </div>
               </div>
 			  <div className="single-blog-inner style-border">
@@ -51,12 +51,11 @@ function Blog() {
                     <li><i className="fa fa-university" /> Regional College</li>
                     <li><i className="fa fa-map-marker" /> Princeton, New Jersey, USA</li>
                   </ul>
-                  <h3 className="title"><Link to="/university-details">Trường đại học Princeton</Link></h3>
+                  <h3 className="title"><Link to="/instructor-details">Trường đại học Princeton</Link></h3>
                   <p>Đại học Princeton là một cộng đồng học thuật và học tập sôi động phục vụ đất nước và nhân loại.</p>
-                  <Link className="read-more-text" to="/university-details">READ MORE <i className="fa fa-angle-right" /></Link>
+                  <Link className="read-more-text" to="/instructor-details">READ MORE <i className="fa fa-angle-right" /></Link>
                 </div>
               </div>
-				{/* Phần phân trang nếu cần */}
 				<nav className="td-page-navigation">
 				  <ul className="pagination">
 					<li className="pagination-arrow"><Link to="#"><i className="fa fa-angle-double-left" /></Link></li>

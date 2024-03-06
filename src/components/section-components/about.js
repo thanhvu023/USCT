@@ -11,7 +11,7 @@ class About extends Component {
                     <div className="about-area-inner">
                       <div className="row">
                         <div className="col-lg-6">
-                          <div className="about-thumb-wrap left-icon" style={{backgroundImage: 'url("'+publicUrl+'assets/img/banner/2.png")'}}>
+                          <div className="about-thumb-wrap left-icon" style={{backgroundImage: 'url("'+publicUrl+'assets/img/team/12.jpg")'}}>
                             <div className="about-icon"><img src={publicUrl+"assets/img/icon/4.png"} alt="img" /></div>
                             <div className="bottom-content">
                               Khai phá tiềm năng và kết nối bạn với trường học tại Mỹ thông qua hệ thống quản lý thông tin chính xác và cập nhật.

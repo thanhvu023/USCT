@@ -49,7 +49,7 @@ class Navbar extends Component {
                   </button>
                 </div>
                 <div className="logo">
-                  <Link to="/"><img src={publicUrl+"assets/img/logo.png"} alt="img" /></Link>
+                  <Link to="/"><img src={publicUrl+""} alt="img" /></Link>
                 </div>
                 <div className="nav-right-part nav-right-part-mobile">
                   <a className="signin-btn" href="signin.html">Sign In</a>

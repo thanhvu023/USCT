@@ -39,9 +39,9 @@ class Footer_v1 extends Component {
 						</form>
 					</div>
 				</div>
-				<div className="footer-top">
-  <div className="container">
-    <div className="row">
+        <div class="footer-top ">
+  <div className="container ">
+    <div className="row flex  justify-content-between">
       <div className="col-lg-3 col-md-6">
         <div className="widget widget_contact">
           <h4 className="widget-title">Liên Hệ</h4>
@@ -64,7 +64,7 @@ class Footer_v1 extends Component {
           </ul>
         </div>
       </div>
-      <div className="col-lg-3 col-md-6 go-top">
+      {/* <div className="col-lg-3 col-md-6 go-top">
         <div className="widget widget_blog_list">
           <h4 className="widget-title">Tin Tức & Blog</h4>
           <ul>
@@ -78,7 +78,7 @@ class Footer_v1 extends Component {
             </li>
           </ul>
         </div>
-      </div>
+      </div> */}
       <div className="col-lg-3 col-md-6">
         <div className="widget widget_contact">
           <h4 className="widget-title">Kết Nối</h4>
@@ -104,7 +104,7 @@ class Footer_v1 extends Component {
 					<div className="container">
 						<div className="row">
 							<div className="col-lg-4 col-md-6 align-self-center">
-								<a href="index.html"><img src={publicUrl + "assets/img/footer-logo.png"} alt="img" /></a>
+								<a href="index.html"><img src={publicUrl + ""} alt="img" /></a>
 							</div>
 							<div className="col-lg-4  col-md-6 order-lg-12 text-md-right align-self-center">
 								<ul className="social-media mt-md-0 mt-3">
