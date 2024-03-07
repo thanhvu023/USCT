@@ -7,7 +7,7 @@ import Footer from './global-components/footer';
 const SingUpPage = () => {
     return <div>
         <Navbar />
-        <PageHeader headertitle="Sign Up"  />
+        <PageHeader headertitle="Đăng ký"  />
         <SignUp />
         <Footer />
     </div>

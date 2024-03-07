@@ -16,7 +16,7 @@ class Signin extends Component {
 			          <div className="row">
 			            <div className="col-12">
 			              <div className="single-input-inner style-bg-border">
-			                <input type="text" placeholder="Name" />
+			                <input type="text" placeholder="Họ và tên" />
 			              </div>
 			            </div>
 			            <div className="col-12">
@@ -26,15 +26,15 @@ class Signin extends Component {
 			            </div>
 			            <div className="col-12">
 			              <div className="single-input-inner style-bg-border">
-			                <input type="text" placeholder="Password" />
+			                <input type="text" placeholder="Mật khẩu" />
 			              </div>
 			            </div>
 			            <div className="col-12 mb-4">
 			              <button className="btn btn-base w-100">Sign In</button>
 			            </div>
 			            <div className="col-12">
-			              <a href="#">Forgotten Your Password</a>
-			              <a  className="ml-2" href="signup.html"><strong>Signup</strong></a>
+			              <a href="#">Quên mật khâủ</a>
+			              <a  className="ml-2" href="signup.html"><strong>Đăng ký</strong></a>
 			            </div>
 			          </div>
 			        </form>

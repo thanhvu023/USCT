@@ -18,10 +18,10 @@ const Course = ({ course }) => (
 		  <div className="emt-course-meta">
 			<div className="row">
 			  <div className="col-6">
-				<div className="rating">
+				{/* <div className="rating">
 				  <i className="fa fa-star" /> {course.rating}
 				  <span>({course.reviewCount})</span>
-				</div>
+				</div> */}
 			  </div>
 			  <div className="col-6">
 				<div className="price text-right">
@@ -42,9 +42,9 @@ class CourseFilter extends Component {
 		  {
 			id: 1,
 			category: 'Graphics & Design',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/1.png`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/1.png`,
-			authorName: 'Nancy Reyes',
+			authorName: 'Đại học A',
 			title: 'Fox nymphs grab quick-jived waltz. Brick quiz whangs',
 			rating: '4.3',
 			reviewCount: 23,
@@ -53,9 +53,9 @@ class CourseFilter extends Component {
 		  {
 			id: 2,
 			category: 'Graphics & Design',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/2.png`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/2.png`,
-			authorName: 'John Doe',
+			authorName: 'Đại học A',
 			title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
 			rating: '4.5',
 			reviewCount: 17,
@@ -64,9 +64,9 @@ class CourseFilter extends Component {
 		  {
 			id: 3,
 			category: 'Graphics & Design',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/3.png`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/3.png`,
-			authorName: 'Jane Smith',
+			authorName: 'Đại học A',
 			title: 'Etiam vehicula sapien ac turpis hendrerit, a malesuada justo eleifend',
 			rating: '4.0',
 			reviewCount: 30,
@@ -75,9 +75,9 @@ class CourseFilter extends Component {
 		  {
 			id: 4,
 			category: 'Graphics & Design',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/4.png`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/4.png`,
-			authorName: 'Michael Johnson',
+			authorName: 'Đại học A',
 			title: 'Vestibulum vel nisi in elit accumsan eleifend nec vitae est',
 			rating: '4.8',
 			reviewCount: 42,
@@ -86,9 +86,9 @@ class CourseFilter extends Component {
 		  {
 			id: 5,
 			category: 'Graphics & Design',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/5.png`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/5.png`,
-			authorName: 'Emily Wilson',
+			authorName: 'Đại học A',
 			title: 'Aliquam sollicitudin eros nec semper blandit',
 			rating: '4.2',
 			reviewCount: 28,
@@ -97,9 +97,9 @@ class CourseFilter extends Component {
 		  {
 			id: 6,
 			category: 'Graphics & Design',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/6.png`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
-			authorName: 'David Brown',
+			authorName: 'Đại học A',
 			title: 'Praesent vel augue a elit interdum laoreet',
 			rating: '4.6',
 			reviewCount: 36,
@@ -108,9 +108,9 @@ class CourseFilter extends Component {
 		  {
 			id: 7,
 			category: 'Digital Marketing',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/7.png`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/7.png`,
-			authorName: 'Sarah Martinez',
+			authorName: 'Đại học A',
 			title: 'Duis id velit aliquam, laoreet magna ac, vehicula orci',
 			rating: '4.1',
 			reviewCount: 20,
@@ -119,9 +119,9 @@ class CourseFilter extends Component {
 		  {
 			id: 8,
 			category: 'Digital Marketing',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/8.png`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/7.png`,
-			authorName: 'Christopher Lee',
+			authorName: 'Đại học A',
 			title: 'Curabitur sed neque nec eros dignissim gravida',
 			rating: '4.7',
 			reviewCount: 39,
@@ -130,9 +130,9 @@ class CourseFilter extends Component {
 		  {
 			id: 9,
 			category: 'Digital Marketing',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/9.png`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/7.png`,
-			authorName: 'Jessica Taylor',
+			authorName: 'Đại học A',
 			title: 'Nam eget metus sit amet sem faucibus facilisis id at mi',
 			rating: '4.4',
 			reviewCount: 25,
@@ -141,9 +141,9 @@ class CourseFilter extends Component {
 		  {
 			id: 10,
 			category: 'Digital Marketing',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/9.png`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
-			authorName: 'Kevin White',
+			authorName: 'Đại học A',
 			title: 'Integer sit amet nisi vitae orci volutpat commodo',
 			rating: '4.9',
 			reviewCount: 48,
@@ -152,9 +152,9 @@ class CourseFilter extends Component {
 		  {
 			id: 11,
 			category: 'Digital Marketing',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/9.png`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
-			authorName: 'Amanda Harris',
+			authorName: 'Đại học A',
 			title: 'Vivamus rutrum quam non turpis ullamcorper, vitae aliquet arcu tincidunt',
 			rating: '4.3',
 			reviewCount: 29,
@@ -163,9 +163,9 @@ class CourseFilter extends Component {
 		  {
 			id: 12,
 			category: 'Digital Marketing',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/9.png`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
-			authorName: 'Matthew Rodriguez',
+			authorName: 'Đại học A',
 			title: 'Proin sagittis ligula vel ante tincidunt, in finibus ligula interdum',
 			rating: '4.6',
 			reviewCount: 35,
@@ -174,9 +174,9 @@ class CourseFilter extends Component {
 		  {
 			id: 13,
 			category: 'Writing & Translation',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/9.png`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
-			authorName: 'Stephanie Clark',
+			authorName: 'Đại học A',
 			title: 'Sed fermentum dui at congue fermentum',
 			rating: '4.2',
 			reviewCount: 27,
@@ -185,9 +185,9 @@ class CourseFilter extends Component {
 		  {
 			id: 14,
 			category: 'Writing & Translation',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/9.png`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
-			authorName: 'Ryan Moore',
+			authorName: 'Đại học A',
 			title: 'Fusce a elit non diam condimentum aliquam',
 			rating: '4.7',
 			reviewCount: 40,
@@ -196,9 +196,9 @@ class CourseFilter extends Component {
 		  {
 			id: 15,
 			category: 'Writing & Translation',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/9.png`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
-			authorName: 'Laura King',
+			authorName: 'Đại học A',
 			title: 'Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas',
 			rating: '4.5',
 			reviewCount: 31,
@@ -207,9 +207,9 @@ class CourseFilter extends Component {
 		  {
 			id: 16,
 			category: 'Writing & Translation',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/9.png`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
-			authorName: 'Justin Turner',
+			authorName: 'Đại học A',
 			title: 'Quisque sed tortor at tellus ullamcorper dapibus',
 			rating: '4.4',
 			reviewCount: 26,
@@ -218,9 +218,9 @@ class CourseFilter extends Component {
 		  {
 			id: 17,
 			category: 'Writing & Translation',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/9.png`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
-			authorName: 'Maria Garcia',
+			authorName: 'Đại học A',
 			title: 'Morbi vel urna nec ligula gravida auctor',
 			rating: '4.8',
 			reviewCount: 44,
@@ -229,9 +229,9 @@ class CourseFilter extends Component {
 		  {
 			id: 18,
 			category: 'Writing & Translation',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/9.png`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
-			authorName: 'Daniel Anderson',
+			authorName: 'Đại học A',
 			title: 'Vestibulum eu risus at ipsum lacinia vehicula',
 			rating: '4.3',
 			reviewCount: 24,
@@ -240,9 +240,9 @@ class CourseFilter extends Component {
 		  {
 			id: 19,
 			category: 'Music & Audio',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/9.png`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
-			authorName: 'Karen Lopez',
+			authorName: 'Đại học A',
 			title: 'Curabitur ornare nisl id justo tincidunt, ut tincidunt odio laoreet',
 			rating: '4.6',
 			reviewCount: 37,
@@ -251,9 +251,9 @@ class CourseFilter extends Component {
 		  {
 			id: 20,
 			category: 'Music & Audio',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/9.png`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
-			authorName: 'Jason Taylor',
+			authorName: 'Đại học A',
 			title: 'Phasellus ullamcorper magna nec sagittis dapibus',
 			rating: '4.5',
 			reviewCount: 32,
@@ -262,9 +262,9 @@ class CourseFilter extends Component {
 		  {
 			id: 21,
 			category: 'Music & Audio',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/9.png`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
-			authorName: 'Jason Taylor',
+			authorName: 'Đại học A',
 			title: 'Phasellus ullamcorper magna nec sagittis dapibus',
 			rating: '4.5',
 			reviewCount: 32,
@@ -273,9 +273,9 @@ class CourseFilter extends Component {
 		  {
 			id: 22,
 			category: 'Music & Audio',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/9.png`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
-			authorName: 'Jason Taylor',
+			authorName: 'Đại học A',
 			title: 'Phasellus ullamcorper magna nec sagittis dapibus',
 			rating: '4.5',
 			reviewCount: 32,
@@ -284,9 +284,9 @@ class CourseFilter extends Component {
 		  {
 			id: 23,
 			category: 'Music & Audio',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/9.png`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
-			authorName: 'Jason Taylor',
+			authorName: 'Đại học A',
 			title: 'Phasellus ullamcorper magna nec sagittis dapibus',
 			rating: '4.5',
 			reviewCount: 32,
@@ -295,9 +295,9 @@ class CourseFilter extends Component {
 		  {
 			id: 24,
 			category: 'Music & Audio',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/9.png`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
-			authorName: 'Jason Taylor',
+			authorName: 'Đại học A',
 			title: 'Phasellus ullamcorper magna nec sagittis dapibus',
 			rating: '4.5',
 			reviewCount: 32,

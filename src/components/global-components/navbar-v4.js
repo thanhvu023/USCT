@@ -104,7 +104,7 @@ class NavbarV4 extends Component {
                   </ul>
                 </li>
                 <li className="menu-item-has-children">
-                  <a href="#">Pages</a>
+                  <a href="#">Danh mục khác</a>
                   <ul className="sub-menu">
                     <li>
                       <Link to="/about">About Us</Link>
@@ -128,19 +128,9 @@ class NavbarV4 extends Component {
                   </ul>
                 </li>
                 <li className="menu-item-has-children">
-                  <Link to="/blog">Blog</Link>
-                  <ul className="sub-menu">
-                    <li>
-                      <Link to="/blog">Blog</Link>
-                    </li>
-                    <li>
-                      <Link to="/blog-details">Blog Details</Link>
-                    </li>
-                  </ul>
+                  <Link to="/university">Trường học</Link>
                 </li>
-                <li>
-                  <Link to="/contact">Contact Us</Link>
-                </li>
+                <li><Link to="/contact">Liên hệ</Link></li>
               </ul>
             </div>
             <div className="nav-right-part nav-right-part-desktop">

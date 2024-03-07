@@ -28,7 +28,7 @@ const Home_V2 = () => {
         <Team />
         <Faq />
         <Client />
-        <LatestPost />
+    
         <Footer />
     </div>
 }

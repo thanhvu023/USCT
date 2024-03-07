@@ -24,7 +24,7 @@ const Home_V2 = () => {
         <Client />
         <Event />
         <Testimonial />
-        <LatestPost />
+  
         <Footer />
     </div>
 }

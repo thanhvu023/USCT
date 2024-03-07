@@ -16,12 +16,12 @@ class SignUP extends Component {
 			          <div className="row">
 			            <div className="col-12">
 			              <div className="single-input-inner style-bg-border">
-			                <input type="text" placeholder="First Name" />
+			                <input type="text" placeholder="Họ và tên" />
 			              </div>
 			            </div>
 			            <div className="col-12">
 			              <div className="single-input-inner style-bg-border">
-			                <input type="text" placeholder="Last Name" />
+			                <input type="text" placeholder="Số CCCD" />
 			              </div>
 			            </div>
 			            <div className="col-12">
@@ -31,20 +31,20 @@ class SignUP extends Component {
 			            </div>
 			            <div className="col-12">
 			              <div className="single-input-inner style-bg-border">
-			                <input type="text" placeholder="Password" />
+			                <input type="text" placeholder="Mật khẩu" />
 			              </div>
 			            </div>
 			            <div className="col-12">
 			              <div className="single-input-inner style-bg-border">
-			                <input type="text" placeholder="Confirm Password" />
+			                <input type="text" placeholder="Xác nhận mật khẩu" />
 			              </div>
 			            </div>
 			            <div className="col-12 mb-4">
-			              <button className="btn btn-base w-100">Create Account</button>
+			              <button className="btn btn-base w-100">Tạo tài khoản</button>
 			            </div>
 			            <div className="col-12">
-			              <span>By creating an account</span>
-			              <a className="ml-2" href="signin.html"><strong>Signin</strong></a>
+			              <span>Đã có tài khoản trước đó?</span>
+			              <a className="ml-2" href="signin.html"><strong>Đăng nhập</strong></a>
 			            </div>
 			          </div>
 			        </form>
