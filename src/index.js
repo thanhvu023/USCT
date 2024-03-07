@@ -1,27 +1,28 @@
-import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, HashRouter, Route, Switch } from "react-router-dom";
-import HomeV1 from './components/home-v1';
-import HomeV2 from './components/home-v2';
-import HomeV3 from './components/home-v3';
-import Course from './components/course';
-import CourseDetails from './components/course-details';
-import About from './components/about';
-import Event from './components/event';
-import EventDetails from './components/event-details';
-import Instructor from './components/instructor';
-import InstructorDetails from './components/instructor-details';
-import Pricing from './components/pricing';
-import Gallery from './components/gallery';
-import SignIn from './components/sign-in';
-import SignUp from './components/sign-up';
-import Contact from './components/contact';
-import Blog from './components/blog';
-import BlogDetails from './components/blog-details';
-import UniversityDetails from './components/university-components/university-details';
-
-
-
+import React, { Component } from "react";
+import ReactDOM from "react-dom";
+import {
+  BrowserRouter as Router,
+  HashRouter,
+  Route,
+  Switch,
+} from "react-router-dom";
+import HomeV1 from "./components/home-v1";
+import HomeV2 from "./components/home-v2";
+import HomeV3 from "./components/home-v3";
+import Course from "./components/course";
+import CourseDetails from "./components/course-details";
+import About from "./components/about";
+import Event from "./components/event";
+import EventDetails from "./components/event-details";
+import Instructor from "./components/instructor";
+import InstructorDetails from "./components/instructor-details";
+import Pricing from "./components/pricing";
+import Gallery from "./components/gallery";
+import SignIn from "./components/sign-in";
+import SignUp from "./components/sign-up";
+import Contact from "./components/contact";
+import Blog from "./components/blog";
+import BlogDetails from "./components/blog-details";
 
 class Root extends Component {
     render() {
@@ -46,7 +47,7 @@ class Root extends Component {
                         <Route path="/contact" component={Contact} />
                         <Route path="/university" component={Blog} />
                         <Route path="/blog-details" component={BlogDetails} />
-                        <Route path="/university-details" component={UniversityDetails} />
+                        <Route path="/university-details" />
 
 	                </Switch>
 	                </div>
@@ -57,4 +58,4 @@ class Root extends Component {
 
 export default Root;
 
-ReactDOM.render(<Root />, document.getElementById('edumint'));
+ReactDOM.render(<Root />, document.getElementById("edumint"));
