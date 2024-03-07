@@ -47,7 +47,7 @@ class NavbarV3 extends Component {
                         <li><Link to="/course-details">Khoá học lẻ</Link></li>
                       </ul>
                     </li>
-			          <li className="menu-item-has-children">
+			          {/* <li className="menu-item-has-children">
 					  <a href="#">Danh mục khác</a>
 			            <ul className="sub-menu">
 				            <li><Link to="/about">About Us</Link></li>
@@ -60,7 +60,7 @@ class NavbarV3 extends Component {
 	                        <li><Link to="/sign-in">Sign In</Link></li>
 	                        <li><Link to="/sign-up">Sign Up</Link></li>
 			            </ul>
-			          </li>
+			          </li> */}
 			          <li className="menu-item-has-children">
 					  <Link to="/university">Trường học</Link>
 			            <ul className="sub-menu">

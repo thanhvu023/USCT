@@ -60,11 +60,11 @@ class Navbar extends Component {
                   <ul className="navbar-nav menu-open">
                     <li className="menu-item-has-children current-menu-item">
                       <Link to="/">Trang chủ</Link>
-                      {/* <ul className="sub-menu">
+                      <ul className="sub-menu">
                         <li><Link to="/">Home 01</Link></li>
                         <li><Link to="/home-v2">Home 02</Link></li>
                         <li><Link to="/home-v3">Home 03</Link></li>
-                      </ul> */}
+                      </ul>
                     </li>
                     <li className="menu-item-has-children">
                       <Link to="/course">Khóa học</Link>
@@ -80,7 +80,7 @@ class Navbar extends Component {
                         <li><Link to="/blog-details">Blog Details</Link></li>
                       </ul> */}
                     </li>
-                    <li className="menu-item-has-children">
+                    {/* <li className="menu-item-has-children">
                       <a href="#">Danh mục khác</a>
                       <ul className="sub-menu">
                         <li><Link to="/about">About Us</Link></li>
@@ -93,7 +93,7 @@ class Navbar extends Component {
                         <li><Link to="/sign-in">Sign In</Link></li>
                         <li><Link to="/sign-up">Sign Up</Link></li>
                       </ul>
-                    </li>
+                    </li> */}
                     <li><Link to="/contact">Liên hệ</Link></li>
                   </ul>
                 </div>

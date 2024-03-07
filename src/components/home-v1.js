@@ -11,11 +11,13 @@ import Team from './section-components/team';
 import LatestPost from './blog-components/latest-news';
 import Contact from './section-components/contact';
 import Footer from './global-components/footer';
+import SliderComponent from './section-components/Slider';
 
 const Home_V1 = () => {
     return <div>
         <Navbar />
         <Banner />
+        <SliderComponent/>
         <Intro />
         <About />
         <CourseFilter />
