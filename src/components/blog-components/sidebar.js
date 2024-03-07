@@ -7,7 +7,7 @@ class Sidebar extends Component {
   state = {
     minPrice: 100000,
     maxPrice: 2000000,
-    currentValue: 100000 // Giá trị khởi tạo ban đầu
+    currentValue: 100000 
   }
 
   handleSliderChange = (event) => {
@@ -36,10 +36,10 @@ class Sidebar extends Component {
               <div className="widget widget_catagory">
             <h4 className="widget-title">Loại Trường</h4>                                 
             <ul className="catagory-items go-top">
-              <li><Link to="/university-type">Research University <i className="fa fa-caret-right" /></Link></li>
-              <li><Link to="/university-type">Liberal Arts College <i className="fa fa-caret-right" /></Link></li>
-              <li><Link to="/university-type">National University <i className="fa fa-caret-right" /></Link></li>
-              <li><Link to="/university-type">Regional College <i className="fa fa-caret-right" /></Link></li>
+              <li><Link to="/university-type">Đại học Liberal Arts <i className="fa fa-caret-right" /></Link></li>
+              <li><Link to="/university-type">Đại học  Quốc gia<i className="fa fa-caret-right" /></Link></li>
+              <li><Link to="/university-type">Đại học miền <i className="fa fa-caret-right" /></Link></li>
+              <li><Link to="/university-type">Cao đẳng cộng đồng<i className="fa fa-caret-right" /></Link></li>
             </ul>
           </div>                 
        
@@ -81,31 +81,40 @@ class Sidebar extends Component {
               {this.formatCurrency(this.state.currentValue)}$
             </div>
           </div>
-              <div className="widget widget_level">
-                <h4 className="widget-title">Level</h4> 
-                <label className="single-checkbox">
-                  <input type="checkbox" defaultChecked="checked" />
-                  <span className="checkmark" />
-                  Beginner
-                </label> 
-                <label className="single-checkbox">
-                  <input type="checkbox" defaultChecked="checked" />
-                  <span className="checkmark" />
-                  Intermediate
-                </label> 
-                <label className="single-checkbox">
-                  <input type="checkbox" defaultChecked="checked" />
-                  <span className="checkmark" />
-                  Advanced
-                </label>  
-              </div> 
+          <div className="widget widget_level">
+  <h4 className="widget-title">Trình độ</h4> 
+  <label className="single-checkbox">
+    <input type="checkbox" defaultChecked="checked" />
+    <span className="checkmark" />
+        IELTS 
+  </label> 
+  <input type="number" defaultValue="0" min="0" max="10" step="0.5" />
+  <label className="single-checkbox">
+    <input type="checkbox" defaultChecked="checked" />
+    <span className="checkmark" />
+    SAT 
+  </label> 
+  <input type="number" defaultValue="0" min="0" max="1600" step="10" />
+  <label className="single-checkbox">
+    <input type="checkbox" defaultChecked="checked" />
+    <span className="checkmark" />
+    CEFR 
+  </label>
+  <input type="number" defaultValue="0" min="0" max="C2" />  
+  <label className="single-checkbox">
+    <input type="checkbox" defaultChecked="checked" />
+    <span className="checkmark" />
+    TOEIC 
+  </label> 
+  <input type="number" defaultValue="0" min="0" max="990" step="10" /> 
+</div>
+
               <div className="widget widget_tags mb-0">
             <h4 className="widget-title">Tags</h4>
             <div className="tagcloud go-top">
               <Link to="/tag">Du học Mỹ</Link>
               <Link to="/tag">Visa</Link>
               <Link to="/tag">Học bổng</Link>
-              {/* Thêm các tags khác liên quan */}
             </div>
           </div>
             </div>

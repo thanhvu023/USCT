@@ -1,11 +1,24 @@
-import React, { Component } from 'react';
+import React from 'react';
 import  { useState, useEffect } from 'react';
+import axios from 'axios';
 
 import { Link } from 'react-router-dom';
 import Sidebar from './sidebar';
 function Blog() {
 	const [Uni, setUni]= useState([]);
-	
+	useEffect(() => {
+        //  API 
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(`https://us-study-capstone-project.azurewebsites.net/universities?universityId`);
+                setUni(response.data); 
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
 	  let publicUrl = process.env.PUBLIC_URL+'/';
   
 	  return (
@@ -13,8 +26,8 @@ function Blog() {
 		  <div className="container">
 			<div className="row">
 			  <div className="col-lg-8">
-				{/* Giả sử mỗi đoạn sau đây là một trường đại học cụ thể */}
-				<div className="single-blog-inner style-border">
+		
+				<div className="single-blog-inner styl9e-border">
 				  <div className="thumb">
 					<img src={publicUrl+"assets/img/blog/4.png"} alt="img" />
 				  </div>
