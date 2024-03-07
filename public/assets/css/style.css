@@ -4914,3 +4914,6 @@ ul {
 .footer-area-2 .footer-bottom .widget_nav_menu ul li a:hover {
   color: #1DC295;
 }
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
