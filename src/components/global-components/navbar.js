@@ -60,31 +60,31 @@ class Navbar extends Component {
                   <ul className="navbar-nav menu-open">
                     <li className="menu-item-has-children current-menu-item">
                       <Link to="/">Trang chủ</Link>
-                      <ul className="sub-menu">
+                      {/* <ul className="sub-menu">
                         <li><Link to="/">Home 01</Link></li>
                         <li><Link to="/home-v2">Home 02</Link></li>
                         <li><Link to="/home-v3">Home 03</Link></li>
-                      </ul>
+                      </ul> */}
                     </li>
                     <li className="menu-item-has-children">
-                      <Link to="/course">Khóa học</Link>
+                      <Link to="/course">Chương trình</Link>
                       <ul className="sub-menu">
-                        <li><Link to="/course">Course</Link></li>
-                        <li><Link to="/course-details">Course Single</Link></li>
+                        <li><Link to="/course">Chương trình du học</Link></li>
+                        <li><Link to="/course-details">Chương trình du học</Link></li>
                       </ul>
                     </li>
                     <li className="menu-item-has-children">
-                      <a href="#">Danh mục khác</a>
+                      <a href="#">Danh mục</a>
                       <ul className="sub-menu">
                         <li><Link to="/about">About Us</Link></li>
                         <li><Link to="/event">Event</Link></li>
                         <li><Link to="/event-details">Event Details</Link></li>
                         <li><Link to="/instructor">Instructor</Link></li>
                         <li><Link to="/instructor-details">Instructor Details</Link></li>
-                        <li><Link to="/pricing">Pricing</Link></li>
+                        {/* <li><Link to="/pricing">Pricing</Link></li>
                         <li><Link to="/gallery">Gallery</Link></li>
                         <li><Link to="/sign-in">Sign In</Link></li>
-                        <li><Link to="/sign-up">Sign Up</Link></li>
+                        <li><Link to="/sign-up">Sign Up</Link></li> */}
                       </ul>
                     </li>
                     <li className="menu-item-has-children">
