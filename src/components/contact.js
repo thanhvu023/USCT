@@ -7,7 +7,7 @@ import Footer from './global-components/footer';
 const Contact = () => {
     return <div>
         <Navbar />
-        <PageHeader headertitle="Contact"  />
+        <PageHeader headertitle="Mục Tư Vấn"  />
         <ContactPage />
         <Footer />
     </div>

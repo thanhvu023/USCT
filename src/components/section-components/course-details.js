@@ -4,6 +4,41 @@ import parse from "html-react-parser";
 
 function CourseDetails() {
   let publicUrl = process.env.PUBLIC_URL + "/";
+  const CourseCard = ({ publicUrl, imgSrc, authorImgSrc, authorName, courseTitle, rating, ratingCount, price }) => (
+    <div className="single-course-inner">
+      <div className="thumb">
+        <img src={publicUrl + imgSrc} alt="Course Thumbnail" />
+      </div>
+      <div className="details">
+        <div className="details-inner">
+          <div className="emt-user">
+            <span className="u-thumb">
+              <img src={publicUrl + authorImgSrc} alt="Author Thumbnail" />
+            </span>
+            <span className="align-self-center">{authorName}</span>
+          </div>
+          <h6>
+            <Link to="/course-details">{courseTitle}</Link>
+          </h6>
+        </div>
+        <div className="emt-course-meta">
+          <div className="row">
+            <div className="col-6">
+              <div className="rating">
+                <i className="fa fa-star" /> {rating}
+                <span>({ratingCount})</span>
+              </div>
+            </div>
+            <div className="col-6">
+              <div className="price text-right">
+                Price: <span>${price}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div className="course-single-area pd-top-120 pd-bottom-90">
@@ -42,11 +77,14 @@ function CourseDetails() {
                       role="tab"
                       aria-controls="tab1"
                       aria-selected="true"
+                      style={{height:"100%"}}
                     >
-                      Mô tả
+                      Mô tả chi tiết
                     </a>
                   </li>
-                  <li className="nav-item">
+                  <li className="nav-item"
+                  
+                  >
                     <a
                       className="nav-link"
                       id="tab2-tab"
@@ -55,6 +93,7 @@ function CourseDetails() {
                       role="tab"
                       aria-controls="tab2"
                       aria-selected="false"
+                      style={{height:"100%", display:"flex", justifyContent:'center', alignItems:'center'}}
                     >
                       Chương trình giảng dạy
                     </a>
@@ -68,6 +107,7 @@ function CourseDetails() {
                       role="tab"
                       aria-controls="tab3"
                       aria-selected="false"
+                      style={{height:"100%"}}
                     >
                       Câu hỏi thường gặp
                     </a>
@@ -81,6 +121,7 @@ function CourseDetails() {
                       role="tab"
                       aria-controls="tab4"
                       aria-selected="false"
+                      style={{height:"100%"}}
                     >
                       Đánh giá
                     </a>
@@ -288,129 +329,119 @@ function CourseDetails() {
                   role="tabpanel"
                   aria-labelledby="tab3-tab"
                 >
-                  <div className="course-details-content">
-                    <h4 className="title">Overview</h4>
-                    <p>
-                      The quick, brown fox jumps over a lazy dog. DJs flock by
-                      when MTV ax quiz prog. Junk MTV quiz graced by fox whelps.
-                      Bawds jog, flick quartz, vex nymphs. Waltz, bad nymph, for
-                      quick jigs vex! Fox nymphs grab
-                    </p>
-                    <div id="accordion-1" className="accordion-area mt-4">
-                      <div className="card single-faq-inner style-header-bg">
-                        <div className="card-header" id="ff-five">
-                          <h5 className="mb-0">
-                            <button
-                              className="btn-link"
-                              data-toggle="collapse"
-                              data-target="#f-five"
-                              aria-expanded="true"
-                              aria-controls="f-five"
-                            >
-                              01. What does you simply dummy in do ?
-                              <i className="fa fa-eye" />
-                            </button>
-                          </h5>
-                        </div>
-                        <div
-                          id="f-five"
-                          className="show collapse"
-                          aria-labelledby="ff-five"
-                          data-parent="#accordion"
-                        >
-                          <div className="card-body">
-                            What does you dummy text of free available in market
-                            printing has industry been industry's standard dummy
-                            text ever.
-                          </div>
-                        </div>
-                      </div>
-                      <div className="card single-faq-inner style-header-bg">
-                        <div className="card-header" id="ff-six">
-                          <h5 className="mb-0">
-                            <button
-                              className="btn-link collapsed"
-                              data-toggle="collapse"
-                              data-target="#f-six"
-                              aria-expanded="true"
-                              aria-controls="f-six"
-                            >
-                              02. What graphics dummy of free design ?
-                              <i className="fa fa-eye" />
-                            </button>
-                          </h5>
-                        </div>
-                        <div
-                          id="f-six"
-                          className="collapse"
-                          aria-labelledby="ff-six"
-                          data-parent="#accordion"
-                        >
-                          <div className="card-body">
-                            What graphics simply dummy text of free available in
-                            market printing industry has been industry's
-                            standard dummy text ever.
-                          </div>
-                        </div>
-                      </div>
-                      <div className="card single-faq-inner style-header-bg">
-                        <div className="card-header" id="ff-seven">
-                          <h5 className="mb-0">
-                            <button
-                              className="btn-link collapsed"
-                              data-toggle="collapse"
-                              data-target="#f-seven"
-                              aria-expanded="true"
-                              aria-controls="f-seven"
-                            >
-                              03. Why we are the best ?
-                              <i className="fa fa-eye" />
-                            </button>
-                          </h5>
-                        </div>
-                        <div
-                          id="f-seven"
-                          className="collapse"
-                          aria-labelledby="ff-seven"
-                          data-parent="#accordion"
-                        >
-                          <div className="card-body">
-                            Why we are dummy text of free available in market
-                            printing industry has been industry's standard dummy
-                            text ever.
-                          </div>
-                        </div>
-                      </div>
-                      <div className="card single-faq-inner style-header-bg">
-                        <div className="card-header" id="ff-eight">
-                          <h5 className="mb-0">
-                            <button
-                              className="btn-link collapsed"
-                              data-toggle="collapse"
-                              data-target="#f-eight"
-                              aria-expanded="true"
-                              aria-controls="f-eight"
-                            >
-                              04. What industries dummy covered ?
-                              <i className="fa fa-eye" />
-                            </button>
-                          </h5>
-                        </div>
-                        <div
-                          id="f-eight"
-                          className="collapse"
-                          aria-labelledby="ff-eight"
-                          data-parent="#accordion"
-                        >
-                          <div className="card-body">
-                            What industries text of free available in market
-                            printing industry has been industry's standard dummy
-                            text ever.
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                 <div className="course-details-content">
+    <h4 className="title">Tổng quan</h4>
+    <p>
+        Cái gì là văn bản giả dối đơn giản của bạn?
+    </p>
+    <div id="accordion-1" className="accordion-area mt-4">
+        <div className="card single-faq-inner style-header-bg">
+            <div className="card-header" id="ff-five">
+                <h5 className="mb-0">
+                    <button
+                        className="btn-link"
+                        data-toggle="collapse"
+                        data-target="#f-five"
+                        aria-expanded="true"
+                        aria-controls="f-five"
+                    >
+                        01. Điều gì làm bạn đơn giản là giả mạo?
+                        <i className="fa fa-eye" />
+                    </button>
+                </h5>
+            </div>
+            <div
+                id="f-five"
+                className="show collapse"
+                aria-labelledby="ff-five"
+                data-parent="#accordion"
+            >
+                <div className="card-body">
+                    Văn bản giả mạo của bạn có sẵn miễn phí trên thị trường in ấn đã là văn bản giả mạo tiêu chuẩn của ngành công nghiệp từng bao giờ.
+                </div>
+            </div>
+        </div>
+        <div className="card single-faq-inner style-header-bg">
+            <div className="card-header" id="ff-six">
+                <h5 className="mb-0">
+                    <button
+                        className="btn-link collapsed"
+                        data-toggle="collapse"
+                        data-target="#f-six"
+                        aria-expanded="true"
+                        aria-controls="f-six"
+                    >
+                        02. Đồ họa giả dối của thiết kế miễn phí là gì?
+                        <i className="fa fa-eye" />
+                    </button>
+                </h5>
+            </div>
+            <div
+                id="f-six"
+                className="collapse"
+                aria-labelledby="ff-six"
+                data-parent="#accordion"
+            >
+                <div className="card-body">
+                    Văn bản giả mạo về đồ họa đơn giản miễn phí có sẵn trên thị trường in ấn đã là văn bản giả mạo tiêu chuẩn của ngành công nghiệp từng bao giờ.
+                </div>
+            </div>
+        </div>
+        <div className="card single-faq-inner style-header-bg">
+            <div className="card-header" id="ff-seven">
+                <h5 className="mb-0">
+                    <button
+                        className="btn-link collapsed"
+                        data-toggle="collapse"
+                        data-target="#f-seven"
+                        aria-expanded="true"
+                        aria-controls="f-seven"
+                    >
+                        03. Tại sao chúng tôi là tốt nhất?
+                        <i className="fa fa-eye" />
+                    </button>
+                </h5>
+            </div>
+            <div
+                id="f-seven"
+                className="collapse"
+                aria-labelledby="ff-seven"
+                data-parent="#accordion"
+            >
+                <div className="card-body">
+                    Tại sao chúng tôi có văn bản giả mạo miễn phí có sẵn trên thị trường in ấn đã là văn bản giả mạo tiêu chuẩn của ngành công nghiệp từng bao giờ.
+                </div>
+            </div>
+        </div>
+        <div className="card single-faq-inner style-header-bg">
+            <div className="card-header" id="ff-eight">
+                <h5 className="mb-0">
+                    <button
+                        className="btn-link collapsed"
+                        data-toggle="collapse"
+                        data-target="#f-eight"
+                        aria-expanded="true"
+                        aria-controls="f-eight"
+                    >
+                        04. Các ngành công nghiệp giả dối được bao gồm?
+                        <i className="fa fa-eye" />
+                    </button>
+                </h5>
+            </div>
+            <div
+                id="f-eight"
+                className="collapse"
+                aria-labelledby="ff-eight"
+                data-parent="#accordion"
+            >
+                <div className="card-body">
+                    Các văn bản giả mạo của bạn có sẵn miễn phí trên thị trường in ấn đã là văn bản giả mạo tiêu chuẩn của ngành công nghiệp từng bao giờ.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
                 </div>
                 <div
                   className="tab-pane fade"
@@ -545,43 +576,48 @@ function CourseDetails() {
           </div>
           <div className="col-lg-4">
             <div className="td-sidebar">
-              <div className="widget widget_feature">
-                <h4 className="widget-title">Course Features</h4>
-                <ul>
-                  <li>
-                    <i className="fa fa-user" />
-                    <span>Enrolled :</span> 1200 students
-                  </li>
-                  <li>
-                    <i className="fa fa-clock-o" />
-                    <span>Duration :</span> 2 hours
-                  </li>
-                  <li>
-                    <i className="fa fa-clipboard" />
-                    <span>Lectures :</span> 8
-                  </li>
-                  <li>
-                    <i className="fa fa-clone" />
-                    <span>Categories:</span> Technology
-                  </li>
-                  <li>
-                    <i className="fa fa-tags" />
-                    <span>Tags:</span> Android, JavaScript
-                  </li>
-                  <li>
-                    <i className="fa fa-clipboard" />
-                    <span>Instructor:</span> Ethan Dean
-                  </li>
-                </ul>
-                <div className="price-wrap text-center">
-                  <h5>
-                    Price:<span>$54.00</span>
-                  </h5>
-                  <a className="btn btn-base btn-radius" to="/course-details">
-                    ENROLL COURSE
-                  </a>
-                </div>
-              </div>
+            <div className="widget widget_feature">
+    <h4 className="widget-title">Chi tiết Chương trình</h4>
+    <ul>
+        <li>
+            <i className="fa fa-university" />
+            <span>Trường Đại học:</span> Đại học XYZ
+        </li>
+        <li>
+            <i className="fa fa-map-marker" />
+            <span>Tiểu Bang:</span> Bang ABC
+        </li>
+        <li>
+            <i className="fa fa-laptop" />
+            <span>Chuyên ngành chính:</span> Công nghệ Thông tin
+        </li>
+        <li>
+            <i className="fa fa-clipboard" />
+            <span>Lộ trình học:</span> 8 buổi học
+        </li>
+        <li>
+            <i className="fa fa-language" />
+            <span>Trình độ Tiếng Anh:</span> Cần có trình độ Tiếng Anh cơ bản
+        </li>
+        <li>
+            <i className="fa fa-clock-o" />
+            <span>Thời gian bắt đầu:</span> DD/MM/YYYY
+        </li>
+        <li>
+            <i className="fa fa-clock-o" />
+            <span>Thời gian kết thúc:</span> DD/MM/YYYY
+        </li>
+    </ul>
+    <div className="price-wrap text-center">
+        <h5>
+            Giá:<span>$54.00</span>
+        </h5>
+        <a className="btn btn-base btn-radius" to="/course-details">
+            ĐĂNG KÝ KHÓA HỌC
+        </a>
+    </div>
+</div>
+
               <div className="widget widget_catagory">
                 <h4 className="widget-title">Trending Course</h4>
                 <div className="single-course-inner">
@@ -629,128 +665,197 @@ function CourseDetails() {
             </div>
           </div>
         </div>
-        <div className="row justify-content-center pd-top-100">
-          <div className="col-lg-4 col-md-6">
-            <div className="single-course-inner">
-              <div className="thumb">
-                <img src={publicUrl + "assets/img/course/1.png"} alt="img" />
-              </div>
-              <div className="details">
-                <div className="details-inner">
-                  <div className="emt-user">
-                    <span className="u-thumb">
-                      <img
-                        src={publicUrl + "assets/img/author/1.png"}
-                        alt="img"
-                      />
-                    </span>
-                    <span className="align-self-center">Nancy Reyes</span>
-                  </div>
-                  <h6>
-                    <Link to="/course-details">
-                      Fox nymphs grab quick-jived waltz. Brick quiz whangs
-                    </Link>
-                  </h6>
-                </div>
-                <div className="emt-course-meta">
-                  <div className="row">
-                    <div className="col-6">
-                      <div className="rating">
-                        <i className="fa fa-star" /> 4.3
-                        <span>(23)</span>
-                      </div>
-                    </div>
-                    <div className="col-6">
-                      <div className="price text-right">
-                        Price: <span>$54.00</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col-lg-4 col-md-6">
-            <div className="single-course-inner">
-              <div className="thumb">
-                <img src={publicUrl + "assets/img/course/2.png"} alt="img" />
-              </div>
-              <div className="details">
-                <div className="details-inner">
-                  <div className="emt-user">
-                    <span className="u-thumb">
-                      <img
-                        src={publicUrl + "assets/img/author/2.png"}
-                        alt="img"
-                      />
-                    </span>
-                    <span className="align-self-center">Joe Powell</span>
-                  </div>
-                  <h6>
-                    <Link to="/course-details">
-                      Aenean sed nibh a magna posuere tempo faucib
-                    </Link>
-                  </h6>
-                </div>
-                <div className="emt-course-meta">
-                  <div className="row">
-                    <div className="col-6">
-                      <div className="rating">
-                        <i className="fa fa-star" /> 4.3
-                        <span>(23)</span>
-                      </div>
-                    </div>
-                    <div className="col-6">
-                      <div className="price text-right">
-                        Price: <span>$54.00</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col-lg-4 col-md-6">
-            <div className="single-course-inner">
-              <div className="thumb">
-                <img src={publicUrl + "assets/img/course/3.png"} alt="img" />
-              </div>
-              <div className="details">
-                <div className="details-inner">
-                  <div className="emt-user">
-                    <span className="u-thumb">
-                      <img
-                        src={publicUrl + "assets/img/author/3.png"}
-                        alt="img"
-                      />
-                    </span>
-                    <span className="align-self-center">Timothy Willis</span>
-                  </div>
-                  <h6>
-                    <Link to="/course-details">
-                      Praesent eu dolor eu orci vehicula euismod
-                    </Link>
-                  </h6>
-                </div>
-                <div className="emt-course-meta">
-                  <div className="row">
-                    <div className="col-6">
-                      <div className="rating">
-                        <i className="fa fa-star" /> 4.9
-                        <span>(73)</span>
-                      </div>
-                    </div>
-                    <div className="col-lg-6">
-                      <div className="price text-right">
-                        Price: <span>$74.00</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+     
+       
+<div>
+<h4 className="widget-title ">Những Chương Trình Tương Tự</h4>
+<div className="row justify-content-center pd-top-100">
+        <div className="col-lg-4 col-md-6">
+    <div className="single-course-inner">
+       
+        <div class="thumb">
+            <img src={publicUrl + "assets/img/course/1.png"} alt="img" />
         </div>
+        <div class="details">
+            <div class="details-inner">
+                <h5>
+                    <Link to="/course-details">
+                        Fox nymphs grab quick-jived waltz. Brick quiz whangs
+                    </Link>
+                </h5>
+                <div class="specialization-icon ">
+                 
+                  <i class="fa fa-laptop "/>
+                  <span className="fw-bold">Chuyên ngành:</span> Công nghệ Thông tin     
+        </div>
+              
+            </div>
+            <div class="emt-course-meta">
+                <div class="price text-right">
+                    Price: <span>$54.00</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div className="col-lg-4 col-md-6">
+    <div className="single-course-inner">
+       
+        <div class="thumb">
+            <img src={publicUrl + "assets/img/course/1.png"} alt="img" />
+        </div>
+        <div class="details">
+            <div class="details-inner">
+                <h5>
+                    <Link to="/instructor-details">
+                        Fox nymphs grab quick-jived waltz. Brick quiz whangs
+                    </Link>
+                </h5>
+                <div class="specialization-icon ">
+                 
+                  <i class="fa fa-laptop "/>
+                  <span className="fw-bold">Chuyên ngành:</span> Công nghệ Thông tin     
+        </div>
+              
+            </div>
+            <div class="emt-course-meta">
+                <div class="price text-right">
+                    Price: <span>$54.00</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div className="col-lg-4 col-md-6">
+    <div className="single-course-inner">
+       
+        <div class="thumb">
+            <img src={publicUrl + "assets/img/course/1.png"} alt="img" />
+        </div>
+        <div class="details">
+            <div class="details-inner">
+                <h5>
+                    <Link to="/instructor-details">
+                        Fox nymphs grab quick-jived waltz. Brick quiz whangs
+                    </Link>
+                </h5>
+                <div class="specialization-icon ">
+                 
+                  <i class="fa fa-laptop "/>
+                  <span className="fw-bold">Chuyên ngành:</span> Công nghệ Thông tin     
+        </div>
+              
+            </div>
+            <div class="emt-course-meta">
+                <div class="price text-right">
+                    Price: <span>$54.00</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+        </div>
+</div>
+<div>
+    <h4 className="widget-title display-5">Những Trường Đại Học Có Mở Chương Trình Này</h4>
+    <div className="row justify-content-center pd-top-100">
+        <div className="col-lg-4 col-md-6">
+            <div className="single-course-inner">
+                <div class="thumb">
+                    <img src={publicUrl + "assets/img/course/1.png"} alt="img" />
+                </div>
+                <div class="details">
+                    <div class="details-inner">
+                        <h5 className="h6">
+                            <Link to="/instructor-details">
+                                Fox nymphs grab quick-jived waltz. Brick quiz whangs
+                            </Link>
+                        </h5>
+                        <div class="specialization-icon mb-2">
+                            <i class="fa fa-university mr-1"></i>
+                            <span className="fw-bold">Trường Đại Học Ohana</span> 
+                        </div>
+                        <div class="specialization-icon">
+                        <i className="fa fa-map-marker mr-2" />
+
+                            <span className="fw-bold">Tiểu Bang: Ohana</span> 
+                        </div>
+                        <div class="emt-course-meta">
+                            <div class="price text-right mt-3">
+                                <Link to="/instructor-details" class="btn btn-primary">Xem Thêm</Link>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div className="col-lg-4 col-md-6">
+            <div className="single-course-inner">
+                <div class="thumb">
+                    <img src={publicUrl + "assets/img/course/1.png"} alt="img" />
+                </div>
+                <div class="details">
+                    <div class="details-inner">
+                        <h5 className="h6">
+                            <Link to="/instructor-detailss">
+                                Fox nymphs grab quick-jived waltz. Brick quiz whangs
+                            </Link>
+                        </h5>
+                        <div class="specialization-icon mb-2">
+                        <i class="fa fa-university mr-1"></i>
+                            <span className="fw-bold">Trường Đại Học Ohana</span> 
+                        </div>
+                        <div class="specialization-icon">
+                        <i className="fa fa-map-marker mr-2" />
+
+                            <span className="fw-bold">Tiểu Bang: Ohana</span> 
+                        </div>
+                        <div class="emt-course-meta">
+                            <div class="price text-right mt-3">
+                                <Link to="/instructor-details" class="btn btn-primary">Xem Thêm</Link>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div className="col-lg-4 col-md-6">
+            <div className="single-course-inner">
+                <div class="thumb">
+                    <img src={publicUrl + "assets/img/course/1.png"} alt="img" />
+                </div>
+                <div class="details">
+                    <div class="details-inner">
+                        <h5 className="h6">
+                            <Link to="/instructor-details">
+                                Fox nymphs grab quick-jived waltz. Brick quiz whangs
+                            </Link>
+                        </h5>
+                        <div class="specialization-icon mb-2">
+                        <i class="fa fa-university mr-1"></i>
+                            <span className="fw-bold">Trường Đại Học Ohana</span> 
+                        </div>
+                        <div class="specialization-icon">
+                        <i className="fa fa-map-marker mr-2" />
+
+                            <span className="fw-bold">Tiểu Bang: Ohana</span> 
+                        </div>
+                        <div class="emt-course-meta">
+                            <div class="price text-right mt-3">
+                                <Link to="/instructor-details" class="btn btn-primary">Xem Thêm</Link>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+      
+
       </div>
     </div>
   );

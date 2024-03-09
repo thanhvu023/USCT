@@ -1,7 +1,69 @@
-import React from "react";
+import React, { useState} from "react";
 import { Link } from "react-router-dom";
+import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+
 import parse from "html-react-parser";
 function CoursePage() {
+
+  
+  const CategoryDropdown = ({ title, items }) => {
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+  
+    const toggleDropdown = () => setDropdownOpen(prevState => !prevState);
+  
+    return (
+      <Dropdown isOpen={dropdownOpen} toggle={toggleDropdown} >
+        <DropdownToggle caret style={{ backgroundColor: '#489DF9', width: '300px', color:'black' }}>
+          {title}
+        </DropdownToggle>
+        <DropdownMenu  style={{ width:'300px'}}>
+          {items.map((item, index) => (
+            <DropdownItem key={index}>
+              <Link to={item.link}>
+                {item.label}
+              </Link>
+            </DropdownItem>
+          ))}
+        </DropdownMenu>
+      </Dropdown>
+    );
+  };
+
+
+    const categories = [
+      {
+        title: "Du học các bang",
+        items: [
+          { label: "California", link: "/blog-details/california" },
+          { label: "New York", link: "/blog-details/new-york" },
+          // Add more states as needed
+        ]
+      },
+      {
+        title: "Trường học",
+        items: [
+          { label: "Đại học Harvard", link: "/instructor-details/harvard" },
+          { label: "Đại học Stanford", link: "/instructor-details/stanford" },
+          // Add more universities as needed
+        ]
+      },
+      {
+        title: "Học bổng du học",
+        items: [
+          { label: "Học bổng Fulbright", link: "/scholarship/fulbright" },
+          { label: "Học bổng Chevening", link: "/scholarship/chevening" },
+          // Add more scholarships as needed
+        ]
+      },
+      {
+        title: "Giới thiệu",
+        items: [
+          { label: "Về chúng tôi", link: "/about-us" },
+          { label: "Liên hệ", link: "/contact" },
+        ]
+      }
+    ];
+
   let publicUrl = process.env.PUBLIC_URL + "/";
 
   return (
@@ -405,48 +467,15 @@ function CoursePage() {
                 </form>
               </div>
               <div className="widget widget_catagory">
-                <h4 className="widget-title">Thông tin du học</h4>
-                <ul className="catagory-items go-top">
-                  <li>
-                    <Link to="/blog-details">
-                      Du học các bang <i className="fa fa-caret-right" />
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/blog-details">
-                      Trường học <i className="fa fa-caret-right" />
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/blog-details">
-                      Học bổng du học <i className="fa fa-caret-right" />
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/blog-details">
-                      Giới thiệu <i className="fa fa-caret-right" />
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-              {/* <div className="widget widget_checkbox_list">
-                <h4 className="widget-title">Price</h4>
-                <label className="single-checkbox">
-                  <input type="checkbox" defaultChecked="checked" />
-                  <span className="checkmark" />
-                  Free Courses
-                </label>
-                <label className="single-checkbox">
-                  <input type="checkbox" />
-                  <span className="checkmark" />
-                  Paid Courses
-                </label>
-                <label className="single-checkbox">
-                  <input type="checkbox" />
-                  <span className="checkmark" />
-                  Only Subscription
-                </label>
-              </div> */}
+      <h4 className="widget-title">Thông tin du học</h4>
+      <ul className="catagory-items go-top">
+        {categories.map((category, index) => (
+          <div key={index} style={{margin:'20px'}}>
+            <CategoryDropdown title={category.title} items={category.items} />
+          </div>
+        ))}
+      </ul>
+    </div>
               <div className="widget widget_checkbox_list">
                 <h4 className="widget-title">Cấp bậc</h4>
                 <label className="single-checkbox">
@@ -465,19 +494,7 @@ function CoursePage() {
                   Bậc sau đại học
                 </label>
               </div>
-              {/* <div className="widget widget_tags mb-0">
-                <h4 className="widget-title">Tags</h4>
-                <div className="tagcloud go-top">
-                  <Link to="blog-details">Art</Link>
-                  <Link to="blog-details">Creative</Link>
-                  <Link to="blog-details">Article</Link>
-                  <Link to="blog-details">Designer</Link>
-                  <Link to="blog-details">Portfolio</Link>
-                  <Link to="blog-details">Project</Link>
-                  <Link to="blog-details">Personal</Link>
-                  <Link to="blog-details">Landing</Link>
-                </div>
-              </div> */}
+             
             </div>
           </div>
         </div>

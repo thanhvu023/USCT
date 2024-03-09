@@ -17,9 +17,9 @@ class Footer_v1 extends Component {
     return (
       <footer className="footer-area bg-gray">
         <div className="footer-subscribe">
-          <div className="container">
-            <form className="footer-subscribe-inner">
-              <div className="row">
+          <div className="container ">
+            <form className="footer-subscribe-inner ">
+              <div className="row ">
                 <div className="col-lg-5">
                   <div className="single-input-inner style-border-bottom">
                     <input type="text" placeholder="Họ và tên" />
@@ -41,7 +41,7 @@ class Footer_v1 extends Component {
         </div>
         <div className="footer-top">
           <div className="container">
-            <div className="row">
+            <div className="row justify-content-between ">
               <div className="col-lg-3 col-md-6">
                 <div className="widget widget_contact">
                   <h4 className="widget-title">Liên Hệ</h4>
@@ -81,34 +81,7 @@ class Footer_v1 extends Component {
                   </ul>
                 </div>
               </div>
-              <div className="col-lg-3 col-md-6 go-top">
-                <div className="widget widget_blog_list">
-                  <h4 className="widget-title">Tin Tức & Blog</h4>
-                  <ul>
-                    <li>
-                      <h6>
-                        <Link to="/blog-details">
-                          5 Lời Khuyên Khi Đi Du Học Mỹ
-                        </Link>
-                      </h6>
-                      <span className="date">
-                        <i className="fa fa-calendar" />7 Tháng 12, 2021
-                      </span>
-                    </li>
-                    <li>
-                      <h6>
-                        <Link to="/blog-details">
-                          Cách Nhận Học Bổng Du Học Mỹ
-                        </Link>
-                      </h6>
-                      <span className="date">
-                        <i className="fa fa-calendar" />
-                        15 Tháng 1, 2022
-                      </span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
+      
               <div className="col-lg-3 col-md-6">
                 <div className="widget widget_contact">
                   <h4 className="widget-title">Kết Nối</h4>

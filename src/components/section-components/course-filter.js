@@ -13,19 +13,18 @@ const Course = ({ course }) => (
 			  <span className="u-thumb"><img src={course.authorImage} alt="img" /></span>
 			  <span className="align-self-center">{course.authorName}</span>
 			</div>
-			<h6><Link to="/course-details">{course.title}</Link></h6>
+			<h6><Link to={`/course-details/${course.id}`}>{course.title}</Link></h6> {/* Thêm link cho xem thêm */}
 		  </div>
-		  <div className="emt-course-meta">
-			<div className="row">
+		  <div className="emt-course-meta " >
+			<div className="row  d-flex justify-content-evenly">
 			  <div className="col-6">
-				{/* <div className="rating">
-				  <i className="fa fa-star" /> {course.rating}
-				  <span>({course.reviewCount})</span>
-				</div> */}
+				<i  className="fa fa-university" />
+			  <span>{course.state}</span>
 			  </div>
 			  <div className="col-6">
 				<div className="price text-right">
-				  Price: <span>{course.price}</span>
+				
+				  <Link to={`/course-details/${course.id}`}>Xem thêm</Link> {/* Thêm link cho xem thêm */}
 				</div>
 			  </div>
 			</div>
@@ -34,6 +33,7 @@ const Course = ({ course }) => (
 	  </div>
 	</div>
   );
+  
 class CourseFilter extends Component {
   state = {
    
@@ -48,7 +48,8 @@ class CourseFilter extends Component {
 			title: 'Fox nymphs grab quick-jived waltz. Brick quiz whangs',
 			rating: '4.3',
 			reviewCount: 23,
-			price: '$54.00'
+			price: '$54.00',
+			state: 'Califoria'
 		  },
 		  {
 			id: 2,
@@ -59,7 +60,9 @@ class CourseFilter extends Component {
 			title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
 			rating: '4.5',
 			reviewCount: 17,
-			price: '$49.99'
+			price: '$49.99',
+			state: 'Califoria'
+
 		  },
 		  {
 			id: 3,
@@ -70,7 +73,9 @@ class CourseFilter extends Component {
 			title: 'Etiam vehicula sapien ac turpis hendrerit, a malesuada justo eleifend',
 			rating: '4.0',
 			reviewCount: 30,
-			price: '$39.99'
+			price: '$39.99',
+			state: 'Califoria'
+
 		  },
 		  {
 			id: 4,
@@ -81,7 +86,9 @@ class CourseFilter extends Component {
 			title: 'Vestibulum vel nisi in elit accumsan eleifend nec vitae est',
 			rating: '4.8',
 			reviewCount: 42,
-			price: '$59.99'
+			price: '$59.99',
+			state: 'Califoria'
+
 		  },
 		  {
 			id: 5,
@@ -92,7 +99,9 @@ class CourseFilter extends Component {
 			title: 'Aliquam sollicitudin eros nec semper blandit',
 			rating: '4.2',
 			reviewCount: 28,
-			price: '$29.99'
+			price: '$29.99',
+			state: 'Califoria'
+
 		  },
 		  {
 			id: 6,
@@ -103,7 +112,9 @@ class CourseFilter extends Component {
 			title: 'Praesent vel augue a elit interdum laoreet',
 			rating: '4.6',
 			reviewCount: 36,
-			price: '$45.00'
+			price: '$45.00',
+			state: 'Califoria'
+
 		  },
 		  {
 			id: 7,
@@ -114,7 +125,9 @@ class CourseFilter extends Component {
 			title: 'Duis id velit aliquam, laoreet magna ac, vehicula orci',
 			rating: '4.1',
 			reviewCount: 20,
-			price: '$39.00'
+			price: '$39.00',
+			state: 'Califoria'
+
 		  },
 		  {
 			id: 8,
@@ -125,7 +138,9 @@ class CourseFilter extends Component {
 			title: 'Curabitur sed neque nec eros dignissim gravida',
 			rating: '4.7',
 			reviewCount: 39,
-			price: '$55.00'
+			price: '$55.00',
+			state: 'Califoria'
+
 		  },
 		  {
 			id: 9,
@@ -136,7 +151,9 @@ class CourseFilter extends Component {
 			title: 'Nam eget metus sit amet sem faucibus facilisis id at mi',
 			rating: '4.4',
 			reviewCount: 25,
-			price: '$42.00'
+			price: '$42.00',
+			state: 'Califoria'
+
 		  },
 		  {
 			id: 10,
@@ -147,7 +164,9 @@ class CourseFilter extends Component {
 			title: 'Integer sit amet nisi vitae orci volutpat commodo',
 			rating: '4.9',
 			reviewCount: 48,
-			price: '$60.00'
+			price: '$60.00',
+			state: 'Califoria'
+
 		  },
 		  {
 			id: 11,
@@ -158,7 +177,9 @@ class CourseFilter extends Component {
 			title: 'Vivamus rutrum quam non turpis ullamcorper, vitae aliquet arcu tincidunt',
 			rating: '4.3',
 			reviewCount: 29,
-			price: '$48.00'
+			price: '$48.00',
+			state: 'Califoria'
+
 		  },
 		  {
 			id: 12,
@@ -169,7 +190,9 @@ class CourseFilter extends Component {
 			title: 'Proin sagittis ligula vel ante tincidunt, in finibus ligula interdum',
 			rating: '4.6',
 			reviewCount: 35,
-			price: '$47.50'
+			price: '$47.50',
+			state: 'Califoria'
+
 		  },
 		  {
 			id: 13,
@@ -180,7 +203,9 @@ class CourseFilter extends Component {
 			title: 'Sed fermentum dui at congue fermentum',
 			rating: '4.2',
 			reviewCount: 27,
-			price: '$38.50'
+			price: '$38.50',
+			state: 'Califoria'
+
 		  },
 		  {
 			id: 14,
@@ -191,7 +216,9 @@ class CourseFilter extends Component {
 			title: 'Fusce a elit non diam condimentum aliquam',
 			rating: '4.7',
 			reviewCount: 40,
-			price: '$57.00'
+			price: '$57.00',
+			state: 'Califoria'
+
 		  },
 		  {
 			id: 15,
@@ -202,7 +229,9 @@ class CourseFilter extends Component {
 			title: 'Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas',
 			rating: '4.5',
 			reviewCount: 31,
-			price: '$53.00'
+			price: '$53.00',
+			state: 'Califoria'
+
 		  },
 		  {
 			id: 16,
@@ -213,7 +242,9 @@ class CourseFilter extends Component {
 			title: 'Quisque sed tortor at tellus ullamcorper dapibus',
 			rating: '4.4',
 			reviewCount: 26,
-			price: '$44.99'
+			price: '$44.99',
+			state: 'Califoria'
+
 		  },
 		  {
 			id: 17,
@@ -224,7 +255,9 @@ class CourseFilter extends Component {
 			title: 'Morbi vel urna nec ligula gravida auctor',
 			rating: '4.8',
 			reviewCount: 44,
-			price: '$62.00'
+			price: '$62.00',
+			state: 'Califoria'
+
 		  },
 		  {
 			id: 18,
@@ -235,7 +268,9 @@ class CourseFilter extends Component {
 			title: 'Vestibulum eu risus at ipsum lacinia vehicula',
 			rating: '4.3',
 			reviewCount: 24,
-			price: '$46.00'
+			price: '$46.00',
+			state: 'Califoria'
+
 		  },
 		  {
 			id: 19,
@@ -246,7 +281,9 @@ class CourseFilter extends Component {
 			title: 'Curabitur ornare nisl id justo tincidunt, ut tincidunt odio laoreet',
 			rating: '4.6',
 			reviewCount: 37,
-			price: '$51.50'
+			price: '$51.50',
+			state: 'Califoria'
+
 		  },
 		  {
 			id: 20,
@@ -257,7 +294,9 @@ class CourseFilter extends Component {
 			title: 'Phasellus ullamcorper magna nec sagittis dapibus',
 			rating: '4.5',
 			reviewCount: 32,
-			price: '$52.00'
+			price: '$52.00',
+			state: 'Califoria'
+
 		  },
 		  {
 			id: 21,
@@ -268,7 +307,9 @@ class CourseFilter extends Component {
 			title: 'Phasellus ullamcorper magna nec sagittis dapibus',
 			rating: '4.5',
 			reviewCount: 32,
-			price: '$52.00'
+			price: '$52.00',
+			state: 'Califoria'
+
 		  },
 		  {
 			id: 22,
@@ -279,7 +320,9 @@ class CourseFilter extends Component {
 			title: 'Phasellus ullamcorper magna nec sagittis dapibus',
 			rating: '4.5',
 			reviewCount: 32,
-			price: '$52.00'
+			price: '$52.00',
+			state: 'Califoria'
+
 		  },
 		  {
 			id: 23,
@@ -290,7 +333,9 @@ class CourseFilter extends Component {
 			title: 'Phasellus ullamcorper magna nec sagittis dapibus',
 			rating: '4.5',
 			reviewCount: 32,
-			price: '$52.00'
+			price: '$52.00',
+			state: 'Califoria'
+
 		  },
 		  {
 			id: 24,
@@ -301,7 +346,9 @@ class CourseFilter extends Component {
 			title: 'Phasellus ullamcorper magna nec sagittis dapibus',
 			rating: '4.5',
 			reviewCount: 32,
-			price: '$52.00'
+			price: '$52.00',
+			state: 'Califoria'
+
 		  }
 		],
 
@@ -367,8 +414,8 @@ class CourseFilter extends Component {
           <div className="row justify-content-center">
             <div className="col-xl-8 col-lg-10 col-md-11">
               <div className="section-title style-white text-center">
-                <h2 className="title">Các Khóa Học Nổi Bật</h2>
-                <p>Khám phá các khóa học đặc sắc giúp bạn mở rộng cánh cửa học thuật tại Mỹ.</p>
+                <h2 className="title">Các Chương Trình Nổi Bật</h2>
+                <p>Khám phá các chương trình đặc sắc giúp bạn mở rộng cánh cửa học thuật tại Mỹ.</p>
               </div>
             </div>
           </div>
