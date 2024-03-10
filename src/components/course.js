@@ -7,7 +7,7 @@ import Footer from './global-components/footer';
 const AboutPage = () => {
     return <div>
         <Navbar />
-        <PageHeader headertitle="Courses"  />
+        <PageHeader headertitle="Các Chương Trình"  />
         <Course />
         <Footer />
     </div>
