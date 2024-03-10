@@ -66,10 +66,10 @@ class NavbarV2 extends Component {
 			            </ul> */}
 			          </li>
 			          <li className="menu-item-has-children">
-			            <Link to="/course">Các chương trình</Link>
+			            <Link to="/program">Các chương trình</Link>
 			            <ul className="sub-menu">
-				            <li><Link to="/course">Chương trình du học</Link></li>
-	                        <li><Link to="/course-details">Chương trình du học</Link></li>
+				            <li><Link to="/program">Chương trình du học</Link></li>
+	                        <li><Link to="/program-details">Chương trình du học</Link></li>
 			            </ul>
 			          </li>
 			          <li className="menu-item-has-children">

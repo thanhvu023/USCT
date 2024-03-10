@@ -30,7 +30,7 @@ class Signin extends Component {
 			              </div>
 			            </div>
 			            <div className="col-12 mb-4">
-			              <button className="btn btn-base w-100">Sign In</button>
+			              <button className="btn btn-base w-100">Đăng nhập</button>
 			            </div>
 			            <div className="col-12">
 			              <a href="#">Quên mật khâủ</a>

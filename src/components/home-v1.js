@@ -17,7 +17,6 @@ const Home_V1 = () => {
     return <div>
         <Navbar />
         <Banner />
-        <SliderComponent/>
         <Intro />
         <About />
         <CourseFilter />

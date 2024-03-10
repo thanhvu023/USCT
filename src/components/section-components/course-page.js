@@ -95,7 +95,7 @@ function CoursePage() {
                           </span>
                         </div> */}
                       <h6>
-                        <Link to="/course-details">
+                        <Link to="/program-details">
                           Chương trình tuyển sinh trực tiếp bậc đại học,cao đẳng
                         </Link>
                       </h6>
@@ -138,7 +138,7 @@ function CoursePage() {
                           <span className="align-self-center">Joe Powell</span>
                         </div> */}
                       <h6>
-                        <Link to="/course-details">
+                        <Link to="/program-details">
                         Các chương trình du học được tài trợ
                         </Link>
                       </h6>
@@ -183,7 +183,7 @@ function CoursePage() {
                         </span>
                       </div> */}
                       <h6>
-                        <Link to="/course-details">
+                        <Link to="/program-details">
                         Thực tập ở nước ngoài
                         </Link>
                       </h6>
@@ -228,7 +228,7 @@ function CoursePage() {
                         </span>
                       </div> */}
                       <h6>
-                        <Link to="/course-details">
+                        <Link to="/program-details">
                         Du học mùa hè
                         </Link>
                       </h6>
@@ -271,7 +271,7 @@ function CoursePage() {
                         <span className="align-self-center">Aaron Powell</span>
                       </div> */}
                       <h6>
-                        <Link to="/course-details">
+                        <Link to="/program-details">
                           Du học học bổng
                         </Link>
                       </h6>
@@ -314,7 +314,7 @@ function CoursePage() {
                         <span className="align-self-center">Randy Hart</span>
                       </div> */}
                       <h6>
-                        <Link to="/course-details">
+                        <Link to="/program-details">
                           Du học tự túc
                         </Link>
                       </h6>
@@ -357,7 +357,7 @@ function CoursePage() {
                         <span className="align-self-center">Joe Powell</span>
                       </div> */}
                       <h6>
-                        <Link to="/course-details">
+                        <Link to="/program-details">
                           Du học sau đại học
                         </Link>
                       </h6>
@@ -402,7 +402,7 @@ function CoursePage() {
                         </span>
                       </div>
                       <h6>
-                        <Link to="/course-details">
+                        <Link to="/program-details">
                           Praesent eu dolor eu orci vehicula euismod
                         </Link>
                       </h6>

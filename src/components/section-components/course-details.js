@@ -18,7 +18,7 @@ function CourseDetails() {
             <span className="align-self-center">{authorName}</span>
           </div>
           <h6>
-            <Link to="/course-details">{courseTitle}</Link>
+            <Link to="/program-details">{courseTitle}</Link>
           </h6>
         </div>
         <div className="emt-course-meta">
@@ -45,7 +45,7 @@ function CourseDetails() {
       <div className="container">
         <div className="row">
           <div className="col-lg-8">
-            <div className="course-course-detaila-inner">
+            <div className="course-course-detail-inner">
               <div className="details-inner">
                 {/* <div className="emt-user">
                   <span className="u-thumb">
@@ -618,7 +618,7 @@ function CourseDetails() {
     </div>
 </div>
 
-              <div className="widget widget_catagory">
+              {/* <div className="widget widget_catagory">
                 <h4 className="widget-title">Trending Course</h4>
                 <div className="single-course-inner">
                   <div className="thumb">
@@ -661,7 +661,7 @@ function CourseDetails() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
