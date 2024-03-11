@@ -1,27 +1,33 @@
-import React, { useState} from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-
+import {
+  Dropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+} from "reactstrap";
 import parse from "html-react-parser";
-function CoursePage() {
+import { useDispatch, useSelector } from "react-redux";
+import { getAllProgram } from "../../redux/slice/programSlice";
 
-  
+function CoursePage() {
   const CategoryDropdown = ({ title, items }) => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
-  
-    const toggleDropdown = () => setDropdownOpen(prevState => !prevState);
-  
+
+    const toggleDropdown = () => setDropdownOpen((prevState) => !prevState);
+
     return (
-      <Dropdown isOpen={dropdownOpen} toggle={toggleDropdown} >
-        <DropdownToggle caret style={{ backgroundColor: '#489DF9', width: '300px', color:'black' }}>
+      <Dropdown isOpen={dropdownOpen} toggle={toggleDropdown}>
+        <DropdownToggle
+          caret
+          style={{ backgroundColor: "#489DF9", width: "300px", color: "black" }}
+        >
           {title}
         </DropdownToggle>
-        <DropdownMenu  style={{ width:'300px'}}>
+        <DropdownMenu style={{ width: "300px" }}>
           {items.map((item, index) => (
             <DropdownItem key={index}>
-              <Link to={item.link}>
-                {item.label}
-              </Link>
+              <Link to={item.link}>{item.label}</Link>
             </DropdownItem>
           ))}
         </DropdownMenu>
@@ -29,40 +35,47 @@ function CoursePage() {
     );
   };
 
-
-    const categories = [
-      {
-        title: "Du học các bang",
-        items: [
-          { label: "California", link: "/blog-details/california" },
-          { label: "New York", link: "/blog-details/new-york" },
-          // Add more states as needed
-        ]
-      },
-      {
-        title: "Trường học",
-        items: [
-          { label: "Đại học Harvard", link: "/instructor-details/harvard" },
-          { label: "Đại học Stanford", link: "/instructor-details/stanford" },
-          // Add more universities as needed
-        ]
-      },
-      {
-        title: "Học bổng du học",
-        items: [
-          { label: "Học bổng Fulbright", link: "/scholarship/fulbright" },
-          { label: "Học bổng Chevening", link: "/scholarship/chevening" },
-          // Add more scholarships as needed
-        ]
-      },
-      {
-        title: "Giới thiệu",
-        items: [
-          { label: "Về chúng tôi", link: "/about-us" },
-          { label: "Liên hệ", link: "/contact" },
-        ]
-      }
-    ];
+  const categories = [
+    {
+      title: "Du học các bang",
+      items: [
+        { label: "California", link: "/blog-details/california" },
+        { label: "New York", link: "/blog-details/new-york" },
+        // Add more states as needed
+      ],
+    },
+    {
+      title: "Trường học",
+      items: [
+        { label: "Đại học Harvard", link: "/instructor-details/harvard" },
+        { label: "Đại học Stanford", link: "/instructor-details/stanford" },
+        // Add more universities as needed
+      ],
+    },
+    {
+      title: "Học bổng du học",
+      items: [
+        { label: "Học bổng Fulbright", link: "/scholarship/fulbright" },
+        { label: "Học bổng Chevening", link: "/scholarship/chevening" },
+        // Add more scholarships as needed
+      ],
+    },
+    {
+      title: "Giới thiệu",
+      items: [
+        { label: "Về chúng tôi", link: "/about-us" },
+        { label: "Liên hệ", link: "/contact" },
+      ],
+    },
+  ];
+  const dispatch = useDispatch();
+  const programs = useSelector((state) => state.program.programs);
+  const loading = useSelector((state) => state.program.loading);
+  
+  useEffect(() => {
+    dispatch(getAllProgram());
+    
+  }, []);
 
   let publicUrl = process.env.PUBLIC_URL + "/";
 
@@ -72,359 +85,43 @@ function CoursePage() {
         <div className="row">
           <div className="col-lg-8 order-lg-12">
             <div className="row go-top">
-              <div className="col-md-6">
-                <div className="single-course-inner">
-                  <div className="thumb">
-                    <img
-                      src={publicUrl + "assets/img/course/programs.jpg"}
-                      alt="img"
-                    />
-                  </div>
-                  <div className="details">
-                    <div className="details-inner">
-                      {/* <div className="emt-user">
-                          <span className="u-thumb">
-                            <img
-                              src={publicUrl + "assets/img/author/1.png"}
-                              alt="img"
-                            />
-                          </span>
-                          <span className="align-self-center">
-                            Chương trình tuyển sinh trực tiếp bậc đại học,cao
-                            đẳng
-                          </span>
-                        </div> */}
-                      <h6>
-                        <Link to="/course-details">
-                          Chương trình tuyển sinh trực tiếp bậc đại học,cao đẳng
-                        </Link>
-                      </h6>
-                    </div>
-                    {/* <div className="emt-course-meta">
-                        <div className="row">
-                          <div className="col-6">
-                            <div className="rating">
-                              <i className="fa fa-star" /> 4.3
-                              <span>(23)</span>
+              {loading ? (
+                <div>Loading...</div>
+              ) : (
+                programs.map((program, index) => (
+                  <div key={index} className="col-md-6">
+                    <div className="single-course-inner">
+                      <div className="thumb">
+                        <img src={publicUrl + "assets/img/course/programs.jpg"} alt="img" />
+                      </div>
+                      <div className="details">
+                        <div className="details-inner">
+                          {/* <div className="emt-user">
+                            <span className="align-self-center">abc</span>
+                          </div> */}
+                          <h6>
+                            <Link to={`/course-details/${program.programId}`}>abc</Link>
+                          </h6>
+                        </div>
+                        <div className="emt-course-meta">
+                          <div className="row">
+                            <div className="col-6">
+                              <div className="rating">
+                                <span>Khoảng thời gian: {program.duration}</span>
+                              </div>
                             </div>
-                          </div>
-                          <div className="col-6">
-                            <div className="price text-right">
-                              Price: <span>$54.00</span>
+                            <div className="col-6">
+                              <div className="price text-right">
+                                Học phí: <span>{program.tuition}$</span>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div> */}
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-6">
-                <div className="single-course-inner">
-                  <div className="thumb">
-                    <img
-                      src={publicUrl + "assets/img/course/programs.jpg"}
-                      alt="img"
-                    />
-                  </div>
-                  <div className="details">
-                    <div className="details-inner">
-                      {/* <div className="emt-user">
-                          <span className="u-thumb">
-                            <img
-                              src={publicUrl + "assets/img/author/2.png"}
-                              alt="img"
-                            />
-                          </span>
-                          <span className="align-self-center">Joe Powell</span>
-                        </div> */}
-                      <h6>
-                        <Link to="/course-details">
-                        Các chương trình du học được tài trợ
-                        </Link>
-                      </h6>
-                    </div>
-                    {/* <div className="emt-course-meta">
-                      <div className="row">
-                        <div className="col-6">
-                          <div className="rating">
-                            <i className="fa fa-star" /> 4.3
-                            <span>(23)</span>
-                          </div>
-                        </div>
-                        <div className="col-6">
-                          <div className="price text-right">
-                            Price: <span>$54.00</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div> */}
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-6">
-                <div className="single-course-inner">
-                  <div className="thumb">
-                    <img
-                      src={publicUrl + "assets/img/course/programs.jpg"}
-                      alt="img"
-                    />
-                  </div>
-                  <div className="details">
-                    <div className="details-inner">
-                      {/* <div className="emt-user">
-                        <span className="u-thumb">
-                          <img
-                            src={publicUrl + "assets/img/author/3.png"}
-                            alt="img"
-                          />
-                        </span>
-                        <span className="align-self-center">
-                          Timothy Willis
-                        </span>
-                      </div> */}
-                      <h6>
-                        <Link to="/course-details">
-                        Thực tập ở nước ngoài
-                        </Link>
-                      </h6>
-                    </div>
-                    {/* <div className="emt-course-meta">
-                      <div className="row">
-                        <div className="col-6">
-                          <div className="rating">
-                            <i className="fa fa-star" /> 4.9
-                            <span>(73)</span>
-                          </div>
-                        </div>
-                        <div className="col-lg-6">
-                          <div className="price text-right">
-                            Price: <span>$74.00</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div> */}
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-6">
-                <div className="single-course-inner">
-                  <div className="thumb">
-                    <img
-                      src={publicUrl + "assets/img/course/programs.jpg"}
-                      alt="img"
-                    />
-                  </div>
-                  <div className="details">
-                    <div className="details-inner">
-                      {/* <div className="emt-user">
-                        <span className="u-thumb">
-                          <img
-                            src={publicUrl + "assets/img/author/4.png"}
-                            alt="img"
-                          />
-                        </span>
-                        <span className="align-self-center">
-                          Walter Griffin
-                        </span>
-                      </div> */}
-                      <h6>
-                        <Link to="/course-details">
-                        Du học mùa hè
-                        </Link>
-                      </h6>
-                    </div>
-                    <div className="emt-course-meta">
-                      {/* <div className="row">
-                        <div className="col-6">
-                          <div className="rating">
-                            <i className="fa fa-star" /> 4.8
-                            <span>(53)</span>
-                          </div>
-                        </div>
-                        <div className="col-6">
-                          <div className="price text-right">
-                            Price: <span>$64.00</span>
-                          </div>
-                        </div>
-                      </div> */}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-6">
-                <div className="single-course-inner">
-                  <div className="thumb">
-                    <img
-                      src={publicUrl + "assets/img/course/programs.jpg"}
-                      alt="img"
-                    />
-                  </div>
-                  <div className="details">
-                    <div className="details-inner">
-                      {/* <div className="emt-user">
-                        <span className="u-thumb">
-                          <img
-                            src={publicUrl + "assets/img/author/5.png"}
-                            alt="img"
-                          />
-                        </span>
-                        <span className="align-self-center">Aaron Powell</span>
-                      </div> */}
-                      <h6>
-                        <Link to="/course-details">
-                          Du học học bổng
-                        </Link>
-                      </h6>
-                    </div>
-                    {/* <div className="emt-course-meta">
-                      <div className="row">
-                        <div className="col-6">
-                          <div className="rating">
-                            <i className="fa fa-star" /> 4.5
-                            <span>(21)</span>
-                          </div>
-                        </div>
-                        <div className="col-6">
-                          <div className="price text-right">
-                            Price: <span>$34.00</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div> */}
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-6">
-                <div className="single-course-inner">
-                  <div className="thumb">
-                    <img
-                      src={publicUrl + "assets/img/course/programs.jpg"}
-                      alt="img"
-                    />
-                  </div>
-                  <div className="details">
-                    <div className="details-inner">
-                      {/* <div className="emt-user">
-                        <span className="u-thumb">
-                          <img
-                            src={publicUrl + "assets/img/author/6.png"}
-                            alt="img"
-                          />
-                        </span>
-                        <span className="align-self-center">Randy Hart</span>
-                      </div> */}
-                      <h6>
-                        <Link to="/course-details">
-                          Du học tự túc
-                        </Link>
-                      </h6>
-                    </div>
-                    {/* <div className="emt-course-meta">
-                      <div className="row">
-                        <div className="col-6">
-                          <div className="rating">
-                            <i className="fa fa-star" /> 4.4
-                            <span>(20)</span>
-                          </div>
-                        </div>
-                        <div className="col-6">
-                          <div className="price text-right">
-                            Price: <span>$55.00</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div> */}
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-6">
-                <div className="single-course-inner">
-                  <div className="thumb">
-                    <img
-                      src={publicUrl + "assets/img/course/programs.jpg"}
-                      alt="img"
-                    />
-                  </div>
-                  <div className="details">
-                    <div className="details-inner">
-                      {/* <div className="emt-user">
-                        <span className="u-thumb">
-                          <img
-                            src={publicUrl + "assets/img/author/2.png"}
-                            alt="img"
-                          />
-                        </span>
-                        <span className="align-self-center">Joe Powell</span>
-                      </div> */}
-                      <h6>
-                        <Link to="/course-details">
-                          Du học sau đại học
-                        </Link>
-                      </h6>
-                    </div>
-                    {/* <div className="emt-course-meta">
-                      <div className="row">
-                        <div className="col-6">
-                          <div className="rating">
-                            <i className="fa fa-star" /> 4.3
-                            <span>(23)</span>
-                          </div>
-                        </div>
-                        <div className="col-6">
-                          <div className="price text-right">
-                            Price: <span>$54.00</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div> */}
-                  </div>
-                </div>
-              </div>
-              {/* <div className="col-md-6">
-                <div className="single-course-inner">
-                  <div className="thumb">
-                    <img
-                      src={publicUrl + "assets/img/course/programs.jpg"}
-                      alt="img"
-                    />
-                  </div>
-                  <div className="details">
-                    <div className="details-inner">
-                      <div className="emt-user">
-                        <span className="u-thumb">
-                          <img
-                            src={publicUrl + "assets/img/author/3.png"}
-                            alt="img"
-                          />
-                        </span>
-                        <span className="align-self-center">
-                          Timothy Willis
-                        </span>
-                      </div>
-                      <h6>
-                        <Link to="/course-details">
-                          Praesent eu dolor eu orci vehicula euismod
-                        </Link>
-                      </h6>
-                    </div>
-                    <div className="emt-course-meta">
-                      <div className="row">
-                        <div className="col-6">
-                          <div className="rating">
-                            <i className="fa fa-star" /> 4.9
-                            <span>(73)</span>
-                          </div>
-                        </div>
-                        <div className="col-lg-6">
-                          <div className="price text-right">
-                            Price: <span>$74.00</span>
-                          </div>
-                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </div> */}
+                ))
+              )}
             </div>
             <nav className="td-page-navigation">
               <ul className="pagination">
@@ -467,15 +164,18 @@ function CoursePage() {
                 </form>
               </div>
               <div className="widget widget_catagory">
-      <h4 className="widget-title">Thông tin du học</h4>
-      <ul className="catagory-items go-top">
-        {categories.map((category, index) => (
-          <div key={index} style={{margin:'20px'}}>
-            <CategoryDropdown title={category.title} items={category.items} />
-          </div>
-        ))}
-      </ul>
-    </div>
+                <h4 className="widget-title">Thông tin du học</h4>
+                <ul className="catagory-items go-top">
+                  {categories.map((category, index) => (
+                    <div key={index} style={{ margin: "20px" }}>
+                      <CategoryDropdown
+                        title={category.title}
+                        items={category.items}
+                      />
+                    </div>
+                  ))}
+                </ul>
+              </div>
               <div className="widget widget_checkbox_list">
                 <h4 className="widget-title">Cấp bậc</h4>
                 <label className="single-checkbox">
@@ -494,7 +194,6 @@ function CoursePage() {
                   Bậc sau đại học
                 </label>
               </div>
-             
             </div>
           </div>
         </div>
