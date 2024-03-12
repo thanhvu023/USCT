@@ -32,7 +32,7 @@ class NavbarV3 extends Component {
 			      </div>
 			      <div className="collapse navbar-collapse go-top" id="edumint_main_menu">
 			        <ul className="navbar-nav menu-open">
-			          <li className="menu-item-has-children current-menu-item">
+			          <li className="menu-item current-menu-item">
 			            <Link to="/">Trang chủ</Link>
 			            {/* <ul className="sub-menu">
 				            <li><Link to="/">Home 01</Link></li>

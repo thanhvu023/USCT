@@ -88,21 +88,13 @@ class Navbar extends Component {
               id="edumint_main_menu"
             >
               <ul className="navbar-nav menu-open">
-                <li className="menu-item-has-children current-menu-item">
+                <li className="menu-item current-menu-item">
                   <Link to="/">Trang chủ</Link>
                 </li>
-                <li className="menu-item-has-children">
+                <li className="menu-item">
                   <Link to="/course">Chương trình</Link>
-                  <ul className="sub-menu">
-                    <li>
-                      <Link to="/course">Các nhóm khóa học chính</Link>
-                    </li>
-                    <li>
-                      <Link to="/course-details">Khoá học lẻ</Link>
-                    </li>
-                  </ul>
                 </li>
-                <li className="menu-item-has-children">
+                <li className="menu-item">
                   <Link to="/university">Trường học</Link>
                   {/* <ul className="sub-menu">
                         <li><Link to="/blog">Blog</Link></li>

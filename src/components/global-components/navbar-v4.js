@@ -84,13 +84,9 @@ class NavbarV4 extends Component {
             </div>
             <div className="collapse navbar-collapse" id="edumint_main_menu">
               <ul className="navbar-nav menu-open">
-                <li className="menu-item-has-children current-menu-item">
+                <li className="menu-item current-menu-item">
                   <Link to="/">Trang chủ</Link>
-                  {/* <ul className="sub-menu">
-                    <li><Link to="/">Home 01</Link></li>
-                    <li><Link to="/home-v2">Home 02</Link></li>
-                    <li><Link to="/home-v3">Home 03</Link></li>
-                  </ul> */}
+                
                 </li>
                 <li className="menu-item-has-children">
                   <Link to="/course">Các chương trình</Link>

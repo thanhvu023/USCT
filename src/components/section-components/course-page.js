@@ -10,7 +10,22 @@ import parse from "html-react-parser";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllProgram } from "../../redux/slice/programSlice";
 
+
+const handleSliderChange = (event, setCurrentValue) => {
+  setCurrentValue(event.target.value);
+};
+
+const formatCurrency = (value) => {
+  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+};
+
+
 function CoursePage() {
+
+  const [minPrice, setMinPrice] = useState(100000);
+  const [maxPrice, setMaxPrice] = useState(2000000);
+  const [currentValue, setCurrentValue] = useState(100000);
+
   const CategoryDropdown = ({ title, items }) => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
@@ -57,14 +72,23 @@ function CoursePage() {
       items: [
         { label: "Học bổng Fulbright", link: "/scholarship/fulbright" },
         { label: "Học bổng Chevening", link: "/scholarship/chevening" },
+        { label: "Học bổng Fulbright", link: "/scholarship/fulbright" },
+        { label: "Học bổng Chevening", link: "/scholarship/chevening" },
+        { label: "Học bổng Fulbright", link: "/scholarship/fulbright" },
+        { label: "Học bổng Chevening", link: "/scholarship/chevening" },
         // Add more scholarships as needed
       ],
     },
     {
-      title: "Giới thiệu",
+      title: "Chuyên ngành",
       items: [
-        { label: "Về chúng tôi", link: "/about-us" },
-        { label: "Liên hệ", link: "/contact" },
+        { label: "Khoa học máy tính", link: "/computer-science" },
+        { label: "Kỹ thuật phần mềm", link: "/software-engineering" },
+        { label: "Mạng máy tính", link: "/computer-networks" },
+        { label: "Trí tuệ nhân tạo", link: "/artificial-intelligence" },
+        { label: "An toàn thông tin", link: "/information-security" },
+
+        // Add more majors as needed
       ],
     },
   ];
@@ -79,11 +103,13 @@ function CoursePage() {
 
   let publicUrl = process.env.PUBLIC_URL + "/";
 
+
+
   return (
     <div className="blog-area pd-top-120 pd-bottom-120">
       <div className="container">
-        <div className="row">
-          <div className="col-lg-8 order-lg-12">
+        <div className="row flex-lg-row-reverse">
+          <div className="col-lg-8 order-lg-12 m-0">
             <div className="row go-top">
               {loading ? (
                 <div>Loading...</div>
@@ -100,14 +126,14 @@ function CoursePage() {
                             <span className="align-self-center">abc</span>
                           </div> */}
                           <h6>
-                            <Link to={`/course-details/${program.programId}`}>abc</Link>
+                            <Link to={`/program-details/${program.programId}`}>abc</Link>
                           </h6>
                         </div>
                         <div className="emt-course-meta">
                           <div className="row">
                             <div className="col-6">
                               <div className="rating">
-                                <span>Khoảng thời gian: {program.duration}</span>
+                                <span>Lộ trình: {program.duration}</span>
                               </div>
                             </div>
                             <div className="col-6">
@@ -177,23 +203,72 @@ function CoursePage() {
                 </ul>
               </div>
               <div className="widget widget_checkbox_list">
-                <h4 className="widget-title">Cấp bậc</h4>
-                <label className="single-checkbox">
-                  <input type="checkbox" defaultChecked="checked" />
-                  <span className="checkmark" />
-                  Bậc THPT
-                </label>
-                <label className="single-checkbox">
-                  <input type="checkbox" />
-                  <span className="checkmark" />
-                  Bậc đại học
-                </label>
-                <label className="single-checkbox">
-                  <input type="checkbox" />
-                  <span className="checkmark" />
-                  Bậc sau đại học
-                </label>
+    <h4 className="widget-title">Trình độ Tiếng Anh</h4>
+    <label className="single-checkbox">
+        <input type="checkbox" defaultChecked="checked" />
+        <span className="checkmark" />
+        TOEFL
+    </label>
+    <label className="single-checkbox">
+        <input type="checkbox" />
+        <span className="checkmark" />
+        IELTS
+    </label>
+    <label className="single-checkbox">
+        <input type="checkbox" />
+        <span className="checkmark" />
+        GMAT
+    </label>
+    <label className="single-checkbox">
+        <input type="checkbox" />
+        <span className="checkmark" />
+        SAT
+    </label>
+    <label className="single-checkbox">
+        <input type="checkbox" />
+        <span className="checkmark" />
+        GRE
+    </label>
+</div>
+<div className="widget widget_price">
+                <h4 className="widget-title">Chi Phí Du Học</h4>
+                <input
+                  type="range"
+                  min="100000"
+                  max="2000000"
+                  value={currentValue}
+                  className="custom-range"
+                  onChange={(event) => handleSliderChange(event, setCurrentValue)}
+                  style={{
+                    width: '100%',
+                    height: '25px',
+                    background: '#ddd',
+                    outline: 'none',
+                    opacity: '0.7',
+                    transition: 'opacity .2s',
+                    position: 'relative',
+                    backgroundColor: '#007bff',
+                    border: '2px solid #007bff'
+                  }}
+                />
+                <div className="d-flex justify-content-between" style={{ color: '#007bff' }}>
+                  <span>$100k</span>
+                  <span>$2M</span>
+                </div>
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: '900px',
+                    left: `${(currentValue - 100000) / (2000000 - 100000) * 100}%`,
+                    transform: 'translateX(-10%)',
+                    whiteSpace: 'nowrap',
+                    fontWeight:'bold'
+                  }}
+                >
+                  {formatCurrency(currentValue)}$
+                </div>
               </div>
+
             </div>
           </div>
         </div>

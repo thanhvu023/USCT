@@ -1,14 +1,47 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import parse from 'html-react-parser';
+import Select from 'react-select';
 
-class ContactPage extends Component {
+const ContactPage = () => {
+    const [select, setSelect] = useState('');
 
-    render() {
+    const handleChange = (event) => {
+        setSelect(event.target.value);
+    };
 
-        let publicUrl = process.env.PUBLIC_URL+'/'
+    const stateOptions = [
+        { value: 'north', label: 'Miền Bắc' },
+        { value: 'central', label: 'Miền Trung' },
+        { value: 'south', label: 'Miền Nam' },
+    ];
+    const genderOptions = [
+        { value: '1', label: 'Nam' },
+        { value: '2', label: 'Nữ' },
+        { value: '3', label: 'Gioi tính khác' },
+    ];
+    
+    const reasonGOptions = [
+        { value: '1', label: 'Giao dục ' },
+        { value: '2', label: 'Cơ hội nghề nghiệp' },
+        { value: '3', label: 'Văn hóa' },
+    ];
+    
+    const feeOptions = [
+        { value: '1', label: 'Tiết kiệm' },
+        { value: '2', label: 'Vừa phải' },
+        { value: '3', label: 'Cao cấp' },
+    ];
+    const reasonUOptions = [
+        { value: '1', label: 'Giao dục ' },
+        { value: '2', label: 'Cơ hội nghề nghiệp' },
+        { value: '3', label: 'Trải nghiệm mới' },
+    ];
+    
+    
+        let publicUrl = process.env.PUBLIC_URL+'/';
 
-    return  <div>
+    return  (
+    <div>
 			 <div className="contact-list pd-top-120 pd-bottom-90">
     <div className="container">
       <div className="row justify-content-center">
@@ -80,16 +113,12 @@ class ContactPage extends Component {
                             </div>
                         </div>
                         <div className="col-lg-6">
-                            <div className="single-input-inner style-bg-border">
-                                <div className="custom-select">
-                                    <select name="gender">
-                                        <option value="">Giới tính</option>
-                                        <option value="male">Nam</option>
-                                        <option value="female">Nữ</option>
-                                        <option value="other">Khác</option>
-                                    </select>
-                                </div>
-                            </div>
+                        <Select
+    value={genderOptions.find(option => option.value === select)}
+    onChange={handleChange}
+    options={genderOptions}
+    placeholder="Chọn giới tính"
+/>
                         </div>
                         <div className="col-lg-6">
                             <div className="single-input-inner style-bg-border">
@@ -112,48 +141,50 @@ class ContactPage extends Component {
                             </div>
                         </div>
                         <div className="col-lg-6">
-                            <div className="single-input-inner style-bg-border">
-                                <input type="text" placeholder="Khu vực" name="area" />
-                            </div>
-                        </div>
+                        <Select
+    value={stateOptions.find(option => option.value === select)}
+    onChange={handleChange}
+    options={stateOptions}
+    placeholder="Chọn khu vực"
+/>
+                                        </div>
                         <div className="col-12">
                             <div className="single-input-inner style-bg-border">
                                 <textarea placeholder="Thông tin thêm" defaultValue={""} name="additionalInformation" />
                             </div>
                         </div>
-                        <div className="col-12">
-                            <div className="single-input-inner style-bg-border">
-                                <textarea placeholder="Lý do đi du học" defaultValue={""} name="studyAbroadReason" />
-                            </div>
-                        </div>
-                        <div className="col-12">
-                            <div className="single-input-inner style-bg-border">
-                                <textarea placeholder="Lý do chọn đích đến" defaultValue={""} name="destinationReason" />
-                            </div>
-                        </div>
+                        <div className="col-12 mb-4">
+                        <Select
+    value={reasonGOptions.find(option => option.value === select)}
+    onChange={handleChange}
+    options={reasonGOptions}
+    placeholder="Chọn lý do du học"
+   
+/>
+                                        </div>
+                                        <div className="col-12 mb-4">
+                                        <Select
+    value={reasonUOptions.find(option => option.value === select)}
+    onChange={handleChange}
+    options={reasonUOptions}
+    placeholder="Chọn lý do đích đến"
+/>
+                                        </div>
                         <div className="col-lg-6">
-                            <div className="single-input-inner style-bg-border">
-                                <div className="custom-select">
-                                    <select name="priorityOfStudyAbroad">
-                                        <option value="">Ưu tiên khi đi du học</option>
-                                        <option value="quality">Chất lượng giáo dục</option>
-                                        <option value="career">Cơ hội nghề nghiệp</option>
-                                        <option value="culture">Trải nghiệm văn hóa</option>
-                                    </select>
-                                </div>
-                            </div>
+                        <Select
+    value={reasonUOptions.find(option => option.value === select)}
+    onChange={handleChange}
+    options={reasonUOptions}
+    placeholder="Chọn ưu tiên khi đi du học"
+/>
                         </div>
-                        <div className="col-lg-6">
-                            <div className="single-input-inner style-bg-border">
-                                <div className="custom-select">
-                                    <select name="budget">
-                                        <option value="">Ngân sách</option>
-                                        <option value="economy">Tiết kiệm</option>
-                                        <option value="moderate">Vừa phải</option>
-                                        <option value="luxury">Cao cấp</option>
-                                    </select>
-                                </div>
-                            </div>
+                        <div className="col-lg-6 mb-2">
+                        <Select
+    value={feeOptions.find(option => option.value === select)}
+    onChange={handleChange}
+    options={feeOptions}
+    placeholder="Ngân sách"
+/>
                         </div>
                         <div className="col-12">
                             <button className="btn btn-base">Send Message</button>
@@ -173,8 +204,9 @@ class ContactPage extends Component {
 			    <iframe src="https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d29208.601361499546!2d90.3598076!3d23.7803374!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sbd!4v1589109092857!5m2!1sen!2sbd" />
 			  </div>
 			</div>
+    )
 
         }
-}
+
 
 export default ContactPage

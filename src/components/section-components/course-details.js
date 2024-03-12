@@ -620,13 +620,14 @@ function CourseDetails() {
                     cơ bản
                   </li>
                   <li>
-                    <i className="fa fa-clock-o" />
-                    <span>Thời gian bắt đầu:</span> DD/MM/YYYY
-                  </li>
-                  <li>
-                    <i className="fa fa-clock-o" />
-                    <span>Thời gian kết thúc:</span> DD/MM/YYYY
-                  </li>
+                  <i className="fa fa-calendar" />
+    <span>Học kỳ:</span> Spring 2024
+</li>
+<li>
+<i className="fa fa-graduation-cap" />
+    <span>Loại chương trình:</span> Full-time
+</li>
+
                 </ul>
                 <div className="price-wrap text-center">
                   <h5>
