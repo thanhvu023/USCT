@@ -13,7 +13,7 @@ class Banner extends Component {
                     <div className="row justify-content-center">
                       <div className="col-lg-5 col-md-8 order-lg-12 align-self-center">
                         <div className="thumb b-animate-thumb">
-                          <img src={publicUrl + "assets/img/banner/1.png"} alt="hình ảnh" />
+                          <img src={publicUrl + "assets/img/banner/1new.png"} alt="hình ảnh" />
                         </div>
                       </div>
                       <div className="col-lg-7 order-lg-1 align-self-center">

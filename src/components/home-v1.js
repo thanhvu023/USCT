@@ -19,12 +19,11 @@ const Home_V1 = () => {
         <Banner />
         <Intro />
         <About />
+        <HowToWork />
         <CourseFilter />
         <FunFact />
-        <HowToWork />
         <Testimonial />
         <Team />
-  
         <Contact />
         <Footer />
     </div>

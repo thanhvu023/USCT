@@ -93,7 +93,7 @@ class ContactPage extends Component {
                         </div>
                         <div className="col-lg-6">
                             <div className="single-input-inner style-bg-border">
-                                <input type="text" placeholder="Ngày sinh (dd/mm/yyyy)" name="dob" />
+                                <input type="date" placeholder="Ngày sinh (dd/mm/yyyy)" name="dob" />
                             </div>
                         </div>
                         <div className="col-lg-6">

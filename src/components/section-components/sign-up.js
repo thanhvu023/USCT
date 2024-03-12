@@ -35,7 +35,7 @@ class SignUP extends Component {
                           </div>
                         </div>
                         <div className="col-12">
-                          <div className="single-input-inner style-bg-border">
+                          <div className="single-input-inner style-bg">
                             <input type="date" placeholder="Ngày sinh" />
                           </div>
                         </div>

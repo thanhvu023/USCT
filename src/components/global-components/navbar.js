@@ -88,7 +88,7 @@ class Navbar extends Component {
               id="edumint_main_menu"
             >
               <ul className="navbar-nav menu-open">
-                <li className="menu-item-has-children current-menu-item">
+                <li className="menu-item current-menu-item">
                   <Link to="/">Trang chủ</Link>
                 </li>
                 <li className="menu-item-has-children">
