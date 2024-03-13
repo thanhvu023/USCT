@@ -1,13 +1,115 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Select from 'react-select';
+import { ProgressBar, Step } from "react-step-progress-bar";
+
+const MultiStepProgressBar = ({ page, onPageNumberClick }) => {
+  let stepPercentage = 0;
+  switch (page) {
+    case "basicInfo":
+      stepPercentage = 0;
+      break;
+    case "uploadFile":
+      stepPercentage = 50;
+      break;
+    case "complete":
+      stepPercentage = 100;
+      break;
+    default:
+      stepPercentage = 0;
+  }
+
+  return (
+    <ProgressBar percent={stepPercentage}>
+      <Step>
+        {({ accomplished, index }) => (
+          <div
+            className={`indexedStep ${accomplished ? "accomplished" : null}`}
+            onClick={() => onPageNumberClick("basicInfo")}
+          >
+            {index + 1}
+          </div>
+        )}
+      </Step>
+      <Step>
+        {({ accomplished, index }) => (
+          <div
+            className={`indexedStep ${accomplished ? "accomplished" : null}`}
+            onClick={() => onPageNumberClick("uploadFile")}
+          >
+            {index + 1}
+          </div>
+        )}
+      </Step>
+      <Step>
+        {({ accomplished, index }) => (
+          <div
+            className={`indexedStep ${accomplished ? "accomplished" : null}`}
+            onClick={() => onPageNumberClick("complete")}
+          >
+            {index + 1}
+          </div>
+        )}
+      </Step>
+    </ProgressBar>
+  );
+};
 
 const ContactPage = () => {
     const [select, setSelect] = useState('');
+    const [step, setStep] = useState(1);
+    const [page, setPage] = useState("basicInfo");
+    const [selectedFile, setSelectedFile] = useState(null);
 
+    const handleFileChange = (event) => {
+      const file = event.target.files[0]; 
+    };
+
+    const handleSubmitFile = () => {
+      // Thực hiện các thao tác xử lý khi người dùng nhấn nút gửi tệp tin
+      // Ví dụ: kiểm tra xem tệp tin đã được chọn chưa và gửi nó đi
+      
+      if (!selectedFile) {
+        alert("Vui lòng chọn một tệp tin.");
+        return;
+      }
+    
+      // Thực hiện các thao tác xử lý khác tại đây, ví dụ: gửi tệp tin đến máy chủ
+    };
     const handleChange = (event) => {
         setSelect(event.target.value);
     };
+
+    const nextPageNumber = (pageNumber) => {
+      setPage(pageNumber);
+    };
+  
+    const handleNextStep = () => {
+      switch (page) {
+        case "basicInfo":
+          setPage("uploadFile");
+          break;
+        case "uploadFile":
+          setPage("complete");
+          break;
+        default:
+          setPage("basicInfo");
+      }
+    };
+  
+    const handlePreviousStep = () => {
+      switch (page) {
+        case "uploadFile":
+          setPage("basicInfo");
+          break;
+        case "complete":
+          setPage("uploadFile");
+          break;
+        default:
+          setPage("basicInfo");
+      }
+    };
+
 
     const stateOptions = [
         { value: 'north', label: 'Miền Bắc' },
@@ -39,9 +141,13 @@ const ContactPage = () => {
     
     
         let publicUrl = process.env.PUBLIC_URL+'/';
+        
 
     return  (
+      
     <div>
+            <MultiStepProgressBar page={page} onPageNumberClick={nextPageNumber} />
+
 			 <div className="contact-list pd-top-120 pd-bottom-90">
     <div className="container">
       <div className="row justify-content-center">
@@ -87,9 +193,11 @@ const ContactPage = () => {
       </div>
     </div>
   </div>
-			  {/* counter area start */}
+			
 			  <div className="counter-area pd-bottom-120">
-    <div className="container">
+        {page === "basicInfo" && (
+        <div>
+           <div className="container">
         <div className="row">
             <div className="col-lg-4">
                 <div className="section-title mb-0">
@@ -186,14 +294,44 @@ const ContactPage = () => {
     placeholder="Ngân sách"
 />
                         </div>
-                        <div className="col-12">
-                            <button className="btn btn-base">Send Message</button>
-                        </div>
+                        <div className="col-12 d-flex justify-content-end">
+    <button className="btn btn-base">Hoàn tất</button>
+</div>
+
                     </div>
                 </form>
             </div>
         </div>
     </div>
+    <div style={{ textAlign: 'center', margin: '20px 0' }}>
+    <button className='btn btn-base' style={{ width:'200px' }} onClick={handleNextStep}>Tiếp tục</button>
+          </div>
+        </div>
+      )}
+      {page === "uploadFile" && (
+        <div className='container'>
+  <form className="file-upload-form">
+      <input type="file" onChange={handleFileChange} />
+      
+      <button type="submit" className="btn btn-base" onClick={handleSubmitFile}>Upload File</button>
+    </form>      
+    <div style={{ textAlign: 'center', margin: '20px 0' }}>  
+      <button className='btn btn-base'  style={{  marginRight: ' 20px' }}onClick={handlePreviousStep}>Quay lại</button>
+          <button className='btn btn-base' onClick={handleNextStep}>Tiếp tục</button>
+          </div>
+        </div>
+      )}
+      {page === "complete" && (
+        <div className='container'>
+        <div className="completion-message">
+          <h3>Hoàn tất!</h3>
+          <p>Cảm ơn bạn đã hoàn thành tất cả các bước.</p>
+        </div>
+        <div style={{ textAlign: 'center', margin: '20px 0' }}>
+  <button className='btn btn-base' style={{ width: '200px' }} onClick={handlePreviousStep}>Quay lại</button>
+</div>      </div>
+      
+      )}
 </div>
 
 
