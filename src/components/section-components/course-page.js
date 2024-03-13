@@ -126,7 +126,7 @@ function CoursePage() {
                             <span className="align-self-center">abc</span>
                           </div> */}
                           <h6>
-                            <Link to={`/program-details/${program.programId}`}>abc</Link>
+                            <Link to={`/program-details/${program.programId}`}>{program.nameProgram}</Link>
                           </h6>
                         </div>
                         <div className="emt-course-meta">
