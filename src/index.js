@@ -35,7 +35,7 @@ class Root extends Component {
             <Route exact path="/" component={HomeV1} />
             <Route path="/home-v2" component={HomeV2} />
             <Route path="/home-v3" component={HomeV3} />
-            <Route path="/course" component={Course} />
+            <Route path="/program" component={Course} />
             <Route
               path="/program-details/:programById"
               component={CourseDetails}

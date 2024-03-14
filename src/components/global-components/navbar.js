@@ -54,7 +54,7 @@ class Navbar extends Component {
             </div>
           </div>
         </div>
-        <nav className="navbar navbar-area-1 navbar-area navbar-expand-lg">
+        <nav className="navbar  navbar-area-1 navbar-area navbar-expand-lg">
           <div className="container nav-container w-1/2">
             <div className="responsive-mobile-menu">
               <button
@@ -69,7 +69,7 @@ class Navbar extends Component {
             </div>
             <div className="logo">
               <Link to="/">
-                <img src={publicUrl + ""} alt="img" />
+                <img src={publicUrl + "assets/img/logo.png"} alt="img" />
               </Link>
             </div>
             <div className="nav-right-part nav-right-part-mobile">
@@ -92,7 +92,7 @@ class Navbar extends Component {
                   <Link to="/">Trang chủ</Link>
                 </li>
                 <li className="menu-item">
-                  <Link to="/course">Chương trình</Link>
+                  <Link to="/program">Chương trình</Link>
                 </li>
                 <li className="menu-item">
                   <Link to="/university">Trường học</Link>
@@ -101,7 +101,7 @@ class Navbar extends Component {
                         <li><Link to="/blog-details">Blog Details</Link></li>
                       </ul> */}
                 </li>
-            
+
                 <li>
                   <Link to="/contact">Tư Vấn</Link>
                 </li>
