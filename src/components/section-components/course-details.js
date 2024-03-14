@@ -2,7 +2,11 @@ import React, { Component, useEffect } from "react";
 import { Link } from "react-router-dom";
 import parse from "html-react-parser";
 import { useDispatch, useSelector } from "react-redux";
-import { getProgramById } from "../../redux/slice/programSlice";
+import {
+  getAllProgram,
+  getProgramById,
+  getProgramByUniId,
+} from "../../redux/slice/programSlice";
 import { useParams } from "react-router-dom/cjs/react-router-dom";
 
 function CourseDetails() {
@@ -10,9 +14,11 @@ function CourseDetails() {
   const dispatch = useDispatch();
   const { programById } = useParams();
   const programDetail = useSelector((state) => state.program.programById);
-  console.log(programDetail);
+  const programs = useSelector((state) => state.program.programs);
   useEffect(() => {
     dispatch(getProgramById(programById));
+    dispatch(getAllProgram());
+    // dispatch(getProgramByUniId())
   }, [programById]);
 
   const CourseCard = ({
@@ -159,9 +165,7 @@ function CourseDetails() {
                   aria-labelledby="tab1-tab"
                 >
                   <div className="course-details-content">
-                    <p>
-                    {programDetail.description}
-                    </p>
+                    <p>{programDetail.description}</p>
                     <p>
                       Sau đây là những lợi ích lớn lao từ việc thực tập ở nước
                       ngoài:
@@ -620,14 +624,13 @@ function CourseDetails() {
                     cơ bản
                   </li>
                   <li>
-                  <i className="fa fa-calendar" />
-    <span>Học kỳ:</span> Spring 2024
-</li>
-<li>
-<i className="fa fa-graduation-cap" />
-    <span>Loại chương trình:</span> Full-time
-</li>
-
+                    <i className="fa fa-calendar" />
+                    <span>Học kỳ:</span> Spring 2024
+                  </li>
+                  <li>
+                    <i className="fa fa-graduation-cap" />
+                    <span>Loại chương trình:</span> Full-time
+                  </li>
                 </ul>
                 <div className="price-wrap text-center">
                   <h5>
@@ -690,84 +693,35 @@ function CourseDetails() {
         <div>
           <h4 className="widget-title ">Những Chương Trình Tương Tự</h4>
           <div className="row justify-content-center pd-top-100">
-            <div className="col-lg-4 col-md-6">
-              <div className="single-course-inner">
-                <div class="thumb">
-                  <img src={publicUrl + "assets/img/course/1.png"} alt="img" />
-                </div>
-                <div class="details">
-                  <div class="details-inner">
-                    <h5>
-                      <Link to="/course-details">
-                        Fox nymphs grab quick-jived waltz. Brick quiz whangs
-                      </Link>
-                    </h5>
-                    <div class="specialization-icon ">
-                      <i class="fa fa-laptop " />
-                      <span className="fw-bold">Chuyên ngành:</span> Công nghệ
-                      Thông tin
-                    </div>
+            {programs.map((program, index) => (
+              <div key={index} className="col-lg-4 col-md-6">
+                <div className="single-course-inner">
+                  <div className="thumb">
+                    <img
+                      src={publicUrl + "assets/img/course/1.png"}
+                      alt="img"
+                    />
                   </div>
-                  <div class="emt-course-meta">
-                    <div class="price text-right">
-                      Price: <span>$54.00</span>
+                  <div className="details">
+                    <div className="details-inner">
+                      <h5>
+                        <Link to="/course-details">{program.nameProgram}</Link>
+                      </h5>
+                      <div className="specialization-icon">
+                        <i className="fa fa-laptop" />
+                        <span className="fw-bold">Chuyên ngành:</span> Công nghệ
+                        Thông tin
+                      </div>
                     </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-4 col-md-6">
-              <div className="single-course-inner">
-                <div class="thumb">
-                  <img src={publicUrl + "assets/img/course/1.png"} alt="img" />
-                </div>
-                <div class="details">
-                  <div class="details-inner">
-                    <h5>
-                      <Link to="/instructor-details">
-                        Fox nymphs grab quick-jived waltz. Brick quiz whangs
-                      </Link>
-                    </h5>
-                    <div class="specialization-icon ">
-                      <i class="fa fa-laptop " />
-                      <span className="fw-bold">Chuyên ngành:</span> Công nghệ
-                      Thông tin
-                    </div>
-                  </div>
-                  <div class="emt-course-meta">
-                    <div class="price text-right">
-                      Price: <span>$54.00</span>
+                    <div className="emt-course-meta">
+                      <div className="price text-right">
+                        Chi phí: <span>{program.tuition}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="col-lg-4 col-md-6">
-              <div className="single-course-inner">
-                <div class="thumb">
-                  <img src={publicUrl + "assets/img/course/1.png"} alt="img" />
-                </div>
-                <div class="details">
-                  <div class="details-inner">
-                    <h5>
-                      <Link to="/instructor-details">
-                        Fox nymphs grab quick-jived waltz. Brick quiz whangs
-                      </Link>
-                    </h5>
-                    <div class="specialization-icon ">
-                      <i class="fa fa-laptop " />
-                      <span className="fw-bold">Chuyên ngành:</span> Công nghệ
-                      Thông tin
-                    </div>
-                  </div>
-                  <div class="emt-course-meta">
-                    <div class="price text-right">
-                      Price: <span>$54.00</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
         <div>

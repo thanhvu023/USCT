@@ -22,7 +22,7 @@ export const getProgramById = createAsyncThunk(
   async (param, thunkAPI) => {
     try {
       const programId = param;
-      const res = await axiosUs.get(`/programs/${programId}`,{
+      const res = await axiosUs.get(`/programs/${programId}`, {
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/problem+json; charset=utf-8",
@@ -36,12 +36,32 @@ export const getProgramById = createAsyncThunk(
   }
 );
 
+export const getProgramByUniId = createAsyncThunk(
+  "/program/getProgramByUniId",
+  async (param, thunkAPI) => {
+    try {
+      const { programId } = param;
+      const { uniId } = param;
+      const res = await axiosUs.get(`/programs/?universityId=${uniId}`, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/problem+json; charset=utf-8",
+          Accept: "application/json",
+        },
+      });
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response);
+    }
+  }
+);
 const initialState = {
   msg: "",
   token: null,
   loading: false,
   programs: [],
   programById: {},
+  programsByUniId: [],
 };
 
 export const programSlice = createSlice({
@@ -71,6 +91,18 @@ export const programSlice = createSlice({
         state.error = null;
       })
       .addCase(getProgramById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(getProgramByUniId.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getProgramByUniId.fulfilled, (state, action) => {
+        state.loading = false;
+        state.programsByUniId = action.payload;
+        state.error = null;
+      })
+      .addCase(getProgramByUniId.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       });
