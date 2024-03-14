@@ -15,12 +15,19 @@ function CourseDetails() {
   const { programById } = useParams();
   const programDetail = useSelector((state) => state.program.programById);
   const programs = useSelector((state) => state.program.programs);
+  const uniId = useSelector((state) => state.program.programById?.universityId);
+  const UniversityDetails = useSelector(
+    (state) => state.program.programsByUniId
+  );
   useEffect(() => {
     dispatch(getProgramById(programById));
     dispatch(getAllProgram());
-    // dispatch(getProgramByUniId())
   }, [programById]);
-
+  useEffect(() => {
+    if (uniId) {
+      dispatch(getProgramByUniId({ uniId }));
+    }
+  }, [uniId]);
   const CourseCard = ({
     publicUrl,
     imgSrc,
@@ -83,7 +90,9 @@ function CourseDetails() {
                   <span className="align-self-center">Nancy Reyes</span>
                 </div> */}
                 <h3 className="title">
-                  <a href="course-details.html">Program Name</a>
+                  <h3 href="course-details.html">
+                    {programDetail.nameProgram}
+                  </h3>
                 </h3>
               </div>
               <div className="thumb">
@@ -693,138 +702,95 @@ function CourseDetails() {
         <div>
           <h4 className="widget-title ">Những Chương Trình Tương Tự</h4>
           <div className="row justify-content-center pd-top-100">
-            {programs.map((program, index) => (
-              <div key={index} className="col-lg-4 col-md-6">
+            {programs
+              .filter((program) => program.programId.toString() !== programById)
+              .map((program, index) => (
+                <div key={index} className="col-lg-4 col-md-6">
+                  <div className="single-course-inner">
+                    <div className="thumb">
+                      <img
+                        src={publicUrl + "assets/img/course/1.png"}
+                        alt="img"
+                      />
+                    </div>
+                    <div className="details">
+                      <div className="details-inner">
+                        <h5>
+                          <Link to={`/program-details/${program.programId}`}>
+                            {program.nameProgram}
+                          </Link>
+                        </h5>
+                        {/* <div className="specialization-icon">
+                  <i className="fa fa-laptop" />
+                  <span className="fw-bold">Chuyên ngành:</span> Công nghệ Thông tin
+                </div> */}
+                      </div>
+                      <div className="emt-course-meta">
+                        <div className="row">
+                          <div className="col-6">
+                            <div className="rating">
+                              <span>Lộ trình: {program.duration}</span>
+                            </div>
+                          </div>
+                          <div className="col-6">
+                            <div className="price text-right">
+                              Học phí: <span>{program.tuition}$</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+          </div>
+        </div>
+
+        <div>
+          <h4 className="widget-title display-5">
+            Những Trường Đại Học Có Mở Chương Trình Này
+          </h4>
+          <div className="row justify-content-center pd-top-100">
+            {UniversityDetails.map((university, index) => (
+              <div className="col-lg-4 col-md-6">
                 <div className="single-course-inner">
-                  <div className="thumb">
+                  <div class="thumb">
                     <img
                       src={publicUrl + "assets/img/course/1.png"}
                       alt="img"
                     />
                   </div>
-                  <div className="details">
-                    <div className="details-inner">
-                      <h5>
-                        <Link to="/course-details">{program.nameProgram}</Link>
+                  <div class="details">
+                    <div class="details-inner">
+                      <h5 className="h6">
+                        <Link to="/instructor-details">
+                    {university.nameProgram}
+                        </Link>
                       </h5>
-                      <div className="specialization-icon">
-                        <i className="fa fa-laptop" />
-                        <span className="fw-bold">Chuyên ngành:</span> Công nghệ
-                        Thông tin
+                      <div class="specialization-icon mb-2">
+                        <i class="fa fa-univers ity mr-1"></i>
+                        <span className="fw-bold">Trường Đại Học Ohana</span>
                       </div>
-                    </div>
-                    <div className="emt-course-meta">
-                      <div className="price text-right">
-                        Chi phí: <span>{program.tuition}</span>
+                      <div class="specialization-icon">
+                        <i className="fa fa-map-marker mr-2" />
+
+                        <span className="fw-bold">Tiểu Bang: Ohana</span>
+                      </div>
+                      <div class="emt-course-meta">
+                        <div class="price text-right mt-3">
+                          <Link
+                            to="/instructor-details"
+                            class="btn btn-primary"
+                          >
+                            Xem Thêm
+                          </Link>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             ))}
-          </div>
-        </div>
-        <div>
-          <h4 className="widget-title display-5">
-            Những Trường Đại Học Có Mở Chương Trình Này
-          </h4>
-          <div className="row justify-content-center pd-top-100">
-            <div className="col-lg-4 col-md-6">
-              <div className="single-course-inner">
-                <div class="thumb">
-                  <img src={publicUrl + "assets/img/course/1.png"} alt="img" />
-                </div>
-                <div class="details">
-                  <div class="details-inner">
-                    <h5 className="h6">
-                      <Link to="/instructor-details">
-                        Fox nymphs grab quick-jived waltz. Brick quiz whangs
-                      </Link>
-                    </h5>
-                    <div class="specialization-icon mb-2">
-                      <i class="fa fa-university mr-1"></i>
-                      <span className="fw-bold">Trường Đại Học Ohana</span>
-                    </div>
-                    <div class="specialization-icon">
-                      <i className="fa fa-map-marker mr-2" />
-
-                      <span className="fw-bold">Tiểu Bang: Ohana</span>
-                    </div>
-                    <div class="emt-course-meta">
-                      <div class="price text-right mt-3">
-                        <Link to="/instructor-details" class="btn btn-primary">
-                          Xem Thêm
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-4 col-md-6">
-              <div className="single-course-inner">
-                <div class="thumb">
-                  <img src={publicUrl + "assets/img/course/1.png"} alt="img" />
-                </div>
-                <div class="details">
-                  <div class="details-inner">
-                    <h5 className="h6">
-                      <Link to="/instructor-detailss">
-                        Fox nymphs grab quick-jived waltz. Brick quiz whangs
-                      </Link>
-                    </h5>
-                    <div class="specialization-icon mb-2">
-                      <i class="fa fa-university mr-1"></i>
-                      <span className="fw-bold">Trường Đại Học Ohana</span>
-                    </div>
-                    <div class="specialization-icon">
-                      <i className="fa fa-map-marker mr-2" />
-
-                      <span className="fw-bold">Tiểu Bang: Ohana</span>
-                    </div>
-                    <div class="emt-course-meta">
-                      <div class="price text-right mt-3">
-                        <Link to="/instructor-details" class="btn btn-primary">
-                          Xem Thêm
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-4 col-md-6">
-              <div className="single-course-inner">
-                <div class="thumb">
-                  <img src={publicUrl + "assets/img/course/1.png"} alt="img" />
-                </div>
-                <div class="details">
-                  <div class="details-inner">
-                    <h5 className="h6">
-                      <Link to="/instructor-details">
-                        Fox nymphs grab quick-jived waltz. Brick quiz whangs
-                      </Link>
-                    </h5>
-                    <div class="specialization-icon mb-2">
-                      <i class="fa fa-university mr-1"></i>
-                      <span className="fw-bold">Trường Đại Học Ohana</span>
-                    </div>
-                    <div class="specialization-icon">
-                      <i className="fa fa-map-marker mr-2" />
-
-                      <span className="fw-bold">Tiểu Bang: Ohana</span>
-                    </div>
-                    <div class="emt-course-meta">
-                      <div class="price text-right mt-3">
-                        <Link to="/instructor-details" class="btn btn-primary">
-                          Xem Thêm
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>

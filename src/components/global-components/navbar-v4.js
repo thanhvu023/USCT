@@ -86,32 +86,34 @@ class NavbarV4 extends Component {
               <ul className="navbar-nav menu-open">
                 <li className="menu-item current-menu-item">
                   <Link to="/">Trang chủ</Link>
-                
                 </li>
-                <li className="menu-item-has-children">
-                  <Link to="/course">Các chương trình</Link>
-                  <ul className="sub-menu">
+                <li className="menu-item">
+                  <Link to="/program">Các chương trình</Link>
+                  {/* <ul className="sub-menu">
                     <li>
-                      <Link to="/course">Chương trình du học</Link>
+                      <Link to="/">Chương trình du học</Link>
                     </li>
                     <li>
                       <Link to="/course-details">Chương trình du học</Link>
                     </li>
-                  </ul>
+                  </ul> */}
                 </li>
-           
-                <li className="menu-item-has-children">
+
+                <li className="menu-item">
                   <Link to="/university">Trường học</Link>
                 </li>
-                <li><Link to="/contact">Tư Vấn</Link></li>
+                <li>
+                  <Link to="/contact">Tư Vấn</Link>
+                </li>
               </ul>
             </div>
             <div className="nav-right-part nav-right-part-desktop">
               <Link className="signin-btn" to="/sign-in">
-           Đăng nhập
+                Đăng nhập
               </Link>
               <Link className="btn btn-base" to="/sign-up">
-Đăng ký              </Link>
+                Đăng ký{" "}
+              </Link>
               <a className="search-bar" href="#">
                 <i className="fa fa-search" />
               </a>
