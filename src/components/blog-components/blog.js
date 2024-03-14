@@ -16,7 +16,7 @@ function Blog() {
 				{/* Giả sử mỗi đoạn sau đây là một trường đại học cụ thể */}
 				<div className="single-blog-inner style-border">
 				  <div className="thumb">
-					<img src={publicUrl+"assets/img/blog/4.png"} alt="img" />
+                  <img src={publicUrl+"assets/img/blog/uni.jpg"} alt="university 1" />
 				  </div>
 				  <div className="details">
 					<ul className="blog-meta">
@@ -30,7 +30,7 @@ function Blog() {
 				</div>
 				<div className="single-blog-inner style-border">
                 <div className="thumb">
-                  <img src={publicUrl+"assets/img/blog/4.png"} alt="university 1" />
+                  <img src={publicUrl+"assets/img/blog/uni.jpg"} alt="university 1" />
                 </div>
                 <div className="details">
                   <ul className="blog-meta">
@@ -44,7 +44,7 @@ function Blog() {
               </div>
 			  <div className="single-blog-inner style-border">
                 <div className="thumb">
-                  <img src={publicUrl+"assets/img/blog/4.png"} alt="Princeton University" />
+				<img src={publicUrl+"assets/img/blog/uni.jpg"} alt="university 1" />
                 </div>
                 <div className="details">
                   <ul className="blog-meta">
