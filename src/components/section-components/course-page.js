@@ -26,29 +26,34 @@ function CoursePage() {
   const [maxPrice, setMaxPrice] = useState(2000000);
   const [currentValue, setCurrentValue] = useState(100000);
 
-  const CategoryDropdown = ({ title, items }) => {
-    const [dropdownOpen, setDropdownOpen] = useState(false);
+  const CategoryCheckboxList = ({ title, items }) => {
+    const [selectedItems, setSelectedItems] = useState([]);
 
-    const toggleDropdown = () => setDropdownOpen((prevState) => !prevState);
+    const handleCheckboxChange = (item) => {
+        if (selectedItems.includes(item)) {
+            setSelectedItems(selectedItems.filter((selectedItem) => selectedItem !== item));
+        } else {
+            setSelectedItems([...selectedItems, item]);
+        }
+    };
 
     return (
-      <Dropdown isOpen={dropdownOpen} toggle={toggleDropdown}>
-        <DropdownToggle
-          caret
-          style={{ backgroundColor: "#489DF9", width: "300px", color: "black" }}
-        >
-          {title}
-        </DropdownToggle>
-        <DropdownMenu style={{ width: "300px" }}>
-          {items.map((item, index) => (
-            <DropdownItem key={index}>
-              <Link to={item.link}>{item.label}</Link>
-            </DropdownItem>
-          ))}
-        </DropdownMenu>
-      </Dropdown>
+        <div className="widget widget_checkbox_list">
+            <h4 className="widget-title">{title}</h4>
+            {items.map((item, index) => (
+                <label key={index} className="single-checkbox">
+                    <input
+                        type="checkbox"
+                        defaultChecked={item.defaultChecked}
+                        onChange={() => handleCheckboxChange(item.label)}
+                    />
+                    <span className="checkmark" />
+                    {item.label}
+                </label>
+            ))}
+        </div>
     );
-  };
+};
 
   const categories = [
     {
@@ -107,8 +112,8 @@ function CoursePage() {
 
   return (
     <div className="blog-area pd-top-120 pd-bottom-120">
-      <div className="container">
-        <div className="row flex-lg-row-reverse">
+<div class="container">
+        <div className="row">
           <div className="col-lg-8 order-lg-12 m-0">
             <div className="row go-top">
               {loading ? (
@@ -194,7 +199,7 @@ function CoursePage() {
                 <ul className="catagory-items go-top">
                   {categories.map((category, index) => (
                     <div key={index} style={{ margin: "20px" }}>
-                      <CategoryDropdown
+                      <CategoryCheckboxList
                         title={category.title}
                         items={category.items}
                       />
