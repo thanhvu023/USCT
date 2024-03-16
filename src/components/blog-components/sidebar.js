@@ -43,62 +43,7 @@ class Sidebar extends Component {
             </ul>
           </div>                 
        
-<div className="widget widget_price">
-            <h4 className="widget-title">Chi Phí Du Học</h4>
-            <input
-              type="range"
-              min="100000"
-              max="2000000"
-              value={this.state.currentValue}
-              className="custom-range"
-              onChange={this.handleSliderChange}
-              style={{
-                width: '100%',
-                height: '25px',
-                background: '#ddd',
-                outline: 'none',
-                opacity: '0.7',
-                transition: 'opacity .2s',
-                position: 'relative',
-                backgroundColor: '#007bff',
-                border: '2px solid #007bff'
-              }}
-            />
-            <div className="d-flex justify-content-between" style={{ color: '#007bff' }}>
-              <span>$100k</span>
-              <span>$2M</span>
-            </div>
-            <div
-              style={{
-                position: 'absolute',
-                top: '470px',
-                left: `${(this.state.currentValue - 100000) / (2000000 - 100000) * 100}%`,
-                transform: 'translateX(-10%)',
-                whiteSpace: 'nowrap',
-                fontWeight:'bold'
-              }}
-            >
-              {this.formatCurrency(this.state.currentValue)}$
-            </div>
-          </div>
-              <div className="widget widget_level">
-                <h4 className="widget-title">Level</h4> 
-                <label className="single-checkbox">
-                  <input type="checkbox" defaultChecked="checked" />
-                  <span className="checkmark" />
-                  Beginner
-                </label> 
-                <label className="single-checkbox">
-                  <input type="checkbox" defaultChecked="checked" />
-                  <span className="checkmark" />
-                  Intermediate
-                </label> 
-                <label className="single-checkbox">
-                  <input type="checkbox" defaultChecked="checked" />
-                  <span className="checkmark" />
-                  Advanced
-                </label>  
-              </div> 
+
               <div className="widget widget_tags mb-0">
             <h4 className="widget-title">Tags</h4>
             <div className="tagcloud go-top">

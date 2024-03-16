@@ -42,7 +42,7 @@ class CourseFilter extends Component {
 		  {
 			id: 1,
 			category: 'Graphics & Design',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/11.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/1.png`,
 			authorName: 'Đại học A',
 			title: 'Fox nymphs grab quick-jived waltz. Brick quiz whangs',
@@ -54,7 +54,7 @@ class CourseFilter extends Component {
 		  {
 			id: 2,
 			category: 'Graphics & Design',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/11.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/2.png`,
 			authorName: 'Đại học A',
 			title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
@@ -67,7 +67,7 @@ class CourseFilter extends Component {
 		  {
 			id: 3,
 			category: 'Graphics & Design',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/11.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/3.png`,
 			authorName: 'Đại học A',
 			title: 'Etiam vehicula sapien ac turpis hendrerit, a malesuada justo eleifend',
@@ -80,7 +80,7 @@ class CourseFilter extends Component {
 		  {
 			id: 4,
 			category: 'Graphics & Design',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/11.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/4.png`,
 			authorName: 'Đại học A',
 			title: 'Vestibulum vel nisi in elit accumsan eleifend nec vitae est',
@@ -93,7 +93,7 @@ class CourseFilter extends Component {
 		  {
 			id: 5,
 			category: 'Graphics & Design',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/11.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/5.png`,
 			authorName: 'Đại học A',
 			title: 'Aliquam sollicitudin eros nec semper blandit',
@@ -106,7 +106,7 @@ class CourseFilter extends Component {
 		  {
 			id: 6,
 			category: 'Graphics & Design',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/11.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
 			authorName: 'Đại học A',
 			title: 'Praesent vel augue a elit interdum laoreet',
@@ -119,7 +119,7 @@ class CourseFilter extends Component {
 		  {
 			id: 7,
 			category: 'Digital Marketing',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/11.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/7.png`,
 			authorName: 'Đại học A',
 			title: 'Duis id velit aliquam, laoreet magna ac, vehicula orci',
@@ -132,7 +132,7 @@ class CourseFilter extends Component {
 		  {
 			id: 8,
 			category: 'Digital Marketing',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/11.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/7.png`,
 			authorName: 'Đại học A',
 			title: 'Curabitur sed neque nec eros dignissim gravida',
@@ -145,7 +145,7 @@ class CourseFilter extends Component {
 		  {
 			id: 9,
 			category: 'Digital Marketing',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/11.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/7.png`,
 			authorName: 'Đại học A',
 			title: 'Nam eget metus sit amet sem faucibus facilisis id at mi',
@@ -158,7 +158,7 @@ class CourseFilter extends Component {
 		  {
 			id: 10,
 			category: 'Digital Marketing',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/11.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
 			authorName: 'Đại học A',
 			title: 'Integer sit amet nisi vitae orci volutpat commodo',
@@ -171,7 +171,7 @@ class CourseFilter extends Component {
 		  {
 			id: 11,
 			category: 'Digital Marketing',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/11.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
 			authorName: 'Đại học A',
 			title: 'Vivamus rutrum quam non turpis ullamcorper, vitae aliquet arcu tincidunt',
@@ -184,7 +184,7 @@ class CourseFilter extends Component {
 		  {
 			id: 12,
 			category: 'Digital Marketing',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/11.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
 			authorName: 'Đại học A',
 			title: 'Proin sagittis ligula vel ante tincidunt, in finibus ligula interdum',
@@ -197,7 +197,7 @@ class CourseFilter extends Component {
 		  {
 			id: 13,
 			category: 'Writing & Translation',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/11.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
 			authorName: 'Đại học A',
 			title: 'Sed fermentum dui at congue fermentum',
@@ -210,7 +210,7 @@ class CourseFilter extends Component {
 		  {
 			id: 14,
 			category: 'Writing & Translation',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/11.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
 			authorName: 'Đại học A',
 			title: 'Fusce a elit non diam condimentum aliquam',
@@ -223,7 +223,7 @@ class CourseFilter extends Component {
 		  {
 			id: 15,
 			category: 'Writing & Translation',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/11.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
 			authorName: 'Đại học A',
 			title: 'Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas',
@@ -236,7 +236,7 @@ class CourseFilter extends Component {
 		  {
 			id: 16,
 			category: 'Writing & Translation',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/11.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
 			authorName: 'Đại học A',
 			title: 'Quisque sed tortor at tellus ullamcorper dapibus',
@@ -249,7 +249,7 @@ class CourseFilter extends Component {
 		  {
 			id: 17,
 			category: 'Writing & Translation',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/11.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
 			authorName: 'Đại học A',
 			title: 'Morbi vel urna nec ligula gravida auctor',
@@ -262,7 +262,7 @@ class CourseFilter extends Component {
 		  {
 			id: 18,
 			category: 'Writing & Translation',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/11.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
 			authorName: 'Đại học A',
 			title: 'Vestibulum eu risus at ipsum lacinia vehicula',
@@ -275,7 +275,7 @@ class CourseFilter extends Component {
 		  {
 			id: 19,
 			category: 'Music & Audio',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/11.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
 			authorName: 'Đại học A',
 			title: 'Curabitur ornare nisl id justo tincidunt, ut tincidunt odio laoreet',
@@ -288,7 +288,7 @@ class CourseFilter extends Component {
 		  {
 			id: 20,
 			category: 'Music & Audio',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/11.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
 			authorName: 'Đại học A',
 			title: 'Phasellus ullamcorper magna nec sagittis dapibus',
@@ -301,7 +301,7 @@ class CourseFilter extends Component {
 		  {
 			id: 21,
 			category: 'Music & Audio',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/11.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
 			authorName: 'Đại học A',
 			title: 'Phasellus ullamcorper magna nec sagittis dapibus',
@@ -314,7 +314,7 @@ class CourseFilter extends Component {
 		  {
 			id: 22,
 			category: 'Music & Audio',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/11.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
 			authorName: 'Đại học A',
 			title: 'Phasellus ullamcorper magna nec sagittis dapibus',
@@ -327,7 +327,7 @@ class CourseFilter extends Component {
 		  {
 			id: 23,
 			category: 'Music & Audio',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/11.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
 			authorName: 'Đại học A',
 			title: 'Phasellus ullamcorper magna nec sagittis dapibus',
@@ -340,7 +340,7 @@ class CourseFilter extends Component {
 		  {
 			id: 24,
 			category: 'Music & Audio',
-			image: `${process.env.PUBLIC_URL}/assets/img/course/10.jpg`,
+			image: `${process.env.PUBLIC_URL}/assets/img/course/11.jpg`,
 			authorImage: `${process.env.PUBLIC_URL}/assets/img/author/6.png`,
 			authorName: 'Đại học A',
 			title: 'Phasellus ullamcorper magna nec sagittis dapibus',

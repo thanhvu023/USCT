@@ -16,7 +16,7 @@ class Page_header extends Component {
 	  <div className="container">
 	    <div className="breadcrumb-inner">
 	      <div className="section-title mb-0 text-center">
-	        <h2 className="page-title">{ HeaderTitle }</h2>
+	        <h2 className="page-title" style={{animation: 'fadeInUp 1s ease'}}>{ HeaderTitle }</h2>
 	       
 	      </div>
 	    </div>
