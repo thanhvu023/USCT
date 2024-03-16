@@ -1,16 +1,19 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import instance from "../axiosCustom";
+import { logoutUser } from "./authSlice";
 
-const axiosUs = axios.create({
-  baseURL: "https://usstudy.monoinfinity.net/v3/",
-});
 
 export const getAllProgram = createAsyncThunk(
   "/program/getAll",
   async (param, thunkAPI) => {
     try {
-      const res = await axiosUs.get("/programs");
-      return res.data;
+      // console.log(param);
+      // const headers = {
+      //   Authorization: `Bearer ${param}`,
+      // };
+      const res = await instance.get("/programs");
+      return res.data;    
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response);
     }
@@ -22,7 +25,7 @@ export const getProgramById = createAsyncThunk(
   async (param, thunkAPI) => {
     try {
       const programId = param;
-      const res = await axiosUs.get(`/programs/${programId}`, {
+      const res = await instance.get(`/programs/${programId}`, {
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/problem+json; charset=utf-8",
@@ -41,7 +44,7 @@ export const getProgramByUniId = createAsyncThunk(
   async (param, thunkAPI) => {
     try {
       const { uniId } = param;
-      const res = await axiosUs.get(`/programs?universityId=${uniId}`, {
+      const res = await instance.get(`/programs?universityId=${uniId}`, {
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/problem+json; charset=utf-8",
@@ -69,7 +72,9 @@ export const programSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder
+    builder.addCase(logoutUser,(state)=>{
+      state.programs = [];
+    })
       .addCase(getAllProgram.pending, (state) => {
         state.loading = true;
       })

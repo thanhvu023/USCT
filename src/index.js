@@ -1,11 +1,6 @@
-import React, { Component } from "react";
-import ReactDOM from "react-dom";
-import {
-  BrowserRouter as Router,
-  HashRouter,
-  Route,
-  Switch,
-} from "react-router-dom";
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomeV1 from "./components/home-v1";
 import HomeV2 from "./components/home-v2";
 import HomeV3 from "./components/home-v3";
@@ -26,50 +21,36 @@ import BlogDetails from "./components/blog-details";
 import { Provider } from "react-redux";
 import store from "./redux/store";
 
-class Root extends Component {
-  render() {
-    return (
-      <HashRouter basename="/haha">
-        <div>
-          <Switch>
-            <Route exact path="/" component={HomeV1} />
-            <Route path="/home-v2" component={HomeV2} />
-            <Route path="/home-v3" component={HomeV3} />
-            <Route path="/program" component={Course} />
-            <Route
-              path="/program-details/:programById"
-              component={CourseDetails}
-            />
-            <Route path="/about" component={About} />
-            <Route path="/event" component={Event} />
-            <Route path="/event-details" component={EventDetails} />
-            <Route path="/instructor" component={Instructor} />
-            <Route path="/instructor-details" component={InstructorDetails} />
-            <Route path="/pricing" component={Pricing} />
-            <Route path="/gallery" component={Gallery} />
-            <Route path="/sign-in" component={SignIn} />
-            <Route path="/sign-up" component={SignUp} />
-            <Route path="/contact" component={Contact} />
-            <Route path="/university" component={Blog} />
-            <Route path="/blog-details" component={BlogDetails} />
-            <Route path="/university-details" />
-          </Switch>
-        </div>
-      </HashRouter>
-    );
-  }
+function Root() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomeV1 />} />
+        <Route path="/home-v2" element={<HomeV2 />} />
+        <Route path="/home-v3" element={<HomeV3 />} />
+        <Route path="/program" element={<Course />} />
+        <Route path="/program-details/:programById" element={<CourseDetails />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/event" element={<Event />} />
+        <Route path="/event-details" element={<EventDetails />} />
+        <Route path="/instructor" element={<Instructor />} />
+        <Route path="/instructor-details" element={<InstructorDetails />} />
+        <Route path="/pricing" element={<Pricing />} />
+        <Route path="/gallery" element={<Gallery />} />
+        <Route path="/sign-in" element={<SignIn />} />
+        <Route path="/sign-up" element={<SignUp />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/university" element={<Blog />} />
+        <Route path="/blog-details" element={<BlogDetails />} />
+        <Route path="/university-details" />
+      </Routes>
+    </Router>
+  );
 }
 
-export default Root;
 const root = ReactDOM.createRoot(document.getElementById("edumint"));
-// ReactDOM.render(
-//   <Provider store={store}>
-//     <Root />
-//   </Provider>,
-//   document.getElementById("edumint")
-// );
 root.render(
-    <Provider store={store}>
-      <Root />
-    </Provider>
+  <Provider store={store}>
+    <Root />
+  </Provider>
 );
