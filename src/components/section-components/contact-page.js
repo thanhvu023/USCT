@@ -309,27 +309,30 @@ const ContactPage = () => {
         </div>
       )}
       {page === "uploadFile" && (
-        <div className='container'>
-  <form className="file-upload-form">
-      <input type="file" onChange={handleFileChange} />
-      
-      <button type="submit" className="btn btn-base" onClick={handleSubmitFile}>Upload File</button>
-    </form>      
-    <div style={{ textAlign: 'center', margin: '20px 0' }}>  
-      <button className='btn btn-base'  style={{  marginRight: ' 20px' }}onClick={handlePreviousStep}>Quay lại</button>
-          <button className='btn btn-base' onClick={handleNextStep}>Tiếp tục</button>
-          </div>
-        </div>
+       <div className='container' style={{ border: '1px solid #ccc', borderRadius: '5px', padding: '20px', width: '400px', margin: '0 auto' }}>
+       <form className="file-upload-form" style={{ textAlign: 'center' }}>
+         <input type="file" onChange={handleFileChange} style={{ marginBottom: '20px' }} />
+         <br />
+         <button type="submit" className="btn btn-base" onClick={handleSubmitFile}>Upload File</button>
+       </form>
+       <div style={{ textAlign: 'center', marginTop: '20px' }}>
+         <button className='btn btn-base' style={{ marginRight: '20px' }} onClick={handlePreviousStep}>Quay lại</button>
+         <button className='btn btn-base' onClick={handleNextStep}>Tiếp tục</button>
+       </div>
+     </div>
+     
       )}
       {page === "complete" && (
-        <div className='container'>
-        <div className="completion-message">
-          <h3>Hoàn tất!</h3>
-          <p>Cảm ơn bạn đã hoàn thành tất cả các bước.</p>
-        </div>
-        <div style={{ textAlign: 'center', margin: '20px 0' }}>
-  <button className='btn btn-base' style={{ width: '200px' }} onClick={handlePreviousStep}>Quay lại</button>
-</div>      </div>
+     <div className='container'>
+     <div className="completion-message" style={{ textAlign: 'center', animation: 'fadeInUp 1s ease' }}>
+       <h3 style={{ color: '#4CAF50', marginBottom: '10px', fontSize:'64px' }}>Hoàn tất! <span role="img" aria-label="check-mark">&#10004;</span></h3>
+       <p style={{ fontSize:'24px' }}>Cảm ơn bạn đã hoàn thành tất cả các bước.</p>
+     </div>
+     <div style={{ textAlign: 'center', margin: '20px 0' }}>
+       <button className='btn btn-base' style={{ width: '200px' }} onClick={handlePreviousStep}>Quay lại</button>
+     </div>
+   </div>
+   
       
       )}
 </div>

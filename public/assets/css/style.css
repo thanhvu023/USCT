@@ -5099,7 +5099,9 @@ margin: 10px;
   }
 }
 
-
+#container-custom {
+  width: 80vw !important; /* Replace 90% with the width you want */
+}
 
 @tailwind base;
 @tailwind components;
