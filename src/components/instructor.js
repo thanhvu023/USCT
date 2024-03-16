@@ -1,5 +1,5 @@
 import React from 'react';
-import Navbar from './global-components/navbar-v4';
+import Navbar from './global-components/navbar';
 import PageHeader from './global-components/page-header';
 import InstructorPage from './section-components/instructor';
 import Funfact from './section-components/fun-fact';

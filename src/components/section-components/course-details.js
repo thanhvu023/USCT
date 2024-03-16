@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import parse from "html-react-parser";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,7 +7,7 @@ import {
   getProgramById,
   getProgramByUniId,
 } from "../../redux/slice/programSlice";
-import { useParams } from "react-router-dom/cjs/react-router-dom";
+import { useParams } from "react-router-dom";
 
 function CourseDetails() {
   let publicUrl = process.env.PUBLIC_URL + "/";
@@ -764,7 +764,7 @@ function CourseDetails() {
                     <div class="details-inner">
                       <h5 className="h6">
                         <Link to="/instructor-details">
-                    {university.nameProgram}
+                          {university.nameProgram}
                         </Link>
                       </h5>
                       <div class="specialization-icon mb-2">

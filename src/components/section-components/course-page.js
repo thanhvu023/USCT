@@ -30,7 +30,7 @@ function CoursePage() {
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
     const toggleDropdown = () => setDropdownOpen((prevState) => !prevState);
-
+    
     return (
       <Dropdown isOpen={dropdownOpen} toggle={toggleDropdown}>
         <DropdownToggle
@@ -95,9 +95,9 @@ function CoursePage() {
   const dispatch = useDispatch();
   const programs = useSelector((state) => state.program.programs);
   const loading = useSelector((state) => state.program.loading);
-  
+  const token= useSelector((state)=>state.auth?.token)
   useEffect(() => {
-    dispatch(getAllProgram());
+    dispatch(getAllProgram(token));
     
   }, []);
 
