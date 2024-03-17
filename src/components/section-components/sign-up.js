@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { signup } from "../../redux/slice/authSlice";
+import { Form, Button } from 'react-bootstrap';
 
 function SignUp() {
   const [formData, setFormData] = useState({
@@ -204,24 +205,26 @@ function SignUp() {
                     />
                   </div>                  
                 </div>
-                <div className="text-left">
-                  <label className="text-gray-600">Giới tính</label>
-                  <select
-                    className="w-full h-12 border border-gray-300 rounded-md px-3 mt-2"
-                    name="gender"
-                    value={formData.gender}
-                    onChange={handleInputChange}
-                  >
-                    <option value="">Chọn giới tính</option>
-                    <option value="male">Nam</option>
-                    <option value="female">Nữ</option>
-                  </select>
-                  {errors.gender && (
-                    <p className="text-red-500 text-[16px] !important">
-                      {errors.gender}
-                    </p>
-                  )}
-                </div>
+                <div className="col-6 mb-4">
+        <Form.Group controlId="gender">
+                <Form.Control
+                  as="select"
+                  name="gender"
+                  value={formData.gender}
+                  onChange={handleInputChange}
+                  placeholder=""
+                >
+                  <option value="">Chọn giới tính</option>
+                  <option value="male">Nam</option>
+                  <option value="female">Nữ</option>
+                </Form.Control>
+                {errors.gender && (
+                  <Form.Text className="text-danger">
+                    {errors.gender}
+                  </Form.Text>
+                )}
+              </Form.Group>
+        </div>
                 <div className="col-12 mb-4">
                   <button className="btn btn-base w-100">Tạo tài khoản</button>
                 </div>

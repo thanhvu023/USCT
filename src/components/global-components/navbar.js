@@ -114,13 +114,13 @@ function Navbar() {
             )}
             {isLoggedIn && (
               <>
-                <button
+                <Link
                   onClick={handleLogout}
-                  className="signin-btn"
+                  className="btn btn-base"
                   to="/sign-in"
                 >
                   Đăng xuất
-                </button>
+                </Link>
               </>
             )}
             <a className="search-bar" href="#">
