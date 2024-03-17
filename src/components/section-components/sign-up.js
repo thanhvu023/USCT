@@ -15,87 +15,88 @@ function SignUp() {
     dob: "",
     phone: "",
   });
+  
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const [errors, setErrors] = useState({}); // Maintain an error object
-  const errMsg = useSelector((state) => state.auth.error?.message);
-  const isError = useSelector((state) => state.auth.error?.name);
-  const loading = useSelector((state) => state.auth.loading);
-
+  
+  const [errors, setErrors] = useState({});
+  
   const validateForm = () => {
     const newErrors = {};
-
+  
     if (formData.fullName.trim() === "") {
       newErrors.fullName = "Họ và tên không được để trống!";
     }
+  
     if (/^[\p{L}\p{M}]+$/u.test(formData.fullName)) {
-      newErrors.fullName = "Họ và tên không hợp lệ!";
+      newErrors.fullName = "Họ và tên không hợp lệ!";
     }
+  
     if (formData.phone.trim() === "" || !/^\d+$/.test(formData.phone)) {
       newErrors.phone = "Số điện thoại không hợp lệ!";
     }
-
+  
     if (formData.email.trim() === "") {
       newErrors.email = "Email không được để trống!";
     }
-
+  
     if (formData.address.trim() === "") {
       newErrors.address = "Địa chỉ không được để trống!";
     }
+  
     if (formData.confirmPassword.trim() === "") {
-      newErrors.confirmPassword = "Xác nhận mật khẩu không được để trống!";
+      newErrors.confirmPassword = "Xác nhận mật khẩu không được để trống!";
     }
-
+  
     if (formData.password.length < 6) {
       newErrors.password = "Mật khẩu phải có ít nhất 6 ký tự!";
     } else if (
       !/[A-Z]/.test(formData.password) ||
       !/\d/.test(formData.password)
     ) {
-      newErrors.password = "Mật khẩu phải chứa ít nhất 1 chữ hoa và 1 số!";
+      newErrors.password =
+        "Mật khẩu phải chứa ít nhất 1 chữ hoa và 1 số!";
     }
-
+  
     if (formData.confirmPassword !== formData.password) {
       newErrors.confirmPassword =
         "Mật khẩu và xác nhận mật khẩu phải giống nhau!";
     }
-
-    if (formData.gender === "") {
+  
+    if (!formData.gender) {
       newErrors.gender = "Giới tính không được để trống!";
     }
-
+  
+    if (formData.dob.trim() === "") {
+      newErrors.dob = "Ngày sinh không được để trống!";
+    }
     return newErrors;
   };
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // if (!isCheckboxChecked) {
-    //   setErrors({
-    //     checkbox: "Bạn phải chấp nhận điều khoản quyền riêng tư và bảo mật!",
-    //   });
-    //   return; // Prevent form submission if the checkbox is unchecked
-    // }
-
+  
     const newErrors = validateForm();
-    console.log(newErrors);
+  
     if (Object.keys(newErrors).length === 0) {
       dispatch(signup({ formData, navigate }));
     } else {
-   
       setErrors(newErrors);
     }
   };
-
+  
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
+    const newValue = type === 'checkbox' ? (checked ? value : '') : value;
+  
     setFormData({
       ...formData,
-      [name]: value,
+      [name]: newValue,
     });
+  
     setErrors({ ...errors, [name]: "" }); 
   };
-
+  
   return (
     <div className="signup-page-area pd-top-120 pd-bottom-120">
       <div className="container">
@@ -129,6 +130,12 @@ function SignUp() {
                       onChange={handleInputChange}
                     />
                   </div>
+                  {errors.dob && (
+               <p className="text-center text-danger mt-1">
+               {errors.dob}
+             </p>
+             
+                  )}
                 </div>
                 <div className="col-12">
                   <div className="single-input-inner style-bg-border">
@@ -207,17 +214,20 @@ function SignUp() {
                 </div>
                 <div className="col-6 mb-4">
                   <Form.Group controlId="gender">
-                    <Form.Control
-                      as="select"
-                      name="gender"
-                      value={formData.gender}
-                      onChange={handleInputChange}
-                      placeholder=""
-                    >
-                      <option value="">Chọn giới tính</option>
-                      <option value="male">Nam</option>
-                      <option value="female">Nữ</option>
-                    </Form.Control>
+                  <Form.Check
+    type="checkbox"
+    name="gender"
+    checked={formData.gender === 'male'} 
+    onChange={handleInputChange}
+    label="Nam"
+  />
+  <Form.Check
+    type="checkbox"
+    name="gender"
+    checked={formData.gender === 'female'}
+    onChange={handleInputChange}
+    label="Nữ"
+  />
                     {errors.gender && (
                <p className="text-center text-danger mt-1">
                {errors.gender}
