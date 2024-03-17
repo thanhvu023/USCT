@@ -80,10 +80,9 @@ function SignUp() {
     const newErrors = validateForm();
     console.log(newErrors);
     if (Object.keys(newErrors).length === 0) {
-      // No errors, submit form data
       dispatch(signup({ formData, navigate }));
     } else {
-      // Errors found, set them in state
+   
       setErrors(newErrors);
     }
   };
@@ -94,7 +93,7 @@ function SignUp() {
       ...formData,
       [name]: value,
     });
-    setErrors({ ...errors, [name]: "" }); // Clear the error for the current field
+    setErrors({ ...errors, [name]: "" }); 
   };
 
   return (
@@ -115,9 +114,10 @@ function SignUp() {
                     />
                   </div>
                   {errors.fullName && (
-                    <p className="text-red-500 text-[16px] !important">
-                      {errors.fullName}
-                    </p>
+               <p className="text-center text-danger mt-1">
+               {errors.fullName}
+             </p>
+             
                   )}
                 </div>
                 <div className="col-12">
@@ -141,8 +141,8 @@ function SignUp() {
                     />
                   </div>
                   {errors.email && (
-                    <p className="text-red-500 text-[16px] !important">
-                      {errors.email}
+               <p className="text-center text-danger mt-1">
+               {errors.email}
                     </p>
                   )}
                 </div>
@@ -157,8 +157,8 @@ function SignUp() {
                     />
                   </div>
                   {errors.phone && (
-                    <p className="text-red-500 text-[16px] !important">
-                      {errors.phone}
+               <p className="text-center text-danger mt-1">
+               {errors.phone}
                     </p>
                   )}
                 </div>
@@ -173,8 +173,8 @@ function SignUp() {
                     />
                   </div>
                   {errors.password && (
-                    <p className="text-red-500 text-[16px] !important">
-                      {errors.password}
+               <p className="text-center text-danger mt-1">
+               {errors.password}
                     </p>
                   )}
                 </div>
@@ -189,8 +189,8 @@ function SignUp() {
                     />
                   </div>
                   {errors.confirmPassword && (
-                    <p className="text-red-500 text-[16px] !important">
-                      {errors.confirmPassword}
+               <p className="text-center text-danger mt-1">
+               {errors.confirmPassword}
                     </p>
                   )}
                 </div>
@@ -206,25 +206,25 @@ function SignUp() {
                   </div>                  
                 </div>
                 <div className="col-6 mb-4">
-        <Form.Group controlId="gender">
-                <Form.Control
-                  as="select"
-                  name="gender"
-                  value={formData.gender}
-                  onChange={handleInputChange}
-                  placeholder=""
-                >
-                  <option value="">Chọn giới tính</option>
-                  <option value="male">Nam</option>
-                  <option value="female">Nữ</option>
-                </Form.Control>
-                {errors.gender && (
-                  <Form.Text className="text-danger">
-                    {errors.gender}
-                  </Form.Text>
-                )}
-              </Form.Group>
-        </div>
+                  <Form.Group controlId="gender">
+                    <Form.Control
+                      as="select"
+                      name="gender"
+                      value={formData.gender}
+                      onChange={handleInputChange}
+                      placeholder=""
+                    >
+                      <option value="">Chọn giới tính</option>
+                      <option value="male">Nam</option>
+                      <option value="female">Nữ</option>
+                    </Form.Control>
+                    {errors.gender && (
+               <p className="text-center text-danger mt-1">
+               {errors.gender}
+                      </p>
+                    )}
+                  </Form.Group>
+                </div>
                 <div className="col-12 mb-4">
                   <button className="btn btn-base w-100">Tạo tài khoản</button>
                 </div>
