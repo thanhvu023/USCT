@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import instance from "../axiosCustom";
+import { setUserAuthToken } from "../authService";
 
 const axiosUs = axios.create({
   baseURL: "https://usstudy.monoinfinity.net/v3/",
@@ -18,8 +19,10 @@ export const login = createAsyncThunk(
           "Access-Control-Allow-Origin": "*",
         },
       });
+      const token = res.data
+      setUserAuthToken(token)
       navigate("/");
-      return res.data;
+      return token;
     } catch (error) {
       throw new Error("Invalid email or password");
     }
@@ -37,6 +40,24 @@ export const getUserById = createAsyncThunk(
     }
   }
 );
+
+export const signup = createAsyncThunk(
+  "customer/signup",
+  async (param, thunkAPI) => {
+    try {
+      const signupData = param.formData;
+      const navigate = param.navigate;
+      const res = await instance.post("account/signup",signupData, {
+        headers: "Access-Control-Allow-Origin",
+      });     
+      navigate("/sign-in");
+      return res.data;
+    } catch (err) {
+      throw new Error(err.response.data);
+    }
+  }
+);
+
 
 // export const decodeTokenAndGetUserId = async (token) => {
 //   try {
@@ -84,7 +105,19 @@ export const authSlice = createSlice({
         state.loading = false;
         state.token = action.payload;
         state.error = null;
-      });
+      })
+      
+      .addCase(signup.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(signup.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error;
+      })
+      .addCase(signup.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+      })
   },
 });
 
