@@ -1,13 +1,13 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import Sidebar from "./sidebar";
-import { useDispatch } from "react-redux";
 import { getAllUniversity } from "../../redux/slice/universitySlice";
+import Sidebar from "./sidebar";
 function Blog() {
-  const [Uni, setUni] = useState([]);
   const dispatch = useDispatch();
+  const universities = useSelector((state) => state.university.universities);
+  console.log(universities);
   useEffect(() => {
     dispatch(getAllUniversity());
   }, []);
@@ -19,7 +19,38 @@ function Blog() {
         <div className="row">
           <div className="col-lg-8">
             {/* Giả sử mỗi đoạn sau đây là một trường đại học cụ thể */}
-            <div className="single-blog-inner style-border">
+            {universities.map((university, index) => (
+              <div className="single-blog-inner style-border">
+                <div className="thumb">
+                  <img
+                    src={publicUrl + "assets/img/blog/4.png"}
+                    alt="university 1"
+                  />
+                </div>
+                <div className="details">
+                  <ul className="blog-meta">
+                    <li>
+                      <i className="fa fa-university" /> Research University
+                    </li>
+                    <li>
+                      <i className="fa fa-map-marker" /> California, Hoa Kỳ
+                    </li>
+                  </ul>
+                  <h3 className="title">
+                    <Link to="/instructor-details">
+                      {university.universityName}
+                    </Link>
+                  </h3>
+                  <p>
+                  {university.description}
+                  </p>
+                  <Link className="read-more-text" to="/instructor-details">
+                    XEM THÊM <i className="fa fa-angle-right" />
+                  </Link>
+                </div>
+              </div>
+            ))}
+            {/* <div className="single-blog-inner style-border">
               <div className="thumb">
                 <img src={publicUrl + "assets/img/blog/4.png"} alt="img" />
               </div>
@@ -45,39 +76,9 @@ function Blog() {
                   XEM THÊM <i className="fa fa-angle-right" />
                 </Link>
               </div>
-            </div>
-            <div className="single-blog-inner style-border">
-              <div className="thumb">
-                <img
-                  src={publicUrl + "assets/img/blog/4.png"}
-                  alt="university 1"
-                />
-              </div>
-              <div className="details">
-                <ul className="blog-meta">
-                  <li>
-                    <i className="fa fa-university" /> Research University
-                  </li>
-                  <li>
-                    <i className="fa fa-map-marker" /> California, Hoa Kỳ
-                  </li>
-                </ul>
-                <h3 className="title">
-                  <Link to="/instructor-details">
-                    Chương trình Kinh doanh Quốc tế tại Stanford
-                  </Link>
-                </h3>
-                <p>
-                  Trường Đại Học Stanford không chỉ nổi tiếng với chất lượng
-                  giảng dạy xuất sắc mà còn là nơi khởi nguồn của nhiều startup
-                  thành công.
-                </p>
-                <Link className="read-more-text" to="/instructor-details">
-                  XEM THÊM <i className="fa fa-angle-right" />
-                </Link>
-              </div>
-            </div>
-            <div className="single-blog-inner style-border">
+            </div> */}
+
+            {/* <div className="single-blog-inner style-border">
               <div className="thumb">
                 <img
                   src={publicUrl + "assets/img/blog/4.png"}
@@ -105,7 +106,7 @@ function Blog() {
                   READ MORE <i className="fa fa-angle-right" />
                 </Link>
               </div>
-            </div>
+            </div> */}
             <nav className="td-page-navigation">
               <ul className="pagination">
                 <li className="pagination-arrow">

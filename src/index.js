@@ -19,7 +19,8 @@ import Contact from "./components/contact";
 import Blog from "./components/blog";
 import BlogDetails from "./components/blog-details";
 import { Provider } from "react-redux";
-import store from "./redux/store";
+import store, { persistor } from "./redux/store";
+import { PersistGate } from "redux-persist/integration/react";
 
 function Root() {
   return (
@@ -51,6 +52,8 @@ function Root() {
 const root = ReactDOM.createRoot(document.getElementById("edumint"));
 root.render(
   <Provider store={store}>
+    <PersistGate persistor={persistor}>
     <Root />
+    </PersistGate>
   </Provider>
 );

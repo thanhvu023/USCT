@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { login, logoutUser } from "../../redux/slice/authSlice";
 
 function Signin() {
-  let publicUrl = process.env.PUBLIC_URL + "/";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -58,7 +57,7 @@ function Signin() {
                   <div className="single-input-inner style-bg-border">
                     <input
                       type="text"
-					  value={email}
+                      value={email}
                       onChange={handleEmailChange}
                       placeholder="Email"
                     />
@@ -68,24 +67,26 @@ function Signin() {
                   <div className="single-input-inner style-bg-border">
                     <input
                       type="password"
-					  value={password}
+                      value={password}
                       onChange={handlePasswordChange}
                       placeholder="Mật khẩu"
                     />
                   </div>
-                {isError === "Error" && (
-                  <div className="text-red-600 text-[18px] mt-2 text-center">{errMsg}</div>
-                )}
-				{error}
+                  {isError === "Error" && (
+                    <div className="text-red-600 text-[18px] mt-2 text-center">
+                      {errMsg}
+                    </div>
+                  )}
+                  {error}
                 </div>
                 <div className="col-12 mb-4">
                   <button className="btn btn-base w-100">Sign In</button>
                 </div>
                 <div className="col-12">
                   <Link to="/">Quên mật khâủ</Link>
-                  <button className="ml-2" href="signup.html">
+                  <Link to="/sign-up" className="ml-2" href="signup.html">
                     <strong>Đăng ký</strong>
-                  </button>
+                  </Link>
                 </div>
               </div>
             </form>

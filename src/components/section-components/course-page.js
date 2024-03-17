@@ -1,15 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import {
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-} from "reactstrap";
-import parse from "html-react-parser";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import { getAllProgram } from "../../redux/slice/programSlice";
-
 
 const handleSliderChange = (event, setCurrentValue) => {
   setCurrentValue(event.target.value);
@@ -19,9 +11,7 @@ const formatCurrency = (value) => {
   return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 };
 
-
 function CoursePage() {
-
   const [minPrice, setMinPrice] = useState(100000);
   const [maxPrice, setMaxPrice] = useState(2000000);
   const [currentValue, setCurrentValue] = useState(100000);
@@ -30,30 +20,31 @@ function CoursePage() {
     const [selectedItems, setSelectedItems] = useState([]);
 
     const handleCheckboxChange = (item) => {
-        if (selectedItems.includes(item)) {
-            setSelectedItems(selectedItems.filter((selectedItem) => selectedItem !== item));
-        } else {
-            setSelectedItems([...selectedItems, item]);
-        }
-    };
-
+      if (selectedItems.includes(item)) {
+        setSelectedItems(
+          selectedItems.filter((selectedItem) => selectedItem !== item)
+        );
+      } else {
+        setSelectedItems([...selectedItems, item]);
+      }
+    };   
     return (
-        <div className="widget widget_checkbox_list">
-            <h4 className="widget-title">{title}</h4>
-            {items.map((item, index) => (
-                <label key={index} className="single-checkbox">
-                    <input
-                        type="checkbox"
-                        defaultChecked={item.defaultChecked}
-                        onChange={() => handleCheckboxChange(item.label)}
-                    />
-                    <span className="checkmark" />
-                    {item.label}
-                </label>
-            ))}
-        </div>
+      <div className="widget widget_checkbox_list">
+        <h4 className="widget-title">{title}</h4>
+        {items.map((item, index) => (
+          <label key={index} className="single-checkbox">
+            <input
+              type="checkbox"
+              defaultChecked={item.defaultChecked}
+              onChange={() => handleCheckboxChange(item.label)}
+            />
+            <span className="checkmark" />
+            {item.label}
+          </label>
+        ))}
+      </div>
     );
-};
+  };
 
   const categories = [
     {
@@ -100,19 +91,16 @@ function CoursePage() {
   const dispatch = useDispatch();
   const programs = useSelector((state) => state.program.programs);
   const loading = useSelector((state) => state.program.loading);
-  const token= useSelector((state)=>state.auth?.token)
+  const token = useSelector((state) => state.auth?.token);
   useEffect(() => {
     dispatch(getAllProgram(token));
-    
   }, []);
 
   let publicUrl = process.env.PUBLIC_URL + "/";
 
-
-
   return (
     <div className="blog-area pd-top-120 pd-bottom-120">
-<div class="container">
+      <div class="container">
         <div className="row">
           <div className="col-lg-8 order-lg-12 m-0">
             <div className="row go-top">
@@ -123,7 +111,10 @@ function CoursePage() {
                   <div key={index} className="col-md-6">
                     <div className="single-course-inner">
                       <div className="thumb">
-                        <img src={publicUrl + "assets/img/course/programs.jpg"} alt="img" />
+                        <img
+                          src={publicUrl + "assets/img/course/programs.jpg"}
+                          alt="img"
+                        />
                       </div>
                       <div className="details">
                         <div className="details-inner">
@@ -131,7 +122,9 @@ function CoursePage() {
                             <span className="align-self-center">abc</span>
                           </div> */}
                           <h6>
-                            <Link to={`/program-details/${program.programId}`}>{program.nameProgram}</Link>
+                            <Link to={`/program-details/${program.programId}`}>
+                              {program.nameProgram}
+                            </Link>
                           </h6>
                         </div>
                         <div className="emt-course-meta">
@@ -208,34 +201,34 @@ function CoursePage() {
                 </ul>
               </div>
               <div className="widget widget_checkbox_list">
-    <h4 className="widget-title">Trình độ Tiếng Anh</h4>
-    <label className="single-checkbox">
-        <input type="checkbox" defaultChecked="checked" />
-        <span className="checkmark" />
-        TOEFL
-    </label>
-    <label className="single-checkbox">
-        <input type="checkbox" />
-        <span className="checkmark" />
-        IELTS
-    </label>
-    <label className="single-checkbox">
-        <input type="checkbox" />
-        <span className="checkmark" />
-        GMAT
-    </label>
-    <label className="single-checkbox">
-        <input type="checkbox" />
-        <span className="checkmark" />
-        SAT
-    </label>
-    <label className="single-checkbox">
-        <input type="checkbox" />
-        <span className="checkmark" />
-        GRE
-    </label>
-</div>
-<div className="widget widget_price">
+                <h4 className="widget-title">Trình độ Tiếng Anh</h4>
+                <label className="single-checkbox">
+                  <input type="checkbox" defaultChecked="checked" />
+                  <span className="checkmark" />
+                  TOEFL
+                </label>
+                <label className="single-checkbox">
+                  <input type="checkbox" />
+                  <span className="checkmark" />
+                  IELTS
+                </label>
+                <label className="single-checkbox">
+                  <input type="checkbox" />
+                  <span className="checkmark" />
+                  GMAT
+                </label>
+                <label className="single-checkbox">
+                  <input type="checkbox" />
+                  <span className="checkmark" />
+                  SAT
+                </label>
+                <label className="single-checkbox">
+                  <input type="checkbox" />
+                  <span className="checkmark" />
+                  GRE
+                </label>
+              </div>
+              <div className="widget widget_price">
                 <h4 className="widget-title">Chi Phí Du Học</h4>
                 <input
                   type="range"
@@ -243,37 +236,43 @@ function CoursePage() {
                   max="2000000"
                   value={currentValue}
                   className="custom-range"
-                  onChange={(event) => handleSliderChange(event, setCurrentValue)}
+                  onChange={(event) =>
+                    handleSliderChange(event, setCurrentValue)
+                  }
                   style={{
-                    width: '100%',
-                    height: '25px',
-                    background: '#ddd',
-                    outline: 'none',
-                    opacity: '0.7',
-                    transition: 'opacity .2s',
-                    position: 'relative',
-                    backgroundColor: '#007bff',
-                    border: '2px solid #007bff'
+                    width: "100%",
+                    height: "25px",
+                    background: "#ddd",
+                    outline: "none",
+                    opacity: "0.7",
+                    transition: "opacity .2s",
+                    position: "relative",
+                    backgroundColor: "#007bff",
+                    border: "2px solid #007bff",
                   }}
                 />
-                <div className="d-flex justify-content-between" style={{ color: '#007bff' }}>
+                <div
+                  className="d-flex justify-content-between"
+                  style={{ color: "#007bff" }}
+                >
                   <span>$100k</span>
                   <span>$2M</span>
                 </div>
                 <div
                   style={{
-                    position: 'absolute',
-                    top: '900px',
-                    left: `${(currentValue - 100000) / (2000000 - 100000) * 100}%`,
-                    transform: 'translateX(-10%)',
-                    whiteSpace: 'nowrap',
-                    fontWeight:'bold'
+                    position: "absolute",
+                    top: "900px",
+                    left: `${
+                      ((currentValue - 100000) / (2000000 - 100000)) * 100
+                    }%`,
+                    transform: "translateX(-10%)",
+                    whiteSpace: "nowrap",
+                    fontWeight: "bold",
                   }}
                 >
                   {formatCurrency(currentValue)}$
                 </div>
               </div>
-
             </div>
           </div>
         </div>
