@@ -2,6 +2,8 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { logoutUser } from "../../redux/slice/authSlice";
+import { Dropdown } from "react-bootstrap";
+
 
 function Navbar() {
   const token = useSelector((state) => state.auth?.token);
@@ -11,6 +13,8 @@ function Navbar() {
     dispatch(logoutUser());
     navigate("/");
   };
+  let publicUrl = process.env.PUBLIC_URL + "/";
+
   const isLoggedIn = useSelector((state) => state.auth?.token);
   return (
     <div className="navbar-area">
@@ -70,7 +74,9 @@ function Navbar() {
           <div className="logo">
             <Link to="/">
               <img
-                src={process.env.PUBLIC_URL + "assets/img/logo.png"}
+                src={process.env.PUBLIC_URL + "assets/img/logo.png"
+              }
+              className="img-fluid rounded-circle "
                 alt="img"
               />
             </Link>
@@ -100,7 +106,7 @@ function Navbar() {
               </li>
             </ul>
           </div>
-          <div className="nav-right-part nav-right-part-desktop">
+          <div className="nav-right-part nav-right-part-desktop d-flex">
             {!isLoggedIn && (
               // If user is not authenticated
               <>
@@ -112,16 +118,33 @@ function Navbar() {
                 </Link>
               </>
             )}
-            {isLoggedIn && (
-              <>
-                <Link
-                  onClick={handleLogout}
-                  className="btn btn-base"
-                  to="/sign-in"
-                >
-                  Đăng xuất
-                </Link>
-              </>
+            {token && (
+                        <div className="nav-right-part nav-right-part-desktop d-flex align-items-center">
+
+                <Dropdown as="li" className="nav-item header-profile">              
+                  <Dropdown.Toggle to={"#"} className="nav-link i-false" as="div">
+                  <img src={publicUrl + "assets/img/author/pic1.jpg"} alt="img" />
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu align="end" className="mt-3 dropdown-menu dropdown-menu-right ">
+                      <Link to={"/profile"} className="dropdown-item ai-icon icon-bell-effect">
+                          <svg id="icon-user1" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                          <span className="ms-2">Profile </span>
+                      </Link>
+                      <Link to={"/email-inbox"} className="dropdown-item ai-icon">
+                          <svg id="icon-inbox" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="feather feather-mail"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                          <span className="ms-2">Inbox </span>
+                      </Link>                     
+             
+                  </Dropdown.Menu>
+                </Dropdown>
+                <button
+                        onClick={handleLogout}
+                        className="btn btn-base"
+                        to="/sign-in"
+                    >
+                        Đăng xuất
+                    </button>
+            </div>
             )}
             <a className="search-bar" href="#">
               <i className="fa fa-search" />
