@@ -11,7 +11,7 @@ function SignUp() {
     confirmPassword: "",
     gender: "",
     address: "",
-    dob: "",
+    dateOfBirth: "",
     phone: "",
   });
   const navigate = useNavigate();
@@ -77,7 +77,7 @@ function SignUp() {
     // }
 
     const newErrors = validateForm();
-    console.log(newErrors);
+    console.log(formData);
     if (Object.keys(newErrors).length === 0) {
       // No errors, submit form data
       dispatch(signup({ formData, navigate }));
@@ -123,8 +123,8 @@ function SignUp() {
                   <div className="single-input-inner style-bg-border">
                     <input
                       type="date"
-                      name="dob"
-                      value={formData.dob}
+                      name="dateOfBirth"
+                      value={formData.dateOfBirth}
                       onChange={handleInputChange}
                     />
                   </div>
@@ -164,7 +164,7 @@ function SignUp() {
                 <div className="col-12">
                   <div className="single-input-inner style-bg-border">
                     <input
-                      type="text"
+                      type="password"
                       name="password"
                       placeholder="Mật khẩu"
                       value={formData.password}
@@ -180,7 +180,7 @@ function SignUp() {
                 <div className="col-12">
                   <div className="single-input-inner style-bg-border">
                     <input
-                      type="text"
+                      type="password"
                       name="confirmPassword"
                       placeholder="Xác nhận mật khẩu"
                       value={formData.confirmPassword}
@@ -202,7 +202,7 @@ function SignUp() {
                       value={formData.address}
                       onChange={handleInputChange}
                     />
-                  </div>                  
+                  </div>
                 </div>
                 <div className="text-left">
                   <label className="text-gray-600">Giới tính</label>
