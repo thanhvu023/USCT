@@ -5103,6 +5103,55 @@ margin: 10px;
   width: 80vw !important; /* Replace 90% with the width you want */
 }
 
+.error-message {
+  color: red;
+  font-size: 14px;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.error-message.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.input-error input {
+  border-color: red;
+}
+
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
+}
+
+.input-error {
+  animation: shake 0.2s;
+}
+
+/* Định dạng checkbox */
+.form-check-input {
+  width: 20px; /* Độ rộng */
+  height: 20px; /* Chiều cao */
+  margin-right: 5px; /* Khoảng cách với nhãn */
+}
+
+/* Định dạng nhãn của checkbox */
+.form-check-label {
+  font-weight: normal; /* Loại bỏ đậm */
+}
+
+/* Tạo kiểu tick khi checkbox được chọn */
+.form-check-input:checked {
+  background-color: #007bff; /* Màu nền khi được chọn */
+  border-color: #007bff; /* Màu viền khi được chọn */
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

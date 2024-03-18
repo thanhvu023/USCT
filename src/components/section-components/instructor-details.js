@@ -19,12 +19,12 @@ function InstructorDetails() {
       <div className="container">
         <div className="team-details-page">
           <div className="row">
-            <div className="col-lg-5">
+            <div className="col-lg-3">
               <div className="thumb">
                 <img src={publicUrl + "assets/img/team/6.png"} alt="img" />
               </div>
             </div>
-            <div className="col-lg-7 align-self-center mt-5 mt-lg-0">
+            <div className="col-lg-9 align-self-center mt-5 mt-lg-0">
               <div className="details">
                 <h3>{uniDetail.universityName}</h3>
                 <span className="designation">National University</span>

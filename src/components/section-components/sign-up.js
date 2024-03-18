@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { signup } from "../../redux/slice/authSlice";
+import { Form, Button } from 'react-bootstrap';
 
 function SignUp() {
   const [formData, setFormData] = useState({
@@ -14,88 +15,88 @@ function SignUp() {
     dateOfBirth: "",
     phone: "",
   });
+  
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const [errors, setErrors] = useState({}); // Maintain an error object
-  const errMsg = useSelector((state) => state.auth.error?.message);
-  const isError = useSelector((state) => state.auth.error?.name);
-  const loading = useSelector((state) => state.auth.loading);
-
+  
+  const [errors, setErrors] = useState({});
+  
   const validateForm = () => {
     const newErrors = {};
-
+  
     if (formData.fullName.trim() === "") {
       newErrors.fullName = "Họ và tên không được để trống!";
     }
+  
     if (/^[\p{L}\p{M}]+$/u.test(formData.fullName)) {
-      newErrors.fullName = "Họ và tên không hợp lệ!";
+      newErrors.fullName = "Họ và tên không hợp lệ!";
     }
+  
     if (formData.phone.trim() === "" || !/^\d+$/.test(formData.phone)) {
       newErrors.phone = "Số điện thoại không hợp lệ!";
     }
-
+  
     if (formData.email.trim() === "") {
       newErrors.email = "Email không được để trống!";
     }
-
+  
     if (formData.address.trim() === "") {
       newErrors.address = "Địa chỉ không được để trống!";
     }
+  
     if (formData.confirmPassword.trim() === "") {
-      newErrors.confirmPassword = "Xác nhận mật khẩu không được để trống!";
+      newErrors.confirmPassword = "Xác nhận mật khẩu không được để trống!";
     }
-
+  
     if (formData.password.length < 6) {
       newErrors.password = "Mật khẩu phải có ít nhất 6 ký tự!";
     } else if (
       !/[A-Z]/.test(formData.password) ||
       !/\d/.test(formData.password)
     ) {
-      newErrors.password = "Mật khẩu phải chứa ít nhất 1 chữ hoa và 1 số!";
+      newErrors.password =
+        "Mật khẩu phải chứa ít nhất 1 chữ hoa và 1 số!";
     }
-
+  
     if (formData.confirmPassword !== formData.password) {
       newErrors.confirmPassword =
         "Mật khẩu và xác nhận mật khẩu phải giống nhau!";
     }
-
-    if (formData.gender === "") {
+  
+    if (!formData.gender) {
       newErrors.gender = "Giới tính không được để trống!";
     }
-
+  
+    if (formData.dob.trim() === "") {
+      newErrors.dob = "Ngày sinh không được để trống!";
+    }
     return newErrors;
   };
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // if (!isCheckboxChecked) {
-    //   setErrors({
-    //     checkbox: "Bạn phải chấp nhận điều khoản quyền riêng tư và bảo mật!",
-    //   });
-    //   return; // Prevent form submission if the checkbox is unchecked
-    // }
-
+  
     const newErrors = validateForm();
-    console.log(formData);
+  
     if (Object.keys(newErrors).length === 0) {
-      // No errors, submit form data
       dispatch(signup({ formData, navigate }));
     } else {
-      // Errors found, set them in state
       setErrors(newErrors);
     }
   };
-
+  
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
+    const newValue = type === 'checkbox' ? (checked ? value : '') : value;
+  
     setFormData({
       ...formData,
-      [name]: value,
+      [name]: newValue,
     });
-    setErrors({ ...errors, [name]: "" }); // Clear the error for the current field
+  
+    setErrors({ ...errors, [name]: "" }); 
   };
-
+  
   return (
     <div className="signup-page-area pd-top-120 pd-bottom-120">
       <div className="container">
@@ -114,9 +115,10 @@ function SignUp() {
                     />
                   </div>
                   {errors.fullName && (
-                    <p className="text-red-500 text-[16px] !important">
-                      {errors.fullName}
-                    </p>
+               <p className="text-center text-danger mt-1">
+               {errors.fullName}
+             </p>
+             
                   )}
                 </div>
                 <div className="col-12">
@@ -128,6 +130,12 @@ function SignUp() {
                       onChange={handleInputChange}
                     />
                   </div>
+                  {errors.dob && (
+               <p className="text-center text-danger mt-1">
+               {errors.dob}
+             </p>
+             
+                  )}
                 </div>
                 <div className="col-12">
                   <div className="single-input-inner style-bg-border">
@@ -140,8 +148,8 @@ function SignUp() {
                     />
                   </div>
                   {errors.email && (
-                    <p className="text-red-500 text-[16px] !important">
-                      {errors.email}
+               <p className="text-center text-danger mt-1">
+               {errors.email}
                     </p>
                   )}
                 </div>
@@ -156,8 +164,8 @@ function SignUp() {
                     />
                   </div>
                   {errors.phone && (
-                    <p className="text-red-500 text-[16px] !important">
-                      {errors.phone}
+               <p className="text-center text-danger mt-1">
+               {errors.phone}
                     </p>
                   )}
                 </div>
@@ -172,8 +180,8 @@ function SignUp() {
                     />
                   </div>
                   {errors.password && (
-                    <p className="text-red-500 text-[16px] !important">
-                      {errors.password}
+               <p className="text-center text-danger mt-1">
+               {errors.password}
                     </p>
                   )}
                 </div>
@@ -188,8 +196,8 @@ function SignUp() {
                     />
                   </div>
                   {errors.confirmPassword && (
-                    <p className="text-red-500 text-[16px] !important">
-                      {errors.confirmPassword}
+               <p className="text-center text-danger mt-1">
+               {errors.confirmPassword}
                     </p>
                   )}
                 </div>
@@ -204,23 +212,28 @@ function SignUp() {
                     />
                   </div>
                 </div>
-                <div className="text-left">
-                  <label className="text-gray-600">Giới tính</label>
-                  <select
-                    className="w-full h-12 border border-gray-300 rounded-md px-3 mt-2"
-                    name="gender"
-                    value={formData.gender}
-                    onChange={handleInputChange}
-                  >
-                    <option value="">Chọn giới tính</option>
-                    <option value="male">Nam</option>
-                    <option value="female">Nữ</option>
-                  </select>
-                  {errors.gender && (
-                    <p className="text-red-500 text-[16px] !important">
-                      {errors.gender}
-                    </p>
-                  )}
+                <div className="col-6 mb-4">
+                  <Form.Group controlId="gender">
+                  <Form.Check
+    type="checkbox"
+    name="gender"
+    checked={formData.gender === 'male'} 
+    onChange={handleInputChange}
+    label="Nam"
+  />
+  <Form.Check
+    type="checkbox"
+    name="gender"
+    checked={formData.gender === 'female'}
+    onChange={handleInputChange}
+    label="Nữ"
+  />
+                    {errors.gender && (
+               <p className="text-center text-danger mt-1">
+               {errors.gender}
+                      </p>
+                    )}
+                  </Form.Group>
                 </div>
                 <div className="col-12 mb-4">
                   <button className="btn btn-base w-100">Tạo tài khoản</button>
