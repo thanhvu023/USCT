@@ -21,8 +21,9 @@ export const getUniversityById = createAsyncThunk(
   "/university/getById",
   async (param, thunkAPI) => {
     try {
-      const { uniId } = param;
-      const res = await axiosUs.get(`/universities/${uniId}`);
+      const { universityId } = param;
+      const res = await axiosUs.get(`/universities/${universityId}`);
+      console.log(res)
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response);
@@ -35,7 +36,7 @@ const initialState = {
   token: null,
   loading: false,
   universities: [],
-  uniniversityById: {},
+  universityById: {},
 };
 
 export const universitySlice = createSlice({
@@ -61,7 +62,7 @@ export const universitySlice = createSlice({
       })
       .addCase(getUniversityById.fulfilled, (state, action) => {
         state.loading = false;
-        state.uniniversityById = action.payload;
+        state.universityById = action.payload;
         state.error = null;
       })
       .addCase(getUniversityById.rejected, (state, action) => {

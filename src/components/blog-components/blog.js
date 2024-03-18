@@ -7,7 +7,6 @@ import Sidebar from "./sidebar";
 function Blog() {
   const dispatch = useDispatch();
   const universities = useSelector((state) => state.university.universities);
-  console.log(universities);
   useEffect(() => {
     dispatch(getAllUniversity());
   }, []);
@@ -37,76 +36,17 @@ function Blog() {
                     </li>
                   </ul>
                   <h3 className="title">
-                    <Link to="/instructor-details">
+                    <Link to={`/university-details/${university.universityId}`}>
                       {university.universityName}
                     </Link>
                   </h3>
-                  <p>
-                  {university.description}
-                  </p>
+                  <p>{university.description}</p>
                   <Link className="read-more-text" to="/instructor-details">
                     XEM THÊM <i className="fa fa-angle-right" />
                   </Link>
                 </div>
               </div>
             ))}
-            {/* <div className="single-blog-inner style-border">
-              <div className="thumb">
-                <img src={publicUrl + "assets/img/blog/4.png"} alt="img" />
-              </div>
-              <div className="details">
-                <ul className="blog-meta">
-                  <li>
-                    <i className="fa fa-university" /> National University
-                  </li>
-                  <li>
-                    <i className="fa fa-map-marker" /> California, Hoa Kỳ
-                  </li>
-                </ul>
-                <h3 className="title">
-                  <Link to="/instructor-details">
-                    Trường Đại Học A với các chương trình học tập tiên tiến
-                  </Link>
-                </h3>
-                <p>
-                  Trường Đại Học A nổi tiếng với nền giáo dục chất lượng và cơ
-                  sở vật chất hiện đại, tạo điều kiện tốt nhất cho sinh viên.
-                </p>
-                <Link className="read-more-text" to="/instructor-details">
-                  XEM THÊM <i className="fa fa-angle-right" />
-                </Link>
-              </div>
-            </div> */}
-
-            {/* <div className="single-blog-inner style-border">
-              <div className="thumb">
-                <img
-                  src={publicUrl + "assets/img/blog/4.png"}
-                  alt="Princeton University"
-                />
-              </div>
-              <div className="details">
-                <ul className="blog-meta">
-                  <li>
-                    <i className="fa fa-university" /> Regional College
-                  </li>
-                  <li>
-                    <i className="fa fa-map-marker" /> Princeton, New Jersey,
-                    USA
-                  </li>
-                </ul>
-                <h3 className="title">
-                  <Link to="/instructor-details">Trường đại học Princeton</Link>
-                </h3>
-                <p>
-                  Đại học Princeton là một cộng đồng học thuật và học tập sôi
-                  động phục vụ đất nước và nhân loại.
-                </p>
-                <Link className="read-more-text" to="/instructor-details">
-                  READ MORE <i className="fa fa-angle-right" />
-                </Link>
-              </div>
-            </div> */}
             <nav className="td-page-navigation">
               <ul className="pagination">
                 <li className="pagination-arrow">

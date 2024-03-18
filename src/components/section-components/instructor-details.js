@@ -1,10 +1,19 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import React, { Component, useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
 import parse from "html-react-parser";
+import { useDispatch, useSelector } from "react-redux";
+import { getUniversityById } from "../../redux/slice/universitySlice";
 
 function InstructorDetails() {
   let publicUrl = process.env.PUBLIC_URL + "/";
+  const dispatch = useDispatch();
 
+  const universityId = useParams();
+  const uniDetail = useSelector((state) => state.university.universityById);
+  console.log(uniDetail)
+  useEffect(() => {
+    dispatch(getUniversityById(universityId));
+  }, []);
   return (
     <div className="main-blog-area pd-top-120 pd-bottom-90">
       <div className="container">
@@ -17,14 +26,11 @@ function InstructorDetails() {
             </div>
             <div className="col-lg-9 align-self-center mt-5 mt-lg-0">
               <div className="details">
-                <h3>Tên Trường Đại Học</h3>
+                <h3>{uniDetail.universityName}</h3>
                 <span className="designation">National University</span>
                 <span className="designation">Bang: California, Hoa Kỳ</span>
                 <p className="mt-4">
-                  Chương trình đào tạo của trường Đại học FPT được thiết kế dựa
-                  trên sự tham vấn của chuyên gia, chú trọng thực hành, phù hợp
-                  với nhu cầu mà nhà tuyển dụng tìm kiếm ở nguồn nhân lực thế hệ
-                  mới.
+                  {uniDetail.description}
                 </p>
               </div>
             </div>
