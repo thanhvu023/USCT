@@ -35,7 +35,7 @@ function Root() {
         <Route path="/event" element={<Event />} />
         <Route path="/event-details" element={<EventDetails />} />
         <Route path="/instructor" element={<Instructor />} />
-        <Route path="/instructor-details" element={<InstructorDetails />} />
+        <Route path="/university-details/:universityId" element={<InstructorDetails />} />
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/sign-in" element={<SignIn />} />
