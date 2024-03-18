@@ -117,7 +117,7 @@ function CoursePage() {
                         />
                       </div>
                       <div className="details">
-                        <div className="details-inner">
+                        <div className="details-inner ">
                           {/* <div className="emt-user">
                             <span className="align-self-center">abc</span>
                           </div> */}

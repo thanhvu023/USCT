@@ -58,6 +58,26 @@ export const getProgramByUniId = createAsyncThunk(
   }
 );
 
+export const getProgramByProgramType = createAsyncThunk(
+  "/program/getProgramByProgramType",
+  async (param, thunkAPI) => {
+    try {
+      const programTypeId  = param;
+      const res = await instance.get(`/programs?programTypeId=${programTypeId}`, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/problem+json; charset=utf-8",
+          Accept: "application/json",
+        },
+      });
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response);
+    }
+  }
+);
+
+
 const initialState = {
   msg: "",
   token: null,
@@ -65,6 +85,7 @@ const initialState = {
   programs: [],
   programById: {},
   programsByUniId: [],
+  programsByProgramType:[]
 };
 
 export const programSlice = createSlice({
@@ -108,6 +129,17 @@ export const programSlice = createSlice({
         state.error = null;
       })
       .addCase(getProgramByUniId.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      }).addCase(getProgramByProgramType.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getProgramByProgramType.fulfilled, (state, action) => {
+        state.loading = false;
+        state.programsByProgramType = action.payload;
+        state.error = null;
+      })
+      .addCase(getProgramByProgramType.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       });
