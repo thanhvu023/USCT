@@ -5154,6 +5154,221 @@ margin: 10px;
   border-color: #007bff; /* Màu viền khi được chọn */
 }
 
+
+.btn.btn-base:hover {
+  background-color: #f44336;
+  border-color: #f44336;
+}
+ /* App Profile */
+
+
+ .page-title {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 2em;
+  color: var(--primary);
+}
+ /* email-tools-box.css */
+.email-tools-box {
+  color: var(--primary);
+  display: none !important; 
+}
+
+.email-tools-box.active {
+  background-color: var(--primary);
+  color: #fff; 
+}
+
+@media only screen and (max-width: 575px) {
+  .email-tools-box {
+    display: inline-block !important;
+    margin-right: auto; 
+  } 
+}
+
+.email-tools-box.active:before {
+  content: '';
+  display: block;
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100vh;
+  height: 100vh;
+  background-color: #000;
+  opacity: 0.2;
+  border-radius: 0.75rem;
+  z-index: 3; 
+}
+
+/* list-group-item.css */
+.list-group-item.active {
+  background-color: var(--primary);
+  border-color: var(--primary); 
+}
+
+/* photo-content.css */
+.photo-content {
+  position: relative; }
+  .photo-content .cover-photo {
+    background: url(../images/profile/cover.jpg);
+    background-size: cover;
+    background-position: center;
+    min-height: 250px;
+    width: 100%; }
+
+.profile .profile-photo {
+  max-width: 100px;
+  position: relative;
+  z-index: 1;
+  margin-top: -40px;
+  margin-right: 10px; }
+  @media only screen and (max-width: 575px) {
+    .profile .profile-photo {
+      width: 80px;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 20px; } }
+
+.profile-info {
+  padding: 15px 20px; }
+  @media only screen and (max-width: 575px) {
+    .profile-info {
+      padding: 0 0 20px;
+      text-align: center; } }
+  .profile-info h4, .profile-info .h4 {
+    color: #464a53 !important; }
+  .profile-info h4.text-primary, .profile-info .text-primary.h4 {
+    color: var(--primary) !important; }
+  .profile-info p {
+    color: #828690; }
+  .profile-info .prf-col {
+    min-width: 250px;
+    padding: 10px 50px 0; }
+
+.profile-interest .row {
+  margin: 0 -.70px; }
+  .profile-interest .row .int-col {
+    padding: 0 .70px; }
+    .profile-interest .row .int-col .interest-cat {
+      margin-bottom: 1.40px;
+      position: relative;
+      display: block; }
+      .profile-interest .row .int-col .interest-cat:after {
+        background: #000;
+        bottom: 0;
+        content: "";
+        left: 0;
+        opacity: 0.5;
+        position: absolute;
+        right: 0;
+        top: 0;
+        z-index: 0; }
+      .profile-interest .row .int-col .interest-cat p {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        padding: 5px;
+        left: 0;
+        margin: 0;
+        z-index: 1;
+        color: white;
+        font-size: 1.20px; }
+
+.profile-tab .nav-item .nav-link {
+  font-size: 1rem;
+  margin-right: 30px;
+  transition: all 0.5s ease-in-out;
+  border: none;
+  border-bottom: .20px solid transparent;
+  color: #828690; }
+  .profile-tab .nav-item .nav-link:hover, .profile-tab .nav-item .nav-link.active {
+    border: 0;
+    background: transparent;
+    background: transparent;
+    border-bottom: 0.2px solid var(--primary);
+    color: var(--primary); }
+
+.profile-info {
+  display: flex; }
+  @media only screen and (max-width: 575px) {
+    .profile-info {
+      display: block; } }
+  .profile-info .profile-details {
+    display: flex;
+    width: 100%; }
+    @media only screen and (max-width: 575px) {
+      .profile-info .profile-details {
+        display: block; }
+        .profile-info .profile-details .dropdown {
+          position: absolute;
+          top: 30px;
+          right: 30px; } }
+
+.post-input {
+  margin-bottom: 30px; }
+  .post-input .form-control {
+    height: 75px;
+    font-weight: 400;
+    margin: 15px 0; }
+
+.profile-uoloaded-post img {
+  margin-bottom: 20px; }
+
+.profile-uoloaded-post a h4, .profile-uoloaded-post a .h4 {
+  margin-bottom: 10px;
+  color: #464a53; }
+.photo-content {
+  position: relative; 
+}
+
+.photo-content .cover-photo {
+  background: url(../images/profile/cover.jpg);
+  background-size: cover;
+  background-position: center;
+  min-height: 250px;
+  width: 100%; 
+}
+.gray-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.1); /* Màu xám nhạt với độ trong suốt 0.1 */
+    z-index: -1; /* Đảm bảo lớp phủ nằm phía sau nội dung */
+}
+.nav-tabs .nav-item .nav-link {
+  border: none; /* Xóa border */
+  border-bottom: 2px solid transparent; /* Hiển thị gạch dưới */
+}
+
+.nav-tabs .nav-item .nav-link.active {
+  border-color: #007bff; /* Màu của gạch dưới khi active */
+  color: #007bff; /* Đổi màu văn bản khi active */
+}
+/* profile-photo.css */
+.profile .profile-photo {
+  max-width: 100px;
+  position: relative;
+  z-index: 1;
+  margin-top: -40px;
+  margin-left: 10px; 
+}
+.settings-form label.form-label {
+  font-weight: bold; /* Đặt font-weight là đậm */
+  font-size: 1.1rem; /* Đặt kích thước font lớn hơn */
+}
+
+@media only screen and (max-width: 575px) {
+  .profile .profile-photo {
+    width: 80px;
+ 
+    margin-right: auto;
+    margin-left: auto;
+    margin-bottom: 20px; 
+  } 
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

@@ -71,7 +71,7 @@ function NavbarV4() {
           <div className="logo">
             <Link to="/">
               <img src={publicUrl + "assets/img/logo.png"} 
-                            className="img-fluid rounded-circle "
+                  
 
               alt="img" />
             </Link>
@@ -147,12 +147,16 @@ function NavbarV4() {
 
                 <Dropdown as="li" className="nav-item header-profile">              
                   <Dropdown.Toggle to={"#"} className="nav-link i-false" as="div">
-                  <img src={publicUrl + "assets/img/author/pic1.jpg"} alt="img" />
+                  <img src={publicUrl + "assets/img/author/pic1.jpg"}
+                            className="bg-info rounded-circle mb-4 "
+                            style={{width:"100px", height:'100px'}}
+
+                  alt="img" />
                   </Dropdown.Toggle>
                   <Dropdown.Menu align="end" className="mt-3 dropdown-menu dropdown-menu-right ">
                       <Link to={"/profile"} className="dropdown-item ai-icon icon-bell-effect">
                           <svg id="icon-user1" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                          <span className="ms-2">Profile </span>
+                          <span className="ms-2 m-0">Profile </span>
                       </Link>
                       <Link to={"/email-inbox"} className="dropdown-item ai-icon">
                           <svg id="icon-inbox" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="feather feather-mail"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>

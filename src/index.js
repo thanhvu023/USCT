@@ -22,6 +22,7 @@ import { Provider } from "react-redux";
 import store, { persistor } from "./redux/store";
 import { PersistGate } from "redux-persist/integration/react";
 import AppProfile from "./components/section-components/AppProfile";
+import Profile from "./components/profile";
 
 function Root() {
   return (
@@ -44,7 +45,7 @@ function Root() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/university" element={<Blog />} />
         <Route path="/blog-details" element={<BlogDetails />} />
-        <Route path="/profile"  element={AppProfile}/>
+        <Route path="/profile"  element={<Profile/>}/>
       </Routes>
     </Router>
   );
