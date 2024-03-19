@@ -5210,10 +5210,10 @@ margin: 10px;
 .photo-content {
   position: relative; }
   .photo-content .cover-photo {
-    background: url(../images/profile/cover.jpg);
+    background: url('https://i.pinimg.com/564x/b9/2f/83/b92f83d7b84f4f60590018042aae9b10.jpg');
     background-size: cover;
     background-position: center;
-    min-height: 250px;
+    min-height: 500px;
     width: 100%; }
 
 .profile .profile-photo {
@@ -5229,8 +5229,14 @@ margin: 10px;
       margin-right: auto;
       margin-bottom: 20px; } }
 
-.profile-info {
-  padding: 15px 20px; }
+      .profile-info {
+        position: relative;
+        top: -50%; /* Đẩy phần profile-info lên trên khoảng 50% */
+        background-color: rgba(255, 255, 255, 0.8); /* Tạo một lớp nền mờ để làm nổi bật phần thông tin */
+        padding: 20px;
+    }
+ 
+    
   @media only screen and (max-width: 575px) {
     .profile-info {
       padding: 0 0 20px;
@@ -5322,22 +5328,8 @@ margin: 10px;
   position: relative; 
 }
 
-.photo-content .cover-photo {
-  background: url(../images/profile/cover.jpg);
-  background-size: cover;
-  background-position: center;
-  min-height: 250px;
-  width: 100%; 
-}
-.gray-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.1); /* Màu xám nhạt với độ trong suốt 0.1 */
-    z-index: -1; /* Đảm bảo lớp phủ nằm phía sau nội dung */
-}
+
+
 .nav-tabs .nav-item .nav-link {
   border: none; /* Xóa border */
   border-bottom: 2px solid transparent; /* Hiển thị gạch dưới */
@@ -5369,6 +5361,25 @@ margin: 10px;
     margin-bottom: 20px; 
   } 
 }
+
+/* Thêm viền và đổ bóng cho card-body */
+.inner-content {
+  border: 1px solid #ced4da; /* Màu viền */
+  border-radius: 10px; /* Bo tròn các góc */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Đổ bóng */
+  padding: 20px; /* Khoảng cách nội dung với viền */
+}
+
+/* Tăng kích thước font cho tiêu đề "Hồ sơ khách hàng" và "Chỉnh sửa thông tin khách hàng" */
+.nav-link {
+  font-size: 20px; /* Kích thước font */
+}
+
+.bc-grey {
+  background-color: #f0f0f0; /* Hoặc một mã màu xám nhạt khác */
+  padding: 20px; /* Điều chỉnh padding nếu cần */
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

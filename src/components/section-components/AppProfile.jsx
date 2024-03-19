@@ -28,21 +28,22 @@ const AppProfile = () => {
     return (
         <Fragment>
             <PageTitle activeMenu="Profile" motherMenu="App" />
-			<div className="page-titles mx-0">
-            <div className="row">
-                <div className="col-lg-12 ">
-                    <div className="profile card card-body px-3 pt-3 pb-0">
+			<div className="bc-grey">
+            <div className="row mb-5 mr-0 ml-0 border-0">
+            <div className="col-lg-12 ">
+                    <div className="profile card card-body px-3 pt-3 pb-0 border rounded">
                         <div className="profile-head">
                             <div className="photo-content ">
-                                <div className="cover-photo rounded bg-red">
-
+                                <div className="cover-photo rounded">
 								</div>
                             </div>
                             <div className="profile-info d-flex">
-                                <div className="profile-photo mt-1">
+                                <div className="profile-photo ">
 								<img src={publicUrl + "assets/img/author/pic2.jpg"} alt="img" 
                             className="bg-info rounded-circle mb-4 "
-                            style={{width:"100px"}}
+                            style={{width:"100px",
+                                    height:'100px'
+                        }}
                   />                                </div>
                                 <div className="profile-details d-flex">
                                     <div className="profile-name px-3 pt-2">
@@ -59,28 +60,12 @@ const AppProfile = () => {
                         </div>
                     </div>
                 </div>
-				<div className="gray-overlay"></div>
             </div>
-            <div className="row">
-                <div className="col-xl-4">
-                    <div className="row">
-                        <div className="col-lg-12">
-
-                        </div>
-                        <div className="col-lg-12">
-
-                        </div>
-                        <div className="col-lg-12">
-
-                        </div>
-                        <div className="col-lg-12">
-
-                        </div>
-                    </div>
-                </div>
-                <div className="col-xl-12">
+            <div className="row mb-5">
+                <div className="col-xl-8 mx-auto">
                     <div className="card">
-                        <div className="card-body">
+                    <div className="inner-content">
+                    <div className="card-body">
                             <div className="profile-tab">
                                 <div className="custom-tab-1">
                                     <Tab.Container defaultActiveKey='About'>
@@ -91,7 +76,7 @@ const AppProfile = () => {
                                             <Nav.Item as='li' className="nav-item">
                                                 <Nav.Link to="#profile-settings" eventKey='Setting'>Chỉnh sửa thông tin khách hàng</Nav.Link>
                                             </Nav.Item>
-                                        </Nav>
+											                                        </Nav>
                                         <Tab.Content>
                                             <Tab.Pane id="about-me" eventKey='About'>
                                                 <div className="profile-about-me">
@@ -255,11 +240,14 @@ const AppProfile = () => {
                                 </div>
                             </div>
                         </div>
+</div>
+                        
                     </div>
                 </div>
             </div>
-			<div className="gray-overlay"></div>
-			</div>
+            </div>
+           
+			
         </Fragment>
     );
 };

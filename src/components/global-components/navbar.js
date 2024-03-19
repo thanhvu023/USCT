@@ -128,15 +128,15 @@ function Navbar() {
                   <Dropdown.Toggle to={"#"} className="nav-link i-false" as="div">
                   <img src={publicUrl + "assets/img/author/pic2.jpg"} alt="img" 
                             className="bg-info rounded-circle mb-4 "
-                            style={{width:"100px"}}
+                            style={{width:"50px",height:'50px'}}
                   />
                   </Dropdown.Toggle>
                   <Dropdown.Menu align="end" className="mt-3 dropdown-menu dropdown-menu-right ">
                       <Link to={"/profile"} className="dropdown-item ai-icon icon-bell-effect ml-0">
-                          <span className="ms-2">Profile </span>
+                          <span className="ms-2">Customer's profile </span>
                       </Link>
                       <Link to={"/email-inbox"} className="dropdown-item ai-icon ml-0">
-                          <span className="ms-2">Inbox </span>
+                          <span className="ms-2">Student's profile </span>
                       </Link>                     
                       <button  className="dropdown-item ai-icon" onClick={handleLogout}>
                 <svg
@@ -152,13 +152,7 @@ function Navbar() {
             </button>
                   </Dropdown.Menu>
                 </Dropdown>
-                <button
-                        onClick={handleLogout}
-                        className="btn btn-base"
-                        to="/sign-in"
-                    >
-                        Đăng xuất
-                    </button>
+              
                     <a className="search-bar" href="#">
               <i className="fa fa-search" />
             </a>
