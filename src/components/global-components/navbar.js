@@ -132,7 +132,7 @@ function Navbar() {
                   />
                   </Dropdown.Toggle>
                   <Dropdown.Menu align="end" className="mt-3 dropdown-menu dropdown-menu-right ">
-                      <Link to={"/profile"} className="dropdown-item ai-icon icon-bell-effect ml-0">
+                      <Link to={"/customer-profile"} className="dropdown-item ai-icon icon-bell-effect ml-0">
                           <span className="ms-2">Customer's profile </span>
                       </Link>
                       <Link to={"/email-inbox"} className="dropdown-item ai-icon ml-0">

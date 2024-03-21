@@ -30,7 +30,7 @@ const AppProfile = () => {
             <PageTitle activeMenu="Profile" motherMenu="App" />
 			<div className="bc-grey">
             <div className="row mb-5 mr-0 ml-0 border-0">
-            <div className="col-lg-12 ">
+            <div className="col-lg-12 mt-12">
                     <div className="profile card card-body px-3 pt-3 pb-0 border rounded">
                         <div className="profile-head">
                             <div className="photo-content ">
@@ -71,10 +71,24 @@ const AppProfile = () => {
                                     <Tab.Container defaultActiveKey='About'>
                                         <Nav as='ul' className="nav nav-tabs">
                                             <Nav.Item as='li' className="nav-item">
-                                                <Nav.Link to="#about-me" eventKey='About'>Hồ sơ khách hàng</Nav.Link>
+                                          
+                                                <Nav.Link to="#about-me" eventKey='About'> 
+                                                <span className="d-flex align-items-center">
+                                                <i className="la la-user me-2" style={{fontWeight: 'bold'}}></i>
+                        <strong style={{fontSize: '1.2rem'}}>Hồ sơ khách hàng</strong>
+                    </span>
+                                                     </Nav.Link>
+                                             
+                                                  
                                             </Nav.Item>
                                             <Nav.Item as='li' className="nav-item">
-                                                <Nav.Link to="#profile-settings" eventKey='Setting'>Chỉnh sửa thông tin khách hàng</Nav.Link>
+                                                <Nav.Link to="#profile-settings" eventKey='Setting'>
+
+                                                <span className="d-flex align-items-center">
+                        <i className="la la-edit me-2 mr-2" style={{fontWeight: 'bold'}}></i>
+                        <strong style={{fontSize: '1.2rem'}}>Chỉnh sửa hồ sơ</strong>
+                    </span>
+                                                </Nav.Link>
                                             </Nav.Item>
 											                                        </Nav>
                                         <Tab.Content>

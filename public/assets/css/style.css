@@ -5379,7 +5379,9 @@ margin: 10px;
   background-color: #f0f0f0; /* Hoặc một mã màu xám nhạt khác */
   padding: 20px; /* Điều chỉnh padding nếu cần */
 }
-
+.custom-tab-1 .nav-link i{
+  transform: scale(1.5);
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
