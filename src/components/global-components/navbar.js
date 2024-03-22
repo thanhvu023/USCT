@@ -135,7 +135,7 @@ function Navbar() {
                       <Link to={"/customer-profile"} className="dropdown-item ai-icon icon-bell-effect ml-0">
                           <span className="ms-2">Customer's profile </span>
                       </Link>
-                      <Link to={"/email-inbox"} className="dropdown-item ai-icon ml-0">
+                      <Link to={"/student-profile"} className="dropdown-item ai-icon ml-0">
                           <span className="ms-2">Student's profile </span>
                       </Link>                     
                       <button  className="dropdown-item ai-icon" onClick={handleLogout}>
