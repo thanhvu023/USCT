@@ -9,15 +9,15 @@ export const COLUMNS = [
 		//disableFilters: true,
 	},
 	{
-		Header : 'Họ',
-		Footer : 'Họ',
-		accessor: 'first_name',
+		Header : 'Chương trình',
+		Footer : 'Chương trình',
+		accessor: 'program_name',
 		Filter: ColumnFilter,
 	},
 	{
-		Header : 'Tên',
-		Footer : 'Tên',
-		accessor: 'last_name',
+		Header : 'Trường đại học',
+		Footer : 'Trường đại học',
+		accessor: 'university_name',
 		Filter: ColumnFilter,
 	},
 	{
@@ -27,16 +27,16 @@ export const COLUMNS = [
 		Filter: ColumnFilter,
 	},
 	{
-		Header : 'Ngày sinh',
-		Footer : 'Ngày sinh',
-		accessor: 'date_of_birth',
+		Header : 'Ngày tạo',
+		Footer : 'Ngày tạo',
+		accessor: 'date_of_application',
 		Cell: ({ value }) => {return format(new Date(value), 'dd/mm/yyyy')},
 		Filter: ColumnFilter,
 	},
 	{
-		Header : 'Quốc gia',
-		Footer : 'Quốc gia',
-		accessor: 'country',
+		Header : 'Bang',
+		Footer : 'Bang',
+		accessor: 'state',
 		Filter: ColumnFilter,
 	},
 	{
@@ -60,12 +60,12 @@ export const GROUPED_COLUMNS = [
 			{
 				Header : 'Họ',
 				Footer : 'Họ',
-				accessor: 'first_name'
+				accessor: 'program_name'
 			},
 			{
 				Header : 'Tên',
 				Footer : 'Tên',
-				accessor: 'last_name'
+				accessor: 'university_name'
 			},
 		]
 	},
@@ -74,9 +74,9 @@ export const GROUPED_COLUMNS = [
 		Footer: 'Thông tin',
 		columns: [
 			{
-				Header : 'Ngày sinh',
-				Footer : 'Ngày sinh',
-				accessor: 'date_of_birth'
+				Header : 'Năm sinh',
+				Footer : 'Năm sinh',
+				accessor: 'date_of_application'
 			},
 			{
 				Header : 'Quốc gia',

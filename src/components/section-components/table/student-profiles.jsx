@@ -1,10 +1,9 @@
 import React, { useMemo, useState } from 'react';
-import { useTable, useGlobalFilter, useFilters, usePagination } from 'react-table';
+import { useTable, useFilters, usePagination } from 'react-table';
 import MOCK_DATA from './mock-api.json';
 import './student-profile.css';
 import Select from "react-select";
 import { COLUMNS } from './columns';
-import { GlobalFilter } from './global-filter'
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
@@ -17,16 +16,10 @@ const options = [
 	{ value: "esol", label: "ESOL" },
   ];
   
-  // Options for country select
-  const countryOptions = [
-	{ value: "vn", label: "Vietnam" },
-	{ value: "us", label: "United States" },
-	// Add more countries as needed
-  ];
+
 const StudenProfileList = () => {
     const columns = useMemo(() => COLUMNS, []);
     const data = useMemo(() => MOCK_DATA, []);
-	const [country, setCountry] = useState(null);
     const [modalCentered, setModalCentered] = useState(false);
     const [selectedRow, setSelectedRow] = useState(null);
 
@@ -34,7 +27,7 @@ const StudenProfileList = () => {
         columns,
         data,
         initialState: { pageIndex: 0 }
-    }, useFilters, useGlobalFilter, usePagination);
+    }, useFilters, usePagination);
 
     const {
         getTableProps,
@@ -50,10 +43,9 @@ const StudenProfileList = () => {
         previousPage,
         canNextPage,
         canPreviousPage,
-        setGlobalFilter
     } = tableInstance;
 
-    const { globalFilter, pageIndex } = state;
+    const {  pageIndex } = state;
 
 
 
@@ -70,7 +62,7 @@ const StudenProfileList = () => {
             <div className="card">
                 <div className="card-body">
                     <div className="table-responsive">
-                        <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
+                        {/* <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} /> */}
                         <table {...getTableProps()} className="table dataTable display custom-table">
                             <thead>
                                 {headerGroups.map(headerGroup => (
@@ -177,13 +169,16 @@ const StudenProfileList = () => {
                                 <label className="form-label">Ngày sinh</label>
                                 <input type="date" className="form-control" />
                               </div>
-                              <div className="form-group mb-3 col-md-6">
-                                <label className="form-label">Quốc gia</label>
-                                <Select
-                                  options={countryOptions}
-                                  value={country}
-                                  onChange={(value) => setCountry(value)}
-                                  placeholder="Chọn quốc gia"
+							  <div className="form-group mb-3 col-md-6">
+                                <label className="form-label">
+									ID Quốc gia
+                                </label>
+                                <input
+                                  type="text"
+                                  placeholder="căn cước công dân"
+                                  className="form-control"
+                                  value={"08941234712"}
+                                  
                                 />
                               </div>
                             </div>
