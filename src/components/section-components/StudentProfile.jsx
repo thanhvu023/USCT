@@ -50,6 +50,7 @@ const StudentProfilePage = () => {
   // const [customerId, setCustomerId] = useState('');
   // const [dob, setDob] = useState(null);
   // const [countryId, setCountryId] = useState('');
+  let publicUrl = process.env.PUBLIC_URL + "/";
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -107,58 +108,65 @@ const StudentProfilePage = () => {
                   </Nav>
                   <Tab.Content>
                   <Tab.Pane id="about-me" eventKey="About">
-  <div className="profile-personal-info">
+  <div className="profile-personal-info mt-3">
     <h4 className="text-primary mb-4">Thông Tin Học Sinh</h4>
-    <div className="row mb-2">
-      <div className="col-3">
-        <h5 className="f-w-500">
-          Tên Học Sinh<span className="pull-right">:</span>
-        </h5>
-      </div>
-      <div className="col-9">
-        <span>HTV</span>
-      </div>
+    <div className="col-lg-12">
+    <div className="card overflow-hidden" id="student-avatar-card">
+        <div className="row">
+            <div className="col-lg-3">
+                <div className="text-center p-3 overlay-box">
+                    <div className="profile-photo">
+                        <img src={publicUrl + "assets/img/author/pic2.jpg"} alt="img" className="bg-info rounded-circle mb-4" style={{ width: "200px", height: '200px' }} />
+                    </div>
+                    <h3 className="mt-3 mb-1 text-black">Deangelo Sena</h3>
+                    <p className="text-black mb-0">Clerk</p>
+                </div>
+            </div>
+            <div className="col-lg-9 align-self-center">
+                <div className="row mb-2 align-items-center">
+                    <div className="col-3">
+                        <h5 className="f-w-500">
+                            Nơi Sinh<span className="pull-right">:</span>
+                        </h5>
+                    </div>
+                    <div className="col-9">
+                        <span>Rosemont Avenue Melbourne, Florida</span>
+                    </div>
+                </div>
+                <div className="row mb-2 align-items-center">
+                    <div className="col-3">
+                        <h5 className="f-w-500">
+                            Quốc Gia<span className="pull-right">:</span>
+                        </h5>
+                    </div>
+                    <div className="col-9">
+                        <span>Australia</span>
+                    </div>
+                </div>
+                <div className="row mb-2 align-items-center">
+                    <div className="col-3">
+                        <h5 className="f-w-500">
+                            ID Quốc Gia<span className="pull-right">:</span>
+                        </h5>
+                    </div>
+                    <div className="col-9">
+                        <span>048321842</span>
+                    </div>
+                </div>
+                <div className="row mb-2 align-items-center">
+                    <div className="col-3">
+                        <h5 className="f-w-500">
+                            Khai sinh<span className="pull-right">:</span>
+                        </h5>
+                    </div>
+                    <div className="col-9">
+                        <span>27/05/2001</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div className="row mb-2">
-      <div className="col-3">
-        <h5 className="f-w-500">
-          Nơi Sinh<span className="pull-right">:</span>
-        </h5>
-      </div>
-      <div className="col-9">
-        <span>Rosemont Avenue Melbourne, Florida</span>
-      </div>
-    </div>
-    <div className="row mb-2">
-      <div className="col-3">
-        <h5 className="f-w-500">
-          Quốc Gia<span className="pull-right">:</span>
-        </h5>
-      </div>
-      <div className="col-9">
-        <span>Australia</span>
-      </div>
-    </div>
-    <div className="row mb-2">
-      <div className="col-3">
-        <h5 className="f-w-500">
-          ID Quốc Gia<span className="pull-right">:</span>
-        </h5>
-      </div>
-      <div className="col-9">
-        <span>048321842</span>
-      </div>
-    </div>
-    <div className="row mb-2">
-      <div className="col-3">
-        <h5 className="f-w-500">
-          Khai sinh<span className="pull-right">:</span>
-        </h5>
-      </div>
-      <div className="col-9">
-        <span>27/05/2001</span>
-      </div>
-    </div>
+</div>
   </div>
   <div className="profile-about-me">
     <div className="pt-4 border-bottom-1 pb-3">
@@ -229,6 +237,7 @@ const StudentProfilePage = () => {
                                   disabled
                                 />
                               </div>
+                              
                               <div className="form-group mb-3 col-md-6">
                                 <label className="form-label">
                                ID Quốc gia

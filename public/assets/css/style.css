@@ -5388,7 +5388,10 @@ margin: 10px;
 
  /* Table */
 
- 
+ #student-avatar-card{
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+ }
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
