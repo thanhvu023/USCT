@@ -4,8 +4,7 @@
         "es6": true
     },
     "extends": [
-        "eslint:recommended",
-        "plugin:react/recommended"
+        "eslint:recommended", "plugin:react/recommended"
     ],
     "parserOptions": {
         "ecmaFeatures": {
@@ -17,16 +16,15 @@
     "plugins": [
         "react"
     ],
-    "rules": {
-        "no-mixed-spaces-and-tabs": 0,
-        "react/jsx-uses-react": "error",
-        "react/jsx-uses-vars": "error",
-        "no-unused-vars": [
-            "error",
-            {
-                "varsIgnorePattern": "React"
-            }
-        ],
-        "no-warning-comments": "off"
-    }
+    "rules": {   
+     "react/jsx-uses-react": "error",   
+     "react/jsx-uses-vars": "error" ,"no-unused-vars": [
+       "error,warn",
+        {
+            "varsIgnorePattern": "React"
+        }
+        
+    ],        "no-warning-comments": "off"
+
+}
 }
