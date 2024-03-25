@@ -5,6 +5,9 @@ import storage from "redux-persist/lib/storage"; // defaults to localStorage for
 import programReducer from "./slice/programSlice";
 import universityReducer from "./slice/universitySlice";
 import authReducer from "./slice/authSlice";
+import stateReducer from "./slice/stateSlice";
+import majorReducer from "./slice/majorSlice";
+import semesterReducer from "./slice/semesterSlice";
 
 const persistConfig = {
   key: "root",
@@ -15,11 +18,14 @@ const rootReducer = combineReducers({
   program: programReducer,
   university: universityReducer,
   auth: authReducer,
+  state: stateReducer,
+  major: majorReducer,
+  semester:semesterReducer
 });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const store = configureStore({
   reducer: persistedReducer,
 });
-export default store
-export const persistor = persistStore(store)
+export default store;
+export const persistor = persistStore(store);

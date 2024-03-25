@@ -5,7 +5,7 @@ import { logoutUser } from "./authSlice";
 
 
 export const getAllProgram = createAsyncThunk(
-  "/program/getAll",
+  "/program/getAllProgram",
   async (param, thunkAPI) => {
     try {
       // console.log(param);
@@ -21,7 +21,7 @@ export const getAllProgram = createAsyncThunk(
 );
 
 export const getProgramById = createAsyncThunk(
-  "/program/getById",
+  "/program/getProgramById",
   async (param, thunkAPI) => {
     try {
       const programId = param;

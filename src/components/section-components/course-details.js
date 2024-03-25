@@ -10,15 +10,16 @@ import {
   // getProgramByUniId,
 } from "../../redux/slice/programSlice";
 import { useParams } from "react-router-dom";
+import { getUniversityById } from "../../redux/slice/universitySlice";
+import { getStateById } from "../../redux/slice/stateSlice";
+import { getSemesterById } from "../../redux/slice/semesterSlice";
+import { getMajorById } from "../../redux/slice/majorSlice";
 
 function CourseDetails() {
   let publicUrl = process.env.PUBLIC_URL + "/";
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
   const { programById } = useParams();
-  const programDetail = useSelector((state) => state.program.programById);
-  // const programs = useSelector((state) => state.program.programs);
-  // const uniId = useSelector((state) => state.program.programById?.universityId);
 
   const handleOpenModal = () => {
     setShowModal(true);
@@ -27,20 +28,44 @@ function CourseDetails() {
   const handleCloseModal = () => {
     setShowModal(false);
   };
+
   const programTypeId = useSelector(
     (state) => state.program?.programById?.programTypeId
   );
+  const universityId = useSelector(
+    (state) => state.program.programById.universityId
+  );
+  const stateId = useSelector(
+    (state) => state.university.universityById.stateId
+  );
+  const semesterId = useSelector((state)=>state.program.programById.semesterId)
+  const universityIdDeatil = useSelector(
+    (state) => state.university.universityById
+  );
+  const majorId = useSelector((state)=>state.program.programById.majorId)
   const programByType = useSelector(
     (state) => state.program?.programsByProgramType
   );
   const UniversityDetails = useSelector(
     (state) => state.program?.programsByUniId
   );
-  console.log("1");
+  const programDetail = useSelector((state) => state.program.programById);
+
+  const stateDetail = useSelector((state) => state.state.stateById);
+const majorDetail = useSelector((state)=>state.major.majorById)
+  // console.log("programDetail:", programDetail);
+  // console.log("universityId:", universityId);
+  // console.log("universityIdDeatil:", universityIdDeatil);
+
   useEffect(() => {
+    // console.log("Running useEffect...");
     dispatch(getProgramById(programById));
     dispatch(getProgramByProgramType(programTypeId));
-  }, [programById, programTypeId]);
+    dispatch(getUniversityById(universityId));
+    dispatch(getStateById(stateId));
+    dispatch(getSemesterById(semesterId))
+    dispatch(getMajorById(majorId))
+  }, [dispatch, programById, programTypeId, universityId, stateId,semesterId,majorId]);
 
   return (
     <>
@@ -380,15 +405,16 @@ function CourseDetails() {
                   <ul>
                     <li>
                       <i className="fa fa-university" />
-                      <span>Trường Đại học:</span> Đại học XYZ
+                      <span>Trường Đại học:</span>{" "}
+                      {universityIdDeatil.universityName}
                     </li>
                     <li>
                       <i className="fa fa-map-marker" />
-                      <span>Tiểu Bang:</span> Bang ABC
+                      <span>Tiểu Bang:</span> {stateDetail.stateName}
                     </li>
                     <li>
                       <i className="fa fa-laptop" />
-                      <span>Chuyên ngành chính:</span> Công nghệ Thông tin
+                      <span>Chuyên ngành chính:</span> {majorDetail.majorName}
                     </li>
                     <li>
                       <i className="fa fa-clipboard" />
@@ -431,25 +457,31 @@ function CourseDetails() {
                     ></div>
                     <div id="modal" className="modal" style={modalStyle}>
                       <div className="modal-content" style={modalContentStyle}>
-                      <span
-  className="close"
-  onClick={handleCloseModal}
-  style={{
-    position: "absolute",
-    top: "10px", 
-    right: "10px", 
-    fontSize: "32px", 
-    cursor: "pointer",
-  }}
->
-  &times;
-</span>
+                        <span
+                          className="close"
+                          onClick={handleCloseModal}
+                          style={{
+                            position: "absolute",
+                            top: "10px",
+                            right: "10px",
+                            fontSize: "32px",
+                            cursor: "pointer",
+                          }}
+                        >
+                          &times;
+                        </span>
 
-                        <h2>Bạn đang đăng ký vào Chương trình A tại trường đại học B</h2>
+                        <h2>
+                          Bạn đang đăng ký vào Chương trình A tại trường đại học
+                          B
+                        </h2>
                         <div className="form-group">
-                        <label htmlFor="fullName" style={{ fontWeight: "bold", fontSize: "16px" }}>
+                          <label
+                            htmlFor="fullName"
+                            style={{ fontWeight: "bold", fontSize: "16px" }}
+                          >
                             Họ và tên:
-                            </label>
+                          </label>
                           <input
                             type="text"
                             id="fullName"
@@ -459,7 +491,12 @@ function CourseDetails() {
                           />
                         </div>
                         <div className="form-group">
-                          <label htmlFor="countryId" style={{ fontWeight: "bold", fontSize: "16px" }}>Id Quốc gia:</label>
+                          <label
+                            htmlFor="countryId"
+                            style={{ fontWeight: "bold", fontSize: "16px" }}
+                          >
+                            Id Quốc gia:
+                          </label>
                           <input
                             type="text"
                             id="countryId"
@@ -469,7 +506,12 @@ function CourseDetails() {
                           />
                         </div>
                         <div className="form-group">
-                          <label htmlFor="cvFile" style={{ fontWeight: "bold", fontSize: "16px" }}>CV của tôi:</label>
+                          <label
+                            htmlFor="cvFile"
+                            style={{ fontWeight: "bold", fontSize: "16px" }}
+                          >
+                            CV của tôi:
+                          </label>
                           <input
                             type="file"
                             id="cvFile"
@@ -478,7 +520,12 @@ function CourseDetails() {
                           />
                         </div>
                         <div className="form-group">
-                          <label htmlFor="editor"style={{ fontWeight: "bold", fontSize: "16px" }}>Thư xin việc cho liên kết portfolio :</label>
+                          <label
+                            htmlFor="editor"
+                            style={{ fontWeight: "bold", fontSize: "16px" }}
+                          >
+                            Thư xin việc cho liên kết portfolio :
+                          </label>
                           <CKEditor
                             editor={ClassicEditor}
                             // onReady={ editor => {
@@ -644,7 +691,6 @@ const modalContentStyle = {
   backgroundColor: "#fefefe",
   padding: "20px",
   borderRadius: "8px",
-
 };
 const modalBgStyle = {
   position: "fixed",

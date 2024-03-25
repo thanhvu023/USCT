@@ -91,16 +91,16 @@ function CoursePage() {
   const dispatch = useDispatch();
   const programs = useSelector((state) => state.program.programs);
   const loading = useSelector((state) => state.program.loading);
-  const token = useSelector((state) => state.auth?.token);
+  // const token = useSelector((state) => state.auth?.token);
   useEffect(() => {
-    dispatch(getAllProgram(token));
+    dispatch(getAllProgram());
   }, []);
 
   let publicUrl = process.env.PUBLIC_URL + "/";
 
   return (
     <div className="blog-area pd-top-120 pd-bottom-120">
-      <div class="container">
+      <div className="container">
         <div className="row">
           <div className="col-lg-8 order-lg-12 m-0">
             <div className="row go-top">

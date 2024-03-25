@@ -1,18 +1,22 @@
-import React, { Component, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
-import parse from "html-react-parser";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 import { getUniversityById } from "../../redux/slice/universitySlice";
+import { getStateById } from "../../redux/slice/stateSlice";
 
 function InstructorDetails() {
   let publicUrl = process.env.PUBLIC_URL + "/";
   const dispatch = useDispatch();
 
-  const universityId = useParams();
+  const uniId = useParams();
+  const { universityId } = uniId;
   const uniDetail = useSelector((state) => state.university.universityById);
-  console.log(uniDetail)
+  const { stateId } = uniDetail;
+  const stateDetail = useSelector((state)=>state.state.stateById)
+  console.log(uniDetail);
   useEffect(() => {
     dispatch(getUniversityById(universityId));
+    dispatch(getStateById(stateId));
   }, []);
   return (
     <div className="main-blog-area pd-top-120 pd-bottom-90">
@@ -28,10 +32,8 @@ function InstructorDetails() {
               <div className="details">
                 <h3>{uniDetail.universityName}</h3>
                 <span className="designation">National University</span>
-                <span className="designation">Bang: California, Hoa Kỳ</span>
-                <p className="mt-4">
-                  {uniDetail.description}
-                </p>
+                <span className="designation">Bang: {stateDetail.stateName}</span>
+                <p className="mt-4">{uniDetail.description}</p>
               </div>
             </div>
           </div>
