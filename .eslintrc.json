@@ -23,7 +23,7 @@
         "react/jsx-uses-vars": "error",
         "no-unused-vars": [
             "error",
-            {
+           {
                 "varsIgnorePattern": "React"
             }
         ],

@@ -133,10 +133,10 @@ function Navbar() {
                   </Dropdown.Toggle>
                   <Dropdown.Menu align="end" className="mt-3 dropdown-menu dropdown-menu-right ">
                       <Link to={"/customer-profile"} className="dropdown-item ai-icon icon-bell-effect ml-0">
-                          <span className="ms-2">Customer's profile </span>
+                          <span className="ms-2">Customer&apos;s profile </span>
                       </Link>
                       <Link to={"/student-profile"} className="dropdown-item ai-icon ml-0">
-                          <span className="ms-2">Student's profile </span>
+                          <span className="ms-2">Student&apos;s profile </span>
                       </Link>                     
                       <button  className="dropdown-item ai-icon" onClick={handleLogout}>
                 <svg
