@@ -232,9 +232,9 @@ function SignUp() {
                 </div>
                 <div className="col-12">
                   <span>Đã có tài khoản trước đó?</span>
-                  <a className="ml-2" href="signin.html">
+                  <Link className="ml-2"to='/sign-in'>
                     <strong>Đăng nhập</strong>
-                  </a>
+                  </Link>
                 </div>
               </div>
             </form>
