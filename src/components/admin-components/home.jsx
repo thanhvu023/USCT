@@ -61,7 +61,7 @@ const AdminHome = () => {
                 </Row>
 
                 <Row>
-                    <Col xl={8} lg={8} md={12}style={{ height: "450px" }}>
+                    <Col xl={8} lg={8} md={12}>
                         <div className="card mt-4">
                             <div className="card-header" style={{ backgroundColor: 'white' }}>
                                 <h3 className="card-title">Báo cáo hồ sơ tiếp nhận</h3>

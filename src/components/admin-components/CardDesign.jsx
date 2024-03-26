@@ -1,36 +1,40 @@
 import React from 'react';
 
-const BgCard = (props) =>{
-    return(
-        <div className="media">
-            <span className="me-3">
-                {props.icon}
-            </span>
-            <div className="media-body text-white">
-                <p className="mb-1 text-white">{props.title}</p>
-                <h3 className="text-white">{props.number}</h3>
-                <div className={`progress mb-2 bg-${props.color}`}>
-                    <div className="progress-bar progress-animated bg-white" style={{width: props.percent}}></div>
-                </div>
-                <small>{props.percent} Increase in 20 Days</small>
-            </div>
-        </div>
-    )
-}
+const ProgressCard = (props) => {
+    const { percent, color } = props;
 
-const ProgressCard = (props) =>{
-    return(        
+    const style = {
+        width: percent,
+        backgroundColor: color
+    };
+
+    return (        
         <div className="card-body">
             <h4 className="card-title">{props.title}</h4>
             <h3 className="fw-bold">{props.number}</h3>
             <div className="progress mb-2">
-                <div className={`progress-bar progress-animated bg-${props.color}`} style={{width: props.percent}}></div>
+                <div className={`progress-bar progress-animated`} style={style}></div>
             </div>
             <small>{props.percent} Increase in 20 Days</small>
-        </div>
-        
+        </div>  
     )
 }
 
+export  {ProgressCard};
 
-export {BgCard, ProgressCard};
+const styles = `
+.progress-bar.progress-animated {
+    animation: progressAnimation 2s ease-in-out forwards;
+}
+
+@keyframes progressAnimation {
+    from { width: 0%; }
+    to { width: props.percent; }
+}
+
+`;
+
+const styleSheet = document.createElement("style");
+styleSheet.type = "text/css";
+styleSheet.innerText = styles;
+document.head.appendChild(styleSheet);
