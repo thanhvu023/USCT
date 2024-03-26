@@ -36,10 +36,10 @@ function CourseDetails() {
     (state) => state.program.programById.universityId
   );
   const stateId = useSelector(
-    (state) => state.university.universityById.stateId
+    (state) => state.university.universityById?.stateId
   );
   const semesterId = useSelector((state)=>state.program.programById.semesterId)
-  const universityIdDeatil = useSelector(
+  const universityIdDetail = useSelector(
     (state) => state.university.universityById
   );
   const majorId = useSelector((state)=>state.program.programById.majorId)
@@ -55,7 +55,7 @@ function CourseDetails() {
 const majorDetail = useSelector((state)=>state.major.majorById)
   // console.log("programDetail:", programDetail);
   // console.log("universityId:", universityId);
-  // console.log("universityIdDeatil:", universityIdDeatil);
+  // console.log("universityIdDetail:", universityIdDetail);
 
   useEffect(() => {
     // console.log("Running useEffect...");
@@ -268,134 +268,7 @@ const majorDetail = useSelector((state)=>state.major.majorById)
                   </div>
                 </div>
 
-                <div className="row">
-                  <div className="col-lg-12">
-                    <div className="course-details-content">
-                      <h4 className="title">Đánh giá</h4>
-                      <div className="ratings-list-inner mb-4">
-                        <div className="row">
-                          <div className="col-md-4 align-self-center text-center">
-                            <div className="total-avarage-rating">
-                              <h2>5.0</h2>
-                              <div className="rating-inner">
-                                <i className="fa fa-star" />
-                                <i className="fa fa-star" />
-                                <i className="fa fa-star" />
-                                <i className="fa fa-star" />
-                                <i className="fa fa-star" />
-                              </div>
-                              <p>Rated 5 out of 3 Ratings</p>
-                            </div>
-                          </div>
-                          <div className="col-md-8">
-                            <ul>
-                              <li>
-                                <a href="#">
-                                  <span className="counter-label">
-                                    <i className="fa fa-star" />5
-                                  </span>
-                                  <span className="progress-bar-inner">
-                                    <span className="progress">
-                                      <span
-                                        className="progress-bar"
-                                        role="progressbar"
-                                        aria-valuenow={100}
-                                        aria-valuemin={0}
-                                        aria-valuemax={100}
-                                        style={{ width: "100%" }}
-                                      />
-                                    </span>
-                                  </span>
-                                  <span className="counter-count">100%</span>
-                                </a>
-                              </li>
-                              <li>
-                                <a href="#">
-                                  <span className="counter-label">
-                                    <i className="fa fa-star" />4
-                                  </span>
-                                  <span className="progress-bar-inner">
-                                    <span className="progress">
-                                      <span
-                                        className="progress-bar"
-                                        role="progressbar"
-                                        aria-valuenow={80}
-                                        aria-valuemin={0}
-                                        aria-valuemax={100}
-                                        style={{ width: "0%" }}
-                                      />
-                                    </span>
-                                  </span>
-                                  <span className="counter-count">0%</span>
-                                </a>
-                              </li>
-                              <li>
-                                <a href="#">
-                                  <span className="counter-label">
-                                    <i className="fa fa-star" />3
-                                  </span>
-                                  <span className="progress-bar-inner">
-                                    <span className="progress">
-                                      <span
-                                        className="progress-bar"
-                                        role="progressbar"
-                                        aria-valuenow={0}
-                                        aria-valuemin={0}
-                                        aria-valuemax={100}
-                                        style={{ width: "0%" }}
-                                      />
-                                    </span>
-                                  </span>
-                                  <span className="counter-count">0%</span>
-                                </a>
-                              </li>
-                              <li>
-                                <a href="#">
-                                  <span className="counter-label">
-                                    <i className="fa fa-star" />2
-                                  </span>
-                                  <span className="progress-bar-inner">
-                                    <span className="progress">
-                                      <span
-                                        className="progress-bar"
-                                        role="progressbar"
-                                        aria-valuenow={0}
-                                        aria-valuemin={0}
-                                        aria-valuemax={100}
-                                        style={{ width: "0%" }}
-                                      />
-                                    </span>
-                                  </span>
-                                  <span className="counter-count">0%</span>
-                                </a>
-                              </li>
-                              <li>
-                                <a href="#">
-                                  <span className="counter-label">
-                                    <i className="fa fa-star" />1
-                                  </span>
-                                  <span className="progress-bar-inner">
-                                    <span className="progress">
-                                      <span
-                                        className="progress-bar"
-                                        role="progressbar"
-                                        aria-valuenow={0}
-                                        aria-valuemin={0}
-                                        aria-valuemax={100}
-                                        style={{ width: "0%" }}
-                                      />
-                                    </span>
-                                  </span>
-                                  <span className="counter-count">0%</span>
-                                </a>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+             
               </div>
             </div>
             <div className="col-lg-4">
@@ -406,7 +279,7 @@ const majorDetail = useSelector((state)=>state.major.majorById)
                     <li>
                       <i className="fa fa-university" />
                       <span>Trường Đại học:</span>{" "}
-                      {universityIdDeatil.universityName}
+                      {universityIdDetail?.universityName}
                     </li>
                     <li>
                       <i className="fa fa-map-marker" />
@@ -472,8 +345,8 @@ const majorDetail = useSelector((state)=>state.major.majorById)
                         </span>
 
                         <h2>
-                          Bạn đang đăng ký vào Chương trình A tại trường đại học
-                          B
+                          Bạn đang đăng ký vào chương trình [{programDetail.nameProgram}] <br/>
+                          tại {universityIdDetail?.universityName}
                         </h2>
                         <div className="form-group">
                           <label
@@ -691,6 +564,7 @@ const modalContentStyle = {
   backgroundColor: "#fefefe",
   padding: "20px",
   borderRadius: "8px",
+
 };
 const modalBgStyle = {
   position: "fixed",

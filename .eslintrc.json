@@ -18,14 +18,13 @@
         "sourceType": "module"
     },
     "plugins": [
-        "react",
-        "react-html-attrs"
+        "react"
     ],
     "rules": {   
     "no-mixed-spaces-and-tabs": 0,
      "react/jsx-uses-react": "error",   
      "react/jsx-uses-vars": "error" ,"no-unused-vars": [
-        "warn",
+        "warn", 
         {
             "varsIgnorePattern": "React"
         }
@@ -35,4 +34,5 @@
     "react/prop-types": "off"
 
 }
+
 }

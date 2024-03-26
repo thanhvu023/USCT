@@ -30,7 +30,7 @@ function InstructorDetails() {
             </div>
             <div className="col-lg-9 align-self-center mt-5 mt-lg-0">
               <div className="details">
-                <h3>{uniDetail.universityName}</h3>
+                <h3>{uniDetail?.universityName}</h3>
                 <span className="designation">National University</span>
                 <span className="designation">Bang: {stateDetail.stateName}</span>
                 <p className="mt-4">{uniDetail.description}</p>

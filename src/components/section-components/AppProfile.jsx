@@ -124,10 +124,10 @@ const AppProfile = () => {
     </div>
     <div className="row mb-2">
     <div className="col-2">
-            <h5 className="f-w-500">Email<span className="pull-right">:</span></h5>
+            <h5 className="f-w-500"> Căn cước công dân<span className="pull-right">:</span></h5>
         </div>
         <div className="col-9 d-flex align-items-center">
-            <span>example@examplel.com</span>
+            <span>4890327148921</span>
         </div>
     </div>
     <div className="row mb-2">
@@ -176,7 +176,7 @@ const AppProfile = () => {
                                                                 <input type="text" placeholder="Họ và tên" className="form-control" />
                                                             </div>
                                                             <div className="form-group mb-3 col-md-6">
-                                                                <label className="form-label">Email</label>
+                                                                <label className="form-label">Số căn cước công dân</label>
                                                                 <input type="email" placeholder="Email" className="form-control" />
                                                             </div>
                                                         </div>
@@ -205,12 +205,12 @@ const AppProfile = () => {
                                                                 <input type="tel" placeholder="Số điện thoại" className="form-control" />
                                                             </div>
                                                         </div>
-                                                        <div className="form-group mb-3">
-                                                            <label className="form-label">Địa chỉ</label>
+                                                        {/* <div className="form-group mb-3">
+                                                            <label className="form-label">ID Quốc gia</label>
                                                             <input type="text" placeholder="Địa chỉ" className="form-control" />
-                                                        </div>
+                                                        </div> */}
                                                         <div className="form-group mb-3">
-                                                            <label className="form-label">Địa chỉ 2</label>
+                                                            <label className="form-label">Địa chỉ </label>
                                                             <input type="text" placeholder="Apartment, studio, or floor" className="form-control" />
                                                         </div>
                                                         <div className="row">
