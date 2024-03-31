@@ -20,8 +20,6 @@
     "plugins": [
         "react"
         ],
-        "react"
-    ],
     "rules": {   
     "no-mixed-spaces-and-tabs": 0,
      "react/jsx-uses-react": "error",   

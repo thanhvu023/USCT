@@ -288,7 +288,7 @@ function CourseDetails() {
                     <li>
                       <i className="fa fa-university" />
                       <span>Trường Đại học:</span>{" "}
-                      {universityIdDetail?.universityName}
+                      {universityIdDeatil?.universityName}
                     </li>
                     <li>
                       <i className="fa fa-map-marker" />
@@ -355,7 +355,7 @@ function CourseDetails() {
 
                         <h2>
                           Bạn đang đăng ký vào chương trình [{programDetail.nameProgram}] <br/>
-                          tại {universityIdDetail?.universityName}
+                          tại {universityIdDeatil?.universityName}
                         </h2>
                         <div className="form-group">
                           <label
