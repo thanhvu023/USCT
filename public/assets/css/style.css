@@ -5392,8 +5392,19 @@ margin: 10px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
  }
 
+ /* ADMIN */
+ .nav-header .brand-logo {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.125rem;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 700; }
 
-
+  
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

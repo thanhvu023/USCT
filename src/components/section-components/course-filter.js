@@ -13,7 +13,7 @@ const Course = ({ course }) => (
 			  <span className="u-thumb"><img src={course.authorImage} alt="img" /></span>
 			  <span className="align-self-center">{course.authorName}</span>
 			</div>
-			<h6><Link to={`/course-details/${course.id}`}>{course.title}</Link></h6> {/* Thêm link cho xem thêm */}
+			<h6><Link to={`/course-details/${course.id}`}>{course.title}</Link></h6> 
 		  </div>
 		  <div className="emt-course-meta " >
 			<div className="row  d-flex justify-content-evenly">
@@ -24,7 +24,7 @@ const Course = ({ course }) => (
 			  <div className="col-6">
 				<div className="price text-right">
 				
-				  <Link to={`/course-details/${course.id}`}>Xem thêm</Link> {/* Thêm link cho xem thêm */}
+				  <Link to={`/course-details/${course.id}`}>Xem thêm</Link>
 				</div>
 			  </div>
 			</div>

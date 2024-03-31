@@ -64,9 +64,9 @@ const StudentProfilePage = () => {
           <div className="card-body">
             <div className="profile-tab">
               <div className="custom-tab-1">
-                <Tab.Container defaultActiveKey="About">
+                <Tab.Container defaultActiveKey="List">
                   <Nav as="ul" className="nav nav-tabs">
-                    <Nav.Item as="li" className="nav-item">
+                    {/* <Nav.Item as="li" className="nav-item">
                       <Nav.Link to="#about-me" eventKey="About">
                         <span className="d-flex align-items-center">
                           <i
@@ -78,8 +78,8 @@ const StudentProfilePage = () => {
                           </strong>
                         </span>
                       </Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item as="li" className="nav-item">
+                    </Nav.Item> */}
+                    {/* <Nav.Item as="li" className="nav-item">
                       <Nav.Link to="#profile-settings" eventKey="Setting">
                         <span className="d-flex align-items-center">
                           <i
@@ -91,7 +91,7 @@ const StudentProfilePage = () => {
                           </strong>
                         </span>
                       </Nav.Link>
-                    </Nav.Item>
+                    </Nav.Item> */}
                     <Nav.Item as="li" className="nav-item">
                       <Nav.Link to="#about-me" eventKey="List">
                         <span className="d-flex align-items-center">
@@ -107,119 +107,7 @@ const StudentProfilePage = () => {
                     </Nav.Item>
                   </Nav>
                   <Tab.Content>
-                  <Tab.Pane id="about-me" eventKey="About">
-  <div className="profile-personal-info mt-3">
-    <h4 className="text-primary mb-4">Thông Tin Học Sinh</h4>
-    <div className="col-lg-12">
-    <div className="card overflow-hidden" id="student-avatar-card">
-        <div className="row">
-            <div className="col-lg-3">
-                <div className="text-center p-3 overlay-box">
-                    <div className="profile-photo">
-                        <img src={publicUrl + "assets/img/author/pic2.jpg"} alt="img" className="bg-info rounded-circle mb-4" style={{ width: "200px", height: '200px' }} />
-                    </div>
-                    <h3 className="mt-3 mb-1 text-black">Deangelo Sena</h3>
-                    <p className="text-black mb-0">Clerk</p>
-                </div>
-            </div>
-            <div className="col-lg-9 align-self-center">
-                <div className="row mb-2 align-items-center">
-                    <div className="col-3">
-                        <h5 className="f-w-500">
-                            Nơi Sinh<span className="pull-right">:</span>
-                        </h5>
-                    </div>
-                    <div className="col-9">
-                        <span>Rosemont Avenue Melbourne, Florida</span>
-                    </div>
-                </div>
-                <div className="row mb-2 align-items-center">
-                    <div className="col-3">
-                        <h5 className="f-w-500">
-                            Quốc Gia<span className="pull-right">:</span>
-                        </h5>
-                    </div>
-                    <div className="col-9">
-                        <span>Australia</span>
-                    </div>
-                </div>
-                <div className="row mb-2 align-items-center">
-                    <div className="col-3">
-                        <h5 className="f-w-500">
-                            ID Quốc Gia<span className="pull-right">:</span>
-                        </h5>
-                    </div>
-                    <div className="col-9">
-                        <span>048321842</span>
-                    </div>
-                </div>
-                <div className="row mb-2 align-items-center">
-                    <div className="col-3">
-                        <h5 className="f-w-500">
-                            Khai sinh<span className="pull-right">:</span>
-                        </h5>
-                    </div>
-                    <div className="col-9">
-                        <span>27/05/2001</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-  </div>
-  <div className="profile-about-me">
-    <div className="pt-4 border-bottom-1 pb-3">
-      <h4 className="text-primary">Qúa trình học tập</h4>
-      <EducationItem
-  year="2020 - 2023"
-  details="Trường THPT Chuyên Khoa học Tự nhiên (Hà Nội)
-    Chuyên Toán
-    Tốt nghiệp loại Xuất sắc"
-  achievements={[
-    "Giải Nhất học sinh giỏi cấp quốc gia môn Toán",
-    "Huy chương Bạc Olympic Toán học Quốc tế",
-    "Giải Nhất cuộc thi nghiên cứu khoa học cấp tỉnh"
-  ]}
-/>
-<EducationItem
-  year="2017 - 2020"
-  details="Trường THCS Nguyễn Tất Thành (Hà Nội)
-    Học sinh giỏi toàn diện"
-  achievements={[
-    "Giải Nhất học sinh giỏi cấp thành phố môn Toán",
-    "Giải Nhì học sinh giỏi cấp thành phố môn Tiếng Anh"
-  ]}
-/>
 
-<div className="profile-skills mb-5">
-    <h4 className="text-primary mb-2">Trình độ tiếng Anh</h4>
-    {options.map((option, index) => (
-      <Link
-        key={index}
-        to="/app-profile"
-        className="btn light btn-xs mb-1 me-1 mr-3"
-        style={{
-          backgroundColor: '#F0F1FE',
-          color: '#6A73FA',
-          transition: 'background-color 0.3s, color 0.3s',
-        }}
-        onMouseOver={(e) => {
-          e.target.style.backgroundColor = '#6A73FA';
-          e.target.style.color = '#ffffff';
-        }}
-        onMouseOut={(e) => {
-          e.target.style.backgroundColor = '#F0F1FE';
-          e.target.style.color = '#6A73FA';
-        }}
-      >
-        {option.label}
-      </Link>
-    ))}
-  </div>
-    </div>
-  </div>
-</Tab.Pane>
 
                     <Tab.Pane id="profile-settings" eventKey="Setting">
                       <div className="pt-3">

@@ -1,17 +1,17 @@
 import React from 'react';
 import Navbar from './global-components/navbar';
 import PageHeader from './global-components/page-header';
-import Blog from './blog-components/blog';
 import Footer from './global-components/footer';
+import University from './blog-components/university';
 
-const SingUpPage = () => {
+const UniversityPage = () => {
     return <div>
         <Navbar />
         <PageHeader headertitle="Trường Đại Học"  />
-        <Blog />
+        <University />
         <Footer />
     </div>
 }
 
-export default SingUpPage
+export default UniversityPage
 

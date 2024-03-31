@@ -21,12 +21,6 @@ export const COLUMNS = [
 		Filter: ColumnFilter,
 	},
 	{
-		Header : 'Email',
-		Footer : 'Email',
-		accessor: 'email',
-		Filter: ColumnFilter,
-	},
-	{
 		Header : 'Ngày tạo',
 		Footer : 'Ngày tạo',
 		accessor: 'date_of_application',
@@ -39,12 +33,7 @@ export const COLUMNS = [
 		accessor: 'state',
 		Filter: ColumnFilter,
 	},
-	{
-		Header : 'Số điện thoại',
-		Footer : 'Số điện thoại',
-		accessor: 'phone',
-		Filter: ColumnFilter,
-	},
+
 ]
 
 export const GROUPED_COLUMNS = [
@@ -74,8 +63,8 @@ export const GROUPED_COLUMNS = [
 		Footer: 'Thông tin',
 		columns: [
 			{
-				Header : 'Năm sinh',
-				Footer : 'Năm sinh',
+				Header : 'Ngày tạo',
+				Footer : 'Ngày tạo',
 				accessor: 'date_of_application'
 			},
 			{
@@ -83,11 +72,7 @@ export const GROUPED_COLUMNS = [
 				Footer : 'Quốc gia',
 				accessor: 'country',
 			},
-			{
-				Header : 'Số điện thoại',
-				Footer : 'Số điện thoại',
-				accessor: 'phone'
-			},
+			
 		]
 	},
 ]

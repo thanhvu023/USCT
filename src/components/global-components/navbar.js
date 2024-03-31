@@ -101,6 +101,10 @@ function Navbar() {
               <li>
                 <Link to="/contact">Tư Vấn</Link>
               </li>
+              <li>
+              <Link to="/admin">Admin</Link>
+
+              </li>
             </ul>
           </div>
           <div className="nav-right-part nav-right-part-desktop d-flex  align-items-center">

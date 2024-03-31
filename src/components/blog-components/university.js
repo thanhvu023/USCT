@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { getAllUniversity } from "../../redux/slice/universitySlice";
 import Sidebar from "./sidebar";
-function Blog() {
+function University() {
   const dispatch = useDispatch();
   const universities = useSelector((state) => state.university.universities);
   useEffect(() => {
@@ -36,7 +36,7 @@ function Blog() {
                   </ul>
                   <h3 className="title">
                     <Link to={`/university-details/${university.universityId}`}>
-                      {university.universityName}
+                      {university?.universityName}
                     </Link>
                   </h3>
                   <p>{university.description}</p>
@@ -82,4 +82,4 @@ function Blog() {
   );
 }
 
-export default Blog;
+export default University;

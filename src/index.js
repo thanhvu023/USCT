@@ -16,18 +16,21 @@ import Gallery from "./components/gallery";
 import SignIn from "./components/sign-in";
 import SignUp from "./components/sign-up";
 import Contact from "./components/contact";
-import Blog from "./components/blog";
 import BlogDetails from "./components/blog-details";
 import { Provider } from "react-redux";
 import store, { persistor } from "./redux/store";
 import { PersistGate } from "redux-persist/integration/react";
 import Profile from "./components/profile";
 import StudentProfile from "./components/student-profile";
+import UniversityPage from "./components/university-page";
+import AdminPage from "./components/admin-page";
+import StudentProfileDetailPage from "./components/student-detail-page";
 
 function Root() {
   return (
     <Router>
       <Routes>
+        
         <Route path="/" element={<HomeV1 />} />
         <Route path="/home-v2" element={<HomeV2 />} />
         <Route path="/home-v3" element={<HomeV3 />} />
@@ -43,10 +46,14 @@ function Root() {
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/university" element={<Blog />} />
+        <Route path="/university" element={<UniversityPage />} />
         <Route path="/blog-details" element={<BlogDetails />} />
         <Route path="/customer-profile"  element={<Profile/>}/>
         <Route path="/student-profile"  element={<StudentProfile/>}/>
+        <Route path="/admin"  element={<AdminPage/>}/>
+        <Route path="/student-profile-detail/:id" element={<StudentProfileDetailPage />} />
+
+
 
       </Routes>
     </Router>
