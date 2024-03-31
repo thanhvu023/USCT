@@ -96,8 +96,6 @@ function CoursePage() {
     dispatch(getAllProgram());
   }, []);
 
-  let publicUrl = process.env.PUBLIC_URL + "/";
-
   return (
     <div className="blog-area pd-top-120 pd-bottom-120">
       <div className="container">
@@ -112,7 +110,7 @@ function CoursePage() {
                     <div className="single-course-inner">
                       <div className="thumb">
                         <img
-                          src={publicUrl + "assets/img/course/programs.jpg"}
+                          src={ "assets/img/course/programs.jpg"}
                           alt="img"
                         />
                       </div>

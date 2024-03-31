@@ -1,23 +1,38 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getUniversityById } from "../../redux/slice/universitySlice";
+import {
+  getUniversityById,
+  getUniversityTypeById,
+} from "../../redux/slice/universitySlice";
 import { getStateById } from "../../redux/slice/stateSlice";
+import { getProgramByUniId } from "../../redux/slice/programSlice";
 
 function InstructorDetails() {
   let publicUrl = process.env.PUBLIC_URL + "/";
+
   const dispatch = useDispatch();
 
   const uniId = useParams();
   const { universityId } = uniId;
-  const uniDetail = useSelector((state) => state.university.universityById);
+  const uniDetail = useSelector((state) => state?.university?.universityById);
   const { stateId } = uniDetail;
-  const stateDetail = useSelector((state)=>state.state.stateById)
-  console.log(uniDetail);
+  const universityTypeId = uniDetail.universityTypeId;
+  const stateDetail = useSelector((state) => state?.state?.stateById);
+  const universityTypeDetail = useSelector(
+    (state) => state?.university?.universityType
+  );
+  const programByUniId = useSelector(
+    (state) => state?.program?.programsByUniId
+  );
   useEffect(() => {
     dispatch(getUniversityById(universityId));
     dispatch(getStateById(stateId));
-  }, []);
+    dispatch(getUniversityTypeById(universityTypeId));
+  }, [stateId, uniId, universityId, universityTypeId]);
+  useEffect(() => {
+    dispatch(getProgramByUniId(uniId));
+  }, [uniId]);
   return (
     <div className="main-blog-area pd-top-120 pd-bottom-90">
       <div className="container">
@@ -25,14 +40,18 @@ function InstructorDetails() {
           <div className="row">
             <div className="col-lg-3">
               <div className="thumb">
-                <img src={publicUrl + "assets/img/team/6.png"} alt="img" />
+                <img src={uniDetail.img} alt="img" />
               </div>
             </div>
             <div className="col-lg-9 align-self-center mt-5 mt-lg-0">
               <div className="details">
                 <h3>{uniDetail.universityName}</h3>
-                <span className="designation">National University</span>
-                <span className="designation">Bang: {stateDetail.stateName}</span>
+                <span className="designation">
+                  {universityTypeDetail.typeName}
+                </span>
+                <span className="designation">
+                  Bang: {stateDetail.stateName}
+                </span>
                 <p className="mt-4">{uniDetail.description}</p>
               </div>
             </div>
@@ -43,30 +62,38 @@ function InstructorDetails() {
               <div className="widget-g-map">
                 <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15678.743238387186!2d106.7547486!3d10.8532152!3m2!1i1024!2i768!4f13.1!4m3!3e0!4m0!4m0!5e0!3m2!1svi!2s!4v1646447852855!5m2!1svi!2s" />
               </div>
-            </div>{" "}
+            </div>
           </div>
         </div>
         <div className="course-area pd-top-90">
-          <h4 className="mb-4">Các Chuyên Ngành Chính</h4>
+          <h4 className="mb-4">Những chương trình liên quan đến trường</h4>
           <div className="row">
-            <div className="col-lg-4 col-md-6">
-              <div className="single-course-inner">
-                <div className="thumb">
-                  <img src={publicUrl + "assets/img/course/1.png"} alt="img" />
-                </div>
-                <div className="details">
-                  <div className="details-inner">
-                    <h6 className="go-top">Tên Chuyên Ngành 1</h6>
-                  </div>
-                  <div className="emt-course-meta">
-                    <div className="price text-right">
-                      Mã Chuyên Ngành: <span>MAJOR01</span>
+            <div className="row justify-content-center">
+              {programByUniId.map((program, index) => (
+                <div key={index} className="col-lg-4 col-md-6">
+                  <div className="single-course-inner">
+                    <div className="thumb">
+                      <img
+                        src={publicUrl + "assets/img/course/1.png"}
+                        alt="img"
+                      />
+                    </div>
+                    <div className="details">
+                      <div className="details-inner">
+                        <h6 className="go-top">{program.nameProgram}</h6>
+                      </div>
+                      <div className="emt-course-meta">
+                        <div className="price text-right">
+                          Mã Chuyên Ngành: <span>{program.code}</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              ))}
             </div>
-            <div className="col-lg-4 col-md-6">
+
+            {/* <div className="col-lg-4 col-md-6">
               <div className="single-course-inner">
                 <div className="thumb">
                   <img src={publicUrl + "assets/img/course/2.png"} alt="img" />
@@ -99,7 +126,7 @@ function InstructorDetails() {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

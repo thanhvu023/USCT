@@ -38,11 +38,13 @@ function CourseDetails() {
   const stateId = useSelector(
     (state) => state.university.universityById.stateId
   );
-  const semesterId = useSelector((state)=>state.program.programById.semesterId)
+  const semesterId = useSelector(
+    (state) => state.program.programById.semesterId
+  );
   const universityIdDeatil = useSelector(
     (state) => state.university.universityById
   );
-  const majorId = useSelector((state)=>state.program.programById.majorId)
+  const majorId = useSelector((state) => state.program.programById.majorId);
   const programByType = useSelector(
     (state) => state.program?.programsByProgramType
   );
@@ -52,7 +54,7 @@ function CourseDetails() {
   const programDetail = useSelector((state) => state.program.programById);
 
   const stateDetail = useSelector((state) => state.state.stateById);
-const majorDetail = useSelector((state)=>state.major.majorById)
+  const majorDetail = useSelector((state) => state.major.majorById);
   // console.log("programDetail:", programDetail);
   // console.log("universityId:", universityId);
   // console.log("universityIdDeatil:", universityIdDeatil);
@@ -63,10 +65,17 @@ const majorDetail = useSelector((state)=>state.major.majorById)
     dispatch(getProgramByProgramType(programTypeId));
     dispatch(getUniversityById(universityId));
     dispatch(getStateById(stateId));
-    dispatch(getSemesterById(semesterId))
-    dispatch(getMajorById(majorId))
-  }, [dispatch, programById, programTypeId, universityId, stateId,semesterId,majorId]);
-
+    dispatch(getSemesterById(semesterId));
+    dispatch(getMajorById(majorId));
+  }, [
+    dispatch,
+    programById,
+    programTypeId,
+    universityId,
+    stateId,
+    semesterId,
+    majorId,
+  ]);
   return (
     <>
       <div className="course-single-area pd-top-120 pd-bottom-90">
