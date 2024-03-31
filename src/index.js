@@ -24,6 +24,7 @@ import Profile from "./components/profile";
 import StudentProfile from "./components/student-profile";
 import UniversityPage from "./components/university-page";
 import AdminPage from "./components/admin-page";
+import StudentProfileDetailPage from "./components/student-detail-page";
 
 function Root() {
   return (
@@ -50,6 +51,8 @@ function Root() {
         <Route path="/customer-profile"  element={<Profile/>}/>
         <Route path="/student-profile"  element={<StudentProfile/>}/>
         <Route path="/admin"  element={<AdminPage/>}/>
+        <Route path="/student-profile-detail/:id" element={<StudentProfileDetailPage />} />
+
 
 
       </Routes>
