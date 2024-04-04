@@ -17,7 +17,7 @@ const ThemeContextProvider = (props) => {
 	const [containerPosition_, setcontainerPosition_] = useState({value: "wide", label: "Wide",});
 	const [primaryColor, setPrimaryColor] = useState("color_1");
 	const [iconHover, setIconHover] = useState(false);
-  const [sidebariconHover, setSidebariconHover] = useState(false);
+  // const [sidebariconHover, setSidebariconHover] = useState(false);
 	const [menuToggle, setMenuToggle] = useState(false);
   const [windowWidth, setWindowWidth] = useState(0);
   const [windowHeight, setWindowHeight] = useState(0);
@@ -137,15 +137,15 @@ const ThemeContextProvider = (props) => {
     }
   };
 
-  const ChangeIconSidebar = (value) => {
-    if(sideBarStyle.value==="icon-hover"){
-      if(value){
-        setSidebariconHover(true);
-      }else{
-        setSidebariconHover(false);
-      }
-    }
-  }
+  // const ChangeIconSidebar = (value) => {
+  //   if(sideBarStyle.value==="icon-hover"){
+  //     if(value){
+  //       setSidebariconHover(true);
+  //     }else{
+  //       setSidebariconHover(false);
+  //     }
+  //   }
+  // }
 
   const changeHeaderPostion = (name) => {
     setHeaderposition(name);
@@ -271,8 +271,8 @@ const setDemoTheme = (theme,direction) => {
         chnageSidebarColor,
         sidebarColor,
         iconHover,
-        ChangeIconSidebar,
-        sidebariconHover,
+        // ChangeIconSidebar,
+        // sidebariconHover,
         menuToggle,
         openMenuToggle,
         // changeBackground,

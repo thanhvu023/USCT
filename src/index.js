@@ -1,6 +1,10 @@
+// App.js
 import React from "react";
-import ReactDOM from "react-dom/client";
+import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import store, { persistor } from "./redux/store";
 import HomeV1 from "./components/home-v1";
 import HomeV2 from "./components/home-v2";
 import HomeV3 from "./components/home-v3";
@@ -17,20 +21,16 @@ import SignIn from "./components/sign-in";
 import SignUp from "./components/sign-up";
 import Contact from "./components/contact";
 import BlogDetails from "./components/blog-details";
-import { Provider } from "react-redux";
-import store, { persistor } from "./redux/store";
-import { PersistGate } from "redux-persist/integration/react";
 import Profile from "./components/profile";
 import StudentProfile from "./components/student-profile";
 import UniversityPage from "./components/university-page";
 import AdminPage from "./components/admin-page";
 import StudentProfileDetailPage from "./components/student-detail-page";
 
-function Root() {
+function App() {
   return (
     <Router>
       <Routes>
-        
         <Route path="/" element={<HomeV1 />} />
         <Route path="/home-v2" element={<HomeV2 />} />
         <Route path="/home-v3" element={<HomeV3 />} />
@@ -48,13 +48,10 @@ function Root() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/university" element={<UniversityPage />} />
         <Route path="/blog-details" element={<BlogDetails />} />
-        <Route path="/customer-profile"  element={<Profile/>}/>
-        <Route path="/student-profile"  element={<StudentProfile/>}/>
-        <Route path="/admin"  element={<AdminPage/>}/>
+        <Route path="/customer-profile" element={<Profile />} />
+        <Route path="/student-profile" element={<StudentProfile />} />
+        <Route path="/admin" element={<AdminPage />} />
         <Route path="/student-profile-detail/:id" element={<StudentProfileDetailPage />} />
-
-
-
       </Routes>
     </Router>
   );
@@ -64,7 +61,7 @@ const root = ReactDOM.createRoot(document.getElementById("edumint"));
 root.render(
   <Provider store={store}>
     <PersistGate persistor={persistor}>
-    <Root />
+      <App />
     </PersistGate>
   </Provider>
 );
