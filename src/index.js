@@ -26,6 +26,7 @@ import StudentProfile from "./components/student-profile";
 import UniversityPage from "./components/university-page";
 import AdminPage from "./components/admin-page";
 import StudentProfileDetailPage from "./components/student-detail-page";
+// import EditCustomer from "./components/admin-components/customer-components/edit-customer";
 
 function App() {
   return (
@@ -52,6 +53,8 @@ function App() {
         <Route path="/student-profile" element={<StudentProfile />} />
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/student-profile-detail/:id" element={<StudentProfileDetailPage />} />
+        {/* <Route path="/customer-edit/:id" element={<EditCustomer />} /> */}
+
       </Routes>
     </Router>
   );

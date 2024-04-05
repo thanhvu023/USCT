@@ -102,11 +102,7 @@ const SideBarAd = ({ setMain }) => {
                         setState({ active: data.title });
                       }
                     }}
-                    onMouseLeave={() => {
-                      if (state.active === data.title) {
-                        setState({ active: "" });
-                      }
-                    }}
+                  
                   >
                     {data.iconStyle}
                     <span className="nav-text">{data.title}</span>

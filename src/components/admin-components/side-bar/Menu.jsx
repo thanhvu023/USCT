@@ -20,29 +20,26 @@ export const MenuList = [
         classsChange: 'mm-collapse',		
         iconStyle: <i className="la la-user" />,
         filterName: 'Tư vấn viên',
-        // content: [
-        //     {
-        //         title: 'All Consultants',
-        //         to: 'all-professors',	
-        //         filterName: 'Tư vấn viên',				
-        //     },
-        //     {
-        //         title: 'Add Consultant',
-        //         to: 'add-professor',
-        //         filterName: 'Tư vấn viên',
-        //     },
-        //     {
-        //         title: 'Edit Consultant',
-        //         to: 'edit-professor',
-        //         filterName: 'Tư vấn viên',
-        //     },
-        //     {
-        //         title: 'Consultant Profile',
-        //         to: 'professor-profile',
-        //         filterName: 'Tư vấn viên',
-        //     },
+        content: [
+            {
+                title: 'All Consultants',
+                to: 'all-customer',	
+            },
+            {
+                title: 'Add Consultant',
+                to: 'add-customer',
+            },
+            {
+                title: 'Edit Khách hàng',
+                to: 'edit-customer',
+            },
+            {
+                title: 'Consultant Profile',
+                to: 'professor-customer',
+          
+            },
            
-        // ],
+        ],
     },
     //Student    
     {
