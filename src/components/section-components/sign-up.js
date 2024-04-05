@@ -212,16 +212,16 @@ function SignUp() {
                     <Form.Check
                       type="radio"
                       name="gender"
-                      value="male"
-                      checked={formData.gender === "male"}
+                      value="Male"
+                      checked={formData.gender === "Male"}
                       onChange={handleInputChange}
                       label="Nam"
                     />
                     <Form.Check
                       type="radio"
                       name="gender"
-                      value="female"
-                      checked={formData.gender === "female"}
+                      value="Female"
+                      checked={formData.gender === "Female"}
                       onChange={handleInputChange}
                       label="Nữ"
                     />

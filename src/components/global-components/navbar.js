@@ -73,7 +73,7 @@ function Navbar() {
           <div className="logo">
             <Link to="/">
               <img
-                src={process.env.PUBLIC_URL + "assets/img/logo.png"}
+                src={publicUrl+"assets/img/logo.png"}
                 alt="img"
               />
             </Link>

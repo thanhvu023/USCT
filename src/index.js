@@ -25,6 +25,8 @@ import StudentProfile from "./components/student-profile";
 import UniversityPage from "./components/university-page";
 import AdminPage from "./components/admin-page";
 import StudentProfileDetailPage from "./components/student-detail-page";
+import ForgotPasswordPage from "./components/forgot-password";
+import ConfirmPasswordPage from "./components/confirm-password";
 
 function Root() {
   return (
@@ -52,8 +54,8 @@ function Root() {
         <Route path="/student-profile"  element={<StudentProfile/>}/>
         <Route path="/admin"  element={<AdminPage/>}/>
         <Route path="/student-profile-detail/:id" element={<StudentProfileDetailPage />} />
-
-
+        <Route path="/forgot-password" element={<ForgotPasswordPage/>} />
+        <Route path="/reset-password" element={<ConfirmPasswordPage/>}/>
 
       </Routes>
     </Router>

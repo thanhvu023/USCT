@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import parse from "html-react-parser";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { login, logoutUser } from "../../redux/slice/authSlice";
-import { Alert, Button } from 'react-bootstrap';
+import { Link, useNavigate } from "react-router-dom";
+import { login } from "../../redux/slice/authSlice";
+import { Alert } from "react-bootstrap";
 
-function Signin() {
+const ConfirmPassword = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -64,7 +63,7 @@ function Signin() {
                       type="text"
                       value={email}
                       onChange={handleEmailChange}
-                      placeholder="Email"
+                      placeholder="Mật khẩu mới"
                     />
                   </div>
                 </div>
@@ -74,14 +73,13 @@ function Signin() {
                       type="password"
                       value={password}
                       onChange={handlePasswordChange}
-                      placeholder="Mật khẩu"
+                      placeholder="Xác nhận mật khẩu mới"
                     />
                   </div>
                   {isError === "Error" && error && (
                     <div className="alert alert-danger mt-2" role="alert">
                       {error}
                     </div>
-                       
                   )}
                 </div>
                 {showAlert && (
@@ -92,10 +90,10 @@ function Signin() {
                   </div>
                 )}
                 <div className="col-12 mb-4">
-                  <button className="btn btn-base w-100">Đăng nhập</button>
+                  <button className="btn btn-base w-100">Gửi</button>
                 </div>
                 <div className="col-12">
-                  <Link to="/forgot-password">Quên mật khẩu</Link>
+                  <Link to="/login">Đăng nhập</Link>
                   <Link to="/sign-up" className="ml-2" href="signup.html">
                     <strong>Đăng ký</strong>
                   </Link>
@@ -107,6 +105,6 @@ function Signin() {
       </div>
     </div>
   );
-}
+};
 
-export default Signin;
+export default ConfirmPassword;

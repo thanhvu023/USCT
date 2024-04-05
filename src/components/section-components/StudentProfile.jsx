@@ -6,7 +6,7 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import StudenProfileList from "./table/student-profiles";
 import { Link } from "react-router-dom";
 
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 const options = [
   { value: "basic_english", label: "Tiếng Anh cơ bản" },
   { value: "ielts", label: "IELTS" },
@@ -17,10 +17,14 @@ const options = [
 
 // Options for country select
 
-
 const EducationItem = ({ year, details, achievements }) => (
   <div className="education-item">
-    <p className="education-year" style={{ fontSize: '16px', fontWeight: 'bold' }}>{year}</p>
+    <p
+      className="education-year"
+      style={{ fontSize: "16px", fontWeight: "bold" }}
+    >
+      {year}
+    </p>
     <div className="education-details">
       <p>{details}</p>
       {achievements && <AchievementList achievements={achievements} />}
@@ -100,15 +104,13 @@ const StudentProfilePage = () => {
                             style={{ fontWeight: "bold" }}
                           ></i>
                           <strong style={{ fontSize: "1.2rem" }}>
-                          Danh sách hồ sơ du học
+                            Danh sách hồ sơ du học
                           </strong>
                         </span>
                       </Nav.Link>
                     </Nav.Item>
                   </Nav>
                   <Tab.Content>
-
-
                     <Tab.Pane id="profile-settings" eventKey="Setting">
                       <div className="pt-3">
                         <div className="settings-form">
@@ -125,17 +127,16 @@ const StudentProfilePage = () => {
                                   disabled
                                 />
                               </div>
-                              
+
                               <div className="form-group mb-3 col-md-6">
                                 <label className="form-label">
-                               ID Quốc gia
+                                  ID Quốc gia
                                 </label>
                                 <input
                                   type="text"
                                   placeholder="ID Quốc gia "
                                   className="form-control"
                                   value={"34214214242424224"}
-                                
                                 />
                               </div>
                             </div>
@@ -150,7 +151,6 @@ const StudentProfilePage = () => {
                                   type="text"
                                   placeholder="Nơi sinh"
                                   className="form-control"
-                                
                                 />
                               </div>
                             </div>
@@ -203,8 +203,7 @@ const StudentProfilePage = () => {
                       </div>
                     </Tab.Pane>
                     <Tab.Pane id="about-me" eventKey="List">
-                 <StudenProfileList/>
-             
+                      <StudenProfileList />
                     </Tab.Pane>
                   </Tab.Content>
                 </Tab.Container>

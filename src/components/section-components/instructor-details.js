@@ -24,7 +24,7 @@ function InstructorDetails() {
   );
   const programByUniId = useSelector(
     (state) => state?.program?.programsByUniId
-  );
+  );1
   useEffect(() => {
     dispatch(getUniversityById(universityId));
     dispatch(getStateById(stateId));
