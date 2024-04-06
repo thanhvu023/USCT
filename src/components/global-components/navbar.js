@@ -111,7 +111,7 @@ function Navbar() {
             {!isLoggedIn && (
               // If user is not authenticated
               <>
-                <Link className="signin-btn" to="/sign-in">
+                <Link className="signin-btn btn" to="/sign-in">
                   Đăng nhập
                 </Link>
                 <Link className="btn btn-base" to="/sign-up">
@@ -142,13 +142,13 @@ function Navbar() {
                     className="mt-3 dropdown-menu dropdown-menu-right "
                   >
                     <Link
-                      to={"/customer-profile"}
+                      to={"/customer"}
                       className="dropdown-item ai-icon icon-bell-effect ml-0"
                     >
                       <span className="ms-2">Customer&apos;s profile </span>
                     </Link>
                     <Link
-                      to={"/student-profile"}
+                      to={"/students-profile"}
                       className="dropdown-item ai-icon ml-0"
                     >
                       <span className="ms-2">Student&apos;s profile </span>
