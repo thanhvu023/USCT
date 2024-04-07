@@ -1,0 +1,19 @@
+.custom-modal .modal-backdrop {
+    opacity: 0.9;
+  }
+  .custom-modal .modal-dialog {
+    width: 300px; 
+    max-width: 100%;
+    margin: auto; 
+  }
+  
+  .custom-modal .modal-content {
+    width: 100%;
+    height: 300px; 
+    max-height: 100%;
+  }
+  
+  .custom-modal .modal-body {
+    height: calc(100% - 56px - 70px); 
+    overflow-y: auto; 
+  }

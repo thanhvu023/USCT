@@ -8,7 +8,7 @@ export const MenuList = [
         to: 'admin',
         classsChange: 'mm-collapse',		
         iconStyle: <i className="la la-home" />,
-        filterName: 'Thống kê'
+        filterName: 'admin'
     },
     
 
@@ -19,34 +19,34 @@ export const MenuList = [
         title: 'Tư vấn viên',	
         classsChange: 'mm-collapse',		
         iconStyle: <i className="la la-user" />,
-        filterName: 'Tư vấn viên',
-        content: [
-            {
-                title: 'All Consultants',
-                to: 'all-customer',	
-            },
-            {
-                title: 'Add Consultant',
-                to: 'add-customer',
-            },
-            {
-                title: 'Edit Khách hàng',
-                to: 'edit-customer',
-            },
-            {
-                title: 'Consultant Profile',
-                to: 'professor-customer',
+        filterName: 'consultant',
+        // content: [
+        //     {
+        //         title: 'All Consultants',
+        //         to: 'all-customer',	
+        //     },
+        //     {
+        //         title: 'Add Consultant',
+        //         to: 'add-customer',
+        //     },
+        //     {
+        //         title: 'Edit Khách hàng',
+        //         to: 'edit-customer',
+        //     },
+        //     {
+        //         title: 'Consultant Profile',
+        //         to: 'professor-customer',
           
-            },
+        //     },
            
-        ],
+        // ],
     },
     //Student    
     {
         title: 'Khách hàng',	
         classsChange: 'mm-collapse',		
         iconStyle: <i className="la la-users" />,
-        filterName: 'Khách hàng',
+        filterName: 'customer',
         // content: [
         //     {
         //         title: 'All Students',
@@ -72,7 +72,7 @@ export const MenuList = [
         title: 'Chương trình',	
         classsChange: 'mm-collapse',		
         iconStyle: <i className="la la-graduation-cap" />,
-        filterName: 'Chương trình',
+        filterName: 'program',
         // content: [
         //     {
         //         title: 'All Programs',
@@ -98,7 +98,7 @@ export const MenuList = [
         title: 'Lợi nhuận',	
         classsChange: 'mm-collapse',		
         iconStyle: <i className="la la-dollar" />,
-        filterName: 'Lợi nhuận',
+        filterName: 'fee',
         // content: [
         //     {
         //         title: 'Fees Collection',
@@ -125,6 +125,14 @@ export const MenuList = [
         classsChange: 'mm-collapse',
         iconStyle: <i className="la la-file-text" />,
         filterName: 'Hồ sơ',
+       
+    },
+
+    {
+        title:'Chỉnh sửa',
+        classsChange: 'mm-collapse',
+        iconStyle: <i className="la la-edit" />,
+        filterName: 'Chỉnh sửa',
        
     },
 ] 

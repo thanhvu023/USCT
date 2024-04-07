@@ -19,19 +19,9 @@ const SideBarAd = ({ setMain }) => {
   const [state, setState] = useReducer(reducer, initialState);
   const [selectedFilter, setSelectedFilter] = useState(null);
 
-  const handleMenuActive = (status) => {
-    setState({ active: status });
-    if (state.active === status) {
-      setState({ active: "" });
-    }
-  };
 
-  const handleSubmenuActive = (status) => {
-    setState({ activeSubmenu: status });
-    if (state.activeSubmenu === status) {
-      setState({ activeSubmenu: "" });
-    }
-  };
+
+ 
   
   const handleFilterClick = (filterName) => {
     setSelectedFilter(filterName);
@@ -39,7 +29,7 @@ const SideBarAd = ({ setMain }) => {
   };
 
   const handleDashboardClick = () => {
-    setSelectedFilter("Thống kê");
+    setSelectedFilter("admin");
     setMain("admin");
   };
 

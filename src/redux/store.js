@@ -20,12 +20,15 @@ const rootReducer = combineReducers({
   auth: authReducer,
   state: stateReducer,
   major: majorReducer,
-  semester:semesterReducer
+  semester: semesterReducer
 });
+
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const store = configureStore({
   reducer: persistedReducer,
 });
+
 export default store;
+
 export const persistor = persistStore(store);

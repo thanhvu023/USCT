@@ -1,10 +1,10 @@
-// App.js
 import React from "react";
-import ReactDOM from "react-dom";
+import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
-import store, { persistor } from "./redux/store";
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import store, { persistor } from './redux/store';
+
 import HomeV1 from "./components/home-v1";
 import HomeV2 from "./components/home-v2";
 import HomeV3 from "./components/home-v3";
@@ -26,9 +26,10 @@ import StudentProfile from "./components/student-profile";
 import UniversityPage from "./components/university-page";
 import AdminPage from "./components/admin-page";
 import StudentProfileDetailPage from "./components/student-detail-page";
-// import EditCustomer from "./components/admin-components/customer-components/edit-customer";
+import AllCustomer from "./components/admin-components/customer-components/all-customer";
+import EditCustomer from "./components/admin-components/customer-components/edit-customer";
 
-function App() {
+const App = () => {
   return (
     <Router>
       <Routes>
@@ -51,9 +52,10 @@ function App() {
         <Route path="/blog-details" element={<BlogDetails />} />
         <Route path="/customer-profile" element={<Profile />} />
         <Route path="/student-profile" element={<StudentProfile />} />
-        <Route path="/admin" element={<AdminPage />} />
+        <Route path="/admin/*" element={<AdminPage />} />
         <Route path="/student-profile-detail/:id" element={<StudentProfileDetailPage />} />
-        {/* <Route path="/customer-edit/:id" element={<EditCustomer />} /> */}
+        {/* <Route path="/admin/customer-edit/:id" element={<EditCustomer />} /> */}
+    
 
       </Routes>
     </Router>
