@@ -487,6 +487,7 @@ const AllCustomer = () => {
                           <td>{data.join}</td>
                           <td style={{ display: "flex", alignItems: "center" }}>
                             <button
+                            
                               onClick={handleShowCheckModal}
                               className="btn btn-xs sharp btn-primary me-1"
                               style={{

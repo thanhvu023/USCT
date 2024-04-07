@@ -2,7 +2,6 @@ import React, { useReducer, useEffect, useState } from "react";
 import { Collapse } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { MenuList } from "./Menu";
-import { useScrollPosition } from "@n8tb1t/use-scroll-position";
 import './sidebar.css';
 
 const reducer = (previousState, updatedState) => ({
