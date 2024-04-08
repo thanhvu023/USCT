@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from 'react-dom';
+import ReactDOM from "react-dom/client";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -26,8 +26,11 @@ import StudentProfile from "./components/student-profile";
 import UniversityPage from "./components/university-page";
 import AdminPage from "./components/admin-page";
 import StudentProfileDetailPage from "./components/student-detail-page";
-import AllCustomer from "./components/admin-components/customer-components/all-customer";
-import EditCustomer from "./components/admin-components/customer-components/edit-customer";
+import ForgotPasswordPage from "./components/forgot-password";
+import ConfirmPasswordPage from "./components/confirm-password";
+import ChangePasswordPage from "./components/change-password";
+import CreateStudentProfilePage from "./components/create-student-profile";
+// import EditCustomer from "./components/admin-components/customer-components/edit-customer";
 
 const App = () => {
   return (
@@ -37,12 +40,18 @@ const App = () => {
         <Route path="/home-v2" element={<HomeV2 />} />
         <Route path="/home-v3" element={<HomeV3 />} />
         <Route path="/program" element={<Course />} />
-        <Route path="/program-details/:programById" element={<CourseDetails />} />
+        <Route
+          path="/program-details/:programById"
+          element={<CourseDetails />}
+        />
         <Route path="/about" element={<About />} />
         <Route path="/event" element={<Event />} />
         <Route path="/event-details" element={<EventDetails />} />
         <Route path="/instructor" element={<Instructor />} />
-        <Route path="/university-details/:universityId" element={<InstructorDetails />} />
+        <Route
+          path="/university-details/:universityId"
+          element={<InstructorDetails />}
+        />
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/sign-in" element={<SignIn />} />
@@ -50,13 +59,18 @@ const App = () => {
         <Route path="/contact" element={<Contact />} />
         <Route path="/university" element={<UniversityPage />} />
         <Route path="/blog-details" element={<BlogDetails />} />
-        <Route path="/customer-profile" element={<Profile />} />
-        <Route path="/student-profile" element={<StudentProfile />} />
-        <Route path="/admin/*" element={<AdminPage />} />
-        <Route path="/student-profile-detail/:id" element={<StudentProfileDetailPage />} />
-        <Route path="/admin/customer-edit" element={<EditCustomer />} />
-    
-
+        <Route path="/customer" element={<Profile />} />
+        <Route path="/students-profile" element={<StudentProfile />} />
+        <Route path="/admin" element={<AdminPage />} />
+        <Route
+          path="/student-profile-detail/:id"
+          element={<StudentProfileDetailPage />}
+        />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ConfirmPasswordPage />} />
+        <Route path="/customer/change-password" element={<ChangePasswordPage />} />
+        <Route path="/create-student-profile" element={<CreateStudentProfilePage/>}/>
+        {/* <Route path="/customer-edit/:id" element={<EditCustomer />} /> */}
       </Routes>
     </Router>
   );

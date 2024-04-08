@@ -4620,7 +4620,7 @@ ul {
 
 .team-details-page .designation {
   color: var(--heading-color);
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   font-size: 20px;
   font-weight: 500;
   font-family: "Roboto", sans-serif;
@@ -5213,7 +5213,7 @@ margin: 10px;
     background: url('https://i.pinimg.com/564x/b9/2f/83/b92f83d7b84f4f60590018042aae9b10.jpg');
     background-size: cover;
     background-position: center;
-    min-height: 500px;
+    min-height: 300px;
     width: 100%; }
 
 .profile .profile-photo {

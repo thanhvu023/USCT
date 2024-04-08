@@ -1,6 +1,15 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import { persistStore, persistReducer } from "redux-persist";
-import storage from "redux-persist/lib/storage"; // defaults to localStorage for web
+import {
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from "redux-persist";
+import storage from "redux-persist/lib/storage";
 
 import programReducer from "./slice/programSlice";
 import universityReducer from "./slice/universitySlice";
@@ -8,6 +17,7 @@ import authReducer from "./slice/authSlice";
 import stateReducer from "./slice/stateSlice";
 import majorReducer from "./slice/majorSlice";
 import semesterReducer from "./slice/semesterSlice";
+import studentReducer from "./slice/studentSice";
 
 const persistConfig = {
   key: "root",
@@ -20,13 +30,20 @@ const rootReducer = combineReducers({
   auth: authReducer,
   state: stateReducer,
   major: majorReducer,
-  semester: semesterReducer
+  semester: semesterReducer,
+  student: studentReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const store = configureStore({
   reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
 });
 
 export default store;

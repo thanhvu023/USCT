@@ -43,8 +43,8 @@ export const getProgramByUniId = createAsyncThunk(
   "/program/getProgramByUniId",
   async (param, thunkAPI) => {
     try {
-      const { uniId } = param;
-      const res = await instance.get(`/programs?universityId=${uniId}`, {
+      const { universityId } = param;
+      const res = await instance.get(`/programs?universityId=${universityId}`, {
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/problem+json; charset=utf-8",
