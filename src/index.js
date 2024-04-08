@@ -29,6 +29,7 @@ import StudentProfileDetailPage from "./components/student-detail-page";
 import ForgotPasswordPage from "./components/forgot-password";
 import ConfirmPasswordPage from "./components/confirm-password";
 import ChangePasswordPage from "./components/change-password";
+import CreateStudentProfilePage from "./components/create-student-profile";
 // import EditCustomer from "./components/admin-components/customer-components/edit-customer";
 
 function App() {
@@ -67,7 +68,8 @@ function App() {
         />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ConfirmPasswordPage />} />
-        <Route path="/customer/change-password/:id" element={<ChangePasswordPage />} />
+        <Route path="/customer/change-password" element={<ChangePasswordPage />} />
+        <Route path="/create-student-profile" element={<CreateStudentProfilePage/>}/>
         {/* <Route path="/customer-edit/:id" element={<EditCustomer />} /> */}
       </Routes>
     </Router>

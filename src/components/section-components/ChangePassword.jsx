@@ -5,6 +5,8 @@ import PageTitle from "./PageTitle";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserById, updateUserById } from "../../redux/slice/authSlice";
 import jwtDecode from "jwt-decode";
+import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
+import { Link } from "react-router-dom";
 
 const ChangePassword = () => {
   let publicUrl = process.env.PUBLIC_URL + "/";
@@ -119,27 +121,26 @@ const ChangePassword = () => {
           </div>
         </div>
         <div className="row mb-5">
-          <div className="col-xl-8 mx-auto">
+          <Sidebar className="ml-4">
+            <Menu>
+              <MenuItem component={<Link to={`/customer`}></Link>}>
+                Hồ sơ của tôi
+              </MenuItem>
+              <MenuItem
+                component={<Link to={`/customer/change-password`}></Link>}
+              >
+                Đổi mật khẩu
+              </MenuItem>
+            </Menu>
+          </Sidebar>
+          <div className="col-xl-8">
             <div className="card">
               <div className="inner-content">
                 <div className="card-body">
                   <div className="profile-tab">
                     <div className="custom-tab-1">
-                      <Tab.Container defaultActiveKey="About">
+                      <Tab.Container defaultActiveKey="Setting">
                         <Nav as="ul" className="nav nav-tabs">
-                          <Nav.Item as="li" className="nav-item">
-                            <Nav.Link to="#about-me" eventKey="About">
-                              <span className="d-flex align-items-center">
-                                <i
-                                  className="la la-user me-2"
-                                  style={{ fontWeight: "bold" }}
-                                ></i>
-                                <strong style={{ fontSize: "1.2rem" }}>
-                                  Hồ sơ khách hàng
-                                </strong>
-                              </span>
-                            </Nav.Link>
-                          </Nav.Item>
                           <Nav.Item as="li" className="nav-item">
                             <Nav.Link to="#profile-settings" eventKey="Setting">
                               <span className="d-flex align-items-center">

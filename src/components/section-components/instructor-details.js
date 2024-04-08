@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import {
   getUniversityById,
   getUniversityTypeById,
@@ -24,7 +24,9 @@ function InstructorDetails() {
   );
   const programByUniId = useSelector(
     (state) => state?.program?.programsByUniId
-  );1
+  );
+  console.log(programByUniId);
+
   useEffect(() => {
     dispatch(getUniversityById(universityId));
     dispatch(getStateById(stateId));
@@ -49,21 +51,23 @@ function InstructorDetails() {
                 <span className="designation">
                   {universityTypeDetail.typeName}
                 </span>
+                <span className="designation">Slogan: {uniDetail.slogan}</span>
                 <span className="designation">
                   Bang: {stateDetail.stateName}
                 </span>
-                <p className="mt-4">{uniDetail.description}</p>
+                <p>{uniDetail.description}</p>
+                {/* <p> Email liên hệ: {uniDetail.email}</p> */}
               </div>
             </div>
           </div>
-          <div className="details-inner mt-4 pt-xl-3">
+          {/* <div className="details-inner mt-4 pt-xl-3">
             <div className="widget widget_catagory">
               <h4 className="widget-title">Location</h4>
               <div className="widget-g-map">
                 <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15678.743238387186!2d106.7547486!3d10.8532152!3m2!1i1024!2i768!4f13.1!4m3!3e0!4m0!4m0!5e0!3m2!1svi!2s!4v1646447852855!5m2!1svi!2s" />
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
         <div className="course-area pd-top-90">
           <h4 className="mb-4">Những chương trình liên quan đến trường</h4>
@@ -80,7 +84,9 @@ function InstructorDetails() {
                     </div>
                     <div className="details">
                       <div className="details-inner">
-                        <h6 className="go-top">{program.nameProgram}</h6>
+                        <h6 className="go-top">
+                          <Link to={`/program-details/${program.programId}`}>{program.nameProgram}</Link>
+                        </h6>
                       </div>
                       <div className="emt-course-meta">
                         <div className="price text-right">
@@ -92,41 +98,6 @@ function InstructorDetails() {
                 </div>
               ))}
             </div>
-
-            {/* <div className="col-lg-4 col-md-6">
-              <div className="single-course-inner">
-                <div className="thumb">
-                  <img src={publicUrl + "assets/img/course/2.png"} alt="img" />
-                </div>
-                <div className="details">
-                  <div className="details-inner">
-                    <h6 className="go-top">Tên Chuyên Ngành 2</h6>
-                  </div>
-                  <div className="emt-course-meta">
-                    <div className="price text-right">
-                      Mã Chuyên Ngành: <span>MAJOR02</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-4 col-md-6">
-              <div className="single-course-inner">
-                <div className="thumb">
-                  <img src={publicUrl + "assets/img/course/3.png"} alt="img" />
-                </div>
-                <div className="details">
-                  <div className="details-inner">
-                    <h6 className="go-top">Tên Chuyên Ngành 3</h6>
-                  </div>
-                  <div className="emt-course-meta">
-                    <div className="price text-right">
-                      Mã Chuyên Ngành: <span>MAJOR03</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div> */}
           </div>
         </div>
       </div>

@@ -4,11 +4,21 @@ import MOCK_DATA from "./mock-api.json";
 import "./student-profile.css";
 import { COLUMNS } from "./columns";
 import { useNavigate } from "react-router-dom";
-
+import { useDispatch, useSelector } from "react-redux";
+import { getStudentProfileByCustomerId } from "../../../redux/slice/studentSice";
 
 const StudentProfileList = () => {
   const columns = useMemo(() => COLUMNS, []);
-  const data = useMemo(() => MOCK_DATA, []);
+
+  const userId = useSelector((state) => state.auth.userById.customerId);
+  const data = useSelector(
+    (state) => state.student.studentProfileByCustomerId
+  );
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getStudentProfileByCustomerId(userId));
+  }, [userId]);
   const [selectedRow, setSelectedRow] = useState(null);
   const navigate = useNavigate();
 
@@ -44,10 +54,6 @@ const StudentProfileList = () => {
 
   const { pageIndex } = state;
 
-
-
-
-
   return (
     <div>
       <div className="card">
@@ -80,7 +86,7 @@ const StudentProfileList = () => {
                       key={rowIndex}
                       {...row.getRowProps()}
                       onClick={() => handleRowClick(row.original.id)}
-                      >
+                    >
                       {row.cells.map((cell, cellIndex) => {
                         return (
                           <td key={cellIndex} {...cell.getCellProps()}>
@@ -104,11 +110,10 @@ const StudentProfileList = () => {
             </table>
             <div className="d-flex justify-content-between">
               <span>
-                Page{" "}
+                Page
                 <strong>
                   {pageIndex + 1} of {pageOptions.length}
                 </strong>
-                {""}
               </span>
             </div>
             <div className="text-center mb-3">
@@ -147,11 +152,8 @@ const StudentProfileList = () => {
           </div>
         </div>
       </div>
-
-    
     </div>
   );
 };
-
 
 export default StudentProfileList;

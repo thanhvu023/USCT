@@ -1,11 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import instance from "../axiosCustom";
 
-export const getStudentById = createAsyncThunk(
-  "customer/getStudentById",
+export const getStudentProfileByCustomerId = createAsyncThunk(
+  "student/getStudentProfileByCustomerId",
   async (userId, thunkAPI) => {
     try {
-      const res = await instance.get(`/account/customer/${userId}`);
+      const res = await instance.get(`/profile/customer/${userId}`);
       console.log(res.data);
       return res.data;
     } catch (error) {
@@ -20,7 +20,7 @@ const initialState = {
   loading: false,
   error: "",
   manager: false,
-  studentById: {},
+  studentProfileByCustomerId: [],
   userNumber: "",
   dataUser: {},
 };
@@ -31,15 +31,15 @@ export const studentSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getStudentById.pending, (state) => {
+      .addCase(getStudentProfileByCustomerId.pending, (state) => {
         state.loading = true;
       })
-      .addCase(getStudentById.fulfilled, (state, action) => {
+      .addCase(getStudentProfileByCustomerId.fulfilled, (state, action) => {
         state.loading = false;
-        state.studentById = action.payload;
+        state.studentProfileByCustomerId = action.payload;
         state.error = action.error;
       })
-      .addCase(getStudentById.rejected, (state) => {
+      .addCase(getStudentProfileByCustomerId.rejected, (state) => {
         state.loading = false;
         state.error = null;
       });

@@ -1,18 +1,11 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { Tab, Nav, Button } from "react-bootstrap";
-import {
-  CDBSidebar,
-  CDBSidebarContent,
-  CDBSidebarHeader,
-  CDBSidebarMenu,
-  CDBSidebarMenuItem,
-  CDBSidebarFooter,
-} from 'cdbreact';
 import PageTitle from "./PageTitle";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserById, updateUserById } from "../../redux/slice/authSlice";
 import jwtDecode from "jwt-decode";
 import { Link } from "react-router-dom";
+import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 
 const AppProfile = () => {
   let publicUrl = process.env.PUBLIC_URL + "/";
@@ -114,29 +107,6 @@ const AppProfile = () => {
   };
   return (
     <Fragment>
-      <CDBSidebar textColor="#333" backgroundColor="#f0f0f0">
-        <CDBSidebarHeader prefix={<i className="fa fa-bars" />}>
-          Contrast Light Mode
-        </CDBSidebarHeader>
-        <CDBSidebarContent>
-          <CDBSidebarMenu>
-            <CDBSidebarMenuItem icon="th-large">Dashboard</CDBSidebarMenuItem>
-            <CDBSidebarMenuItem icon="sticky-note">Components</CDBSidebarMenuItem>
-            <CDBSidebarMenuItem icon="chart-line" iconType="solid">
-              Metrics
-            </CDBSidebarMenuItem>
-          </CDBSidebarMenu>
-        </CDBSidebarContent>
-
-        <CDBSidebarFooter style={{ textAlign: 'center' }}>
-          <div
-            className="sidebar-btn-wrapper"
-            style={{padding: '20px 5px'}}
-          >
-            Sidebar Footer
-          </div>
-        </CDBSidebarFooter>
-      </CDBSidebar>
       <PageTitle activeMenu="Profile" motherMenu="App" />
       <div className="bc-grey">
         <div className="row mb-5 mr-0 ml-0 border-0">
@@ -155,6 +125,7 @@ const AppProfile = () => {
                       style={{ width: "100px", height: "100px" }}
                     />
                   </div>
+
                   <div className="profile-details d-flex">
                     <div className="profile-name px-3 pt-2">
                       <h4 className="text-primary mb-0">
@@ -173,7 +144,17 @@ const AppProfile = () => {
           </div>
         </div>
         <div className="row mb-5">
-          <div className="col-xl-8 mx-auto">
+          <Sidebar className="ml-4">
+            <Menu>
+              <MenuItem component={<Link to={`/customer`}></Link>}>
+                Hồ sơ của tôi
+              </MenuItem>
+              <MenuItem component={<Link to={`/customer/change-password`}></Link>}>
+                Đổi mật khẩu
+              </MenuItem>
+            </Menu>
+          </Sidebar>
+          <div className="col-xl-8">
             <div className="card">
               <div className="inner-content">
                 <div className="card-body">
@@ -348,15 +329,9 @@ const AppProfile = () => {
                                           className="form-control"
                                           value={userDetail.password}
                                           readOnly // Make input readOnly based on isEditingPassword state
-                                        />
-                                        <Link
-                                          to={`/customer/change-password/${userId}`}
-                                        >
-                                          <button style={{padding:"6px"}}>Thay đổi</button>
-                                        </Link>
+                                        />                                        
                                       </div>
                                     </div>
-
                                     <div className="form-group mb-3 col-md-6">
                                       <label className="form-label">
                                         Giới tính
