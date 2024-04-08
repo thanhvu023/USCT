@@ -220,7 +220,7 @@ const AllConsultant = () => {
         <div className="col-lg-12">
           <div className="card">
             <div className="card-header d-flex justify-content-between align-items-center">
-              <h4 className="card-title">Danh sách khách hàng</h4>
+              <h4 className="card-title">Danh sách tư vấn viên</h4>
               <Link to="/add-staff" className="btn btn-primary">
                 + Thêm mới
               </Link>
