@@ -1,10 +1,10 @@
-// App.js
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
-import store, { persistor } from "./redux/store";
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import store, { persistor } from './redux/store';
+
 import HomeV1 from "./components/home-v1";
 import HomeV2 from "./components/home-v2";
 import HomeV3 from "./components/home-v3";
@@ -32,7 +32,7 @@ import ChangePasswordPage from "./components/change-password";
 import CreateStudentProfilePage from "./components/create-student-profile";
 // import EditCustomer from "./components/admin-components/customer-components/edit-customer";
 
-function App() {
+const App = () => {
   return (
     <Router>
       <Routes>

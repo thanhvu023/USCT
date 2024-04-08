@@ -2,7 +2,6 @@ import React, { useReducer, useEffect, useState } from "react";
 import { Collapse } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { MenuList } from "./Menu";
-import { useScrollPosition } from "@n8tb1t/use-scroll-position";
 import './sidebar.css';
 
 const reducer = (previousState, updatedState) => ({
@@ -19,19 +18,9 @@ const SideBarAd = ({ setMain }) => {
   const [state, setState] = useReducer(reducer, initialState);
   const [selectedFilter, setSelectedFilter] = useState(null);
 
-  const handleMenuActive = (status) => {
-    setState({ active: status });
-    if (state.active === status) {
-      setState({ active: "" });
-    }
-  };
 
-  const handleSubmenuActive = (status) => {
-    setState({ activeSubmenu: status });
-    if (state.activeSubmenu === status) {
-      setState({ activeSubmenu: "" });
-    }
-  };
+
+ 
   
   const handleFilterClick = (filterName) => {
     setSelectedFilter(filterName);
@@ -39,7 +28,7 @@ const SideBarAd = ({ setMain }) => {
   };
 
   const handleDashboardClick = () => {
-    setSelectedFilter("Thống kê");
+    setSelectedFilter("admin");
     setMain("admin");
   };
 
