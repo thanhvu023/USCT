@@ -21,7 +21,7 @@ class Banner extends Component {
                           <h6 className="b-animate-1 sub-title">KHÁM PHÁ CƠ HỘI</h6>
                           <h1 className="b-animate-2 title">Mở Ra Tương Lai Học Tập Tại Mỹ</h1>
                           <Link className="btn btn-base b-animate-3 mr-sm-3 mr-2" to="/contact">Kết Nối Ngay</Link>
-                          <Link className="btn btn-border-black b-animate-3" to="/programs">Tìm Hiểu Thêm</Link>
+                          <Link className="btn btn-border-black b-animate-3" to="/program">Tìm Hiểu Thêm</Link>
                         </div>
                       </div>
                     </div>

@@ -1,6 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import store, { persistor } from './redux/store';
+
 import HomeV1 from "./components/home-v1";
 import HomeV2 from "./components/home-v2";
 import HomeV3 from "./components/home-v3";
@@ -16,15 +20,19 @@ import Gallery from "./components/gallery";
 import SignIn from "./components/sign-in";
 import SignUp from "./components/sign-up";
 import Contact from "./components/contact";
-import Blog from "./components/blog";
 import BlogDetails from "./components/blog-details";
-import { Provider } from "react-redux";
-import store, { persistor } from "./redux/store";
-import { PersistGate } from "redux-persist/integration/react";
 import Profile from "./components/profile";
 import StudentProfile from "./components/student-profile";
+import UniversityPage from "./components/university-page";
+import AdminPage from "./components/admin-page";
+import StudentProfileDetailPage from "./components/student-detail-page";
+import ForgotPasswordPage from "./components/forgot-password";
+import ConfirmPasswordPage from "./components/confirm-password";
+import ChangePasswordPage from "./components/change-password";
+import CreateStudentProfilePage from "./components/create-student-profile";
+// import EditCustomer from "./components/admin-components/customer-components/edit-customer";
 
-function Root() {
+const App = () => {
   return (
     <Router>
       <Routes>
@@ -32,22 +40,37 @@ function Root() {
         <Route path="/home-v2" element={<HomeV2 />} />
         <Route path="/home-v3" element={<HomeV3 />} />
         <Route path="/program" element={<Course />} />
-        <Route path="/program-details/:programById" element={<CourseDetails />} />
+        <Route
+          path="/program-details/:programById"
+          element={<CourseDetails />}
+        />
         <Route path="/about" element={<About />} />
         <Route path="/event" element={<Event />} />
         <Route path="/event-details" element={<EventDetails />} />
         <Route path="/instructor" element={<Instructor />} />
-        <Route path="/university-details/:universityId" element={<InstructorDetails />} />
+        <Route
+          path="/university-details/:universityId"
+          element={<InstructorDetails />}
+        />
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/university" element={<Blog />} />
+        <Route path="/university" element={<UniversityPage />} />
         <Route path="/blog-details" element={<BlogDetails />} />
-        <Route path="/customer-profile"  element={<Profile/>}/>
-        <Route path="/student-profile"  element={<StudentProfile/>}/>
-
+        <Route path="/customer" element={<Profile />} />
+        <Route path="/students-profile" element={<StudentProfile />} />
+        <Route path="/admin" element={<AdminPage />} />
+        <Route
+          path="/student-profile-detail/:id"
+          element={<StudentProfileDetailPage />}
+        />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ConfirmPasswordPage />} />
+        <Route path="/customer/change-password" element={<ChangePasswordPage />} />
+        <Route path="/create-student-profile" element={<CreateStudentProfilePage/>}/>
+        {/* <Route path="/customer-edit/:id" element={<EditCustomer />} /> */}
       </Routes>
     </Router>
   );
@@ -57,7 +80,7 @@ const root = ReactDOM.createRoot(document.getElementById("edumint"));
 root.render(
   <Provider store={store}>
     <PersistGate persistor={persistor}>
-    <Root />
+      <App />
     </PersistGate>
   </Provider>
 );

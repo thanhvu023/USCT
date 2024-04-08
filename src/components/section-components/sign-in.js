@@ -95,7 +95,7 @@ function Signin() {
                   <button className="btn btn-base w-100">Đăng nhập</button>
                 </div>
                 <div className="col-12">
-                  <Link to="/">Quên mật khẩu</Link>
+                  <Link to="/forgot-password">Quên mật khẩu</Link>
                   <Link to="/sign-up" className="ml-2" href="signup.html">
                     <strong>Đăng ký</strong>
                   </Link>

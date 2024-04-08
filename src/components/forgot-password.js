@@ -1,17 +1,17 @@
 import React from 'react';
 import Navbar from './global-components/navbar';
 import PageHeader from './global-components/page-header';
-import Blog from './blog-components/blog';
 import Footer from './global-components/footer';
+import ForgotPassword from './section-components/forgot-password';
 
-const SingUpPage = () => {
+const ForgotPasswordPage = () => {
     return <div>
         <Navbar />
-        <PageHeader headertitle="Trường Đại Học"  />
-        <Blog />
+        <PageHeader headertitle="Forgot Password"  />
+        <ForgotPassword />
         <Footer />
     </div>
 }
 
-export default SingUpPage
+export default ForgotPasswordPage
 

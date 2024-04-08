@@ -7,13 +7,13 @@ const handleSliderChange = (event, setCurrentValue) => {
   setCurrentValue(event.target.value);
 };
 
-const formatCurrency = (value) => {
-  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-};
+// const formatCurrency = (value) => {
+//   return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+// };
 
 function CoursePage() {
-  const [minPrice, setMinPrice] = useState(100000);
-  const [maxPrice, setMaxPrice] = useState(2000000);
+  // const [minPrice, setMinPrice] = useState(100000);
+  // const [maxPrice, setMaxPrice] = useState(2000000);
   const [currentValue, setCurrentValue] = useState(100000);
 
   const CategoryCheckboxList = ({ title, items }) => {
@@ -91,16 +91,14 @@ function CoursePage() {
   const dispatch = useDispatch();
   const programs = useSelector((state) => state.program.programs);
   const loading = useSelector((state) => state.program.loading);
-  const token = useSelector((state) => state.auth?.token);
+  // const token = useSelector((state) => state.auth?.token);
   useEffect(() => {
-    dispatch(getAllProgram(token));
+    dispatch(getAllProgram());
   }, []);
-
-  let publicUrl = process.env.PUBLIC_URL + "/";
 
   return (
     <div className="blog-area pd-top-120 pd-bottom-120">
-      <div class="container">
+      <div className="container">
         <div className="row">
           <div className="col-lg-8 order-lg-12 m-0">
             <div className="row go-top">
@@ -112,7 +110,7 @@ function CoursePage() {
                     <div className="single-course-inner">
                       <div className="thumb">
                         <img
-                          src={publicUrl + "assets/img/course/programs.jpg"}
+                          src={ "assets/img/course/programs.jpg"}
                           alt="img"
                         />
                       </div>
@@ -258,7 +256,7 @@ function CoursePage() {
                   <span>$100k</span>
                   <span>$2M</span>
                 </div>
-                <div
+                {/* <div
                   style={{
                     position: "absolute",
                     top: "900px",
@@ -271,7 +269,7 @@ function CoursePage() {
                   }}
                 >
                   {formatCurrency(currentValue)}$
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

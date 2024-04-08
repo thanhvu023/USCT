@@ -4620,7 +4620,7 @@ ul {
 
 .team-details-page .designation {
   color: var(--heading-color);
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   font-size: 20px;
   font-weight: 500;
   font-family: "Roboto", sans-serif;
@@ -5213,7 +5213,7 @@ margin: 10px;
     background: url('https://i.pinimg.com/564x/b9/2f/83/b92f83d7b84f4f60590018042aae9b10.jpg');
     background-size: cover;
     background-position: center;
-    min-height: 500px;
+    min-height: 300px;
     width: 100%; }
 
 .profile .profile-photo {
@@ -5392,6 +5392,166 @@ margin: 10px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
  }
 
-@tailwind base;
+ /* ADMIN */
+ /* .nav-header .brand-logo {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.125rem;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 700; }
+.dlabnav-scroll{
+  margin-top: 55px;
+  width: 194px;
+}
+ 
+  .dlabnav .metismenu > li > a svg {
+    color: #6673fd; }
+  .dlabnav .metismenu > li:hover > a, .dlabnav .metismenu > li:focus > a {
+    color: #6673fd; }
+  .dlabnav .metismenu > li.mm-active > a {
+     color: #6673fd; }
+ .dlabnav .metismenu ul a:hover, .dlabnav .metismenu ul a:focus, .dlabnav .metismenu ul a.mm-active {
+    color: #6673fd; }
+   @media (min-width: 767px) {
+    [data-sidebar-style="modern"] .dlabnav .metismenu > li > a:hover > a, [data-sidebar-style="modern"] .dlabnav .metismenu > li > a:focus > a, [data-sidebar-style="modern"] .dlabnav .metismenu > li > a:active > a, [data-sidebar-style="modern"] .dlabnav .metismenu > li > a.mm-active > a {
+      background-color: white; } }
+      .dlabnav .dlabnav-scroll {
+        position: relative;
+      }
+      
+      [data-sidebar-style="full"][data-layout="vertical"] .menu-toggle .dlabnav .dlabnav-scroll {
+        overflow: visible;
+      }
+      
+      [data-sidebar-style="mini"] .dlabnav .dlabnav-scroll {
+        overflow: visible !important;
+      }
+      
+      [data-layout="horizontal"] .dlabnav .slimScrollDiv .dlabnav-scroll {
+        overflow: visible !important;
+      }
+      
+      [data-layout="horizontal"] .dlabnav .dlabnav-scroll {
+        overflow: visible !important;
+      }
+      
+      [data-sidebar-style="modern"][data-layout="vertical"] .dlabnav .dlabnav-scroll {
+        overflow: visible !important;
+      }
+      .nav-header {
+        height: var(--dz-header-height);
+        width: var(--dz-sidebar-width);
+        display: inline-block;
+        text-align: left;
+        position: absolute;
+        top: 0;
+        background-color: #6A73FA;
+        transition: all .2s ease;
+        z-index: 20; }
+        .nav-header .logo-abbr {
+          max-width: 3.7375rem; }
+        .nav-header .logo-compact {
+          display: none; }
+        .nav-header .brand-logo {
+          display: flex;
+          height: 100%;
+          width: 100%;
+          justify-content: center;
+          align-items: center;
+          font-size: 1.125rem;
+          color: #fff;
+          text-decoration: none;
+          font-weight: 700; }
+        .nav-header .brand-title {
+          margin-right: 0.9375rem;
+          max-width: 8.75rem; }
+          .nav-control {
+            cursor: pointer;
+            position: absolute;
+            left: -4rem;
+            text-align: center;
+            top: 55%;
+            transform: translateY(-50%);
+            z-index: 9999;
+            font-size: 1.4rem;
+            padding: 0.125rem 0.5rem 0;
+            border-radius: 0.125rem; }
+
+            /* src/assets/css/style-rtl.css */
+/* .container,
+.container-fluid,
+.container-sm,
+.navbar > .container,
+.navbar > .container-fluid,
+.navbar > .container-sm,
+.navbar > .container-md,
+.navbar > .container-lg,
+.navbar > .container-xl,
+.navbar > .container-xxl,
+.content-body .container-fluid,
+.content-body .container-sm,
+.content-body .container-md,
+.content-body .container-lg,
+.content-body .container-xl,
+.content-body .container-xxl,
+[data-layout="horizontal"] .content-body .container-fluid,
+[data-layout="horizontal"] .content-body .container-sm,
+[data-layout="horizontal"] .content-body .container-md,
+[data-layout="horizontal"] .content-body .container-lg,
+[data-layout="horizontal"] .content-body .container-xl,
+[data-layout="horizontal"] .content-body .container-xxl,
+[data-container="boxed"] .content-body .container-fluid,
+[data-container="boxed"] .content-body .container-sm,
+[data-container="boxed"] .content-body .container-md,
+[data-container="boxed"] .content-body .container-lg,
+[data-container="boxed"] .content-body .container-xl,
+[data-container="boxed"] .content-body .container-xxl {
+    padding-top: 0.9375rem;
+    padding-bottom: 0.9375rem;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem;
+}
+
+/* src/assets/css/style.css */
+/* .container,
+.container-fluid,
+.container-sm,
+.navbar > .container,
+.navbar > .container-fluid,
+.navbar > .container-sm,
+.navbar > .container-md,
+.navbar > .container-lg,
+.navbar > .container-xl,
+.navbar > .container-xxl,
+.content-body .container-fluid,
+.content-body .container-sm,
+.content-body .container-md,
+.content-body .container-lg,
+.content-body .container-xl,
+.content-body .container-xxl,
+[data-layout="horizontal"] .content-body .container-fluid,
+[data-layout="horizontal"] .content-body .container-sm,
+[data-layout="horizontal"] .content-body .container-md,
+[data-layout="horizontal"] .content-body .container-lg,
+[data-layout="horizontal"] .content-body .container-xl,
+[data-layout="horizontal"] .content-body .container-xxl,
+[data-container="boxed"] .content-body .container-fluid,
+[data-container="boxed"] .content-body .container-sm,
+[data-container="boxed"] .content-body .container-md,
+[data-container="boxed"] .content-body .container-lg,
+[data-container="boxed"] .content-body .container-xl,
+[data-container="boxed"] .content-body .container-xxl {
+    padding-top: 0.9375rem;
+    padding-bottom: 0.9375rem;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem;
+}
+ */ 
+
+
 @tailwind components;
 @tailwind utilities;

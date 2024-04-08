@@ -5,7 +5,7 @@ import { logoutUser } from "./authSlice";
 
 
 export const getAllProgram = createAsyncThunk(
-  "/program/getAll",
+  "/program/getAllProgram",
   async (param, thunkAPI) => {
     try {
       // console.log(param);
@@ -21,7 +21,7 @@ export const getAllProgram = createAsyncThunk(
 );
 
 export const getProgramById = createAsyncThunk(
-  "/program/getById",
+  "/program/getProgramById",
   async (param, thunkAPI) => {
     try {
       const programId = param;
@@ -43,8 +43,8 @@ export const getProgramByUniId = createAsyncThunk(
   "/program/getProgramByUniId",
   async (param, thunkAPI) => {
     try {
-      const { uniId } = param;
-      const res = await instance.get(`/programs?universityId=${uniId}`, {
+      const { universityId } = param;
+      const res = await instance.get(`/programs?universityId=${universityId}`, {
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/problem+json; charset=utf-8",

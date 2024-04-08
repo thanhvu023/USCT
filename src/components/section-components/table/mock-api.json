@@ -1,30 +1,30 @@
 [
   {
     "id": 1,
-    "program_name": "Chương trình A",
+    "fullName": "Chương trình A",
     "university_name": "Đại học Phạm",
     "email": "anpham0@edublogs.org",
-    "date_of_application": "2015-05-05T06:18:12Z",
+    "createDate": "2015-05-05T06:18:12Z",
     "age": 56,
     "state": "Malaysia",
     "phone": "8898927667"
   },
   {
     "id": 2,
-    "program_name": "Chương trình B",
+    "fullName": "Chương trình B",
     "university_name": "Đại học Nguyễn",
     "email": "hanguyen1@joomla.org",
-    "date_of_application": "1982-05-01T03:16:30Z",
+    "createDate": "1982-05-01T03:16:30Z",
     "age": 26,
     "state": "Pakistan",
     "phone": "2315313399"
   },
   {
     "id": 3,
-    "program_name": "Chương trình C",
+    "fullName": "Chương trình C",
     "university_name": "Đại học Trần",
     "email": "minhtran2@vkontakte.ru",
-    "date_of_application": "1996-02-01T16:48:16Z",
+    "createDate": "1996-02-01T16:48:16Z",
     "age": 27,
     "state": "China",
     "phone": "7287791978"

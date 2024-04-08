@@ -1,12 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
-import jwt_decode from "jwt-decode";
-import instance from "../axiosCustom";
 import { setUserAuthToken } from "../authService";
-
-const axiosUs = axios.create({
-  baseURL: "https://usstudy.monoinfinity.net/v3/",
-});
+import instance from "../axiosCustom";
 
 export const login = createAsyncThunk(
   "customer/login",
@@ -14,13 +8,13 @@ export const login = createAsyncThunk(
     try {
       const loginData = param.loginData;
       const navigate = param.navigate;
-      const res = await axiosUs.post("account/login", loginData, {
+      const res = await instance.post("account/login", loginData, {
         headers: {
           "Access-Control-Allow-Origin": "*",
         },
       });
-      const token = res.data
-      setUserAuthToken(token)
+      const token = res.data;
+      setUserAuthToken(token);
       navigate("/");
       return token;
     } catch (error) {
@@ -33,7 +27,7 @@ export const getUserById = createAsyncThunk(
   "customer/getUserById",
   async (userId, thunkAPI) => {
     try {
-      const res = await instance.get(`customer/${userId}`);
+      const res = await instance.get(`/account/customer/${userId}`);
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.res.data);
@@ -47,9 +41,9 @@ export const signup = createAsyncThunk(
     try {
       const signupData = param.formData;
       const navigate = param.navigate;
-      const res = await instance.post("account/signup",signupData, {
+      const res = await instance.post("account/signup", signupData, {
         headers: "Access-Control-Allow-Origin",
-      });     
+      });
       navigate("/sign-in");
       return res.data;
     } catch (err) {
@@ -58,6 +52,33 @@ export const signup = createAsyncThunk(
   }
 );
 
+export const updateUserById = createAsyncThunk(
+  "customer/updateUserById",
+  async (params, thunkAPI) => {
+    const { userId, userData } = params;
+    try {
+      const res = await instance.put(`/account/customer/${userId}`, {
+        ...userData,
+      });
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const sendEmailForgotPassword = createAsyncThunk(
+  "customer/sendEmail",
+  async (params, thunkAPI) => {
+    try {
+      const email = params;
+      const res = await instance.get(`account/reset-password?email=${email}`);
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
 
 // export const decodeTokenAndGetUserId = async (token) => {
 //   try {
@@ -106,7 +127,6 @@ export const authSlice = createSlice({
         state.token = action.payload;
         state.error = null;
       })
-      
       .addCase(signup.pending, (state) => {
         state.loading = true;
       })
@@ -114,10 +134,45 @@ export const authSlice = createSlice({
         state.loading = false;
         state.error = action.error;
       })
-      .addCase(signup.fulfilled, (state, action) => {
+      .addCase(signup.fulfilled, (state) => {
         state.loading = false;
         state.error = null;
       })
+      .addCase(getUserById.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getUserById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.userById = action.payload;
+        state.error = action.error;
+      })
+      .addCase(getUserById.rejected, (state) => {
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(updateUserById.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updateUserById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.userById = action.payload;
+        state.error = action.error;
+      })
+      .addCase(updateUserById.rejected, (state) => {
+        state.loading = false;
+        state.error = null;
+      }).addCase(sendEmailForgotPassword.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(sendEmailForgotPassword.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = action.error;
+        state.msg ='Gửi mail thành công'
+      })
+      .addCase(sendEmailForgotPassword.rejected, (state) => {
+        state.loading = false;
+        state.error = null;
+      });
   },
 });
 
@@ -126,4 +181,4 @@ const {
   actions: { logoutUser },
 } = authSlice;
 
-export { logoutUser, authReducer as default };
+export { authReducer as default, logoutUser };
