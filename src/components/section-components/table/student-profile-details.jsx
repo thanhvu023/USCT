@@ -11,7 +11,7 @@ const StudentProfileDetails = () => {
     let publicUrl = process.env.PUBLIC_URL + "/";
 
 
-    const { studentProfileId } = useParams();
+    const { studentProfileId, fullName, email, createDate, dateOfBirth, gender, nationalId, phone, placeOfBirth, studyProcess } = useParams();
  
 
 
@@ -181,7 +181,7 @@ const StudentProfileDetails = () => {
                     <div className="profile-photo">
                         <img src={publicUrl + "assets/img/author/pic2.jpg"} alt="img" className="bg-info rounded-circle mb-4" style={{ width: "200px", height: '200px' }} />
                     </div>
-                    <h3 className="mt-3 mb-1 text-black">{studentProfileId}</h3>
+                    <h3 className="mt-3 mb-1 text-black">{fullName}</h3>
                     <p className="text-black mb-0">Clerk</p>
                 </div>
             </div>
@@ -193,7 +193,7 @@ const StudentProfileDetails = () => {
                         </h5>
                     </div>
                     <div className="col-9">
-                        <span>Rosemont Avenue Melbourne, Florida</span>
+                        <span>{placeOfBirth}</span>
                     </div>
                 </div>
                 <div className="row mb-2 align-items-center">
@@ -203,7 +203,7 @@ const StudentProfileDetails = () => {
                         </h5>
                     </div>
                     <div className="col-9">
-                        <span>Australia</span>
+                        <span>{nationalId}</span>
                     </div>
                 </div>
                 <div className="row mb-2 align-items-center">
@@ -213,7 +213,7 @@ const StudentProfileDetails = () => {
                         </h5>
                     </div>
                     <div className="col-9">
-                        <span>048321842</span>
+                        <span>{nationalId}</span>
                     </div>
                 </div>
                 <div className="row mb-2 align-items-center">
@@ -223,7 +223,7 @@ const StudentProfileDetails = () => {
                         </h5>
                     </div>
                     <div className="col-9">
-                        <span>27/05/2001</span>
+                        <span>{dateOfBirth}</span>
                     </div>
                 </div>
             </div>

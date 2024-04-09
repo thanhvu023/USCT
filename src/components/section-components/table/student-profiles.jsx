@@ -28,10 +28,11 @@ const StudentProfileList = () => {
   const [selectedRow, setSelectedRow] = useState(null);
   const navigate = useNavigate();
 
-  const handleRowClick = (studentProfileId) => {
+  const handleRowClick = (studentProfileId, fullName, email,createDate, phone, nationalId, gender, dateOfBirth, placeOfBirth, studyProcess) => {
     // Navigate to StudentProfileDetail with necessary information in URL
-    navigate(`/student-profile-detail/${studentProfileId}`);
+    navigate(`/student-profile-detail/${studentProfileId}/${fullName}/${email}/${createDate}/${dateOfBirth}/${gender}/${nationalId}/${phone}/${placeOfBirth}/${studyProcess}`);
   };
+  
   const tableInstance = useTable(
     {
       columns,
@@ -91,7 +92,7 @@ const StudentProfileList = () => {
                     <tr
                       key={rowIndex}
                       {...row.getRowProps()}
-                      onClick={() => handleRowClick(row.original.studentProfileId)}
+                      onClick={() => handleRowClick(row.original.studentProfileId, row.original.fullName, row.original.email, row.original.createDate, row.original.phone, row.original.nationalId, row.original.gender, row.original.dateOfBirth, row.original.placeOfBirth, row.original.studyProcess)}
                       >
                       {row.cells.map((cell, cellIndex) => {
                         return (
