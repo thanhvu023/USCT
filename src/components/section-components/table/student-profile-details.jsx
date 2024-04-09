@@ -1,11 +1,19 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import Select from "react-select";
 import { Link } from "react-router-dom";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import { useSelector } from "react-redux"; 
+import { useParams } from "react-router-dom";
+
 const StudentProfileDetails = () => {
 
     let publicUrl = process.env.PUBLIC_URL + "/";
+
+
+    const { studentProfileId } = useParams();
+ 
+
 
 
     const [editMode, setEditMode] = useState(false);
@@ -173,7 +181,7 @@ const StudentProfileDetails = () => {
                     <div className="profile-photo">
                         <img src={publicUrl + "assets/img/author/pic2.jpg"} alt="img" className="bg-info rounded-circle mb-4" style={{ width: "200px", height: '200px' }} />
                     </div>
-                    <h3 className="mt-3 mb-1 text-black">Deangelo Sena</h3>
+                    <h3 className="mt-3 mb-1 text-black">{studentProfileId}</h3>
                     <p className="text-black mb-0">Clerk</p>
                 </div>
             </div>

@@ -10,6 +10,8 @@ import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import { getStudentProfileByCustomerId } from "../../redux/slice/studentSice";
+import RegistrationList from "./table/registration-list";
+import StudentProfileAppliedList from "./table/student-profiles-applied";
 const options = [
   { value: "basic_english", label: "Tiếng Anh cơ bản" },
   { value: "ielts", label: "IELTS" },
@@ -82,36 +84,10 @@ const StudentProfilePage = () => {
             <div className="card-body">
               <div className="profile-tab">
                 <div className="custom-tab-1">
-                  <Tab.Container defaultActiveKey="List">
+                  <Tab.Container defaultActiveKey="StudentList">
                     <Nav as="ul" className="nav nav-tabs">
-                      {/* <Nav.Item as="li" className="nav-item">
-                        <Nav.Link to="#about-me" eventKey="About">
-                          <span className="d-flex align-items-center">
-                            <i
-                              className="la la-user me-2"
-                              style={{ fontWeight: "bold" }}
-                            ></i>
-                            <strong style={{ fontSize: "1.2rem" }}>
-                              Hồ sơ du học
-                            </strong>
-                          </span>
-                        </Nav.Link>
-                      </Nav.Item> */}
-                      {/* <Nav.Item as="li" className="nav-item">
-                        <Nav.Link to="#profile-settings" eventKey="Setting">
-                          <span className="d-flex align-items-center">
-                            <i
-                              className="la la-edit me-2 mr-2"
-                              style={{ fontWeight: "bold" }}
-                            ></i>
-                            <strong style={{ fontSize: "1.2rem" }}>
-                              Chỉnh sửa hồ sơ
-                            </strong>
-                          </span>
-                        </Nav.Link>
-                      </Nav.Item> */}
-                      <Nav.Item as="li" className="nav-item">
-                        <Nav.Link to="#about-me" eventKey="List">
+                    <Nav.Item as="li" className="nav-item">
+                        <Nav.Link to="#about-mefdasf" eventKey="StudentList">
                           <span className="d-flex align-items-center">
                             <i
                               className="la la-clipboard me-2"
@@ -123,10 +99,37 @@ const StudentProfilePage = () => {
                           </span>
                         </Nav.Link>
                       </Nav.Item>
+                      <Nav.Item as="li" className="nav-item">
+                        <Nav.Link to="#about-me" eventKey="RegistrationList">
+                          <span className="d-flex align-items-center">
+                            <i
+                              className="la la-user me-2"
+                              style={{ fontWeight: "bold" }}
+                            ></i>
+                            <strong style={{ fontSize: "1.2rem" }}>
+                         Danh sách đơn tư vấn
+                            </strong>
+                          </span>
+                        </Nav.Link>
+                      </Nav.Item>
+                      <Nav.Item as="li" className="nav-item">
+                        <Nav.Link to="#profile-settings" eventKey="Setting">
+                          <span className="d-flex align-items-center">
+                            <i
+                              className="la la-edit me-2 mr-2"
+                              style={{ fontWeight: "bold" }}
+                            ></i>
+                            <strong style={{ fontSize: "1.2rem" }}>
+                            Hồ sơ đã duyệt
+                            </strong>
+                          </span>
+                        </Nav.Link>
+                      </Nav.Item>
+                     
                     </Nav>
                     <Tab.Content>
                       <Tab.Pane id="profile-settings" eventKey="Setting">
-                        <div className="pt-3">
+                        {/* <div className="pt-3">
                           <div className="settings-form">
                             <h4 className="text-primary">
                               Chỉnh sửa thông tin
@@ -219,12 +222,18 @@ const StudentProfilePage = () => {
                               </button>
                             </form>
                           </div>
-                        </div>
+                        </div> */}
+                        <StudentProfileAppliedList/>
                       </Tab.Pane>
-                      <Tab.Pane id="about-me" eventKey="List">
+                      <Tab.Pane id="about-mefdsaf" eventKey="StudentList">
                         <StudenProfileList />
                       </Tab.Pane>
+                      <Tab.Pane id="about-me" eventKey="RegistrationList">
+  <RegistrationList />
+</Tab.Pane>
+                      
                     </Tab.Content>
+                    
                   </Tab.Container>
                 </div>
               </div>

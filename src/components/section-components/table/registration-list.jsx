@@ -1,25 +1,20 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useTable, useFilters, usePagination } from "react-table";
-import MOCK_DATA from "./mock-api.json";
 import "./student-profile.css";
-import { COLUMNS } from "./columns";
+import { COLUMNS } from "./registration-columns";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getStudentProfileByCustomerId } from "../../../redux/slice/studentSice";
 
-const StudentProfileList = () => {
+const RegistrationList = () => {
+
+
   const columns = useMemo(() => COLUMNS, []);
 
   const userId = useSelector((state) => state.auth.userById.customerId);
-
   const data = useSelector(
     (state) => state.student.studentProfileByCustomerId
   );
-
-  // const studentProfileId = useSelector(
-  //   (state) => state.student.studentProfileByCustomerId[0].studentProfileId
-  // );
-  // console.log("studentId là:", studentProfileId)
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -28,10 +23,10 @@ const StudentProfileList = () => {
   const [selectedRow, setSelectedRow] = useState(null);
   const navigate = useNavigate();
 
-  const handleRowClick = (studentProfileId) => {
-    // Navigate to StudentProfileDetail with necessary information in URL
-    navigate(`/student-profile-detail/${studentProfileId}`);
+  const handleRowClick = (studentId) => {
+    navigate(`/student-profile-detail/${studentId}`);
   };
+
   const tableInstance = useTable(
     {
       columns,
@@ -91,8 +86,8 @@ const StudentProfileList = () => {
                     <tr
                       key={rowIndex}
                       {...row.getRowProps()}
-                      onClick={() => handleRowClick(row.original.studentProfileId)}
-                      >
+                      onClick={() => handleRowClick(row.original.id)}
+                    >
                       {row.cells.map((cell, cellIndex) => {
                         return (
                           <td key={cellIndex} {...cell.getCellProps()}>
@@ -162,4 +157,4 @@ const StudentProfileList = () => {
   );
 };
 
-export default StudentProfileList;
+export default RegistrationList;
