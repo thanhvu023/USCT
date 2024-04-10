@@ -1,29 +1,37 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Select from "react-select";
+import { createStudentProfile } from "../../redux/slice/studentSice";
 
 const MultiStepProgressBar = () => {};
 
 const CreateStudentProfile = () => {
   const [page, setPage] = useState("basicInfo");
-  const [fullName, setFullName] = useState("");
-  const [nationalId, setNationalId] = useState("");
-  const [email, setEmail] = useState("");
-  const [gender, setGender] = useState("");
-  const [phone, setPhone] = useState("");
-  const [address, setAddress] = useState("");
-  const [studyProcess, setStudyProcess] = useState("");
-  const [placeOfBirth, setPlaceOfBirth] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState("");
+  const customerId = useSelector((state) => state.auth.userById.customerId);
+  const [formData, setFormData] = useState({
+    fullName: "",
+    nationalId: "",
+    email: "",
+    gender: "",
+    phone: "",
+    address: "",
+    studyProcess: "",
+    placeOfBirth: "",
+    dateOfBirth: "",
+    fileString: [],
+    customerId,
+  });
   const [selectedFile, setSelectedFile] = useState("");
   const [errors, setErrors] = useState({});
 
   const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    setSelectedFile(file);
+    const files = Array.from(event.target.files); // Convert FileList to an array
+    setFormData({
+      ...formData,
+      fileString: files, // Assign the array of files to fileStrings
+    });
   };
-
-  
 
   const nextPageNumber = (pageNumber) => {
     setPage(pageNumber);
@@ -53,10 +61,40 @@ const CreateStudentProfile = () => {
     { value: "female", label: "Nữ" },
     { value: "other", label: "Gioi tính khác" },
   ];
-  const handleSubmitForm = (event) => {
-    event.preventDefault();
-    // Additional form submission logic here
-    console.log("Form submitted with selected file:", selectedFile);
+
+  const dispatch = useDispatch();
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    // Add validation logic here for each form field
+    // Example:
+    // if (formData.fullName.trim() === "") {
+    //   newErrors.fullName = "Full Name is required";
+    // }
+
+    return newErrors;
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const newErrors = validateForm();
+
+    if (Object.keys(newErrors).length === 0) {
+      dispatch(createStudentProfile(formData));
+    } else {
+      setErrors(newErrors);
+    }
+  };
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+
+    setErrors({ ...errors, [name]: "" });
   };
   return (
     <div>
@@ -69,7 +107,7 @@ const CreateStudentProfile = () => {
                 <div className="col-xl-12 mt-5 mt-lg-0">
                   <form
                     className="contact-form-inner mt-5 mt-md-0"
-                    onSubmit={handleSubmitForm}
+                    onSubmit={handleSubmit}
                   >
                     <div className="row">
                       {/* Input fields for basic information */}
@@ -80,8 +118,8 @@ const CreateStudentProfile = () => {
                             type="text"
                             placeholder="Full Name"
                             name="fullName"
-                            value={fullName}
-                            onChange={(e) => setFullName(e.target.value)}
+                            value={formData.fullName}
+                            onChange={handleInputChange}
                           />
                         </div>
                       </div>
@@ -92,8 +130,8 @@ const CreateStudentProfile = () => {
                             type="text"
                             placeholder="National ID"
                             name="nationalId"
-                            value={nationalId}
-                            onChange={(e) => setNationalId(e.target.value)}
+                            value={formData.nationalId}
+                            onChange={handleInputChange}
                           />
                         </div>
                       </div>
@@ -102,9 +140,9 @@ const CreateStudentProfile = () => {
                         <div className="single-input-inner style-bg-border">
                           <input
                             type="date"
-                            name="dob"
-                            value={dateOfBirth}
-                            onChange={(e) => setDateOfBirth(e.target.value)}
+                            name="dateOfBirth"
+                            value={formData.dateOfBirth}
+                            onChange={handleInputChange}
                           />
                         </div>
                       </div>
@@ -113,9 +151,9 @@ const CreateStudentProfile = () => {
                           <input
                             type="text"
                             placeholder="Place of Birth"
-                            name="placeofbirth"
-                            value={placeOfBirth}
-                            onChange={(e) => setPlaceOfBirth(e.target.value)}
+                            name="placeOfBirth"
+                            value={formData.placeOfBirth}
+                            onChange={handleInputChange}
                           />
                         </div>
                       </div>
@@ -126,8 +164,8 @@ const CreateStudentProfile = () => {
                             type="text"
                             placeholder="Address"
                             name="address"
-                            value={address}
-                            onChange={(e) => setAddress(e.target.value)}
+                            value={formData.address}
+                            onChange={handleInputChange}
                           />
                         </div>
                       </div>
@@ -138,8 +176,8 @@ const CreateStudentProfile = () => {
                             type="text"
                             placeholder="Phone"
                             name="phone"
-                            value={phone}
-                            onChange={(e) => setPhone(e.target.value)}
+                            value={formData.phone}
+                            onChange={handleInputChange}
                           />
                         </div>
                       </div>
@@ -150,8 +188,8 @@ const CreateStudentProfile = () => {
                             type="email"
                             placeholder="Email"
                             name="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            value={formData.email}
+                            onChange={handleInputChange}
                           />
                         </div>
                       </div>
@@ -162,8 +200,8 @@ const CreateStudentProfile = () => {
                             type="text"
                             placeholder="Education Level"
                             name="studyProcess"
-                            value={studyProcess}
-                            onChange={(e) => setStudyProcess(e.target.value)}
+                            value={formData.studyProcess}
+                            onChange={handleInputChange}
                           />
                         </div>
                       </div>
@@ -171,22 +209,29 @@ const CreateStudentProfile = () => {
                       <div className="col-lg-6">
                         <Select
                           value={genderOptions.find(
-                            (option) => option.value === gender
+                            (option) => option.value === formData.gender
                           )}
                           onChange={(selectedOption) =>
-                            setGender(selectedOption.value)
+                            handleInputChange({
+                              target: {
+                                name: "gender",
+                                value: selectedOption.value,
+                              },
+                            })
                           }
                           options={genderOptions}
                           placeholder="Select Gender"
                         />
                       </div>
+
                       {/* File Upload */}
                       <div className="col-lg-6">
                         <div className="single-input-inner style-bg-border">
                           <input
                             type="file"
                             onChange={handleFileChange}
-                            name="profileFile"
+                            name="fileString"
+                            multiple
                           />
                         </div>
                       </div>

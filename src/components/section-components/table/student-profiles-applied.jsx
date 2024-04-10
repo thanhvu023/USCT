@@ -1,6 +1,5 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useTable, useFilters, usePagination } from "react-table";
-import MOCK_DATA from "./mock-api.json";
 import "./student-profile.css";
 import { COLUMNS } from "./columns";
 import { useNavigate } from "react-router-dom";
@@ -11,16 +10,12 @@ const StudentProfileAppliedList = () => {
   const columns = useMemo(() => COLUMNS, []);
 
   const userId = useSelector((state) => state.auth.userById.customerId);
-  const data = useSelector(
-    (state) => state.student.studentProfileByCustomerId
-  );
+  const data = useSelector((state) => state.student.studentProfileByCustomerId);
   const dispatch = useDispatch();
-
   useEffect(() => {
     dispatch(getStudentProfileByCustomerId(userId));
   }, [userId]);
   const [selectedRow, setSelectedRow] = useState(null);
-  const navigate = useNavigate();
 
   // const handleRowClick = (studentId) => {
   //   navigate(`/student-profile-detail/${studentId}`);

@@ -22,6 +22,9 @@ import studentReducer from "./slice/studentSice";
 const persistConfig = {
   key: "root",
   storage,
+  version: 1,
+  whitelist: ["auth"],
+  blacklist: ["program", "university", "state", "major", "semester", "student"],
 };
 
 const rootReducer = combineReducers({
@@ -31,7 +34,7 @@ const rootReducer = combineReducers({
   state: stateReducer,
   major: majorReducer,
   semester: semesterReducer,
-  student: studentReducer
+  student: studentReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
