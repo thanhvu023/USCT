@@ -22,15 +22,15 @@ const CreateStudentProfile = () => {
     fileString: [],
     customerId,
   });
-  const [selectedFile, setSelectedFile] = useState("");
   const [errors, setErrors] = useState({});
-
   const handleFileChange = (event) => {
-    const files = Array.from(event.target.files); // Convert FileList to an array
-    setFormData({
-      ...formData,
-      fileString: files, // Assign the array of files to fileStrings
-    });
+    const files = Array.from(event.target.files); 
+    const fileNames = files.map(file => file.name); 
+  
+    setFormData(prevState => ({
+      ...prevState,
+      fileString: [...prevState.fileString, ...fileNames] 
+    }));
   };
 
   const nextPageNumber = (pageNumber) => {
