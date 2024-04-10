@@ -7,14 +7,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { getStudentProfileByCustomerId } from "../../../redux/slice/studentSice";
 
 const RegistrationList = () => {
-
-
   const columns = useMemo(() => COLUMNS, []);
 
   const userId = useSelector((state) => state.auth.userById.customerId);
-  const data = useSelector(
-    (state) => state.student.studentProfileByCustomerId
-  );
+  const data = useSelector((state) => state.student.studentProfileByCustomerId);
   const dispatch = useDispatch();
 
   useEffect(() => {

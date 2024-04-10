@@ -1,9 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Provider } from 'react-redux';
-import { PersistGate } from 'redux-persist/integration/react';
-import store, { persistor } from './redux/store';
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import store, { persistor } from "./redux/store";
 
 import HomeV1 from "./components/home-v1";
 import HomeV2 from "./components/home-v2";
@@ -63,21 +63,24 @@ const App = () => {
         <Route path="/students-profile" element={<StudentProfile />} />
         <Route path="/admin" element={<AdminPage />} />
         <Route
-  path="/student-profile-detail/:studentProfileId/:fullName/:email/:createDate/:dateOfBirth/:gender/:nationalId/:phone/:placeOfBirth/:studyProcess"
-  element={<StudentProfileDetailPage />}
-/>
-
-          
-
+          path="/student-profile-detail/:studentProfileId"
+          element={<StudentProfileDetailPage />}
+        />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ConfirmPasswordPage />} />
-        <Route path="/customer/change-password" element={<ChangePasswordPage />} />
-        <Route path="/create-student-profile" element={<CreateStudentProfilePage/>}/>
+        <Route
+          path="/customer/change-password"
+          element={<ChangePasswordPage />}
+        />
+        <Route
+          path="/create-student-profile"
+          element={<CreateStudentProfilePage />}
+        />
         {/* <Route path="/customer-edit/:id" element={<EditCustomer />} /> */}
       </Routes>
     </Router>
   );
-}
+};
 
 const root = ReactDOM.createRoot(document.getElementById("edumint"));
 root.render(

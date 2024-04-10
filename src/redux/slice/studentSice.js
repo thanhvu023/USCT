@@ -6,6 +6,18 @@ export const getStudentProfileByCustomerId = createAsyncThunk(
   async (userId, thunkAPI) => {
     try {
       const res = await instance.get(`/profile/customer/${userId}`);
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.res.data);
+    }
+  }
+);
+
+export const getStudentProfileById = createAsyncThunk(
+  "student/getStudentProfileById",
+  async (profileId, thunkAPI) => {
+    try {
+      const res = await instance.get(`/profile/${profileId}`);
       console.log(res.data);
       return res.data;
     } catch (error) {
@@ -14,15 +26,27 @@ export const getStudentProfileByCustomerId = createAsyncThunk(
   }
 );
 
+export const createStudentProfile = createAsyncThunk(
+  "student/createStudentProfile",
+  async (studentData, thunkAPI) => {
+    try {
+      console.log(studentData)  
+      const res = await instance.post("/profile/", studentData, {
+        headers: "Access-Control-Allow-Origin",
+      });
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.res.data);
+    }
+  }
+);
 const initialState = {
   msg: "",
   token: null,
   loading: false,
   error: "",
-  manager: false,
   studentProfileByCustomerId: [],
-  userNumber: "",
-  dataUser: {},
+  profileById: {},
 };
 
 export const studentSlice = createSlice({
@@ -42,9 +66,31 @@ export const studentSlice = createSlice({
       .addCase(getStudentProfileByCustomerId.rejected, (state) => {
         state.loading = false;
         state.error = null;
-      });
+      })
+      .addCase(getStudentProfileById.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getStudentProfileById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.profileById = action.payload;
+        state.error = action.error;
+      })
+      .addCase(getStudentProfileById.rejected, (state) => {
+        state.loading = false;
+        state.error = null;
+      }).addCase(createStudentProfile.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(createStudentProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error;
+      })
+      .addCase(createStudentProfile.fulfilled, (state) => {
+        state.loading = false;
+        state.error = null;
+      })
   },
 });
 
-const { reducer : studentReducer } = studentSlice;
-export {studentReducer as default}
+const { reducer: studentReducer } = studentSlice;
+export { studentReducer as default };
