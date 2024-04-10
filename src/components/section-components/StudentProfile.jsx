@@ -59,7 +59,6 @@ const StudentProfilePage = () => {
   // const [customerId, setCustomerId] = useState('');
   // const [dob, setDob] = useState(null);
   // const [countryId, setCountryId] = useState('');
- 
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -86,7 +85,7 @@ const StudentProfilePage = () => {
                 <div className="custom-tab-1">
                   <Tab.Container defaultActiveKey="StudentList">
                     <Nav as="ul" className="nav nav-tabs">
-                    <Nav.Item as="li" className="nav-item">
+                      <Nav.Item as="li" className="nav-item">
                         <Nav.Link to="#about-mefdasf" eventKey="StudentList">
                           <span className="d-flex align-items-center">
                             <i
@@ -107,7 +106,7 @@ const StudentProfilePage = () => {
                               style={{ fontWeight: "bold" }}
                             ></i>
                             <strong style={{ fontSize: "1.2rem" }}>
-                         Danh sách đơn tư vấn
+                              Danh sách đơn tư vấn
                             </strong>
                           </span>
                         </Nav.Link>
@@ -120,12 +119,11 @@ const StudentProfilePage = () => {
                               style={{ fontWeight: "bold" }}
                             ></i>
                             <strong style={{ fontSize: "1.2rem" }}>
-                            Hồ sơ đã duyệt
+                              Hồ sơ đã duyệt
                             </strong>
                           </span>
                         </Nav.Link>
                       </Nav.Item>
-                     
                     </Nav>
                     <Tab.Content>
                       <Tab.Pane id="profile-settings" eventKey="Setting">
@@ -223,17 +221,15 @@ const StudentProfilePage = () => {
                             </form>
                           </div>
                         </div> */}
-                        <StudentProfileAppliedList/>
+                        <StudentProfileAppliedList />
                       </Tab.Pane>
                       <Tab.Pane id="about-mefdsaf" eventKey="StudentList">
                         <StudenProfileList />
                       </Tab.Pane>
                       <Tab.Pane id="about-me" eventKey="RegistrationList">
-  <RegistrationList />
-</Tab.Pane>
-                      
+                        <RegistrationList />
+                      </Tab.Pane>
                     </Tab.Content>
-                    
                   </Tab.Container>
                 </div>
               </div>

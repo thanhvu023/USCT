@@ -28,9 +28,9 @@ const StudentProfileList = () => {
   const [selectedRow, setSelectedRow] = useState(null);
   const navigate = useNavigate();
 
-  const handleRowClick = (studentProfileId, fullName, email,createDate, phone, nationalId, gender, dateOfBirth, placeOfBirth, studyProcess) => {
+  const handleRowClick = (studentProfileId) => {
     // Navigate to StudentProfileDetail with necessary information in URL
-    navigate(`/student-profile-detail/${studentProfileId}/${fullName}/${email}/${createDate}/${dateOfBirth}/${gender}/${nationalId}/${phone}/${placeOfBirth}/${studyProcess}`);
+    navigate(`/student-profile-detail/${studentProfileId}`);
   };
   
   const tableInstance = useTable(

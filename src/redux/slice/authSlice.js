@@ -98,10 +98,7 @@ const initialState = {
   token: null,
   loading: false,
   error: "",
-  manager: false,
   userById: {},
-  userNumber: "",
-  dataUser: {},
 };
 
 export const authSlice = createSlice({
@@ -161,13 +158,14 @@ export const authSlice = createSlice({
       .addCase(updateUserById.rejected, (state) => {
         state.loading = false;
         state.error = null;
-      }).addCase(sendEmailForgotPassword.pending, (state) => {
+      })
+      .addCase(sendEmailForgotPassword.pending, (state) => {
         state.loading = true;
       })
       .addCase(sendEmailForgotPassword.fulfilled, (state, action) => {
         state.loading = false;
         state.error = action.error;
-        state.msg ='Gửi mail thành công'
+        state.msg = "Gửi mail thành công";
       })
       .addCase(sendEmailForgotPassword.rejected, (state) => {
         state.loading = false;
