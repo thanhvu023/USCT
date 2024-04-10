@@ -55,7 +55,7 @@ const MultiStepProgressBar = ({ page, onPageNumberClick }) => {
   );
 };
 
-const ContactPage = () => {
+const Registration = () => {
     const [select, setSelect] = useState('');
     const [step, setStep] = useState(1);
     const [page, setPage] = useState("basicInfo");
@@ -350,4 +350,4 @@ const ContactPage = () => {
         }
 
 
-export default ContactPage
+export default Registration

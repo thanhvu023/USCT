@@ -116,7 +116,7 @@ const CreateStudentProfile = () => {
                         <div className="single-input-inner style-bg-border">
                           <input
                             type="text"
-                            placeholder="Full Name"
+                            placeholder="Họ và tên"
                             name="fullName"
                             value={formData.fullName}
                             onChange={handleInputChange}
@@ -128,7 +128,7 @@ const CreateStudentProfile = () => {
                         <div className="single-input-inner style-bg-border">
                           <input
                             type="text"
-                            placeholder="National ID"
+                            placeholder="ID Quốc Gia"
                             name="nationalId"
                             value={formData.nationalId}
                             onChange={handleInputChange}
@@ -150,7 +150,7 @@ const CreateStudentProfile = () => {
                         <div className="single-input-inner style-bg-border">
                           <input
                             type="text"
-                            placeholder="Place of Birth"
+                            placeholder="Nơi sinh"
                             name="placeOfBirth"
                             value={formData.placeOfBirth}
                             onChange={handleInputChange}
@@ -162,7 +162,7 @@ const CreateStudentProfile = () => {
                         <div className="single-input-inner style-bg-border">
                           <input
                             type="text"
-                            placeholder="Address"
+                            placeholder="Địa chỉ lưu trú"
                             name="address"
                             value={formData.address}
                             onChange={handleInputChange}
@@ -174,7 +174,7 @@ const CreateStudentProfile = () => {
                         <div className="single-input-inner style-bg-border">
                           <input
                             type="text"
-                            placeholder="Phone"
+                            placeholder="Số điện thoại"
                             name="phone"
                             value={formData.phone}
                             onChange={handleInputChange}
@@ -198,7 +198,7 @@ const CreateStudentProfile = () => {
                         <div className="single-input-inner style-bg-border">
                           <input
                             type="text"
-                            placeholder="Education Level"
+                            placeholder="Trình độ học vấn"
                             name="studyProcess"
                             value={formData.studyProcess}
                             onChange={handleInputChange}
@@ -220,13 +220,13 @@ const CreateStudentProfile = () => {
                             })
                           }
                           options={genderOptions}
-                          placeholder="Select Gender"
+                          placeholder="Chọn giới tính"
                         />
                       </div>
 
                       {/* File Upload */}
                       <div className="col-lg-6">
-                        <div className="single-input-inner style-bg-border">
+                        <div className=" style-bg-border mb-4">
                           <input
                             type="file"
                             onChange={handleFileChange}
@@ -238,13 +238,13 @@ const CreateStudentProfile = () => {
                       {/* Additional Information */}
                       <div className="col-12">
                         <div className="single-input-inner style-bg-border">
-                          <textarea placeholder="Additional Information" />
+                          <textarea placeholder="Thông tin bổ sung" />
                         </div>
                       </div>
                       {/* Submit Button */}
                       <div className="col-12 d-flex justify-content-end">
                         <button type="submit" className="btn btn-base">
-                          Submit
+                          Hoàn tất
                         </button>
                       </div>
                     </div>

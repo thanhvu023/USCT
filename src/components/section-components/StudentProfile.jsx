@@ -69,7 +69,7 @@ const StudentProfilePage = () => {
     <div className="row mb-5 mt-5">
       <Sidebar className="ml-4">
         <Menu className="mt-5">
-          <MenuItem component={<Link to={`/customer`}></Link>}>
+          <MenuItem component={<Link to={`/customer-profile`}></Link>}>
             Hồ sơ của tôi
           </MenuItem>
           <MenuItem component={<Link to={`/create-student-profile`}></Link>}>

@@ -142,7 +142,7 @@ function Navbar() {
                     className="mt-3 dropdown-menu dropdown-menu-right "
                   >
                     <Link
-                      to={"/customer"}
+                      to={"/customer-profile"}
                       className="dropdown-item ai-icon icon-bell-effect ml-0"
                     >
                       <span className="ms-2">Customer&apos;s profile </span>

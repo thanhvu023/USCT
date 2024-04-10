@@ -5,22 +5,11 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import store, { persistor } from "./redux/store";
 
-import HomeV1 from "./components/home-v1";
-import HomeV2 from "./components/home-v2";
-import HomeV3 from "./components/home-v3";
 import Course from "./components/course";
 import CourseDetails from "./components/course-details";
-import About from "./components/about";
-import Event from "./components/event";
-import EventDetails from "./components/event-details";
-import Instructor from "./components/instructor";
-import InstructorDetails from "./components/instructor-details";
-import Pricing from "./components/pricing";
-import Gallery from "./components/gallery";
 import SignIn from "./components/sign-in";
 import SignUp from "./components/sign-up";
 import Contact from "./components/contact";
-import BlogDetails from "./components/blog-details";
 import Profile from "./components/profile";
 import StudentProfile from "./components/student-profile";
 import UniversityPage from "./components/university-page";
@@ -30,36 +19,30 @@ import ForgotPasswordPage from "./components/forgot-password";
 import ConfirmPasswordPage from "./components/confirm-password";
 import ChangePasswordPage from "./components/change-password";
 import CreateStudentProfilePage from "./components/create-student-profile";
+import UniversityDetail from "./components/section-components/instructor-details";
+import HomePage from "./components/home-v1";
 // import EditCustomer from "./components/admin-components/customer-components/edit-customer";
 
 const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<HomeV1 />} />
-        <Route path="/home-v2" element={<HomeV2 />} />
-        <Route path="/home-v3" element={<HomeV3 />} />
+        <Route path="/" element={<HomePage />} />
+
         <Route path="/program" element={<Course />} />
         <Route
           path="/program-details/:programById"
           element={<CourseDetails />}
         />
-        <Route path="/about" element={<About />} />
-        <Route path="/event" element={<Event />} />
-        <Route path="/event-details" element={<EventDetails />} />
-        <Route path="/instructor" element={<Instructor />} />
         <Route
           path="/university-details/:universityId"
-          element={<InstructorDetails />}
+          element={<UniversityDetail />}
         />
-        <Route path="/pricing" element={<Pricing />} />
-        <Route path="/gallery" element={<Gallery />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/university" element={<UniversityPage />} />
-        <Route path="/blog-details" element={<BlogDetails />} />
-        <Route path="/customer" element={<Profile />} />
+        <Route path="/customer-profile" element={<Profile />} />
         <Route path="/students-profile" element={<StudentProfile />} />
         <Route path="/admin" element={<AdminPage />} />
         <Route

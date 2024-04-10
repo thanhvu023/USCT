@@ -8,7 +8,7 @@ import {
 import { getStateById } from "../../redux/slice/stateSlice";
 import { getProgramByUniId } from "../../redux/slice/programSlice";
 
-function InstructorDetails() {
+function UniversityDetail() {
   let publicUrl = process.env.PUBLIC_URL + "/";
 
   const dispatch = useDispatch();
@@ -105,4 +105,4 @@ function InstructorDetails() {
   );
 }
 
-export default InstructorDetails;
+export default UniversityDetail;

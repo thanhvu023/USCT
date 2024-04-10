@@ -11,10 +11,17 @@ const handleSliderChange = (event, setCurrentValue) => {
 //   return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 // };
 
-function CoursePage() {
+function ProgramsPage() {
   // const [minPrice, setMinPrice] = useState(100000);
   // const [maxPrice, setMaxPrice] = useState(2000000);
   const [currentValue, setCurrentValue] = useState(100000);
+  const handleSliderChange = (event) => {
+    setCurrentValue(event.target.value);
+  };
+  const formatCurrency = (value) => {
+    return `${value / 1000}k$`; // Định dạng giá trị sang đơn vị $k
+  };
+  const progressLeft = ((currentValue - 100000) / (2000000 - 100000)) * 100;
 
   const CategoryCheckboxList = ({ title, items }) => {
     const [selectedItems, setSelectedItems] = useState([]);
@@ -226,51 +233,33 @@ function CoursePage() {
                   GRE
                 </label>
               </div>
-              <div className="widget widget_price">
-                <h4 className="widget-title">Chi Phí Du Học</h4>
-                <input
-                  type="range"
-                  min="100000"
-                  max="2000000"
-                  value={currentValue}
-                  className="custom-range"
-                  onChange={(event) =>
-                    handleSliderChange(event, setCurrentValue)
-                  }
-                  style={{
-                    width: "100%",
-                    height: "25px",
-                    background: "#ddd",
-                    outline: "none",
-                    opacity: "0.7",
-                    transition: "opacity .2s",
-                    position: "relative",
-                    backgroundColor: "#007bff",
-                    border: "2px solid #007bff",
-                  }}
-                />
-                <div
-                  className="d-flex justify-content-between"
-                  style={{ color: "#007bff" }}
-                >
-                  <span>$100k</span>
-                  <span>$2M</span>
-                </div>
-                {/* <div
-                  style={{
-                    position: "absolute",
-                    top: "900px",
-                    left: `${
-                      ((currentValue - 100000) / (2000000 - 100000)) * 100
-                    }%`,
-                    transform: "translateX(-10%)",
-                    whiteSpace: "nowrap",
-                    fontWeight: "bold",
-                  }}
-                >
-                  {formatCurrency(currentValue)}$
-                </div> */}
-              </div>
+              <div className="widget widget_price" style={{ width: "70%" }}>
+      <h4 className="widget-title">Chi Phí Du Học</h4>
+      <input
+        type="range"
+        min="100000"
+        max="2000000"
+        value={currentValue}
+        className="custom-range"
+        onChange={handleSliderChange}
+        style={{
+          width: "100%",
+          height: "25px",
+          background: "#ddd",
+          outline: "none",
+          opacity: "0.7",
+          transition: "opacity .2s",
+          position: "relative",
+          backgroundColor: "#007bff",
+          border: "2px solid #007bff",
+        }}
+      />
+     <div className="d-flex justify-content-between">
+  <span style={{ fontWeight: "bold" }}>$100k</span>
+  <span style={{ fontWeight: "bold", fontSize: "1.2rem", color: "#007bff", background: "rgba(0,0,0,0.1)", padding: "10px", borderRadius: "5px", boxShadow: "0 0 5px rgba(0,0,0,0.2)" }}>{formatCurrency(currentValue)}</span>
+  <span style={{ fontWeight: "bold" }}>$2M</span>
+</div>
+    </div>
             </div>
           </div>
         </div>
@@ -279,4 +268,4 @@ function CoursePage() {
   );
 }
 
-export default CoursePage;
+export default ProgramsPage;
