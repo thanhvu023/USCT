@@ -11,7 +11,7 @@ const handleSliderChange = (event, setCurrentValue) => {
 //   return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 // };
 
-function CoursePage() {
+function ProgramsPage() {
   // const [minPrice, setMinPrice] = useState(100000);
   // const [maxPrice, setMaxPrice] = useState(2000000);
   const [currentValue, setCurrentValue] = useState(100000);
@@ -279,4 +279,4 @@ function CoursePage() {
   );
 }
 
-export default CoursePage;
+export default ProgramsPage;

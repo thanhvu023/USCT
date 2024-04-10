@@ -146,7 +146,7 @@ const AppProfile = () => {
         <div className="row mb-5">
           <Sidebar className="ml-4">
             <Menu>
-              <MenuItem component={<Link to={`/customer`}></Link>}>
+              <MenuItem component={<Link to={`/customer-profile`}></Link>}>
                 Hồ sơ của tôi
               </MenuItem>
               <MenuItem component={<Link to={`/customer/change-password`}></Link>}>
