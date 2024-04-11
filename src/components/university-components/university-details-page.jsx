@@ -8,13 +8,14 @@ import {
 import { getStateById } from "../../redux/slice/stateSlice";
 import { getProgramByUniId } from "../../redux/slice/programSlice";
 
-function UniversityDetail() {
+function UniversityDetailPage() {
   let publicUrl = process.env.PUBLIC_URL + "/";
 
   const dispatch = useDispatch();
 
   const uniId = useParams();
   const { universityId } = uniId;
+  const majorDetail = useSelector((state) => state.major.majorById);
   const uniDetail = useSelector((state) => state?.university?.universityById);
   const { stateId } = uniDetail;
   const universityTypeId = uniDetail.universityTypeId;
@@ -90,7 +91,7 @@ function UniversityDetail() {
                       </div>
                       <div className="emt-course-meta">
                         <div className="price text-right">
-                          Mã Chuyên Ngành: <span>{program.code}</span>
+                          Mã Chuyên Ngành: <span>{majorDetail.majorName}</span>
                         </div>
                       </div>
                     </div>
@@ -105,4 +106,4 @@ function UniversityDetail() {
   );
 }
 
-export default UniversityDetail;
+export default UniversityDetailPage;

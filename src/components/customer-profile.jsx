@@ -1,15 +1,15 @@
 import React from 'react';
 import Navbar from './global-components/navbar';
 import Footer from './global-components/footer';
-import AppProfile from './section-components/AppProfile';
+import CustomerProfilePage from './section-components/customer-profile-page';
 
-const Profile = () => {
+const CustomerProfile = () => {
     return <div>
         <Navbar />
-        <AppProfile />
+        <CustomerProfilePage />
         <Footer />
     </div>
 }
 
-export default Profile
+export default CustomerProfile
 

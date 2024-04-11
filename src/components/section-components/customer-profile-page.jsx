@@ -7,7 +7,7 @@ import jwtDecode from "jwt-decode";
 import { Link } from "react-router-dom";
 import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 
-const AppProfile = () => {
+const CustomerProfilePage = () => {
   let publicUrl = process.env.PUBLIC_URL + "/";
 
   const token = useSelector((state) => state.auth.token);
@@ -473,4 +473,4 @@ const AppProfile = () => {
   );
 };
 
-export default AppProfile;
+export default CustomerProfilePage;

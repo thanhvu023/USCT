@@ -5,22 +5,22 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import store, { persistor } from "./redux/store";
 
-import Course from "./components/course";
-import CourseDetails from "./components/course-details";
 import SignIn from "./components/sign-in";
 import SignUp from "./components/sign-up";
-import Contact from "./components/contact";
-import Profile from "./components/profile";
 import StudentProfile from "./components/student-profile";
-import UniversityPage from "./components/university-page";
 import AdminPage from "./components/admin-page";
 import StudentProfileDetailPage from "./components/student-detail-page";
 import ForgotPasswordPage from "./components/forgot-password";
 import ConfirmPasswordPage from "./components/confirm-password";
 import ChangePasswordPage from "./components/change-password";
-import CreateStudentProfilePage from "./components/create-student-profile";
-import UniversityDetail from "./components/section-components/instructor-details";
-import HomePage from "./components/home-v1";
+import CreateStudentProfilePage from "./components/student-profile/create-student-profile.jsx";
+import HomePage from "./components/home";
+import Program from "./components/program";
+import ProgramDetail from "./components/program-details";
+import CustomerProfile from "./components/customer-profile";
+import University from "./components/university-components/university.jsx";
+import UniversityDetail from "./components/university-components/university-details";
+import RegistrationPage from "./components/registration-page.jsx";
 // import EditCustomer from "./components/admin-components/customer-components/edit-customer";
 
 const App = () => {
@@ -29,10 +29,10 @@ const App = () => {
       <Routes>
         <Route path="/" element={<HomePage />} />
 
-        <Route path="/program" element={<Course />} />
+        <Route path="/program" element={<Program />} />
         <Route
           path="/program-details/:programById"
-          element={<CourseDetails />}
+          element={<ProgramDetail />}
         />
         <Route
           path="/university-details/:universityId"
@@ -40,9 +40,9 @@ const App = () => {
         />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/university" element={<UniversityPage />} />
-        <Route path="/customer-profile" element={<Profile />} />
+        <Route path="/contact" element={<RegistrationPage />} />
+        <Route path="/university" element={<University />} />
+        <Route path="/customer-profile" element={<CustomerProfile />} />
         <Route path="/students-profile" element={<StudentProfile />} />
         <Route path="/admin" element={<AdminPage />} />
         <Route

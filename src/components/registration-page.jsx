@@ -2,16 +2,16 @@ import React from 'react';
 import Navbar from './global-components/navbar';
 import PageHeader from './global-components/page-header';
 import Footer from './global-components/footer';
-import University from './blog-components/university';
+import Registration from './section-components/contact-page';
 
-const UniversityPage = () => {
+const RegistrationPage = () => {
     return <div>
         <Navbar />
-        <PageHeader headertitle="Trường Đại Học"  />
-        <University />
+        <PageHeader headertitle="Mục Tư Vấn"  />
+        <Registration />
         <Footer />
     </div>
 }
 
-export default UniversityPage
+export default RegistrationPage
 
