@@ -4,7 +4,9 @@ import {
     getAllProgram,
     getProgramTypes,
     getProgramById,
-    updateProgram
+    updateProgram,
+    createProgram,
+    deleteProgram
   } from "../../../redux/slice/programSlice";
   import { getAllMajor, getMajorById } from "../../../redux/slice/majorSlice";
   import { getAllSemester } from "../../../redux/slice/semesterSlice";
@@ -15,220 +17,198 @@ import { Row, Dropdown, Modal, Button, Form, Col } from "react-bootstrap";
 import Swal from "sweetalert2";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-const CreateProgramModal = ({ show, onClose }) => {
-    const [formData, setFormData] = useState({
-      nameProgram: "",
-      status: "",
-      duration: "",
-      description: "",
-      tuition: 0,
-      level: "",
-      img: "",
-      responsibilities: "",
-      requirement: "",
-      universityId: 0,
-      majorId: 0,
-      semesterId: 0,
-      programTypeId: 0,
+const CreateProgramModal = ({ show, onClose, onSubmit, formData, setFormData }) => {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
     });
-  
-    
-    const handleChange = (e) => {
-      const { name, value } = e.target;
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
-    };
-  
-    const handleCKEditorChange = (editorData, editor) => {
-      const name = editor.name;
-      setFormData({
-        ...formData,
-        [name]: editorData,
-      });
-    };
-  
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      // Gửi dữ liệu formData lên backend hoặc xử lý dữ liệu ở đây
-      console.log(formData);
-      // Đóng modal sau khi xử lý
-      onClose();
-    };
-  
-    return (
-      <Modal show={show} onHide={onClose} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Tạo mới chương trình</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form onSubmit={handleSubmit}>
-            <Row>
-              <Col md={6}>
-                <Form.Group controlId="formNameProgram">
-                  <Form.Label>Tên chương trình</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Nhập tên chương trình"
-                    name="nameProgram"
-                    value={formData.nameProgram}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Form.Group>
-                  <Form.Label>Trạng thái</Form.Label>
-                  <div>
-                    <Form.Check
-                      type="checkbox"
-                      label="Active"
-                      name="statusActive"
-                      defaultChecked={formData.statusActive}
-                      onChange={handleChange}
-                    />
-                    <Form.Check
-                      type="checkbox"
-                      label="Inactive"
-                      name="statusInactive"
-                      defaultChecked={formData.statusInactive}
-                      onChange={handleChange}
-                    />
-                  </div>
-                </Form.Group>
-  
-                <Form.Group controlId="formDuration">
-                  <Form.Label>Thời gian học</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Nhập thời gian học"
-                    name="duration"
-                    value={formData.duration}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formTuition">
-                  <Form.Label>Học phí</Form.Label>
-                  <Form.Control
-                    type="number"
-                    placeholder="Nhập học phí"
-                    name="tuition"
-                    value={formData.tuition}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formLevel">
-                  <Form.Label>Trình độ</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Nhập trình độ"
-                    name="level"
-                    value={formData.level}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formImg">
-                  <Form.Label>Link ảnh</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Nhập link ảnh"
-                    name="img"
-                    value={formData.img}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={6}>
-                <Form.Group controlId="formUniversity">
-                  <Form.Label>Trường đại học</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Nhập trường đại học"
-                    name="university"
-                    value={formData.university}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formMajor">
-                  <Form.Label>Chuyên ngành</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Nhập chuyên ngành"
-                    name="major"
-                    value={formData.major}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formSemester">
-                  <Form.Label>Học kỳ</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Nhập học kỳ"
-                    name="semester"
-                    value={formData.semester}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formProgramType">
-                  <Form.Label>Loại chuyên ngành</Form.Label>
-                  <Form.Control
-                    as="select"
-                    name="programType"
-                    value={formData.programType}
-                    onChange={handleChange}
-                  >
-                    <option value="">Chọn loại chuyên ngành</option>
-                    <option value="type1">Type 1</option>
-                    <option value="type2">Type 2</option>
-                    <option value="type3">Type 3</option>
-                  </Form.Control>
-                </Form.Group>
-                <Form.Group controlId="formResponsibilities">
-                  <Form.Label>Trách nhiệm</Form.Label>
-                  <CKEditor
-                    editor={ClassicEditor}
-                    name="responsibilities"
-                    data={formData.responsibilities}
-                    onChange={(event, editor) => {
-                      const data = editor.getData();
-                      handleCKEditorChange(data, editor);
-                    }}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formRequirement">
-                  <Form.Label>Yêu cầu</Form.Label>
-                  <CKEditor
-                    editor={ClassicEditor}
-                    name="requirement"
-                    data={formData.requirement}
-                    onChange={(event, editor) => {
-                      const data = editor.getData();
-                      handleCKEditorChange(data, editor);
-                    }}
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-            <Button variant="primary" type="submit">
-              Tạo mới
-            </Button>
-          </Form>
-        </Modal.Body>
-      </Modal>
-    );
   };
+
+  return (
+<Modal show={show} onHide={onClose} centered>
+  <Modal.Header closeButton>
+    <Modal.Title>Tạo chương trình mới</Modal.Title>
+  </Modal.Header>
+  <Modal.Body>
+    <div className="row">
+      <div className="col">
+        <form onSubmit={onSubmit}>
+          <div className="form-group">
+            <label htmlFor="nameProgram">Tên chương trình:</label>
+            <input
+              type="text"
+              className="form-control"
+              id="nameProgram"
+              name="nameProgram"
+              value={formData.nameProgram}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="status">Trạng thái:</label>
+            <input
+              type="text"
+              className="form-control"
+              id="status"
+              name="status"
+              value={formData.status}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="universityId">University ID:</label>
+            <input
+              type="text"
+              className="form-control"
+              id="universityId"
+              name="universityId"
+              value={formData.universityId}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="majorId">Major ID:</label>
+            <input
+              type="text"
+              className="form-control"
+              id="majorId"
+              name="majorId"
+              value={formData.majorId}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="semesterId">Semester ID:</label>
+            <input
+              type="text"
+              className="form-control"
+              id="semesterId"
+              name="semesterId"
+              value={formData.semesterId}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="programTypeId">Program Type ID:</label>
+            <input
+              type="text"
+              className="form-control"
+              id="programTypeId"
+              name="programTypeId"
+              value={formData.programTypeId}
+              onChange={handleChange}
+            />
+          </div>
+        </form>
+      </div>
+      <div className="col">
+        <form onSubmit={onSubmit}>
+          <div className="form-group">
+            <label htmlFor="duration">Thời lượng:</label>
+            <input
+              type="text"
+              className="form-control"
+              id="duration"
+              name="duration"
+              value={formData.duration}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="description">Mô tả:</label>
+            <textarea
+              className="form-control"
+              id="description"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="tuition">Học phí:</label>
+            <input
+              type="text"
+              className="form-control"
+              id="tuition"
+              name="tuition"
+              value={formData.tuition}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="level">Level:</label>
+            <input
+              type="text"
+              className="form-control"
+              id="level"
+              name="level"
+              value={formData.level}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="img">Ảnh:</label>
+            <input
+              type="text"
+              className="form-control"
+              id="img"
+              name="img"
+              value={formData.img}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="responsibilities">Trách nhiệm:</label>
+            <textarea
+              className="form-control"
+              id="responsibilities"
+              name="responsibilities"
+              value={formData.responsibilities}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="requirement">Yêu cầu:</label>
+            <textarea
+              className="form-control"
+              id="requirement"
+              name="requirement"
+              value={formData.requirement}
+              onChange={handleChange}
+            />
+          </div>
+        </form>
+      </div>
+    </div>
+  </Modal.Body>
+  <Modal.Footer>
+    <Button variant="secondary" onClick={onClose}>
+      Đóng
+    </Button>
+    <Button variant="primary" onClick={onSubmit}>
+      Tạo mới
+    </Button>
+  </Modal.Footer>
+</Modal>
+
+  );
+};
 const AllPrograms = () => {
   const dispatch = useDispatch();
   const [feeData, setFeeData] = useState([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  // const [editedProgram, setEditedProgram] = useState(null);
   const [selectedProgramForEdit, setSelectedProgramForEdit] = useState(null);
+  // Thêm trạng thái mới để theo dõi sự thay đổi của dữ liệu chương trình sau khi chỉnh sửa
+const [programUpdated, setProgramUpdated] = useState(false);
   const programTypes = useSelector((state) => state.program.programTypes);
   const majors = useSelector((state) => state.major.allMajor);
   const programs = useSelector((state) => state.program.programs);
   const semesters = useSelector((state)=> state.semester.allSemester)
   const universities = useSelector((state)=> state.university.universities)
-  console.log("semesters:",programs)
+  // console.log("semesters:",programs)
   const [selectedProgramId, setSelectedProgramId] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState(null);
@@ -250,6 +230,43 @@ const AllPrograms = () => {
     programTypeId: ''
   } ?? {});
 
+  const [formData, setFormData] = useState({
+    nameProgram: "",
+    status: "",
+    duration: "",
+    description: "",
+    tuition: '',
+    level: "",
+    img: "",
+    responsibilities: "",
+    requirement: "",
+    universityId: '',
+    majorId: '',
+    semesterId: '',
+    programTypeId: '',
+  });
+
+  const handleDelete = (programId) => {
+    // Gọi hàm deleteProgram khi người dùng xác nhận xóa chương trình
+    dispatch(deleteProgram(programId));
+  };
+  // Hàm mở modal tạo mới chương trình
+  const handleShowCreateModal = () => {
+    setShowCreateModal(true);
+  };
+
+  // Hàm đóng modal tạo mới chương trình
+  const handleCloseCreateModal = () => {
+    setShowCreateModal(false);
+    // Có thể làm gì đó sau khi đóng modal, ví dụ: làm mới dữ liệu form, vv.
+  };
+
+  const handleSubmitCreateProgram = () => {
+    // Gọi hàm createProgram để tạo mới một chương trình
+    dispatch(createProgram(formData)); // dispatch action với dữ liệu của form
+    
+    handleCloseCreateModal(); // Đóng modal sau khi tạo chương trình thành công
+  };
   // Gọi API để lấy danh sách tất cả các chương trình khi trang được tải
   useEffect(() => {
     dispatch(getAllProgram());
@@ -371,6 +388,8 @@ const handleCloseEditModal = () => {
       setShowAllPrograms(false);
     }
   };
+ 
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     // Gọi hàm dispatch để gửi thông tin chương trình đã chỉnh sửa lên server
@@ -379,14 +398,22 @@ const handleCloseEditModal = () => {
       .then((data) => {
         // Xử lý khi cập nhật thành công, có thể đóng modal hoặc cập nhật lại danh sách chương trình
         handleCloseEditModal();
+        // Đặt trạng thái cập nhật chương trình thành true
+        setProgramUpdated(true);
       })
       .catch((error) => {
         // Xử lý khi có lỗi xảy ra trong quá trình cập nhật
         console.error("Error updating program:", error);
       });
   };
-  
-
+  useEffect(() => {
+    // Nếu trạng thái cập nhật chương trình là true, gọi lại API để lấy danh sách chương trình mới
+    if (programUpdated) {
+      dispatch(getAllProgram());
+      // Đặt lại trạng thái cập nhật chương trình về false sau khi đã cập nhật xong
+      setProgramUpdated(false);
+    }
+  }, [programUpdated, dispatch]);
   const renderPrograms = () => {
     return (
       <div className="row">
@@ -569,21 +596,26 @@ Xem thêm
                 />
               </label>
               <button
-                onClick={handleToggleCreateModal}
+                onClick={handleShowCreateModal}
                 className="btn btn-primary"
               >
                 + Thêm mới
               </button>
               <CreateProgramModal
-                show={showCreateModal}
-                onClose={handleToggleCreateModal}
-              />
+        show={showCreateModal} // Truyền trạng thái của modal
+        onClose={handleCloseCreateModal} // Truyền hàm đóng modal
+        onSubmit={handleSubmitCreateProgram} // Truyền hàm xử lý khi gửi form tạo mới chương trình
+        formData={formData} // Truyền dữ liệu form vào modal
+        setFormData={setFormData} // Truyền hàm setFormData để cập nhật dữ liệu form
+      />
+   
             </div>
           </div>
 
           {renderPrograms()}
         </div>
       </Row>
+      
 
       <Modal show={showModal} onHide={handleCloseDetailModal} centered>
   <Modal.Header closeButton>
@@ -648,71 +680,72 @@ Xem thêm
     {selectedProgramForEdit && (
       <form onSubmit={handleSubmit}>
         <div className="row">
-          <div className="col-md-6">
-            
-            <div className="form-group">
-              <label htmlFor="nameProgram">Tên chương trình:</label>
-              <input
-                type="text"
-                className="form-control"
-                id="nameProgram"
-                value={selectedProgramForEdit.nameProgram}
-                onChange={(e) => setEditedProgram({ ...selectedProgramForEdit, nameProgram: e.target.value })}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="semesterId">Học kỳ bắt đầu:</label>
-              <input
-                type="text"
-                className="form-control"
-                id="semesterId"
-                value={selectedProgramForEdit.semesterId}
-                onChange={(e) => setEditedProgram({ ...selectedProgramForEdit, semesterId: e.target.value })}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="status">Trạng thái:</label>
-              <input
-                type="text"
-                className="form-control"
-                id="status"
-                value={selectedProgramForEdit.status}
-                onChange={(e) => setEditedProgram({ ...selectedProgramForEdit, status: e.target.value })}
-              />
-            </div>
-          </div>
-          <div className="col-md-6">
-            <div className="form-group">
-              <label htmlFor="duration">Thời lượng:</label>
-              <input
-                type="text"
-                className="form-control"
-                id="duration"
-                value={selectedProgramForEdit.duration}
-                onChange={(e) => setEditedProgram({ ...selectedProgramForEdit, duration: e.target.value })}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="tuition">Học phí:</label>
-              <input
-                type="text"
-                className="form-control"
-                id="tuition"
-                value={selectedProgramForEdit.tuition}
-                onChange={(e) => setEditedProgram({ ...selectedProgramForEdit, tuition: e.target.value })}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="level">Level:</label>
-              <input
-                type="text"
-                className="form-control"
-                id="level"
-                value={selectedProgramForEdit.level}
-                onChange={(e) => setEditedProgram({ ...selectedProgramForEdit, level: e.target.value })}
-              />
-            </div>
-          </div>
+        <div className="col-md-6">
+  <div className="form-group">
+    <label htmlFor="nameProgram">Tên chương trình:</label>
+    <input
+      type="text"
+      className="form-control"
+      id="nameProgram"
+      defaultValue={selectedProgramForEdit.nameProgram}
+      onChange={(e) => setEditedProgram({ ...selectedProgramForEdit, nameProgram: e.target.value })}
+    />
+  </div>
+  <div className="form-group">
+    <label htmlFor="semesterId">Học kỳ bắt đầu:</label>
+    <input
+      type="text"
+      className="form-control"
+      id="semesterId"
+      defaultValue={selectedProgramForEdit.semesterId}
+      onChange={(e) => setEditedProgram({ ...selectedProgramForEdit, semesterId: e.target.value })}
+    />
+  </div>
+  <div className="form-group">
+    <label htmlFor="status">Trạng thái:</label>
+    <input
+      type="text"
+      className="form-control"
+      id="status"
+      defaultValue={selectedProgramForEdit.status}
+      onChange={(e) => setEditedProgram({ ...selectedProgramForEdit, status: e.target.value })}
+    />
+  </div>
+</div>
+<div className="col-md-6">
+  <div className="form-group">
+    <label htmlFor="duration">Thời lượng:</label>
+    <input
+      type="text"
+      className="form-control"
+      id="duration"
+      defaultValue={selectedProgramForEdit.duration}
+      onChange={(e) => setEditedProgram({ ...selectedProgramForEdit, duration: e.target.value })}
+    />
+  </div>
+  <div className="form-group">
+    <label htmlFor="tuition">Học phí:</label>
+    <input
+      type="text"
+      className="form-control"
+      id="tuition"
+      defaultValue={selectedProgramForEdit.tuition}
+      onChange={(e) => setEditedProgram({ ...selectedProgramForEdit, tuition: e.target.value })}
+    />
+  </div>
+  <div className="form-group">
+    <label htmlFor="level">Level:</label>
+    <input
+      type="text"
+      className="form-control"
+      id="level"
+      defaultValue={selectedProgramForEdit.level}
+      onChange={(e) => setEditedProgram({ ...selectedProgramForEdit, level: e.target.value })}
+    />
+  </div>
+</div>
+
+
         </div>
         <div className="form-group">
   <label htmlFor="description">Mô tả:</label>
@@ -764,11 +797,6 @@ Xem thêm
   </Modal.Body>
   
 </Modal>
-
-
-
-
-
 
     </div>
   );

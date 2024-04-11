@@ -2,6 +2,40 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import instance from "../axiosCustom";
 import { logoutUser } from "./authSlice";
 
+export const createProgram = createAsyncThunk(
+  "/program/createProgram",
+  async (programData, thunkAPI) => {
+    try {
+      const res = await instance.post(`/programs`, programData, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      });
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+export const deleteProgram = createAsyncThunk(
+  "/program/deleteProgram",
+  async (programId, thunkAPI) => {
+    try {
+      await instance.delete(`/programs/${programId}`, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      });
+      return programId; // Trả về ID của chương trình đã bị xóa để cập nhật store
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
 
 export const getAllProgram = createAsyncThunk(
   "/program/getAllProgram",
@@ -18,19 +52,7 @@ export const getAllProgram = createAsyncThunk(
     }
   }
 );
-export const createProgram = createAsyncThunk(
-  "/program/createProgram",
-  async (programData, thunkAPI) => {
-    try {
-      const res = await instance.post("/programs", programData,{
-        headers: "Access-Control-Allow-Origin",
-      });
-      return res.data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
-    }
-  }
-);
+
 export const updateProgram = createAsyncThunk(
   "/program/updateProgram",
   async (programData, thunkAPI) => {
@@ -231,6 +253,19 @@ export const programSlice = createSlice({
       })
       // Xử lý action updateProgram.rejected
       .addCase(updateProgram.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(deleteProgram.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(deleteProgram.fulfilled, (state, action) => {
+        state.loading = false;
+        // Xóa chương trình khỏi danh sách dựa trên ID đã trả về
+        state.programs = state.programs.filter(program => program.id !== action.payload);
+        state.error = null;
+      })
+      .addCase(deleteProgram.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       });
