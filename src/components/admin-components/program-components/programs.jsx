@@ -4,6 +4,7 @@ import {
     getAllProgram,
     getProgramTypes,
     getProgramById,
+    updateProgram
   } from "../../../redux/slice/programSlice";
   import { getAllMajor, getMajorById } from "../../../redux/slice/majorSlice";
   import { getAllSemester } from "../../../redux/slice/semesterSlice";
@@ -31,6 +32,7 @@ const CreateProgramModal = ({ show, onClose }) => {
       programTypeId: 0,
     });
   
+    
     const handleChange = (e) => {
       const { name, value } = e.target;
       setFormData({
@@ -219,7 +221,7 @@ const AllPrograms = () => {
   const [feeData, setFeeData] = useState([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [editedProgram, setEditedProgram] = useState(null);
+  // const [editedProgram, setEditedProgram] = useState(null);
   const [selectedProgramForEdit, setSelectedProgramForEdit] = useState(null);
   const programTypes = useSelector((state) => state.program.programTypes);
   const majors = useSelector((state) => state.major.allMajor);
@@ -232,6 +234,21 @@ const AllPrograms = () => {
   const [selectedProgram, setSelectedProgram] = useState(null);
   const loading = useSelector((state) => state.program.loading);
   const [showAllPrograms, setShowAllPrograms] = useState(true);
+  const [editedProgram, setEditedProgram] = useState({
+    programId: '',
+    nameProgram: '',
+    status: '',
+    duration: '',
+    description: '',
+    tuition: '',
+    level: '',
+    responsibilities: '',
+    requirement: '',
+    universityId: '',
+    majorId: '',
+    semesterId: '',
+    programTypeId: ''
+  } ?? {});
 
   // Gọi API để lấy danh sách tất cả các chương trình khi trang được tải
   useEffect(() => {
@@ -255,37 +272,38 @@ const AllPrograms = () => {
     setSelectedProgramId(null); // Reset ID của chương trình được chọn
     setSelectedProgram(null); // Reset thông tin của chương trình được chọn
   };
-
+  const handleShowEditModal = (programId) => {
+    const program = programs.find((p) => p.programId === programId);
+    setSelectedProgramForEdit(program);
+    // Truyền giá trị của programId vào state editedProgram
+    setEditedProgram({
+      ...editedProgram,
+      programId: programId,
+      nameProgram: program.nameProgram, // Nếu bạn muốn hiển thị tên chương trình
+      semesterId: program.semesterId, // Nếu bạn muốn hiển thị semesterId
+      // Các trường thông tin khác
+    });
+    setShowEditModal(true);
+  };
   // Xử lý hiển thị thông tin của chương trình được chọn trong modal
   useEffect(() => {
     if (selectedProgramId) {
       // Lấy thông tin chi tiết của chương trình từ danh sách đã có
       const program = programs.find((p) => p.programId === selectedProgramId);
       setSelectedProgram(program);
+  
     }
   }, [selectedProgramId, programs]);
   
-  const handleShowEditModal = (program) => {
-    setSelectedProgramForEdit(program);
-    setShowEditModal(true);
-  };
-  // const handleEditProgram = () => {
-  //   // Gọi action updateProgram với thông tin chương trình cần chỉnh sửa
-  //   dispatch(updateProgram(editedProgram))
-  //     .then(() => {
-  //       // Xử lý sau khi chỉnh sửa thành công
-  //       console.log("Chỉnh sửa thành công");
-  //       setShowEditModal(false); // Đóng modal sau khi chỉnh sửa thành công
-  //     })
-  //     .catch((error) => {
-  //       // Xử lý khi có lỗi xảy ra trong quá trình chỉnh sửa
-  //       console.log("Lỗi khi chỉnh sửa:", error);
-  //     });
-  // };
-  const handleCloseEditModal = () => {
-    setShowEditModal(false); // Đóng modal chỉnh sửa chương trình
+
+// console.log("edit:",selectedProgramForEdit)
+const handleCloseEditModal = () => {
+  setShowEditModal(false); // Đóng modal chỉnh sửa chương trình
+  if (selectedProgramForEdit) {
     setEditedProgram(null); // Đặt lại dữ liệu của chương trình đang chỉnh sửa về null
-  };
+  }
+};
+
   
   const handleShowDeleteModal = () => {
     Swal.fire({
@@ -344,7 +362,6 @@ const AllPrograms = () => {
     } else {
       // Nếu có giá trị tìm kiếm, lọc dữ liệu từ API
       const updatedData = programs.filter((item) => {
-        // Thay vì sử dụng các trường cứng như trong mẫu, bạn có thể sử dụng các trường từ API của bạn
         // Hãy thay thế các trường sau với các trường tương ứng từ API của bạn
         let searchData =
           `${item.nameProgram} ${item.programTypeId} ${item.majorId} ${item.createDate}`.toLowerCase();
@@ -356,9 +373,20 @@ const AllPrograms = () => {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Xử lý việc gửi dữ liệu lên server hoặc cập nhật trạng thái ở đây
-    // Sau khi xử lý xong, bạn có thể đóng modal bằng cách gọi handleCloseModal()
+    // Gọi hàm dispatch để gửi thông tin chương trình đã chỉnh sửa lên server
+    dispatch(updateProgram(editedProgram))
+      .unwrap()
+      .then((data) => {
+        // Xử lý khi cập nhật thành công, có thể đóng modal hoặc cập nhật lại danh sách chương trình
+        handleCloseEditModal();
+      })
+      .catch((error) => {
+        // Xử lý khi có lỗi xảy ra trong quá trình cập nhật
+        console.error("Error updating program:", error);
+      });
   };
+  
+
   const renderPrograms = () => {
     return (
       <div className="row">
@@ -385,7 +413,7 @@ const AllPrograms = () => {
                       >
                         <div className="py-2">
                           <button
-                            onClick={() => handleShowEditModal(index)}
+                            onClick={() => handleShowEditModal(program.programId)}
                             className="dropdown-item"
                           >
                             Chỉnh sửa
@@ -398,10 +426,10 @@ const AllPrograms = () => {
                           </button>
                         </div>
                       </Dropdown.Menu>
-                    </Dropdown>{" "}
+                    </Dropdown>
                   </div>
            
-                  <div className="text-center">
+                  <div className="">
                     <h3 className="mt-4 mb-1">{program.nameProgram}</h3>
                     {/* <img
           src={"assets/img/course/programs.jpg"}
@@ -446,6 +474,7 @@ const AllPrograms = () => {
             <div className="col-lg-4 col-md-6 col-sm-6 col-12 mb-4" key={index}>
             <div className="card mx-4 mt-4">
               <div className="card-body">
+                
                 <div className="d-flex justify-content-end">
                   <Dropdown>
                     <Dropdown.Toggle
@@ -461,7 +490,7 @@ const AllPrograms = () => {
                     >
                       <div className="py-2">
                         <button
-                          onClick={() => handleShowEditModal(index)}
+                          onClick={() => handleShowEditModal(program.programId)}
                           className="dropdown-item"
                         >
                           Chỉnh sửa
@@ -474,10 +503,16 @@ const AllPrograms = () => {
                         </button>
                       </div>
                     </Dropdown.Menu>
-                  </Dropdown>{" "}
+                  </Dropdown>
                 </div>
+         
                 <div className="text-center">
                   <h3 className="mt-4 mb-1">{program.nameProgram}</h3>
+                  {/* <img
+        src={"assets/img/course/programs.jpg"}
+        alt="img"
+        className="img-fluid"
+      /> */}
                   <p className="text-muted">
                     {getTypeName(program.programTypeId)}
                   </p>
@@ -515,6 +550,8 @@ Xem thêm
       </div>
     );
   };
+
+
   return (
     <div>
       <Row>
@@ -548,9 +585,9 @@ Xem thêm
         </div>
       </Row>
 
-      <Modal show={showModal} onHide={handleCloseDetailModal}>
+      <Modal show={showModal} onHide={handleCloseDetailModal} centered>
   <Modal.Header closeButton>
-    <Modal.Title></Modal.Title>
+    <Modal.Title>Chi tiết chương trình </Modal.Title>
   </Modal.Header>
   <Modal.Body>
   {selectedProgram && (
@@ -581,8 +618,15 @@ Xem thêm
         <div>
           <p><strong>Mô tả:</strong> {selectedProgram.description}</p>
           <p><strong>Học phí:</strong> {selectedProgram.tuition}</p>
-          <p><strong>Trách nhiệm:</strong> {selectedProgram.responsibilities}</p>
-          <p><strong>Yêu cầu:</strong> {selectedProgram.requirement}</p>
+          <p>
+  <strong>Trách nhiệm:</strong>{" "}
+  <span
+    dangerouslySetInnerHTML={{ __html:selectedProgram.responsibilities.replace(/\\r\\n/g, "<br/>• ")  }}
+  ></span>
+</p>
+          <p><strong>Yêu cầu:</strong>  <span
+    dangerouslySetInnerHTML={{ __html: selectedProgram.requirement.replace(/\\r\\n/g, "<br/>• ") }}
+  ></span></p>
         </div>
       </div>
     </div>
@@ -590,7 +634,7 @@ Xem thêm
 </Modal.Body>
 
   <Modal.Footer>
-    <Button variant="secondary" onClick={handleCloseDetailModal}>
+    <Button variant="secondary" onClick={handleCloseDetailModal} >
       Đóng
     </Button>
   </Modal.Footer>
@@ -598,40 +642,134 @@ Xem thêm
 
                            {/* Edit */}
                            <Modal show={showEditModal} onHide={handleCloseEditModal} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Chỉnh sửa chương trình</Modal.Title>
-        </Modal.Header>
-          <Modal.Body>
-            {/* Form chỉnh sửa thông tin chương trình */}
-            <Form>
-              {/* Các trường nhập liệu để chỉnh sửa thông tin */}
-              {/* Ví dụ: */}
-              {/* <Form.Group controlId="formName">
-                <Form.Label>Tên chương trình</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Nhập tên chương trình"
-                  value={editedProgram ? editedProgram.nameProgram : ""}
-                  onChange={(e) =>
-                    setEditedProgram({
-                      ...editedProgram,
-                      nameProgram: e.target.value,
-                    })
-                  }
-                />
-              </Form.Group> */}
-              {/* Các trường nhập liệu khác tương tự */}
-            </Form>
-          </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseEditModal}>
-            Đóng
-          </Button>
-          <Button variant="primary" onClick={''}>
-            Lưu chỉnh sửa
-          </Button>
-        </Modal.Footer>
-      </Modal>
+  <Modal.Header >
+  </Modal.Header>
+  <Modal.Body>
+    {selectedProgramForEdit && (
+      <form onSubmit={handleSubmit}>
+        <div className="row">
+          <div className="col-md-6">
+            
+            <div className="form-group">
+              <label htmlFor="nameProgram">Tên chương trình:</label>
+              <input
+                type="text"
+                className="form-control"
+                id="nameProgram"
+                value={selectedProgramForEdit.nameProgram}
+                onChange={(e) => setEditedProgram({ ...selectedProgramForEdit, nameProgram: e.target.value })}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="semesterId">Học kỳ bắt đầu:</label>
+              <input
+                type="text"
+                className="form-control"
+                id="semesterId"
+                value={selectedProgramForEdit.semesterId}
+                onChange={(e) => setEditedProgram({ ...selectedProgramForEdit, semesterId: e.target.value })}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="status">Trạng thái:</label>
+              <input
+                type="text"
+                className="form-control"
+                id="status"
+                value={selectedProgramForEdit.status}
+                onChange={(e) => setEditedProgram({ ...selectedProgramForEdit, status: e.target.value })}
+              />
+            </div>
+          </div>
+          <div className="col-md-6">
+            <div className="form-group">
+              <label htmlFor="duration">Thời lượng:</label>
+              <input
+                type="text"
+                className="form-control"
+                id="duration"
+                value={selectedProgramForEdit.duration}
+                onChange={(e) => setEditedProgram({ ...selectedProgramForEdit, duration: e.target.value })}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="tuition">Học phí:</label>
+              <input
+                type="text"
+                className="form-control"
+                id="tuition"
+                value={selectedProgramForEdit.tuition}
+                onChange={(e) => setEditedProgram({ ...selectedProgramForEdit, tuition: e.target.value })}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="level">Level:</label>
+              <input
+                type="text"
+                className="form-control"
+                id="level"
+                value={selectedProgramForEdit.level}
+                onChange={(e) => setEditedProgram({ ...selectedProgramForEdit, level: e.target.value })}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="form-group">
+  <label htmlFor="description">Mô tả:</label>
+  <CKEditor
+    editor={ClassicEditor}
+    data={selectedProgramForEdit.description}
+    onChange={(event, editor) => {
+      const data = editor.getData();
+      setEditedProgram({ ...selectedProgramForEdit, description: data });
+    }}
+  />
+</div>
+<div className="form-group">
+  <label htmlFor="responsibilities">Trách nhiệm:</label>
+  <CKEditor
+    editor={ClassicEditor}
+    data={selectedProgramForEdit.responsibilities}
+    onChange={(event, editor) => {
+      const data = editor.getData();
+      setEditedProgram({ ...selectedProgramForEdit, responsibilities: data });
+    }}
+  />
+</div>
+<div className="form-group">
+  <label htmlFor="requirement">Yêu cầu:</label>
+  <CKEditor
+    editor={ClassicEditor}
+    data={selectedProgramForEdit.requirement}
+    onChange={(event, editor) => {
+      const data = editor.getData();
+      setEditedProgram({ ...selectedProgramForEdit, requirement: data });
+    }}
+  />
+</div>
+
+        {/* Các trường thông tin khác */}
+        <div className="d-flex justify-content-between">
+  <Button type="submit" className="btn btn-primary" onClick={handleSubmit}>
+    Lưu chỉnh sửa
+  </Button>
+  <Button variant="secondary" onClick={handleCloseEditModal}>
+    Đóng
+  </Button>
+</div>
+
+       
+      </form>
+    )}
+  </Modal.Body>
+  
+</Modal>
+
+
+
+
+
+
     </div>
   );
 };

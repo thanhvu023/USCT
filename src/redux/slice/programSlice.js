@@ -31,6 +31,24 @@ export const createProgram = createAsyncThunk(
     }
   }
 );
+export const updateProgram = createAsyncThunk(
+  "/program/updateProgram",
+  async (programData, thunkAPI) => {
+    try {
+      const { programId, ...updatedData } = programData;
+      const res = await instance.put(`/programs/${programId}`, updatedData, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      });
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
 export const getProgramById = createAsyncThunk(
   "/program/getProgramById",
   async (param, thunkAPI) => {
@@ -195,6 +213,24 @@ export const programSlice = createSlice({
         state.error = null;
       })
       .addCase(getProgramTypeById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(updateProgram.pending, (state) => {
+        state.loading = true;
+      })
+      // Xử lý action updateProgram.fulfilled
+      .addCase(updateProgram.fulfilled, (state, action) => {
+        state.loading = false;
+        // Cập nhật thông tin chương trình đã được cập nhật trong state
+        // Ví dụ: 
+        // state.programs = state.programs.map((program) =>
+        //   program.programId === action.payload.programId ? action.payload : program
+        // );
+        state.error = null;
+      })
+      // Xử lý action updateProgram.rejected
+      .addCase(updateProgram.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       });
