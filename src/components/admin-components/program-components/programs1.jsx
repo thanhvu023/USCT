@@ -3,12 +3,9 @@ import { useSelector, useDispatch } from "react-redux";
 import {
     getAllProgram,
     getProgramTypes,
-    getProgramById,
+    getProgramById
   } from "../../../redux/slice/programSlice";
   import { getAllMajor, getMajorById } from "../../../redux/slice/majorSlice";
-  import { getAllSemester } from "../../../redux/slice/semesterSlice";
-  import{getAllUniversity} from '../../../redux/slice/universitySlice'
-
 import "./program.css";
 import { Row, Dropdown, Modal, Button, Form, Col } from "react-bootstrap";
 import Swal from "sweetalert2";
@@ -214,19 +211,15 @@ const CreateProgramModal = ({ show, onClose }) => {
       </Modal>
     );
   };
-const AllPrograms = () => {
+const AllProgramsPage = () => {
   const dispatch = useDispatch();
   const [feeData, setFeeData] = useState([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [editedProgram, setEditedProgram] = useState(null);
   const [selectedProgramForEdit, setSelectedProgramForEdit] = useState(null);
   const programTypes = useSelector((state) => state.program.programTypes);
   const majors = useSelector((state) => state.major.allMajor);
   const programs = useSelector((state) => state.program.programs);
-  const semesters = useSelector((state)=> state.semester.allSemester)
-  const universities = useSelector((state)=> state.university.universities)
-  console.log("semesters:",programTypes)
   const [selectedProgramId, setSelectedProgramId] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState(null);
@@ -236,11 +229,6 @@ const AllPrograms = () => {
   // Gọi API để lấy danh sách tất cả các chương trình khi trang được tải
   useEffect(() => {
     dispatch(getAllProgram());
-    dispatch(getAllSemester());
-    dispatch(getAllMajor());
-    dispatch(getAllUniversity());
-    dispatch(getProgramTypes());
-
   }, [dispatch]);
 
   // Hàm xử lý khi nhấp vào nút "Xem chi tiết"
@@ -269,24 +257,6 @@ const AllPrograms = () => {
     setSelectedProgramForEdit(program);
     setShowEditModal(true);
   };
-  // const handleEditProgram = () => {
-  //   // Gọi action updateProgram với thông tin chương trình cần chỉnh sửa
-  //   dispatch(updateProgram(editedProgram))
-  //     .then(() => {
-  //       // Xử lý sau khi chỉnh sửa thành công
-  //       console.log("Chỉnh sửa thành công");
-  //       setShowEditModal(false); // Đóng modal sau khi chỉnh sửa thành công
-  //     })
-  //     .catch((error) => {
-  //       // Xử lý khi có lỗi xảy ra trong quá trình chỉnh sửa
-  //       console.log("Lỗi khi chỉnh sửa:", error);
-  //     });
-  // };
-  const handleCloseEditModal = () => {
-    setShowEditModal(false); // Đóng modal chỉnh sửa chương trình
-    setEditedProgram(null); // Đặt lại dữ liệu của chương trình đang chỉnh sửa về null
-  };
-  
   const handleShowDeleteModal = () => {
     Swal.fire({
       title: "Bạn có chắc muốn xóa không?",
@@ -318,19 +288,7 @@ const AllPrograms = () => {
     const major = majors.find((major) => major.majorId === majorId);
     return major ? major.majorName : "Unknown";
   };
-  const getSemesterStartDate = (semesterId) => {
-    const semester = semesters.find((semester) => semester.semesterId === semesterId);
-    return semester ? semester.startDate : "Unknown";
-  };
-  const getSemesterEndDate = (semesterId) => {
-    const semester = semesters.find((semester) => semester.semesterId === semesterId);
-    return semester ? semester.endDate : "Unknown";
-  };
-  const getUniversityName = (universityId) => {
-    const university = universities.find((university) => university.id === universityId);
-    return university ? university.universityName : "Unknownhihi";
-  };
-  
+
   const dataSearch = (e) => {
     const searchValue = e.target.value.toLowerCase();
     if (searchValue === "") {
@@ -536,83 +494,39 @@ const AllPrograms = () => {
         </div>
       </Row>
 
+      {/* Modal hiển thị thông tin chi tiết của chương trình */}
       <Modal show={showModal} onHide={handleCloseDetailModal}>
-  <Modal.Header closeButton>
-    <Modal.Title>        {selectedProgram.nameProgram}</Modal.Title>
-  </Modal.Header>
-  <Modal.Body>
-    {selectedProgram && (
-      <div className="row">
-        <div className="col-md-6">
-        <p><strong>Start Semester:</strong> {getSemesterStartDate(selectedProgram.semesterId)}</p>
-            <p><strong>End Semester:</strong> {getSemesterEndDate(selectedProgram.semesterId)}</p>
-            <p><strong>Thời lượng:</strong> {selectedProgram.duration}</p>
-            <p><strong>Level:</strong> {selectedProgram.level}</p>
-            <p><strong>University ID:</strong> {getUniversityName(selectedProgram.universityName)}</p>
-            <p><strong>Major ID:</strong> {getMajorName(selectedProgram.majorId)}</p>
-            
-            <p><strong>Program Type ID:</strong> {getTypeName(selectedProgram.programTypeId)}</p>
-        </div>
-        <div className="col-md-6">
-          <div>
-            <p><strong>Status:</strong> {selectedProgram.status}</p>
-          
-            <p><strong>Mô tả:</strong> {selectedProgram.description}</p>
-            <p><strong>Học phí:</strong> {selectedProgram.tuition}</p>
-          
-            <p><strong>Trách nhiệm:</strong> {selectedProgram.responsibilities}</p>
-            <p><strong>Yêu cầu:</strong> {selectedProgram.requirement}</p>
-           
-          </div>
-        </div>
-      </div>
-    )}
-  </Modal.Body>
-  <Modal.Footer>
-    <Button variant="secondary" onClick={handleCloseDetailModal}>
-      Đóng
-    </Button>
-  </Modal.Footer>
-</Modal>
-
+        <Modal.Header closeButton>
+          <Modal.Title>Chi tiết chương trình</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedProgram && (
+            <>
+              <p>Tên chương trình: {selectedProgram.nameProgram}</p>
+              <p>Status: {selectedProgram.status}</p>
+              {/* Hiển thị các thông tin khác của chương trình */}
+            </>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseDetailModal}>
+            Đóng
+          </Button>
+        </Modal.Footer>
+      </Modal>
                            {/* Edit */}
-                           <Modal show={showEditModal} onHide={handleCloseEditModal} centered>
+      <Modal show={showEditModal} onHide={handleCloseDetailModal} centered>
         <Modal.Header closeButton>
           <Modal.Title>Chỉnh sửa chương trình</Modal.Title>
         </Modal.Header>
-          <Modal.Body>
-            {/* Form chỉnh sửa thông tin chương trình */}
-            <Form>
-              {/* Các trường nhập liệu để chỉnh sửa thông tin */}
-              {/* Ví dụ: */}
-              <Form.Group controlId="formName">
-                <Form.Label>Tên chương trình</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Nhập tên chương trình"
-                  value={editedProgram ? editedProgram.nameProgram : ""}
-                  onChange={(e) =>
-                    setEditedProgram({
-                      ...editedProgram,
-                      nameProgram: e.target.value,
-                    })
-                  }
-                />
-              </Form.Group>
-              {/* Các trường nhập liệu khác tương tự */}
-            </Form>
-          </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseEditModal}>
-            Đóng
-          </Button>
-          <Button variant="primary" onClick={''}>
-            Lưu chỉnh sửa
-          </Button>
-        </Modal.Footer>
+        <Modal.Body>
+          <Form onSubmit={handleSubmit}>
+            {/* Form fields for editing program */}
+          </Form>
+        </Modal.Body>
       </Modal>
     </div>
   );
 };
 
-export default AllPrograms;
+export default AllProgramsPage;

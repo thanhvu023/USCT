@@ -1,6 +1,18 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import instance from "../axiosCustom";
 
+export const getAllSemester = createAsyncThunk(
+  "semester/getAllSemester",
+  async (_, thunkAPI) => {
+    try {
+      const res = await instance.get("/semesters");
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response);
+    }
+  }
+);
+
 export const getSemesterById = createAsyncThunk(
   "semester/getSemesterById",
   async (param, thunkAPI) => {
@@ -13,10 +25,12 @@ export const getSemesterById = createAsyncThunk(
     }
   }
 );
+
 const initialState = {
   msg: "",
   loading: false,
   semesterById: {},
+  allSemester: []
 };
 
 export const semesterSlice = createSlice({
@@ -25,6 +39,18 @@ export const semesterSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(getAllSemester.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getAllSemester.fulfilled, (state, action) => {
+        state.loading = false;
+        state.allSemester = action.payload;
+        state.error = null;
+      })
+      .addCase(getAllSemester.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
       .addCase(getSemesterById.pending, (state) => {
         state.loading = true;
       })
@@ -41,4 +67,4 @@ export const semesterSlice = createSlice({
 });
 
 const { reducer: semesterReducer } = semesterSlice;
-export {semesterReducer as default}
+export { semesterReducer as default };

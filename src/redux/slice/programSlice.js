@@ -18,7 +18,19 @@ export const getAllProgram = createAsyncThunk(
     }
   }
 );
-
+export const createProgram = createAsyncThunk(
+  "/program/createProgram",
+  async (programData, thunkAPI) => {
+    try {
+      const res = await instance.post("/programs", programData,{
+        headers: "Access-Control-Allow-Origin",
+      });
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
 export const getProgramById = createAsyncThunk(
   "/program/getProgramById",
   async (param, thunkAPI) => {
@@ -75,8 +87,35 @@ export const getProgramByProgramType = createAsyncThunk(
     }
   }
 );
+export const getProgramTypes = createAsyncThunk(
+  "/program/getProgramTypes",
+  async (_, thunkAPI) => {
+    try {
+      const res = await instance.get("/program-types");
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response);
+    }
+  }
+);
 
-
+export const getProgramTypeById = createAsyncThunk(
+  "/program/getProgramTypeById",
+  async (programTypeId, thunkAPI) => {
+    try {
+      const res = await instance.get(`/program-types/${programTypeId}`, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      });
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response);
+    }
+  }
+);
 const initialState = {
   msg: "",
   token: null,
@@ -84,7 +123,8 @@ const initialState = {
   programs: [],
   programById: {},
   programsByUniId: [],
-  programsByProgramType:[]
+  programsByProgramType:[],
+
 };
 
 export const programSlice = createSlice({
@@ -139,6 +179,22 @@ export const programSlice = createSlice({
         state.error = null;
       })
       .addCase(getProgramByProgramType.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(getProgramTypes.fulfilled, (state, action) => {
+        state.programTypes = action.payload;
+      })
+      .addCase(getProgramTypeById.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getProgramTypeById.fulfilled, (state, action) => {
+        state.loading = false;
+        // Lưu ý: Chỉ cập nhật state.programTypeById nếu cần thiết
+        state.programTypeById = action.payload;
+        state.error = null;
+      })
+      .addCase(getProgramTypeById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       });
