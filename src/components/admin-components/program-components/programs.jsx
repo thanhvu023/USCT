@@ -226,7 +226,7 @@ const AllPrograms = () => {
   const programs = useSelector((state) => state.program.programs);
   const semesters = useSelector((state)=> state.semester.allSemester)
   const universities = useSelector((state)=> state.university.universities)
-  console.log("semesters:",programTypes)
+  console.log("semesters:",programs)
   const [selectedProgramId, setSelectedProgramId] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState(null);
@@ -326,6 +326,10 @@ const AllPrograms = () => {
     const semester = semesters.find((semester) => semester.semesterId === semesterId);
     return semester ? semester.endDate : "Unknown";
   };
+  const getProgramName = (programId) => {
+    const program = programs.find((program) => program.id === programId);
+    return program ? program.programName : "Unknownprogram";
+  };
   const getUniversityName = (universityId) => {
     const university = universities.find((university) => university.id === universityId);
     return university ? university.universityName : "Unknownhihi";
@@ -365,6 +369,7 @@ const AllPrograms = () => {
             <div className="col-lg-4 col-md-6 col-sm-6 col-12 mb-4" key={index}>
               <div className="card mx-4 mt-4">
                 <div className="card-body">
+                  
                   <div className="d-flex justify-content-end">
                     <Dropdown>
                       <Dropdown.Toggle
@@ -395,8 +400,14 @@ const AllPrograms = () => {
                       </Dropdown.Menu>
                     </Dropdown>{" "}
                   </div>
+           
                   <div className="text-center">
                     <h3 className="mt-4 mb-1">{program.nameProgram}</h3>
+                    {/* <img
+          src={"assets/img/course/programs.jpg"}
+          alt="img"
+          className="img-fluid"
+        /> */}
                     <p className="text-muted">
                       {getTypeName(program.programTypeId)}
                     </p>
@@ -490,10 +501,11 @@ const AllPrograms = () => {
                     </li>
                   </ul>
                   <button
-                    className="btn btn-primary btn-rounded mt-3 px-4"
-                    onClick={() => handleShowDetailModal(program.programId)}                  >
-                    Xem thêm
-                  </button>
+className="btn btn-primary btn-rounded mt-3 px-4"
+onClick={() => handleShowDetailModal(program.programId)}  >
+Xem thêm
+</button>
+
                 </div>
               </div>
             </div>
@@ -538,36 +550,45 @@ const AllPrograms = () => {
 
       <Modal show={showModal} onHide={handleCloseDetailModal}>
   <Modal.Header closeButton>
-    <Modal.Title>        {selectedProgram.nameProgram}</Modal.Title>
+    <Modal.Title></Modal.Title>
   </Modal.Header>
   <Modal.Body>
-    {selectedProgram && (
-      <div className="row">
-        <div className="col-md-6">
-        <p><strong>Start Semester:</strong> {getSemesterStartDate(selectedProgram.semesterId)}</p>
+  {selectedProgram && (
+    <div className="row">
+      <div className="col-md-5">
+        <img
+          src={"assets/img/course/programs.jpg"}
+          alt="img"
+          className="img-fluid"
+        />
+      </div>
+      <div className="col-md-7">
+        <h4>{selectedProgram.nameProgram}</h4>
+        <div className="row">
+          <div className="col-md-6">
+            <p><strong>Start Semester:</strong> {getSemesterStartDate(selectedProgram.semesterId)}</p>
             <p><strong>End Semester:</strong> {getSemesterEndDate(selectedProgram.semesterId)}</p>
             <p><strong>Thời lượng:</strong> {selectedProgram.duration}</p>
             <p><strong>Level:</strong> {selectedProgram.level}</p>
+          </div>
+          <div className="col-md-6">
             <p><strong>University ID:</strong> {getUniversityName(selectedProgram.universityName)}</p>
             <p><strong>Major ID:</strong> {getMajorName(selectedProgram.majorId)}</p>
-            
             <p><strong>Program Type ID:</strong> {getTypeName(selectedProgram.programTypeId)}</p>
-        </div>
-        <div className="col-md-6">
-          <div>
             <p><strong>Status:</strong> {selectedProgram.status}</p>
-          
-            <p><strong>Mô tả:</strong> {selectedProgram.description}</p>
-            <p><strong>Học phí:</strong> {selectedProgram.tuition}</p>
-          
-            <p><strong>Trách nhiệm:</strong> {selectedProgram.responsibilities}</p>
-            <p><strong>Yêu cầu:</strong> {selectedProgram.requirement}</p>
-           
           </div>
         </div>
+        <div>
+          <p><strong>Mô tả:</strong> {selectedProgram.description}</p>
+          <p><strong>Học phí:</strong> {selectedProgram.tuition}</p>
+          <p><strong>Trách nhiệm:</strong> {selectedProgram.responsibilities}</p>
+          <p><strong>Yêu cầu:</strong> {selectedProgram.requirement}</p>
+        </div>
       </div>
-    )}
-  </Modal.Body>
+    </div>
+  )}
+</Modal.Body>
+
   <Modal.Footer>
     <Button variant="secondary" onClick={handleCloseDetailModal}>
       Đóng
@@ -585,7 +606,7 @@ const AllPrograms = () => {
             <Form>
               {/* Các trường nhập liệu để chỉnh sửa thông tin */}
               {/* Ví dụ: */}
-              <Form.Group controlId="formName">
+              {/* <Form.Group controlId="formName">
                 <Form.Label>Tên chương trình</Form.Label>
                 <Form.Control
                   type="text"
@@ -598,7 +619,7 @@ const AllPrograms = () => {
                     })
                   }
                 />
-              </Form.Group>
+              </Form.Group> */}
               {/* Các trường nhập liệu khác tương tự */}
             </Form>
           </Modal.Body>
