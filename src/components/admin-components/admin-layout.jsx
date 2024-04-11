@@ -2,7 +2,7 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import NavHader from "./NavHader";
-import Footer_v2 from "../global-components/footer-v2";
+import Footer from "../global-components/footer";
 import SideBarAd from "./side-bar/SideBar";
 
 const AdminLayout = () => {
@@ -15,7 +15,7 @@ const AdminLayout = () => {
           <Outlet />
         </div>
       </div>
-      <Footer_v2 />
+      <Footer />
     </div>
   );
 };

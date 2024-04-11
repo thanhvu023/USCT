@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { getAllUniversity } from "../../redux/slice/universitySlice";
 import Sidebar from "./sidebar";
-function University() {
+function UniversityPage() {
   const dispatch = useDispatch();
   const universities = useSelector((state) => state.university.universities);
   useEffect(() => {
@@ -82,4 +82,4 @@ function University() {
   );
 }
 
-export default University;
+export default UniversityPage;

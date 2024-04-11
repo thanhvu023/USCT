@@ -15,7 +15,7 @@ import { getStateById } from "../../redux/slice/stateSlice";
 import { getSemesterById } from "../../redux/slice/semesterSlice";
 import { getMajorById } from "../../redux/slice/majorSlice";
 
-function ProgramDetail() {
+function ProgramDetailPage() {
   let publicUrl = process.env.PUBLIC_URL + "/";
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
@@ -584,4 +584,4 @@ const modalBgStyle = {
   height: "100%",
   backgroundColor: "rgba(0,0,0,0.4)",
 };
-export default ProgramDetail;
+export default ProgramDetailPage;

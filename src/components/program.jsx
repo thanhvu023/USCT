@@ -2,9 +2,9 @@ import React from 'react';
 import Navbar from './global-components/navbar';
 import PageHeader from './global-components/page-header';
 import Footer from './global-components/footer';
-import ProgramsPage from './section-components/course-page';
+import ProgramsPage from './section-components/program-page';
 
-const AboutPage = () => {
+const Program = () => {
     return <div>
         <Navbar />
         <PageHeader headertitle="Các Chương Trình"  />
@@ -13,5 +13,5 @@ const AboutPage = () => {
     </div>
 }
 
-export default AboutPage
+export default Program
 

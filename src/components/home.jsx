@@ -19,6 +19,7 @@ const HomePage = () => {
         <FunFact />
         <HowToWork />
         <Team />
+        
         <Footer />
     </div>
 }

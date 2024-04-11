@@ -1,8 +1,8 @@
 import React from 'react';
-import Navbar from './global-components/navbar';
-import PageHeader from './global-components/page-header';
-import Footer from './global-components/footer';
-import CreateStudentProfile from './student-profile/CreateStudentProfile';
+import Navbar from '../global-components/navbar';
+import PageHeader from '../global-components/page-header';
+import Footer from '../global-components/footer';
+import CreateStudentProfile from './CreateStudentProfile';
 
 const CreateStudentProfilePage = () => {
     return <div>
