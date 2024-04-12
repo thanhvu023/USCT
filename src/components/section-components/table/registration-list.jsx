@@ -11,7 +11,7 @@ const RegistrationList = () => {
   const token = useSelector((state) => state.auth.token);
   const customerId = jwtDecode(token).UserId;
   const data = useSelector((state) => state.registration.registrationById);
-  // console.log("RegistrationList:", data)
+  // console.log("data là:", data)
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -19,16 +19,26 @@ const RegistrationList = () => {
       dispatch(getRegistrationByCustomerId(customerId));
     }
   }, [customerId]);
+  // Fix data is null
+useEffect(() => {
+  if (!data) {
+    dispatch(getRegistrationByCustomerId(customerId));
+  }
+}, [data, dispatch, customerId]);
+
   const [selectedRow, setSelectedRow] = useState(null);
   const navigate = useNavigate();
 
   const handleRowClick = (registrationFormId) => {
     navigate(`/registration-detail/${registrationFormId}`);
   };
+
+  const normalizedData = Array.isArray(data) ? data : [data];
+
   const tableInstance = useTable(
     {
       columns,
-      data,
+      data: normalizedData,
       initialState: { pageIndex: 0 },
     },
     useFilters,

@@ -75,9 +75,7 @@ const NavbarV2 = () => {
             <Link className="btn btn-base" to="/sign-up">
               Đăng ký
             </Link>
-            <a className="search-bar" href="#">
-              <i className="fa fa-search" />
-            </a>
+          
           </div>
           <div
             className="collapse navbar-collapse"
