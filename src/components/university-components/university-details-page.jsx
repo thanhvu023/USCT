@@ -29,13 +29,23 @@ function UniversityDetailPage() {
   console.log(programByUniId);
 
   useEffect(() => {
-    dispatch(getUniversityById(universityId));
-    dispatch(getStateById(stateId));
-    dispatch(getUniversityTypeById(universityTypeId));
-  }, [stateId, uniId, universityId, universityTypeId]);
+    if (universityId) {
+      dispatch(getUniversityById(universityId));
+    }
+  }, [universityId]);
   useEffect(() => {
-    dispatch(getProgramByUniId(uniId));
-  }, [uniId]);
+    if (universityTypeId) {
+      dispatch(getUniversityTypeById(universityTypeId));
+    }
+  }, [universityTypeId]);
+  useEffect(() => {
+    dispatch(getProgramByUniId(universityId));
+  }, [universityId]);
+  useEffect(() => {
+    if (stateId) {
+      dispatch(getStateById(stateId));
+    }
+  }, [stateId]);
   return (
     <div className="main-blog-area pd-top-120 pd-bottom-90">
       <div className="container">
@@ -79,14 +89,16 @@ function UniversityDetailPage() {
                   <div className="single-course-inner">
                     <div className="thumb">
                       <img
-                        src={publicUrl + "assets/img/course/1.png"}
+                        src={publicUrl + "assets/img/course/program.png"}
                         alt="img"
                       />
                     </div>
                     <div className="details">
                       <div className="details-inner">
                         <h6 className="go-top">
-                          <Link to={`/program-details/${program.programId}`}>{program.nameProgram}</Link>
+                          <Link to={`/program-details/${program.programId}`}>
+                            {program.nameProgram}
+                          </Link>
                         </h6>
                       </div>
                       <div className="emt-course-meta">

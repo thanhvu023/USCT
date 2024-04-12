@@ -57,7 +57,7 @@ console.log("customerName là:",customers)
   console.log("danh sach là:",registrationProfileByCustomerId)
   const handleCloseCheckModal = () => setShowCheckModal(false);
   const handleCloseDeleteModal = () => setShowDeleteModal(false);
-  
+
   const handleShowCheckModal = () => {
     Swal.fire({
       icon: "success",

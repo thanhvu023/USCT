@@ -1,23 +1,25 @@
-import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import parse from "html-react-parser";
+import React, { useEffect, useState } from "react";
+import { Alert } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { login, logoutUser } from "../../redux/slice/authSlice";
-import { Alert, Button } from 'react-bootstrap';
+import { Link, useNavigate } from "react-router-dom";
+import { login, resetMessage } from "../../redux/slice/authSlice";
 
 function Signin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [showAlert, setShowAlert] = useState(false);
-
+  const [error, setError] = useState();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const loading = useSelector((state) => state.auth.loading);
   const errMsg = useSelector((state) => state.auth.error?.message);
   const isError = useSelector((state) => state.auth.error?.name);
 
-  const handleSubmit = async (e) => {
+  useEffect(() => {
+    if (isError) {
+      setError("Sai tài khoản hoặc mật khẩu!");
+    }
+  }, [isError, errMsg]);
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (email.trim() === "" || password.trim() === "") {
       setError("Bạn cần phải điền đầy đủ thông tin!");
@@ -28,8 +30,13 @@ function Signin() {
       password: password,
     };
     dispatch(login({ loginData, navigate }));
+    if (isError) {
+      dispatch(resetMessage());
+      return;
+    }
+    // Clear the error state
+    setError("");
   };
-
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
     setError("");
@@ -39,12 +46,6 @@ function Signin() {
     setPassword(e.target.value);
     setError("");
   };
-
-  useEffect(() => {
-    if (isError === "Error" && errMsg) {
-      setShowAlert(true);
-    }
-  }, [isError, errMsg]);
 
   return (
     <div className="signin-page-area pd-top-120 pd-bottom-120">
@@ -77,18 +78,16 @@ function Signin() {
                       placeholder="Mật khẩu"
                     />
                   </div>
-                  {isError === "Error" && error && (
+                  {/* {isError === "Error" && error && (
                     <div className="alert alert-danger mt-2" role="alert">
                       {error}
                     </div>
                        
-                  )}
+                  )} */}
                 </div>
-                {showAlert && (
+                {error && (
                   <div className="col-12">
-                    <Alert variant="danger">
-                      {errMsg || "Bạn cần phải điền đầy đủ thông tin!"}
-                    </Alert>
+                    <Alert variant="danger">{error}</Alert>
                   </div>
                 )}
                 <div className="col-12 mb-4">

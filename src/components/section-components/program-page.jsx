@@ -153,7 +153,7 @@ function ProgramsPage() {
                 ))
               )}
             </div>
-            <nav className="td-page-navigation">
+            {/* <nav className="td-page-navigation">
               <ul className="pagination">
                 <li className="pagination-arrow">
                   <Link to="#">
@@ -180,7 +180,7 @@ function ProgramsPage() {
                   </Link>
                 </li>
               </ul>
-            </nav>
+            </nav> */}
           </div>
           <div className="col-lg-4 order-lg-1 col-12">
             <div className="td-sidebar mt-5 mt-lg-0">

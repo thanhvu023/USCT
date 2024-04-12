@@ -54,7 +54,7 @@ const AchievementList = ({ achievements }) => (
   </ul>
 );
 
-const StudentProfilePage = () => {
+const StudentProfileRegistration = () => {
   // const [name, setName] = useState('');
   // const [customerId, setCustomerId] = useState('');
   // const [dob, setDob] = useState(null);
@@ -77,19 +77,15 @@ const StudentProfilePage = () => {
 
   return (
     <div className="row mb-5 mt-5">
-      <Sidebar className="ml-4">
+     <Sidebar className="ml-4">
         <Menu className="mt-5">
           <MenuItem component={<Link to={`/students-profile`}></Link>}>
             Hồ sơ học sinh
           </MenuItem>
-          <MenuItem
-            component={<Link to={`/students-profile/registrationList`}></Link>}
-          >
+          <MenuItem component={<Link to={`/students-profile/registrationList`}></Link>}>
             Danh sách đơn tư vấn
           </MenuItem>
-          <MenuItem
-            component={<Link to={`/students-profile/appliedList`}></Link>}
-          >
+          <MenuItem component={<Link to={`/students-profile/appliedList`}></Link>}>
             Danh sách hồ sơ đã duyêt
           </MenuItem>
           <MenuItem component={<Link to={`/create-student-profile`}></Link>}>
@@ -103,25 +99,25 @@ const StudentProfilePage = () => {
             <div className="card-body">
               <div className="profile-tab">
                 <div className="custom-tab-1">
-                  <Tab.Container defaultActiveKey="StudentList">
+                  <Tab.Container defaultActiveKey="RegistrationList">
                     <Nav as="ul" className="nav nav-tabs">
                       <Nav.Item as="li" className="nav-item">
-                        <Nav.Link to="#about-mefdasf" eventKey="StudentList">
+                        <Nav.Link to="#about-me" eventKey="RegistrationList">
                           <span className="d-flex align-items-center">
                             <i
-                              className="la la-clipboard me-2"
+                              className="la la-user me-2"
                               style={{ fontWeight: "bold" }}
                             ></i>
                             <strong style={{ fontSize: "1.2rem" }}>
-                              Danh sách hồ sơ du học
+                              Danh sách đơn tư vấn
                             </strong>
                           </span>
                         </Nav.Link>
                       </Nav.Item>
                     </Nav>
                     <Tab.Content>
-                      <Tab.Pane id="about-mefdsaf" eventKey="StudentList">
-                        <StudenProfileList />
+                      <Tab.Pane id="about-me" eventKey="RegistrationList">
+                        <RegistrationList />
                       </Tab.Pane>
                     </Tab.Content>
                   </Tab.Container>
@@ -145,4 +141,4 @@ SkillsList.propTypes = {
 AchievementList.propTypes = {
   achievements: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
-export default StudentProfilePage;
+export default StudentProfileRegistration;
