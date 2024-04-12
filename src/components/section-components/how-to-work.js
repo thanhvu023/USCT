@@ -57,7 +57,7 @@ class HowToWork extends Component {
 			          <div className="details">
 			            <h5>Bắt Đầu Học</h5>
 			            <p>Đăng ký chương trình và bắt đầu hành trình du học của bạn với sự hỗ trợ từ đội ngũ chuyên gia của chúng tôi.</p>
-			            <Link className="read-more-text" to="/program-details">Xem Thêm <i className="fa fa-angle-right" /></Link>
+			            <Link className="read-more-text" to="/">Tiếp tục</Link>
 			          </div>
 			        </div>
 			      </div>
@@ -70,6 +70,7 @@ class HowToWork extends Component {
 			          <div className="details">
 			            <h5>Nhận Chứng Chỉ</h5>
 			            <p>Hoàn thành chương trình và nhận chứng chỉ du học, mở ra cơ hội nghề nghiệp và phát triển cá nhân.</p>
+			            <Link className="read-more-text" to="/course-details">Chức mừng</Link>
 			          </div>
 			        </div>
 			      </div>

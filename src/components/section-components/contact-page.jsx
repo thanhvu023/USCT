@@ -5,6 +5,7 @@ import Select from "react-select";
 import { ProgressBar, Step } from "react-step-progress-bar";
 import { createRegistration } from "../../redux/slice/registrationSlice";
 import jwtDecode from "jwt-decode";
+import Swal from "sweetalert2";
 
 const MultiStepProgressBar = ({ page, onPageNumberClick }) => {
   let stepPercentage = 0;
@@ -113,13 +114,19 @@ const Registration = () => {
 
     return newErrors;
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const newErrors = validateForm();
 
     if (Object.keys(newErrors).length === 0) {
       dispatch(createRegistration(formData));
+      await Swal.fire({
+        icon: "success",
+        title: "Đăng ký tư vấn thành công!",
+        showConfirmButton: false,
+        timer: 1500,
+      });
     } else {
       setErrors(newErrors);
     }

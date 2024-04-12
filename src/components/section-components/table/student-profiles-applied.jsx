@@ -14,6 +14,7 @@ const StudentProfileAppliedList = () => {
   const data = useSelector(
     (state) => state?.student?.studentProfileByCustomerId
   );
+  console.log("hồ sơ đã duyệt là:",data)
   const dispatch = useDispatch();
 
   useEffect(() => {
