@@ -8,6 +8,7 @@ import FunFact from './section-components/fun-fact';
 import HowToWork from './section-components/how-to-work';
 import Team from './section-components/team';
 import Footer from './global-components/footer';
+import SliderComponent from './section-components/Slider';
 
 const HomePage = () => {
     return <div>
@@ -15,6 +16,7 @@ const HomePage = () => {
         <Banner />
         <Intro />
         <About />
+        <HowToWork />
         <CourseFilter />
         <FunFact />
         <HowToWork />
