@@ -34,7 +34,7 @@ export const getUserById = createAsyncThunk(
     }
   }
 );
-export const getAllUsers  = createAsyncThunk(
+export const getAllUsers = createAsyncThunk(
   "customer/getUserById",
   async (_, thunkAPI) => {
     try {
@@ -118,6 +118,11 @@ export const authSlice = createSlice({
     logoutUser: (state) => {
       state.token = null;
       state.msg = null;
+      state.user = [];
+      state.userById={}
+    },
+    resetMessage: (state) => {
+      state.error = null;
     },
   },
   extraReducers: (builder) => {
@@ -186,7 +191,7 @@ export const authSlice = createSlice({
 
 const {
   reducer: authReducer,
-  actions: { logoutUser },
+  actions: { logoutUser, resetMessage },
 } = authSlice;
 
-export { authReducer as default, logoutUser };
+export { authReducer as default, logoutUser, resetMessage };

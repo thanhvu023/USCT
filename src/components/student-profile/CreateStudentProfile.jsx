@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Select from "react-select";
 import { createStudentProfile } from "../../redux/slice/studentSice";
+import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
 import Swal from "sweetalert2";
 
 const MultiStepProgressBar = () => {};
@@ -20,19 +21,21 @@ const CreateStudentProfile = () => {
     studyProcess: "",
     placeOfBirth: "",
     dateOfBirth: "",
-    fileString: [],
+    fileString: [
+      "https://firebasestorage.googleapis.com/v0/b/capstone-project-5362d.appspot.com/o/Image%2FProfileStudent%2FResume.pdf?alt=media&token=9912665c-f830-415f-9ee6-4daa96bbeb24",
+    ],
     customerId,
   });
   const [errors, setErrors] = useState({});
-  const handleFileChange = (event) => {
-    const files = Array.from(event.target.files); 
-    const fileNames = files.map(file => file.name); 
-  
-    setFormData(prevState => ({
-      ...prevState,
-      fileString: [...prevState.fileString, ...fileNames] 
-    }));
-  };
+  // const handleFileChange = (event) => {
+  //   const files = Array.from(event.target.files);
+  //   const fileNames = files.map((file) => file.name);
+
+  //   setFormData((prevState) => ({
+  //     ...prevState,
+  //     fileString: [...prevState.fileString, ...fileNames],
+  //   }));
+  // };
 
   const nextPageNumber = (pageNumber) => {
     setPage(pageNumber);
@@ -62,7 +65,71 @@ const CreateStudentProfile = () => {
     { value: "female", label: "Nữ" },
     { value: "other", label: "Gioi tính khác" },
   ];
-
+  const placeOfBirthOptions = [
+    { value: "An Giang", label: "An Giang" },
+    { value: "Bà Rịa - Vũng Tàu", label: "Bà Rịa - Vũng Tàu" },
+    { value: "Bắc Giang", label: "Bắc Giang" },
+    { value: "Bắc Kạn", label: "Bắc Kạn" },
+    { value: "Bạc Liêu", label: "Bạc Liêu" },
+    { value: "Bắc Ninh", label: "Bắc Ninh" },
+    { value: "Bến Tre", label: "Bến Tre" },
+    { value: "Bình Định", label: "Bình Định" },
+    { value: "Bình Dương", label: "Bình Dương" },
+    { value: "Bình Phước", label: "Bình Phước" },
+    { value: "Bình Thuận", label: "Bình Thuận" },
+    { value: "Cà Mau", label: "Cà Mau" },
+    { value: "Cao Bằng", label: "Cao Bằng" },
+    { value: "Đắk Lắk", label: "Đắk Lắk" },
+    { value: "Đắk Nông", label: "Đắk Nông" },
+    { value: "Điện Biên", label: "Điện Biên" },
+    { value: "Đồng Nai", label: "Đồng Nai" },
+    { value: "Đồng Tháp", label: "Đồng Tháp" },
+    { value: "Gia Lai", label: "Gia Lai" },
+    { value: "Hà Giang", label: "Hà Giang" },
+    { value: "Hà Nam", label: "Hà Nam" },
+    { value: "Hà Tĩnh", label: "Hà Tĩnh" },
+    { value: "Hải Dương", label: "Hải Dương" },
+    { value: "Hậu Giang", label: "Hậu Giang" },
+    { value: "Hòa Bình", label: "Hòa Bình" },
+    { value: "Hưng Yên", label: "Hưng Yên" },
+    { value: "Tp.Hồ Chí Minh", label: "Hồ Chí Minh" },
+    { value: "Khánh Hòa", label: "Khánh Hòa" },
+    { value: "Kiên Giang", label: "Kiên Giang" },
+    { value: "Kon Tum", label: "Kon Tum" },
+    { value: "Lai Châu", label: "Lai Châu" },
+    { value: "Lâm Đồng", label: "Lâm Đồng" },
+    { value: "Lạng Sơn", label: "Lạng Sơn" },
+    { value: "Lào Cai", label: "Lào Cai" },
+    { value: "Long An", label: "Long An" },
+    { value: "Nam Định", label: "Nam Định" },
+    { value: "Nghệ An", label: "Nghệ An" },
+    { value: "Ninh Bình", label: "Ninh Bình" },
+    { value: "Ninh Thuận", label: "Ninh Thuận" },
+    { value: "Phú Thọ", label: "Phú Thọ" },
+    { value: "Quảng Bình", label: "Quảng Bình" },
+    { value: "Quảng Nam", label: "Quảng Nam" },
+    { value: "Quảng Ngãi", label: "Quảng Ngãi" },
+    { value: "Quảng Ninh", label: "Quảng Ninh" },
+    { value: "Quảng Trị", label: "Quảng Trị" },
+    { value: "Sóc Trăng", label: "Sóc Trăng" },
+    { value: "Sơn La", label: "Sơn La" },
+    { value: "Tây Ninh", label: "Tây Ninh" },
+    { value: "Thái Bình", label: "Thái Bình" },
+    { value: "Thái Nguyên", label: "Thái Nguyên" },
+    { value: "Thanh Hóa", label: "Thanh Hóa" },
+    { value: "Thừa Thiên Huế", label: "Thừa Thiên Huế" },
+    { value: "Tiền Giang", label: "Tiền Giang" },
+    { value: "Trà Vinh", label: "Trà Vinh" },
+    { value: "Tuyên Quang", label: "Tuyên Quang" },
+    { value: "Vĩnh Long", label: "Vĩnh Long" },
+    { value: "Vĩnh Phúc", label: "Vĩnh Phúc" },
+    { value: "Yên Bái", label: "Yên Bái" },
+    { value: "Phú Yên", label: "Phú Yên" },
+    { value: "Cần Thơ", label: "Cần Thơ" },
+    { value: "Đà Nẵng", label: "Đà Nẵng" },
+    { value: "Hải Phòng", label: "Hải Phòng" },
+    { value: "Hà Nội", label: "Hà Nội" },
+  ];
   const dispatch = useDispatch();
 
   const validateForm = () => {
@@ -112,9 +179,37 @@ const CreateStudentProfile = () => {
       <div className="counter-area pd-bottom-120 mt-5">
         {page === "basicInfo" && (
           <div>
-            <div className="container">
+            <div className="">
               <div className="row">
-                <div className="col-xl-12 mt-5 mt-lg-0">
+                <Sidebar className="ml-4">
+                  <Menu className="mt-5">
+                    <MenuItem
+                      component={<Link to={`/students-profile`}></Link>}
+                    >
+                      Hồ sơ học sinh
+                    </MenuItem>
+                    <MenuItem
+                      component={
+                        <Link to={`/students-profile/registrationList`}></Link>
+                      }
+                    >
+                      Danh sách đơn tư vấn
+                    </MenuItem>
+                    <MenuItem
+                      component={
+                        <Link to={`/students-profile/appliedList`}></Link>
+                      }
+                    >
+                      Danh sách hồ sơ đã duyêt
+                    </MenuItem>
+                    <MenuItem
+                      component={<Link to={`/create-student-profile`}></Link>}
+                    >
+                      Khởi tạo hồ sơ học sinh
+                    </MenuItem>
+                  </Menu>
+                </Sidebar>
+                <div className="col-xl-9 mt-5 ">
                   <form
                     className="contact-form-inner mt-5 mt-md-0"
                     onSubmit={handleSubmit}
@@ -138,7 +233,7 @@ const CreateStudentProfile = () => {
                         <div className="single-input-inner style-bg-border">
                           <input
                             type="text"
-                            placeholder="ID Quốc Gia"
+                            placeholder="Căn cước công dân"
                             name="nationalId"
                             value={formData.nationalId}
                             onChange={handleInputChange}
@@ -157,13 +252,22 @@ const CreateStudentProfile = () => {
                         </div>
                       </div>
                       <div className="col-lg-6">
-                        <div className="single-input-inner style-bg-border">
-                          <input
-                            type="text"
+                        <div>
+                          <Select
                             placeholder="Nơi sinh"
                             name="placeOfBirth"
-                            value={formData.placeOfBirth}
-                            onChange={handleInputChange}
+                            value={placeOfBirthOptions.find(
+                              (option) => option.value === formData.placeOfBirth
+                            )}
+                            onChange={(selectedOption) =>
+                              handleInputChange({
+                                target: {
+                                  name: "placeOfBirth",
+                                  value: selectedOption.value,
+                                },
+                              })
+                            }
+                            options={placeOfBirthOptions}
                           />
                         </div>
                       </div>
@@ -239,7 +343,7 @@ const CreateStudentProfile = () => {
                         <div className=" style-bg-border mb-4">
                           <input
                             type="file"
-                            onChange={handleFileChange}
+                            // onChange={handleFileChange}
                             name="fileString"
                             multiple
                           />

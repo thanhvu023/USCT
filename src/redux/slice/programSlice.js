@@ -107,6 +107,7 @@ export const createProgramApplication = createAsyncThunk(
     try {
       console.log(param);
       const res = await instance.post("/program-applications", param);
+      console.log(res);
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response);
@@ -197,7 +198,6 @@ export const getProgramTypeById = createAsyncThunk(
   }
 );
 
-
 const initialState = {
   msg: "",
   token: null,
@@ -271,7 +271,8 @@ export const programSlice = createSlice({
       .addCase(getProgramByProgramType.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-      }) .addCase(getProgramTypes.fulfilled, (state, action) => {
+      })
+      .addCase(getProgramTypes.fulfilled, (state, action) => {
         state.programTypes = action.payload;
       })
       .addCase(getProgramTypeById.pending, (state) => {
@@ -294,7 +295,7 @@ export const programSlice = createSlice({
       .addCase(updateProgram.fulfilled, (state, action) => {
         state.loading = false;
         // Cập nhật thông tin chương trình đã được cập nhật trong state
-        // Ví dụ: 
+        // Ví dụ:
         // state.programs = state.programs.map((program) =>
         //   program.programId === action.payload.programId ? action.payload : program
         // );
@@ -311,14 +312,15 @@ export const programSlice = createSlice({
       .addCase(deleteProgram.fulfilled, (state, action) => {
         state.loading = false;
         // Xóa chương trình khỏi danh sách dựa trên ID đã trả về
-        state.programs = state.programs.filter(program => program.id !== action.payload);
+        state.programs = state.programs.filter(
+          (program) => program.id !== action.payload
+        );
         state.error = null;
       })
       .addCase(deleteProgram.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       });
-
   },
 });
 const {
