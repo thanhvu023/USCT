@@ -14,8 +14,9 @@ import AllPrograms from "./admin-components/program-components/programs";
 const AdminPage = () => {
   const [main, setMain] = useState("admin");
   console.log("main là :", main);
-  const navigate = useNavigate(); 
-
+  const handleAllConsultantClick = () => {
+    setMain("Tư vấn viên");
+  };
   const componentMap = {
     "Tư vấn viên": <AllConsultant setMain={setMain}/>,
     "Khách hàng": <AllCustomer  /> , 
@@ -27,7 +28,7 @@ const AdminPage = () => {
   
   const getContentComponent = (main) => {
 
-    const selectedComponent = componentMap[main] || <AdminHome />;
+    const selectedComponent = componentMap[main] || <AdminHome handleAllConsultantClick={handleAllConsultantClick} />;
     return selectedComponent;
   };
   

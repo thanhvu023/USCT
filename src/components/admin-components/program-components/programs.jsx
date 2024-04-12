@@ -263,7 +263,10 @@ const [programUpdated, setProgramUpdated] = useState(false);
 
   const handleSubmitCreateProgram = () => {
     // Gọi hàm createProgram để tạo mới một chương trình
-    dispatch(createProgram(formData)); // dispatch action với dữ liệu của form
+    dispatch(createProgram(formData)).then(() => {
+      // Gọi lại API để lấy danh sách tất cả các chương trình
+      dispatch(getAllProgram());
+    });  // dispatch action với dữ liệu của form
     
     handleCloseCreateModal(); // Đóng modal sau khi tạo chương trình thành công
   };
@@ -457,13 +460,13 @@ const handleCloseEditModal = () => {
                   </div>
            
                   <div className="">
-                    <h3 className="mt-4 mb-1">{program.nameProgram}</h3>
+                    <h3 className="mt-4 mb-1" style={{ fontSize: "24px" }}>{program.nameProgram}</h3>
                     {/* <img
           src={"assets/img/course/programs.jpg"}
           alt="img"
           className="img-fluid"
         /> */}
-                    <p className="text-muted">
+                    <p className="text-muted" >
                       {getTypeName(program.programTypeId)}
                     </p>
                     <ul className="list-group mb-3 list-group-flush">
@@ -674,128 +677,122 @@ Xem thêm
 
                            {/* Edit */}
                            <Modal show={showEditModal} onHide={handleCloseEditModal} centered>
-  <Modal.Header >
+  <Modal.Header>
+    <Modal.Title><strong>Chỉnh sửa chương trình</strong></Modal.Title>
   </Modal.Header>
   <Modal.Body>
     {selectedProgramForEdit && (
       <form onSubmit={handleSubmit}>
         <div className="row">
-        <div className="col-md-6">
-  <div className="form-group">
-    <label htmlFor="nameProgram">Tên chương trình:</label>
-    <input
-      type="text"
-      className="form-control"
-      id="nameProgram"
-      defaultValue={selectedProgramForEdit.nameProgram}
-      onChange={(e) => setEditedProgram({ ...selectedProgramForEdit, nameProgram: e.target.value })}
-    />
-  </div>
-  <div className="form-group">
-    <label htmlFor="semesterId">Học kỳ bắt đầu:</label>
-    <input
-      type="text"
-      className="form-control"
-      id="semesterId"
-      defaultValue={selectedProgramForEdit.semesterId}
-      onChange={(e) => setEditedProgram({ ...selectedProgramForEdit, semesterId: e.target.value })}
-    />
-  </div>
-  <div className="form-group">
-    <label htmlFor="status">Trạng thái:</label>
-    <input
-      type="text"
-      className="form-control"
-      id="status"
-      defaultValue={selectedProgramForEdit.status}
-      onChange={(e) => setEditedProgram({ ...selectedProgramForEdit, status: e.target.value })}
-    />
-  </div>
-</div>
-<div className="col-md-6">
-  <div className="form-group">
-    <label htmlFor="duration">Thời lượng:</label>
-    <input
-      type="text"
-      className="form-control"
-      id="duration"
-      defaultValue={selectedProgramForEdit.duration}
-      onChange={(e) => setEditedProgram({ ...selectedProgramForEdit, duration: e.target.value })}
-    />
-  </div>
-  <div className="form-group">
-    <label htmlFor="tuition">Học phí:</label>
-    <input
-      type="text"
-      className="form-control"
-      id="tuition"
-      defaultValue={selectedProgramForEdit.tuition}
-      onChange={(e) => setEditedProgram({ ...selectedProgramForEdit, tuition: e.target.value })}
-    />
-  </div>
-  <div className="form-group">
-    <label htmlFor="level">Level:</label>
-    <input
-      type="text"
-      className="form-control"
-      id="level"
-      defaultValue={selectedProgramForEdit.level}
-      onChange={(e) => setEditedProgram({ ...selectedProgramForEdit, level: e.target.value })}
-    />
-  </div>
-</div>
-
-
+          <div className="col-md-6">
+            <div className="form-group">
+              <label htmlFor="nameProgram"><strong>Tên chương trình:</strong></label>
+              <input
+                type="text"
+                className="form-control"
+                id="nameProgram"
+                defaultValue={selectedProgramForEdit.nameProgram}
+                onChange={(e) => setEditedProgram({ ...selectedProgramForEdit, nameProgram: e.target.value })}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="semesterId"><strong>Học kỳ bắt đầu:</strong></label>
+              <input
+                type="text"
+                className="form-control"
+                id="semesterId"
+                defaultValue={selectedProgramForEdit.semesterId}
+                onChange={(e) => setEditedProgram({ ...selectedProgramForEdit, semesterId: e.target.value })}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="status"><strong>Trạng thái:</strong></label>
+              <input
+                type="text"
+                className="form-control"
+                id="status"
+                defaultValue={selectedProgramForEdit.status}
+                onChange={(e) => setEditedProgram({ ...selectedProgramForEdit, status: e.target.value })}
+              />
+            </div>
+          </div>
+          <div className="col-md-6">
+            <div className="form-group">
+              <label htmlFor="duration"><strong>Thời lượng:</strong></label>
+              <input
+                type="text"
+                className="form-control"
+                id="duration"
+                defaultValue={selectedProgramForEdit.duration}
+                onChange={(e) => setEditedProgram({ ...selectedProgramForEdit, duration: e.target.value })}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="tuition"><strong>Học phí:</strong></label>
+              <input
+                type="text"
+                className="form-control"
+                id="tuition"
+                defaultValue={selectedProgramForEdit.tuition}
+                onChange={(e) => setEditedProgram({ ...selectedProgramForEdit, tuition: e.target.value })}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="level"><strong>Level:</strong></label>
+              <input
+                type="text"
+                className="form-control"
+                id="level"
+                defaultValue={selectedProgramForEdit.level}
+                onChange={(e) => setEditedProgram({ ...selectedProgramForEdit, level: e.target.value })}
+              />
+            </div>
+          </div>
         </div>
         <div className="form-group">
-  <label htmlFor="description">Mô tả:</label>
-  <CKEditor
-    editor={ClassicEditor}
-    data={selectedProgramForEdit.description}
-    onChange={(event, editor) => {
-      const data = editor.getData();
-      setEditedProgram({ ...selectedProgramForEdit, description: data });
-    }}
-  />
-</div>
-<div className="form-group">
-  <label htmlFor="responsibilities">Trách nhiệm:</label>
-  <CKEditor
-    editor={ClassicEditor}
-    data={selectedProgramForEdit.responsibilities}
-    onChange={(event, editor) => {
-      const data = editor.getData();
-      setEditedProgram({ ...selectedProgramForEdit, responsibilities: data });
-    }}
-  />
-</div>
-<div className="form-group">
-  <label htmlFor="requirement">Yêu cầu:</label>
-  <CKEditor
-    editor={ClassicEditor}
-    data={selectedProgramForEdit.requirement}
-    onChange={(event, editor) => {
-      const data = editor.getData();
-      setEditedProgram({ ...selectedProgramForEdit, requirement: data });
-    }}
-  />
-</div>
-
-        {/* Các trường thông tin khác */}
+          <label htmlFor="description"><strong>Mô tả:</strong></label>
+          <CKEditor
+            editor={ClassicEditor}
+            data={selectedProgramForEdit.description}
+            onChange={(event, editor) => {
+              const data = editor.getData();
+              setEditedProgram({ ...selectedProgramForEdit, description: data });
+            }}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="responsibilities"><strong>Trách nhiệm:</strong></label>
+          <CKEditor
+            editor={ClassicEditor}
+            data={selectedProgramForEdit.responsibilities}
+            onChange={(event, editor) => {
+              const data = editor.getData();
+              setEditedProgram({ ...selectedProgramForEdit, responsibilities: data });
+            }}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="requirement"><strong>Yêu cầu:</strong></label>
+          <CKEditor
+            editor={ClassicEditor}
+            data={selectedProgramForEdit.requirement}
+            onChange={(event, editor) => {
+              const data = editor.getData();
+              setEditedProgram({ ...selectedProgramForEdit, requirement: data });
+            }}
+          />
+        </div>
         <div className="d-flex justify-content-between">
-  <Button type="submit" className="btn btn-primary" onClick={handleSubmit}>
-    Lưu chỉnh sửa
-  </Button>
-  <Button variant="secondary" onClick={handleCloseEditModal}>
-    Đóng
-  </Button>
-</div>
-
-       
+          <Button type="submit" className="btn btn-primary" onClick={handleSubmit}>
+            Lưu chỉnh sửa
+          </Button>
+          <Button variant="secondary" onClick={handleCloseEditModal}>
+            Đóng
+          </Button>
+        </div>
       </form>
     )}
   </Modal.Body>
-  
 </Modal>
 
     </div>
