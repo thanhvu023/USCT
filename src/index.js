@@ -21,6 +21,8 @@ import CustomerProfile from "./components/customer-profile";
 import University from "./components/university-components/university.jsx";
 import UniversityDetail from "./components/university-components/university-details";
 import RegistrationPage from "./components/registration-page.jsx";
+import StudentProfileRegistrationPage from "./components/studentProfileRegistration.jsx";
+import StudentProfileAppliedPage from "./components/StudentProfileAppliedPage.jsx";
 // import EditCustomer from "./components/admin-components/customer-components/edit-customer";
 
 const App = () => {
@@ -58,6 +60,14 @@ const App = () => {
         <Route
           path="/create-student-profile"
           element={<CreateStudentProfilePage />}
+        />
+        <Route 
+        path="/students-profile/registrationList" 
+        element={<StudentProfileRegistrationPage/>}
+        />
+        <Route 
+        path="/students-profile/appliedList" 
+        element={<StudentProfileAppliedPage/>}
         />
         {/* <Route path="/customer-edit/:id" element={<EditCustomer />} /> */}
       </Routes>

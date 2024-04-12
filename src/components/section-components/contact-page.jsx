@@ -341,8 +341,8 @@ const Registration = () => {
   console.log(formData);
   return (
     <div>
-      <MultiStepProgressBar page={page} onPageNumberClick={nextPageNumber} />
-      <div className="contact-list pd-top-120 pd-bottom-90">
+      {/* <MultiStepProgressBar page={page} onPageNumberClick={nextPageNumber} /> */}
+      {/* <div className="contact-list pd-top-120 pd-bottom-90">
         <div className="container">
           <div className="row justify-content-center">
             <div className="col-lg-4">
@@ -386,19 +386,19 @@ const Registration = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       <div className="counter-area pd-bottom-120">
         {page === "basicInfo" && (
           <div>
-            <div className="container">
+            <div className="container mt-5">
               <div className="row">
                 <div className="col-lg-4">
                   <div className="section-title mb-0">
                     <h6 className="sub-title right-line">
                       Trang Tư Vấn Đăng Ký Chương Trình Du Học
                     </h6>
-                    <h2 className="title">Write Us a Message</h2>
+                    <h2 className="title">Hãy gửi tin nhắn cho chúng tôi</h2>
                     <p className="content pb-3">
                       Vui lòng điền đầy đủ thông tin
                     </p>
@@ -548,14 +548,18 @@ const Registration = () => {
                         </div>
                       </div>
                       <div className="col-12 d-flex justify-content-end">
-                        <button className="btn btn-base">Hoàn tất</button>
+                        <button
+                          className="btn btn-base"
+                        >
+                          Hoàn tất
+                        </button>
                       </div>
                     </div>
                   </form>
                 </div>
               </div>
             </div>
-            <div style={{ textAlign: "center", margin: "20px 0" }}>
+            {/* <div style={{ textAlign: "center", margin: "20px 0" }}>
               <button
                 className="btn btn-base"
                 style={{ width: "200px" }}
@@ -563,7 +567,7 @@ const Registration = () => {
               >
                 Tiếp tục
               </button>
-            </div>
+            </div> */}
           </div>
         )}
         {page === "uploadFile" && (
@@ -643,9 +647,9 @@ const Registration = () => {
 
       {/* counter area end */}
       {/* contact area start */}
-      <div className="contact-g-map">
+      {/* <div className="contact-g-map">
         <iframe src="https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d29208.601361499546!2d90.3598076!3d23.7803374!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sbd!4v1589109092857!5m2!1sen!2sbd" />
-      </div>
+      </div> */}
     </div>
   );
 };

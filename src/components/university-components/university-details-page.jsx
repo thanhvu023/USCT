@@ -39,8 +39,8 @@ function UniversityDetailPage() {
     }
   }, [universityTypeId]);
   useEffect(() => {
-    dispatch(getProgramByUniId(uniId));
-  }, [uniId]);
+    dispatch(getProgramByUniId(universityId));
+  }, [universityId]);
   useEffect(() => {
     if (stateId) {
       dispatch(getStateById(stateId));
@@ -89,7 +89,7 @@ function UniversityDetailPage() {
                   <div className="single-course-inner">
                     <div className="thumb">
                       <img
-                        src={publicUrl + "assets/img/course/1.png"}
+                        src={publicUrl + "assets/img/course/program.png"}
                         alt="img"
                       />
                     </div>

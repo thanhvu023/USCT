@@ -18,13 +18,15 @@ import { getStateById } from "../../redux/slice/stateSlice";
 import { getSemesterById } from "../../redux/slice/semesterSlice";
 import { getMajorById } from "../../redux/slice/majorSlice";
 import { getStudentProfileByCustomerId } from "../../redux/slice/studentSice";
+import jwtDecode from "jwt-decode";
 
 function ProgramDetailPage() {
   let publicUrl = process.env.PUBLIC_URL + "/";
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
   const { programById } = useParams();
-
+  const token = useSelector((state) => state.auth.token);
+  const customerId = jwtDecode(token).UserId;
   const handleOpenModal = () => {
     setShowModal(true);
   };
@@ -62,7 +64,6 @@ function ProgramDetailPage() {
   const programDetail = useSelector((state) => state?.program?.programById);
   const stateDetail = useSelector((state) => state?.state?.stateById);
   const majorDetail = useSelector((state) => state?.major?.majorById);
-  const customerId = useSelector((state) => state?.auth?.userById.customerId);
   const profileStudent = useSelector(
     (state) => state?.student?.studentProfileByCustomerId
   );
@@ -132,7 +133,7 @@ function ProgramDetailPage() {
       dispatch(createProgramApplication(formData));
     }
   };
-  console.log(formData)
+  console.log(formData);
   return (
     <>
       <div className="course-single-area pd-top-120 pd-bottom-90">
@@ -446,54 +447,6 @@ function ProgramDetailPage() {
                 <h4>Không có chương trình tương tự</h4>
               </div>
             )}
-          </div>
-
-          <div>
-            <h4 className="widget-title display-5">
-              Những Trường Đại Học Có Mở Chương Trình Này
-            </h4>
-            <div className="row justify-content-center pd-top-100">
-              {UniversityDetails.map((university, index) => (
-                <div key={index} className="col-lg-4 col-md-6">
-                  <div className="single-course-inner">
-                    <div className="thumb">
-                      <img
-                        src={publicUrl + "assets/img/course/programs.jpg"}
-                        alt="img"
-                      />
-                    </div>
-                    <div className="details">
-                      <div className="details-inner">
-                        <h5 className="h6">
-                          <Link to={`/program-details/${university.programId}`}>
-                            {university.nameProgram}
-                          </Link>
-                        </h5>
-                        <div className="specialization-icon mb-2">
-                          <i className="fa fa-univers ity mr-1"></i>
-                          <span className="fw-bold">Trường Đại Học Ohana</span>
-                        </div>
-                        <div className="specialization-icon">
-                          <i className="fa fa-map-marker mr-2" />
-
-                          <span className="fw-bold">Tiểu Bang: Ohana</span>
-                        </div>
-                        <div className="emt-course-meta">
-                          <div className="price text-right mt-3">
-                            <Link
-                              to="/instructor-details"
-                              className="btn btn-primary"
-                            >
-                              Xem Thêm
-                            </Link>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       </div>
