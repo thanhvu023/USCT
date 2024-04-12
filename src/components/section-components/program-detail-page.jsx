@@ -264,7 +264,7 @@ function ProgramDetailPage() {
                   </ul>
                   <div className="price-wrap text-center">
                     <h5>
-                      Giá:<span>$54.00</span>
+                      Chi phí dự kiến:<span>$20000</span>
                     </h5>
 
                     <a

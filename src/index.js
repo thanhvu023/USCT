@@ -51,10 +51,10 @@ const App = () => {
           path="/student-profile-detail/:studentProfileId"
           element={<StudentProfileDetailPage />}
         />
-             <Route
+             {/* <Route
           path="/registration-detail/:registrationFormId"
           element={<RegistrationDetailPage />}
-        />
+        /> */}
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ConfirmPasswordPage />} />
         <Route
