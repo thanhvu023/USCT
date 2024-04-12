@@ -1,20 +1,26 @@
-import React, { useMemo, useState, useEffect } from "react";
-import { useTable, useFilters, usePagination } from "react-table";
-import "./student-profile.css";
-import { COLUMNS } from "./columns";
-import { useNavigate } from "react-router-dom";
+import jwtDecode from "jwt-decode";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useFilters, usePagination, useTable } from "react-table";
 import { getStudentProfileByCustomerId } from "../../../redux/slice/studentSice";
+import { COLUMNS } from "./columns";
+import "./student-profile.css";
 
 const StudentProfileAppliedList = () => {
   const columns = useMemo(() => COLUMNS, []);
+  const token = useSelector((state) => state.auth.token);
+  const customerId = jwtDecode(token).UserId;
 
-  const userId = useSelector((state) => state.auth.userById.customerId);
-  const data = useSelector((state) => state.student.studentProfileByCustomerId);
+  const data = useSelector(
+    (state) => state?.student?.studentProfileByCustomerId
+  );
   const dispatch = useDispatch();
+
   useEffect(() => {
-    dispatch(getStudentProfileByCustomerId(userId));
-  }, [userId]);
+    if (customerId) {
+      dispatch(getStudentProfileByCustomerId(customerId));
+    }
+  }, [customerId]);
   const [selectedRow, setSelectedRow] = useState(null);
 
   // const handleRowClick = (studentId) => {

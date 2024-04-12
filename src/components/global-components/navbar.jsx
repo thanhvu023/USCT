@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { logoutUser } from "../../redux/slice/authSlice";
 import { logoutStudent } from "../../redux/slice/studentSice";
 import { Dropdown } from "react-bootstrap";
+import { logoutProgram } from "../../redux/slice/programSlice";
 
 function Navbar() {
   const token = useSelector((state) => state.auth?.token);
@@ -12,6 +13,7 @@ function Navbar() {
   const handleLogout = () => {
     dispatch(logoutUser());
     dispatch(logoutStudent());
+    dispatch(logoutProgram())
     navigate("/");
   };
   let publicUrl = process.env.PUBLIC_URL + "/";

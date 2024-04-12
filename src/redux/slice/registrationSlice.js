@@ -1,12 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import instance from "../axiosCustom";
 
-export const getRegistrationById = createAsyncThunk(
+export const getRegistrationByCustomerId = createAsyncThunk(
   "registration/getRegistrationById",
   async (param, thunkAPI) => {
     try {
       const majorId = param;
-      const res = await instance.get(`/majors/${majorId}`);
+      const res = await instance.get(`/registration-forms/customer/${param}`);
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response);
@@ -25,11 +25,24 @@ export const getRegistration = createAsyncThunk(
   }
 );
 
+export const createRegistration = createAsyncThunk(
+  "registration/createRegistration",
+  async (param, thunkAPI) => {
+    try {
+      console.log(param);
+      const res = await instance.post(`/registration-forms`,param);
+      return res.data
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response);
+    }
+  }
+);
+
 const initialState = {
   msg: "",
   loading: false,
   registrationForms: [],
-  registrationById: {},
+  registrationById: [],
 };
 
 export const registrationSlice = createSlice({
@@ -38,15 +51,15 @@ export const registrationSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getRegistrationById.pending, (state) => {
+      .addCase(getRegistrationByCustomerId.pending, (state) => {
         state.loading = true;
       })
-      .addCase(getRegistrationById.fulfilled, (state, action) => {
+      .addCase(getRegistrationByCustomerId.fulfilled, (state, action) => {
         state.loading = false;
         state.registrationById = action.payload;
         state.error = null;
       })
-      .addCase(getRegistrationById.rejected, (state, action) => {
+      .addCase(getRegistrationByCustomerId.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       })

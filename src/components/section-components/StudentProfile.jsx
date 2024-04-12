@@ -40,17 +40,17 @@ const SkillsList = ({ skills }) => (
   <div className="skills-list">
     <h5 className="text-primary">Kỹ năng:</h5>
     <ul>
-      {skills.map((skill, index) => (
-        <li key={index}>{skill}</li>
-      ))}
+      {skills && skills.map((skill, index) => <li key={index}>{skill}</li>)}
     </ul>
   </div>
 );
+
 const AchievementList = ({ achievements }) => (
   <ul>
-    {achievements.map((achievement, index) => (
-      <li key={index}>{achievement}</li>
-    ))}
+    {achievements &&
+      achievements.map((achievement, index) => (
+        <li key={index}>{achievement}</li>
+      ))}
   </ul>
 );
 
@@ -59,7 +59,17 @@ const StudentProfilePage = () => {
   // const [customerId, setCustomerId] = useState('');
   // const [dob, setDob] = useState(null);
   // const [countryId, setCountryId] = useState('');
-
+  // const customerId = useSelector((state) => state.auth.userById.customerId);
+  // const data = useSelector(
+  //   (state) => state?.student?.studentProfileByCustomerId
+  // );
+  // console.log(data);
+  // const dispatch = useDispatch();
+  // useEffect(() => {
+  //   if (customerId) {
+  //     dispatch(getStudentProfileByCustomerId(customerId));
+  //   }
+  // }, [customerId]);
   const handleSubmit = (e) => {
     e.preventDefault();
     // Add your submit logic here
@@ -126,101 +136,7 @@ const StudentProfilePage = () => {
                       </Nav.Item>
                     </Nav>
                     <Tab.Content>
-                      <Tab.Pane id="profile-settings" eventKey="Setting">
-                        {/* <div className="pt-3">
-                          <div className="settings-form">
-                            <h4 className="text-primary">
-                              Chỉnh sửa thông tin
-                            </h4>
-                            <form onSubmit={handleSubmit}>
-                              <div className="row">
-                                <div className="form-group mb-3 col-md-6">
-                                  <label className="form-label">
-                                    Họ và tên
-                                  </label>
-                                  <input
-                                    type="text"
-                                    placeholder="Họ và tên"
-                                    className="form-control"
-                                    value={"NAME"}
-                                    disabled
-                                  />
-                                </div>
-
-                                <div className="form-group mb-3 col-md-6">
-                                  <label className="form-label">
-                                    ID Quốc gia
-                                  </label>
-                                  <input
-                                    type="text"
-                                    placeholder="ID Quốc gia "
-                                    className="form-control"
-                                    value={"34214214242424224"}
-                                  />
-                                </div>
-                              </div>
-                              <div className="row">
-                                <div className="form-group mb-3 col-md-6">
-                                  <label className="form-label">
-                                    Ngày sinh
-                                  </label>
-                                  <input type="date" className="form-control" />
-                                </div>
-                                <div className="form-group mb-3 col-md-6">
-                                  <label className="form-label">Nơi sinh</label>
-                                  <input
-                                    type="text"
-                                    placeholder="Nơi sinh"
-                                    className="form-control"
-                                  />
-                                </div>
-                              </div>
-                              <div className="form-group mb-3">
-                                <label className="form-label">
-                                  Qúa trình học tập
-                                </label>
-                                <div className="card h-auto">
-                                  <div className="card-body">
-                                    <label className="form-label">
-                                      Mô tả ở đây
-                                    </label>
-                                    <div className="custom-ekeditor cms-radius add-content-ckeditor ">
-                                      <CKEditor
-                                        editor={ClassicEditor}
-                                        // onReady={ editor => {
-
-                                        // } }
-                                        // onChange={ ( event, editor ) => {
-                                        //     // const data = editor.getData();
-                                        // } }
-                                        // onBlur={ ( event, editor ) => {
-
-                                        // } }
-                                        // onFocus={ ( event, editor ) => {
-
-                                        // } }
-                                      />
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="form-group mb-3 ">
-                                <label className="form-label">
-                                  Chứng chỉ tiếng Anh
-                                </label>
-                                <Select
-                                  options={options}
-                                  className="basic-multi-select"
-                                  isMulti
-                                  classNamePrefix="select"
-                                />
-                              </div>
-                              <button className="btn btn-primary" type="submit">
-                                Cập nhật
-                              </button>
-                            </form>
-                          </div>
-                        </div> */}
+                      <Tab.Pane id="profile-settings" eventKey="Setting">                        
                         <StudentProfileAppliedList />
                       </Tab.Pane>
                       <Tab.Pane id="about-mefdsaf" eventKey="StudentList">

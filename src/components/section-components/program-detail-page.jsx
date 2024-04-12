@@ -3,10 +3,13 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import Select from "react-select";
 import {
+  createProgramApplication,
   // getAllProgram,
   getProgramById,
   getProgramByProgramType,
+  getProgramByUniId,
   // getProgramByUniId,
 } from "../../redux/slice/programSlice";
 import { useParams } from "react-router-dom";
@@ -14,6 +17,7 @@ import { getUniversityById } from "../../redux/slice/universitySlice";
 import { getStateById } from "../../redux/slice/stateSlice";
 import { getSemesterById } from "../../redux/slice/semesterSlice";
 import { getMajorById } from "../../redux/slice/majorSlice";
+import { getStudentProfileByCustomerId } from "../../redux/slice/studentSice";
 
 function ProgramDetailPage() {
   let publicUrl = process.env.PUBLIC_URL + "/";
@@ -27,55 +31,105 @@ function ProgramDetailPage() {
 
   const handleCloseModal = () => {
     setShowModal(false);
+    setFormData({
+      studentProfileId: "",
+      programById: "",
+    });
   };
 
   const programTypeId = useSelector(
-    (state) => state.program?.programById?.programTypeId
+    (state) => state?.program?.programById?.programTypeId
   );
   const universityId = useSelector(
-    (state) => state.program.programById.universityId
+    (state) => state?.program?.programById?.universityId
   );
   const stateId = useSelector(
-    (state) => state.university.universityById?.stateId
+    (state) => state?.university?.universityById?.stateId
   );
   const semesterId = useSelector(
-    (state) => state.program.programById.semesterId
+    (state) => state?.program?.programById?.semesterId
   );
   const universityIdDeatil = useSelector(
-    (state) => state.university.universityById
+    (state) => state?.university?.universityById
   );
-  const majorId = useSelector((state) => state.program.programById.majorId);
+  const majorId = useSelector((state) => state?.program?.programById?.majorId);
   const programByType = useSelector(
-    (state) => state.program?.programsByProgramType
+    (state) => state?.program?.programsByProgramType
   );
   const UniversityDetails = useSelector(
-    (state) => state.program?.programsByUniId
+    (state) => state?.program?.programsByUniId
   );
-  const programDetail = useSelector((state) => state.program.programById);
-
-  const stateDetail = useSelector((state) => state.state.stateById);
-  const majorDetail = useSelector((state) => state.major.majorById);
-  // console.log("programDetail:", programDetail);
-  // console.log("universityId:", universityId);
-  // console.log("universityIdDetail:", universityIdDetail);
+  const programDetail = useSelector((state) => state?.program?.programById);
+  const stateDetail = useSelector((state) => state?.state?.stateById);
+  const majorDetail = useSelector((state) => state?.major?.majorById);
+  const customerId = useSelector((state) => state?.auth?.userById.customerId);
+  const profileStudent = useSelector(
+    (state) => state?.student?.studentProfileByCustomerId
+  );
+  useEffect(() => {
+    if (programById) {
+      dispatch(getProgramById(programById));
+    }
+  }, [dispatch, programById]);
 
   useEffect(() => {
-    // console.log("Running useEffect...");
-    dispatch(getProgramById(programById));
-    dispatch(getProgramByProgramType(programTypeId));
-    dispatch(getUniversityById(universityId));
-    dispatch(getStateById(stateId));
-    dispatch(getSemesterById(semesterId));
-    dispatch(getMajorById(majorId));
-  }, [
-    dispatch,
+    if (programTypeId) {
+      dispatch(getProgramByProgramType(programTypeId));
+    }
+  }, [dispatch, programTypeId]);
+
+  useEffect(() => {
+    if (universityId) {
+      dispatch(getUniversityById(universityId));
+    }
+  }, [dispatch, universityId]);
+
+  useEffect(() => {
+    if (universityId) {
+      dispatch(getProgramByUniId(universityId));
+    }
+  }, [dispatch, universityId]);
+
+  useEffect(() => {
+    if (stateId) {
+      dispatch(getStateById(stateId));
+    }
+  }, [dispatch, stateId]);
+
+  useEffect(() => {
+    if (semesterId) {
+      dispatch(getSemesterById(semesterId));
+    }
+  }, [dispatch, semesterId]);
+
+  useEffect(() => {
+    if (majorId) {
+      dispatch(getMajorById(majorId));
+    }
+  }, [dispatch, majorId]);
+
+  useEffect(() => {
+    if (customerId) {
+      dispatch(getStudentProfileByCustomerId(customerId));
+    }
+  }, [dispatch, customerId]);
+  const [formData, setFormData] = useState({
+    studentProfileId: "",
     programById,
-    programTypeId,
-    universityId,
-    stateId,
-    semesterId,
-    majorId,
-  ]);
+  });
+  const handleSelectChange = (selectedOption) => {
+    // Update the formData state with the selected option
+    setFormData({
+      ...formData,
+      studentProfileId: selectedOption.value,
+    });
+  };
+  const handleSubmitProgramApplication = () => {
+    if (formData.studentProfileId) {
+      dispatch(createProgramApplication(formData));
+    }
+  };
+  console.log(formData);
   return (
     <>
       <div className="course-single-area pd-top-120 pd-bottom-90">
@@ -111,7 +165,8 @@ function ProgramDetailPage() {
                         ngoài:
                       </p>
                       <div className="row pt-4">
-                        <div className="col-sm-6">
+                        {/* {programDetail.responsibilities} */}
+                        {/* <div className="col-sm-6">
                           <ul className="single-list-wrap">
                             <li className="single-list-inner style-check-box">
                               <i className="fa fa-check" /> Làm đẹp thêm CV
@@ -126,8 +181,8 @@ function ProgramDetailPage() {
                               mới
                             </li>
                           </ul>
-                        </div>
-                        <div className="col-sm-6 mt-3 mt-sm-0">
+                        </div> */}
+                        {/* <div className="col-sm-6 mt-3 mt-sm-0">
                           <ul className="single-list-wrap">
                             <li className="single-list-inner style-check-box">
                               <i className="fa fa-check" /> Có kinh nghiệm làm
@@ -140,144 +195,31 @@ function ProgramDetailPage() {
                               <i className="fa fa-check" /> Thực tập kết hợp với
                               du lịch giá rẻ, khám phá thế giới diệu kỳ
                             </li>
-                            {/* <li className="single-list-inner style-check-box">
-              <i className="fa fa-check" /> Fringilla nulla
-            </li> */}
+                            
                           </ul>
-                        </div>
+                        </div> */}
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="row">
-                  <h4 className="title">Chương trình giảng dạy</h4>
-                  <p>
-                    The quick, brown fox jumps over a lazy dog. DJs flock by
-                    when MTV ax quiz prog. Junk MTV quiz graced by fox whelps.
-                    Bawds jog, flick quartz, vex nymphs. Waltz, bad nymph, for
-                    quick jigs vex! Fox nymphs grab
-                  </p>
-                  <div className="col-lg-6">
-                    <div className="course-details-content">
-                      <div id="accordion" className="accordion-area mt-4">
-                        <div className="card single-faq-inner style-no-border">
-                          <div className="card-header" id="ff-one">
-                            <h5 className="mb-0">01. Kinh nghiệm văn hóa</h5>
-                          </div>
-                          <div className="card-body">
-                            Thực tập ở nước ngoài mang lại cơ hội tiếp xúc với
-                            văn hóa mới, từ cách làm việc đến phong cách sống.
-                            Điều này giúp bạn mở rộng kiến thức và hiểu biết về
-                            thế giới.
-                          </div>
-                        </div>
-                        <div className="card single-faq-inner style-no-border">
-                          <div className="card-header" id="ff-two">
-                            <h5 className="mb-0">02. Mang lưới quốc tế</h5>
-                          </div>
-                          <div className="card-body">
-                            Thực tập ở nước ngoài cung cấp cơ hội để xây dựng
-                            mạng lưới quốc tế. Bạn có thể gặp gỡ và làm việc
-                            cùng các đồng nghiệp từ nhiều quốc gia khác nhau,
-                            tạo ra cơ hội hợp tác trong tương lai.
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-lg-6">
-                    <div className="course-details-content">
-                      <div id="accordion" className="accordion-area mt-4">
-                        <div className="card single-faq-inner style-no-border">
-                          <div className="card-header" id="ff-three">
-                            <h5 className="mb-0">
-                              03. Phát triển kỹ năng ngôn ngữ
-                            </h5>
-                          </div>
-                          <div className="card-body">
-                            Sống và làm việc trong một môi trường nói tiếng nước
-                            ngoài giúp bạn cải thiện kỹ năng ngôn ngữ của mình.
-                            Điều này có thể là một phần quan trọng trong việc
-                            phát triển sự nghiệp của bạn trong thị trường lao
-                            động toàn cầu.
-                          </div>
-                        </div>
-                        <div className="card single-faq-inner style-no-border">
-                          <div className="card-header" id="ff-four">
-                            <h5 className="mb-0">04. Kiến thức chuyên môn</h5>
-                          </div>
-                          <div className="card-body">
-                            Thực tập ở nước ngoài cung cấp cơ hội học hỏi về
-                            phong cách làm việc và phương pháp chuyên môn mới.
-                            Bạn có thể tiếp cận với công nghệ, quy trình và dự
-                            án mà bạn không thể trải nghiệm được ở quê nhà.
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
                 <div className="row">
                   <div className="col-lg-12">
-                    <div className="course-details-content">
-                      <h4 className="title">Câu hỏi thường gặp</h4>
-                      <p>Cái gì là văn bản giả dối đơn giản của bạn?</p>
-                      <div id="accordion-1" className="accordion-area mt-4">
-                        <div className="card single-faq-inner style-header-bg">
-                          <div className="card-header" id="ff-five">
-                            <h5 className="mb-0">
-                              01. Điều gì làm bạn đơn giản là giả mạo?
-                            </h5>
-                          </div>
-                          <div className="card-body">
-                            Văn bản giả mạo của bạn có sẵn miễn phí trên thị
-                            trường in ấn đã là văn bản giả mạo tiêu chuẩn của
-                            ngành công nghiệp từng bao giờ.
-                          </div>
-                        </div>
-                        <div className="card single-faq-inner style-header-bg">
-                          <div className="card-header" id="ff-six">
-                            <h5 className="mb-0">
-                              02. Đồ họa giả dối của thiết kế miễn phí là gì?
-                            </h5>
-                          </div>
-                          <div className="card-body">
-                            Văn bản giả mạo về đồ họa đơn giản miễn phí có sẵn
-                            trên thị trường in ấn đã là văn bản giả mạo tiêu
-                            chuẩn của ngành công nghiệp từng bao giờ.
-                          </div>
-                        </div>
-                        <div className="card single-faq-inner style-header-bg">
-                          <div className="card-header" id="ff-seven">
-                            <h5 className="mb-0">
-                              03. Tại sao chúng tôi là tốt nhất?
-                            </h5>
-                          </div>
-                          <div className="card-body">
-                            Tại sao chúng tôi có văn bản giả mạo miễn phí có sẵn
-                            trên thị trường in ấn đã là văn bản giả mạo tiêu
-                            chuẩn của ngành công nghiệp từng bao giờ.
-                          </div>
-                        </div>
-                        <div className="card single-faq-inner style-header-bg">
-                          <div className="card-header" id="ff-eight">
-                            <h5 className="mb-0">
-                              04. Các ngành công nghiệp giả dối được bao gồm?
-                            </h5>
-                          </div>
-                          <div className="card-body">
-                            Các văn bản giả mạo của bạn có sẵn miễn phí trên thị
-                            trường in ấn đã là văn bản giả mạo tiêu chuẩn của
-                            ngành công nghiệp từng bao giờ.
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                    <h4 className="title ">Trách nhiệm</h4>
+                    <ul>
+                      {programDetail &&
+                        programDetail.responsibilities &&
+                        programDetail.responsibilities
+                          .split("\\r\\n")
+                          .map((responsibility, index) => (
+                            <li key={index}>{responsibility}</li>
+                          ))}
+                    </ul>
+                  </div>
+                  <div className="col-lg-12">
+                    <h4 className="title ">Yêu cầu của chương trình</h4>
+                    <p>{programDetail?.requirement}</p>
                   </div>
                 </div>
-
-             
               </div>
             </div>
             <div className="col-lg-4">
@@ -287,7 +229,7 @@ function ProgramDetailPage() {
                   <ul>
                     <li>
                       <i className="fa fa-university" />
-                      <span>Trường Đại học:</span>{" "}
+                      <span>Trường Đại học:</span>
                       {universityIdDeatil?.universityName}
                     </li>
                     <li>
@@ -353,10 +295,11 @@ function ProgramDetailPage() {
                           &times;
                         </span>
 
-                        <h2>
-                          Bạn đang đăng ký vào chương trình [{programDetail.nameProgram}] <br/>
-                          tại {universityIdDeatil?.universityName}
-                        </h2>
+                        <h4>
+                          Bạn đang đăng ký vào chương trình [
+                          {programDetail.nameProgram}] tại
+                          {universityIdDeatil?.universityName}
+                        </h4>
                         <div className="form-group">
                           <label
                             htmlFor="fullName"
@@ -392,15 +335,19 @@ function ProgramDetailPage() {
                             htmlFor="cvFile"
                             style={{ fontWeight: "bold", fontSize: "16px" }}
                           >
-                            CV của tôi:
+                            Hồ sơ học sinh:
                           </label>
-                          <input
-                            type="file"
-                            id="cvFile"
-                            className="form-control"
-                            // Handle file upload logic here
+                          <Select
+                            options={profileStudent.map((profile) => ({
+                              value: profile.studentProfileId,
+                              label: profile.fullName,
+                            }))}
+                            placeholder="Chọn hồ sơ học sinh"
+                            onChange={handleSelectChange}
+                            // Other props like placeholder, onChange, etc. can be added here
                           />
                         </div>
+
                         <div className="form-group">
                           <label
                             htmlFor="editor"
@@ -422,7 +369,7 @@ function ProgramDetailPage() {
                             // onFocus={ ( event, editor ) => {
 
                             // } }
-                          />{" "}
+                          />
                         </div>
                         <div className="modal-footer">
                           <button
@@ -433,7 +380,7 @@ function ProgramDetailPage() {
                           </button>
                           <button
                             className="btn btn-primary"
-                            onClick={handleCloseModal}
+                            onClick={handleSubmitProgramApplication}
                           >
                             Save
                           </button>
@@ -463,7 +410,7 @@ function ProgramDetailPage() {
                       <div className="single-course-inner">
                         <div className="thumb">
                           <img
-                            src={publicUrl + "assets/img/course/1.png"}
+                            src={publicUrl + "assets/img/course/programs.jpg"}
                             alt="img"
                           />
                         </div>
@@ -513,7 +460,7 @@ function ProgramDetailPage() {
                   <div className="single-course-inner">
                     <div className="thumb">
                       <img
-                        src={publicUrl + "assets/img/course/1.png"}
+                        src={publicUrl + "assets/img/course/programs.jpg"}
                         alt="img"
                       />
                     </div>
@@ -573,7 +520,6 @@ const modalContentStyle = {
   backgroundColor: "#fefefe",
   padding: "20px",
   borderRadius: "8px",
-
 };
 const modalBgStyle = {
   position: "fixed",

@@ -2,17 +2,22 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import instance from "../axiosCustom";
 import { logoutUser } from "./authSlice";
 
-
 export const getAllProgram = createAsyncThunk(
   "/program/getAllProgram",
   async (param, thunkAPI) => {
     try {
+      const programName = param;
+      if (programName) {
+        const res = await instance.get(`programs?programName=${programName}`);
+        return res.data;
+      } else {
+        const res = await instance.get("/programs");
+        return res.data;
+      }
       // console.log(param);
       // const headers = {
       //   Authorization: `Bearer ${param}`,
       // };
-      const res = await instance.get("/programs");
-      return res.data;    
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response);
     }
@@ -42,8 +47,25 @@ export const getProgramByUniId = createAsyncThunk(
   "/program/getProgramByUniId",
   async (param, thunkAPI) => {
     try {
-      const { universityId } = param;
-      const res = await instance.get(`/programs?universityId=${universityId}`, {
+      const res = await instance.get(`/programs?universityId=${param}`, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/problem+json; charset=utf-8",
+          Accept: "application/json",
+        },
+      });
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response);
+    }
+  }
+);
+
+export const getprogramByName = createAsyncThunk(
+  "/program/getprogramByName",
+  async (param, thunkAPI) => {
+    try {
+      const res = await instance.get(`/programs?programName=${param}`, {
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/problem+json; charset=utf-8",
@@ -61,14 +83,17 @@ export const getProgramByProgramType = createAsyncThunk(
   "/program/getProgramByProgramType",
   async (param, thunkAPI) => {
     try {
-      const programTypeId  = param;
-      const res = await instance.get(`/programs?programTypeId=${programTypeId}`, {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/problem+json; charset=utf-8",
-          Accept: "application/json",
-        },
-      });
+      const programTypeId = param;
+      const res = await instance.get(
+        `/programs?programTypeId=${programTypeId}`,
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/problem+json; charset=utf-8",
+            Accept: "application/json",
+          },
+        }
+      );
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response);
@@ -76,6 +101,18 @@ export const getProgramByProgramType = createAsyncThunk(
   }
 );
 
+export const createProgramApplication = createAsyncThunk(
+  "/program/createProgramApplication",
+  async (param, thunkAPI) => {
+    try {
+      console.log(param);
+      const res = await instance.post("/program-applications", param);
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response);
+    }
+  }
+);
 
 const initialState = {
   msg: "",
@@ -84,17 +121,25 @@ const initialState = {
   programs: [],
   programById: {},
   programsByUniId: [],
-  programsByProgramType:[]
+  programsByProgramType: [],
 };
 
 export const programSlice = createSlice({
   name: "program",
   initialState,
-  reducers: {},
-  extraReducers: (builder) => {
-    builder.addCase(logoutUser,(state)=>{
+  reducers: {
+    logoutProgram: (state) => {
       state.programs = [];
-    })
+      state.programById = {};
+      state.programsByUniId = [];
+      state.programsByProgramType = [];
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(logoutUser, (state) => {
+        state.programs = [];
+      })
       .addCase(getAllProgram.pending, (state) => {
         state.loading = true;
       })
@@ -130,7 +175,8 @@ export const programSlice = createSlice({
       .addCase(getProgramByUniId.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-      }).addCase(getProgramByProgramType.pending, (state) => {
+      })
+      .addCase(getProgramByProgramType.pending, (state) => {
         state.loading = true;
       })
       .addCase(getProgramByProgramType.fulfilled, (state, action) => {
@@ -144,5 +190,8 @@ export const programSlice = createSlice({
       });
   },
 });
-const { reducer: programReducer } = programSlice;
-export { programReducer as default };
+const {
+  reducer: programReducer,
+  actions: { logoutProgram },
+} = programSlice;
+export { programReducer as default, logoutProgram };

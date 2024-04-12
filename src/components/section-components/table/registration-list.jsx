@@ -4,18 +4,20 @@ import "./student-profile.css";
 import { COLUMNS } from "./registration-columns";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getStudentProfileByCustomerId } from "../../../redux/slice/studentSice";
-
+import jwtDecode from "jwt-decode";
+import { getRegistrationByCustomerId } from "../../../redux/slice/registrationSlice";
 const RegistrationList = () => {
   const columns = useMemo(() => COLUMNS, []);
-
-  const userId = useSelector((state) => state.auth.userById.customerId);
-  const data = useSelector((state) => state.student.studentProfileByCustomerId);
+  const token = useSelector((state) => state.auth.token);
+  const customerId = jwtDecode(token).UserId;
+  const data = useSelector((state) => state.registration.registrationById);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getStudentProfileByCustomerId(userId));
-  }, [userId]);
+    if (customerId) {
+      dispatch(getRegistrationByCustomerId(customerId));
+    }
+  }, [customerId]);
   const [selectedRow, setSelectedRow] = useState(null);
   const navigate = useNavigate();
 

@@ -1,11 +1,10 @@
-import React, { useMemo, useState, useEffect } from "react";
-import { useTable, useFilters, usePagination } from "react-table";
-import MOCK_DATA from "./mock-api.json";
-import "./student-profile.css";
-import { COLUMNS } from "./columns";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useFilters, usePagination, useTable } from "react-table";
 import { getStudentProfileByCustomerId } from "../../../redux/slice/studentSice";
+import { COLUMNS } from "./columns";
+import "./student-profile.css";
 
 const StudentProfileList = () => {
   const columns = useMemo(() => COLUMNS, []);
@@ -29,7 +28,6 @@ const StudentProfileList = () => {
   const navigate = useNavigate();
 
   const handleRowClick = (studentProfileId) => {
-    // Navigate to StudentProfileDetail with necessary information in URL
     navigate(`/student-profile-detail/${studentProfileId}`);
   };
   

@@ -4,14 +4,14 @@ export const COLUMNS = [
 	{
 		Header : 'Mã đơn tư vấn',
 		Footer : 'Mã đơn tư vấn',
-		accessor: 'registrationId',
+		accessor: 'registrationFormId',
 		Filter: ColumnFilter,
 		//disableFilters: true,
 	},
 	{
-		Header : 'Mã khách hàng',
-		Footer : 'Mã khách hàng',
-		accessor: 'customerId',
+		Header : 'Lý do gửi đơn',
+		Footer : 'Lý do gửi đơn',
+		accessor: 'destinationReason',
 		Filter: ColumnFilter,
 	},	{
 		Header : 'Mã tư vấn viên',

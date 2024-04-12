@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { getAllProgram } from "../../redux/slice/programSlice";
 
-const handleSliderChange = (event, setCurrentValue) => {
-  setCurrentValue(event.target.value);
-};
+// const handleSliderChange = (event, setCurrentValue) => {
+//   setCurrentValue(event.target.value);
+// };
 
 // const formatCurrency = (value) => {
 //   return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -34,7 +34,7 @@ function ProgramsPage() {
       } else {
         setSelectedItems([...selectedItems, item]);
       }
-    };   
+    };
     return (
       <div className="widget widget_checkbox_list">
         <h4 className="widget-title">{title}</h4>
@@ -95,14 +95,18 @@ function ProgramsPage() {
       ],
     },
   ];
+  const [programName, setProgramName] = useState("");
+  const handleInputChangeName = (event) => {
+    setProgramName(event.target.value); // Update the program name state with the input value
+  };
   const dispatch = useDispatch();
   const programs = useSelector((state) => state.program.programs);
   const loading = useSelector((state) => state.program.loading);
+
   // const token = useSelector((state) => state.auth?.token);
   useEffect(() => {
-    dispatch(getAllProgram());
-  }, []);
-
+    dispatch(getAllProgram(programName)); // Dispatch action with program name
+  }, [dispatch, programName]);
   return (
     <div className="blog-area pd-top-120 pd-bottom-120">
       <div className="container">
@@ -116,10 +120,7 @@ function ProgramsPage() {
                   <div key={index} className="col-md-6">
                     <div className="single-course-inner">
                       <div className="thumb">
-                        <img
-                          src={ "assets/img/course/programs.jpg"}
-                          alt="img"
-                        />
+                        <img src={"assets/img/course/programs.jpg"} alt="img" />
                       </div>
                       <div className="details">
                         <div className="details-inner ">
@@ -184,9 +185,14 @@ function ProgramsPage() {
           <div className="col-lg-4 order-lg-1 col-12">
             <div className="td-sidebar mt-5 mt-lg-0">
               <div className="widget widget_search_course">
-                <h4 className="widget-title">Tìm kiếm thông tin</h4>
+                <h4 className="widget-title">Tìm kiếm chương trình</h4>
                 <form className="search-form single-input-inner">
-                  <input type="text" placeholder="Nhập nội dung cần tìm" />
+                  <input
+                    type="text"
+                    value={programName}
+                    onChange={handleInputChangeName}
+                    placeholder="Nhập chương trình cần tìm"
+                  />
                   <button className="btn btn-base w-100 mt-3" type="submit">
                     <i className="fa fa-search" /> Tìm kiếm
                   </button>
@@ -234,32 +240,44 @@ function ProgramsPage() {
                 </label>
               </div>
               <div className="widget widget_price" style={{ width: "70%" }}>
-      <h4 className="widget-title">Chi Phí Du Học</h4>
-      <input
-        type="range"
-        min="100000"
-        max="2000000"
-        value={currentValue}
-        className="custom-range"
-        onChange={handleSliderChange}
-        style={{
-          width: "100%",
-          height: "25px",
-          background: "#ddd",
-          outline: "none",
-          opacity: "0.7",
-          transition: "opacity .2s",
-          position: "relative",
-          backgroundColor: "#007bff",
-          border: "2px solid #007bff",
-        }}
-      />
-     <div className="d-flex justify-content-between">
-  <span style={{ fontWeight: "bold" }}>$100k</span>
-  <span style={{ fontWeight: "bold", fontSize: "1.2rem", color: "#007bff", background: "rgba(0,0,0,0.1)", padding: "10px", borderRadius: "5px", boxShadow: "0 0 5px rgba(0,0,0,0.2)" }}>{formatCurrency(currentValue)}</span>
-  <span style={{ fontWeight: "bold" }}>$2M</span>
-</div>
-    </div>
+                <h4 className="widget-title">Chi Phí Du Học</h4>
+                <input
+                  type="range"
+                  min="100000"
+                  max="2000000"
+                  value={currentValue}
+                  className="custom-range"
+                  onChange={handleSliderChange}
+                  style={{
+                    width: "100%",
+                    height: "25px",
+                    background: "#ddd",
+                    outline: "none",
+                    opacity: "0.7",
+                    transition: "opacity .2s",
+                    position: "relative",
+                    backgroundColor: "#007bff",
+                    border: "2px solid #007bff",
+                  }}
+                />
+                <div className="d-flex justify-content-between">
+                  <span style={{ fontWeight: "bold" }}>$100k</span>
+                  <span
+                    style={{
+                      fontWeight: "bold",
+                      fontSize: "1.2rem",
+                      color: "#007bff",
+                      background: "rgba(0,0,0,0.1)",
+                      padding: "10px",
+                      borderRadius: "5px",
+                      boxShadow: "0 0 5px rgba(0,0,0,0.2)",
+                    }}
+                  >
+                    {formatCurrency(currentValue)}
+                  </span>
+                  <span style={{ fontWeight: "bold" }}>$2M</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>

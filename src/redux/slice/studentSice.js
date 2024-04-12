@@ -54,8 +54,8 @@ export const studentSlice = createSlice({
   initialState,
   reducers: {
     logoutStudent: (state) => {
-      state.studentProfileByCustomerId = null;
-      state.profileById = null;
+      state.studentProfileByCustomerId = [];
+      state.profileById = {};
     },
   },
   extraReducers: (builder) => {
