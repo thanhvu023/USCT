@@ -34,7 +34,17 @@ export const getUserById = createAsyncThunk(
     }
   }
 );
-
+export const getAllUsers  = createAsyncThunk(
+  "customer/getUserById",
+  async (_, thunkAPI) => {
+    try {
+      const res = await instance.get("/account/customer"); // Gọi endpoint API để lấy danh sách tất cả các userId
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.res.data);
+    }
+  }
+);
 export const signup = createAsyncThunk(
   "customer/signup",
   async (param, thunkAPI) => {

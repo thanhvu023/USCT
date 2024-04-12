@@ -264,12 +264,19 @@ const [programUpdated, setProgramUpdated] = useState(false);
   const handleSubmitCreateProgram = () => {
     // Gọi hàm createProgram để tạo mới một chương trình
     dispatch(createProgram(formData)).then(() => {
-      // Gọi lại API để lấy danh sách tất cả các chương trình
-      dispatch(getAllProgram());
-    });  // dispatch action với dữ liệu của form
-    
+        // Hiển thị thông báo tạo chương trình thành công
+        Swal.fire({
+            icon: "success",
+            title: "Tạo chương trình thành công!",
+            showConfirmButton: false,
+            timer: 1500 // Thời gian hiển thị thông báo
+        });
+        // Gọi lại API để lấy danh sách tất cả các chương trình
+        dispatch(getAllProgram());
+    });
     handleCloseCreateModal(); // Đóng modal sau khi tạo chương trình thành công
-  };
+};
+
   // Gọi API để lấy danh sách tất cả các chương trình khi trang được tải
   useEffect(() => {
     dispatch(getAllProgram());
@@ -397,18 +404,26 @@ const handleCloseEditModal = () => {
     e.preventDefault();
     // Gọi hàm dispatch để gửi thông tin chương trình đã chỉnh sửa lên server
     dispatch(updateProgram(editedProgram))
-      .unwrap()
-      .then((data) => {
-        // Xử lý khi cập nhật thành công, có thể đóng modal hoặc cập nhật lại danh sách chương trình
-        handleCloseEditModal();
-        // Đặt trạng thái cập nhật chương trình thành true
-        setProgramUpdated(true);
-      })
-      .catch((error) => {
-        // Xử lý khi có lỗi xảy ra trong quá trình cập nhật
-        console.error("Error updating program:", error);
-      });
-  };
+        .unwrap()
+        .then((data) => {
+            // Hiển thị thông báo chỉnh sửa chương trình thành công
+            Swal.fire({
+                icon: "success",
+                title: "Chỉnh sửa chương trình thành công!",
+                showConfirmButton: false,
+                timer: 1500 // Thời gian hiển thị thông báo
+            });
+            // Đặt trạng thái cập nhật chương trình thành true
+            setProgramUpdated(true);
+            // Đóng modal chỉnh sửa chương trình
+            handleCloseEditModal();
+        })
+        .catch((error) => {
+            // Xử lý khi có lỗi xảy ra trong quá trình cập nhật
+            console.error("Error updating program:", error);
+        });
+};
+
   useEffect(() => {
     // Nếu trạng thái cập nhật chương trình là true, gọi lại API để lấy danh sách chương trình mới
     if (programUpdated) {

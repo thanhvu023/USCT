@@ -164,14 +164,14 @@ const SideBarAd = ({ setMain }) => {
           })}
         </ul>
         <div className="copyright">
-          <p>Edumin Saas Admin © {new Date().getFullYear()} All Rights Reserved</p>
+          {/* <p>Edumin  Admin © {new Date().getFullYear()}</p> */}
           <p className="fs-12">
-            Made with{" "}
+            Made with{" Thesis"}
             <span
               className="heart"
               onClick={(e) => e.target.classList.toggle("heart-blast")}
             ></span>{" "}
-            by DexignLab
+            by USCT
           </p>
         </div>
       </div>

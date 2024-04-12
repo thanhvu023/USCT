@@ -9,6 +9,7 @@ import Test1 from "./admin-components/customer-components/test1";
 import AllConsultant from "./admin-components/consultant-components/consutant";
 import AllProgramsPage from "./admin-components/program-components/programs1";
 import AllPrograms from "./admin-components/program-components/programs";
+import Registration from "./admin-components/registration-components/registration";
 
 
 const AdminPage = () => {
@@ -22,7 +23,8 @@ const AdminPage = () => {
     "Khách hàng": <AllCustomer  /> , 
     "Chương trình": <AllPrograms />,
     "Lợi nhuận": <Test1 />,
-    "Hồ sơ": <Test1 />,
+    "Hồ sơ học sinh": <Test1 />,
+    "Đơn tư vấn": <Registration />,
     
   };
   

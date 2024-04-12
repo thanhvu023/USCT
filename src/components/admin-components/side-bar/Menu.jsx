@@ -121,10 +121,18 @@ export const MenuList = [
     
     //Forms
     {
-        title:'Hồ sơ',
+        title:'Hồ sơ học sinh',
         classsChange: 'mm-collapse',
         iconStyle: <i className="la la-file-text" />,
-        filterName: 'Hồ sơ',
+        filterName: 'Hồ sơ học sinh',
+       
+    },
+    {
+        title:'Đơn tư vấn',
+        classsChange: 'mm-collapse',
+        iconStyle: <i className="
+        la la-pencil-square" />,
+        filterName: 'Đơn tư vấn',
        
     },
 

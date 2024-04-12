@@ -3,261 +3,20 @@ import { Dropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { IMAGES } from "./contants/theme-student";
 import { Row, Button, Modal, Alert } from "react-bootstrap";
+import { getAllUsers } from "../../../redux/slice/authSlice";
+import { useSelector, useDispatch } from "react-redux";
 import Swal from "sweetalert2";
 import "./customer.css";
-const holidayTable = [
-  {
-    id: 1,
-    name: "Garrett Winters",
-    cccd: "123456789",
-    gender: "Male",
-    dob: "1990/01/15",
-    mobile: "987 654 3210",
-    email: "info@example.com",
-    address: "#8901 Demo Road ",
-    join: "2020/07/25",
-    profile: IMAGES.smallpic9,
-  },
-  {
-    id: 10,
-    name: "Airi Satou",
-    cccd: "987654321",
-    gender: "Female",
-    dob: "1995/05/20",
-    mobile: "987 654 3210",
-    email: "info@example.com",
-    address: "#1001 Demo Road ",
-    join: "2021/11/28",
-    profile: IMAGES.smallpic9,
-  },
-  {
-    id: 3,
-    name: "Tiger Nixon",
-    cccd: "234567890",
-    gender: "Male",
-    dob: "1988/11/30",
-    mobile: "123 456 7890",
-    email: "info@example.com",
-    address: "#8911 Demo Road ",
-    join: "2019/04/25",
-    profile: IMAGES.smallpic9,
-  },
-  {
-    id: 4,
-    name: "Cedric Kelly",
-    cccd: "345678901",
-    gender: "Male",
-    dob: "1992/03/10",
-    mobile: "123 456 7890",
-    email: "info@example.com",
-    address: "#1201 Demo Road ",
-    join: "2018/04/25",
-    profile: IMAGES.smallpic9,
-  },
-  {
-    id: 2,
-    name: "Gavin Joyce",
-    cccd: "456789012",
-    gender: "Male",
-    dob: "1991/07/05",
-    mobile: "(123) 4567 890",
-    email: "info@example.com",
-    address: "#8881 Demo Road ",
-    join: "2020/04/25",
-    profile: IMAGES.smallpic9,
-  },
-  {
-    id: 9,
-    name: "Angelica Ramos",
-    cccd: "567890123",
-    gender: "Female",
-    dob: "1985/09/12",
-    mobile: "987 654 3210",
-    email: "info@example.com",
-    address: "#4101 Demo Road ",
-    join: "2015/08/25",
-    profile: IMAGES.smallpic9,
-  },
-  {
-    id: 7,
-    name: "Paul Byrd",
-    cccd: "678901234",
-    gender: "Male",
-    dob: "1993/02/28",
-    mobile: "987 654 3210",
-    email: "info@example.com",
-    address: "#3301 Demo Road ",
-    join: "2023/09/01",
-    profile: IMAGES.smallpic9,
-  },
-  {
-    id: 8,
-    name: "Ashton Cox",
-    cccd: "789012345",
-    gender: "Male",
-    dob: "1987/06/20",
-    mobile: "(123) 4567 890",
-    email: "info@example.com",
-    address: "#4401 Demo Road ",
-    join: "2015/02/22",
-    profile: IMAGES.smallpic9,
-  },
-  {
-    id: 6,
-    name: "Rhona Davidson",
-    cccd: "890123456",
-    gender: "Female",
-    dob: "1994/10/17",
-    mobile: "(123) 4567 890",
-    email: "info@example.com",
-    address: "#8801 Demo Road ",
-    join: "2018/06/12",
-    profile: IMAGES.smallpic9,
-  },
-  {
-    id: 5,
-    name: "Colleen Hurst",
-    cccd: "901234567",
-    gender: "Female",
-    dob: "1996/12/25",
-    mobile: "(123) 4567 890",
-    email: "info@example.com",
-    address: "#9901 Demo Road ",
-    join: "2021/11/19",
-    profile: IMAGES.smallpic9,
-  },
-  {
-    id: 11,
-    name: "John Doe",
-    cccd: "012345678",
-    gender: "Male",
-    dob: "1980/08/12",
-    mobile: "(123) 4567 890",
-    email: "info@example.com",
-    address: "#1234 Demo Road ",
-    join: "2022/03/15",
-    profile: IMAGES.smallpic9,
-  },
-  {
-    id: 12,
-    name: "Jane Smith",
-    cccd: "123456789",
-    gender: "Female",
-    dob: "1982/05/25",
-    mobile: "(123) 4567 890",
-    email: "info@example.com",
-    address: "#5678 Demo Road ",
-    join: "2023/09/28",
-    profile: IMAGES.smallpic9,
-  },
-  {
-    id: 13,
-    name: "Michael Johnson",
-    cccd: "234567890",
-    gender: "Male",
-    dob: "1984/11/18",
-    mobile: "987 654 3210",
-    email: "info@example.com",
-    address: "#9876 Demo Road ",
-    join: "2019/07/10",
-    profile: IMAGES.smallpic9,
-  },
-  {
-    id: 14,
-    name: "Emily Brown",
-    cccd: "345678901",
-    gender: "Female",
-    dob: "1986/04/30",
-    mobile: "(123) 4567 890",
-    email: "info@example.com",
-    address: "#2468 Demo Road ",
-    join: "2020/11/05",
-    profile: IMAGES.smallpic9,
-  },
-  {
-    id: 15,
-    name: "William Wilson",
-    cccd: "456789012",
-    gender: "Male",
-    dob: "1988/10/08",
-    mobile: "(123) 4567 890",
-    email: "info@example.com",
-    address: "#1357 Demo Road ",
-    join: "2017/02/20",
-    profile: IMAGES.smallpic9,
-  },
-  {
-    id: 16,
-    name: "Emma Taylor",
-    cccd: "567890123",
-    gender: "Female",
-    dob: "1990/02/14",
-    mobile: "987 654 3210",
-    email: "info@example.com",
-    address: "#3698 Demo Road ",
-    join: "2016/08/30",
-    profile: IMAGES.smallpic9,
-  },
-  {
-    id: 17,
-    name: "James Martinez",
-    cccd: "678901234",
-    gender: "Male",
-    dob: "1992/06/22",
-    mobile: "(123) 4567 890",
-    email: "info@example.com",
-    address: "#7531 Demo Road ",
-    join: "2018/04/12",
-    profile: IMAGES.smallpic9,
-  },
-  {
-    id: 18,
-    name: "Olivia Brown",
-    cccd: "789012345",
-    gender: "Female",
-    dob: "1994/12/05",
-    mobile: "987 654 3210",
-    email: "info@example.com",
-    address: "#8523 Demo Road ",
-    join: "2015/10/25",
-    profile: IMAGES.smallpic9,
-  },
-  {
-    id: 19,
-    name: "Alexander Garcia",
-    cccd: "890123456",
-    gender: "Male",
-    dob: "1996/08/28",
-    mobile: "(123) 4567 890",
-    email: "info@example.com",
-    address: "#9632 Demo Road ",
-    join: "2021/06/17",
-    profile: IMAGES.smallpic9,
-  },
-  {
-    id: 20,
-    name: "Sophia Rodriguez",
-    cccd: "901234567",
-    gender: "Female",
-    dob: "1998/04/03",
-    mobile: "987 654 3210",
-    email: "info@example.com    ",
-    address: "#7410 Demo Road ",
-    join: "2014/12/19",
-    profile: IMAGES.smallpic9,
-  },
-];
 
 const theadData = [
-  { heading: "Avatar", sortingVale: "profile" },
+  { heading: "Id khách hàng", sortingVale: "customerId" },
   { heading: "Họ và tên", sortingVale: "name" },
-  { heading: "Mã số CCCD", sortingVale: "cccd" },
   { heading: "Giới tính", sortingVale: "gender" },
   { heading: "Ngày sinh", sortingVale: "dob" },
   { heading: "Số điện thoại", sortingVale: "mobile" },
   { heading: "Email", sortingVale: "email" },
-  { heading: "Địa chủ", sortingVale: "address" },
-  { heading: "Thời gian tạo", sortingVale: "join" },
+  { heading: "Địa chỉ", sortingVale: "address" },
+  // { heading: "Thời gian tạo", sortingVale: "join" },
   { heading: "Thao tác", sortingVale: "action" },
 ];
 
@@ -265,14 +24,27 @@ const AllCustomer = () => {
   const [sort, setSortata] = useState(10);
   const [data, setData] = useState([]);
   const activePag = useRef(0);
+  const dispatch = useDispatch();
   const [test, settest] = useState(0);
-  const [feeData, setFeeDate] = useState([...holidayTable]);
+  const [feeData, setFeeDate] = useState([]);
   const [iconData, setIconDate] = useState({ complete: false, ind: null });
   const [showCheckModal, setShowCheckModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showCheckSuccess, setShowCheckSuccess] = useState(false);
   const [showDeleteSuccess, setShowDeleteSuccess] = useState(false);
+  const userData = useSelector((state) => state.auth.userById);
+  const loading = useSelector((state) => state.auth.loading);
+console.log("userData:",userData)
+useEffect(() => {
+  dispatch(getAllUsers());
+}, [dispatch]);
 
+
+  useEffect(() => {
+    if (userData) {
+      setFeeDate(userData); // Cập nhật state feeData với dữ liệu từ API
+    }
+  }, [userData]);
   const handleCloseCheckModal = () => setShowCheckModal(false);
   const handleCloseDeleteModal = () => setShowDeleteModal(false);
 
@@ -331,12 +103,12 @@ const AllCustomer = () => {
   function SotingData(name) {
     const sortedPeople = [...feeData];
     switch (name) {
-      case "sno":
-        sortedPeople.sort((a, b) => (a.sno < b.sno ? -1 : 1));
-        break;
+      case "customerId":
       case "name":
-      case "designation":
+      case "gender":
+      case "dob":
       case "mobile":
+      case "email":
       case "address":
         sortedPeople.sort((a, b) => {
           return iconData.complete
@@ -349,15 +121,17 @@ const AllCustomer = () => {
     }
     setFeeDate(sortedPeople);
   }
+  
 
+  
   function DataSearch(e) {
-    const updatesDate = holidayTable.filter((item) => {
-      let selectdata =
-        `${item.name} ${item.address} ${item.designation} ${item.mobile}`.toLowerCase();
-      return selectdata.includes(e.target.value.toLowerCase());
+    const updatesDate = feeData.filter((item) => {
+      const searchData = `${item.fullName} ${item.customerId} ${item.gender} ${item.dateOfBirth} ${item.phone} ${item.email} ${item.address}`.toLowerCase();
+      return searchData.includes(e.target.value.toLowerCase());
     });
     setFeeDate([...updatesDate]);
   }
+  
 
   return (
     <>
@@ -459,32 +233,24 @@ const AllCustomer = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {feeData.map((data, ind) => (
-                        <tr key={ind}>
-                          <td>
-                            <img
-                              className="rounded-circle"
-                              width="35"
-                              src={data.profile}
-                              alt=""
-                            />{" "}
-                          </td>
-                          <td>{data.name}</td>
-                          <td>{data.cccd}</td>
+                    {feeData.map((data) => (
+                          <tr key={data.id}>
+                           <td>{data.customerId}</td>
+                          <td>{data.fullName}</td>
+                       
                           <td>{data.gender}</td>
-                          <td>{data.dob}</td>
+                          <td>{data.dateOfBirth}</td>
                           <td>
                             <Link to="#">
-                              <strong>{data.mobile}</strong>
+                              <strong>{data.phone}</strong>
                             </Link>
                           </td>
-                          <td>
-                            <Link to="#">
+                                                <Link to="#">
                               <strong>{data.email}</strong>
-                            </Link>
-                          </td>
-                          <td>{data.address}</td>
-                          <td>{data.join}</td>
+                            </Link>                         
+                             <td>{data.address}</td>
+                         
+                         
                           <td style={{ display: "flex", alignItems: "center" }}>
                             <button
                             
