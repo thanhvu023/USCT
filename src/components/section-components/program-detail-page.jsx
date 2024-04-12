@@ -33,7 +33,7 @@ function ProgramDetailPage() {
     setShowModal(false);
     setFormData({
       studentProfileId: "",
-      programById: "",
+      programId: "",
     });
   };
 
@@ -113,9 +113,10 @@ function ProgramDetailPage() {
       dispatch(getStudentProfileByCustomerId(customerId));
     }
   }, [dispatch, customerId]);
+
   const [formData, setFormData] = useState({
-    studentProfileId: "",
-    programById,
+    studentProfileId: undefined,
+    programId: programById,
   });
   const handleSelectChange = (selectedOption) => {
     // Update the formData state with the selected option
@@ -124,12 +125,14 @@ function ProgramDetailPage() {
       studentProfileId: selectedOption.value,
     });
   };
-  const handleSubmitProgramApplication = () => {
+  const handleSubmitProgramApplication = (e) => {
+    e.preventDefault();
     if (formData.studentProfileId) {
+      console.log(formData);
       dispatch(createProgramApplication(formData));
     }
   };
-  console.log(formData);
+  console.log(formData)
   return (
     <>
       <div className="course-single-area pd-top-120 pd-bottom-90">
@@ -273,7 +276,7 @@ function ProgramDetailPage() {
                 </div>
                 {/* Modal */}
                 {showModal && (
-                  <div>
+                  <form onSubmit={handleSubmitProgramApplication}>
                     <div
                       id="modal-bg"
                       className="modal-bg"
@@ -378,16 +381,11 @@ function ProgramDetailPage() {
                           >
                             Cancel
                           </button>
-                          <button
-                            className="btn btn-primary"
-                            onClick={handleSubmitProgramApplication}
-                          >
-                            Save
-                          </button>
+                          <button className="btn btn-primary">Save</button>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </form>
                 )}
               </div>
             </div>

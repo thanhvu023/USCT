@@ -29,13 +29,23 @@ function UniversityDetailPage() {
   console.log(programByUniId);
 
   useEffect(() => {
-    dispatch(getUniversityById(universityId));
-    dispatch(getStateById(stateId));
-    dispatch(getUniversityTypeById(universityTypeId));
-  }, [stateId, uniId, universityId, universityTypeId]);
+    if (universityId) {
+      dispatch(getUniversityById(universityId));
+    }
+  }, [universityId]);
+  useEffect(() => {
+    if (universityTypeId) {
+      dispatch(getUniversityTypeById(universityTypeId));
+    }
+  }, [universityTypeId]);
   useEffect(() => {
     dispatch(getProgramByUniId(uniId));
   }, [uniId]);
+  useEffect(() => {
+    if (stateId) {
+      dispatch(getStateById(stateId));
+    }
+  }, [stateId]);
   return (
     <div className="main-blog-area pd-top-120 pd-bottom-90">
       <div className="container">
@@ -86,7 +96,9 @@ function UniversityDetailPage() {
                     <div className="details">
                       <div className="details-inner">
                         <h6 className="go-top">
-                          <Link to={`/program-details/${program.programId}`}>{program.nameProgram}</Link>
+                          <Link to={`/program-details/${program.programId}`}>
+                            {program.nameProgram}
+                          </Link>
                         </h6>
                       </div>
                       <div className="emt-course-meta">
