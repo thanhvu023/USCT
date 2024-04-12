@@ -19,6 +19,8 @@ const StudentProfileList = () => {
   //   (state) => state.student.studentProfileByCustomerId[0].studentProfileId
   // );
   // console.log("studentId là:", studentProfileId)
+    // console.log("ProfileList :", data)
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -135,13 +137,16 @@ const StudentProfileList = () => {
                   className="previous-button"
                   onClick={() => previousPage()}
                   disabled={!canPreviousPage}
+                  style={{color:'black'}}
+
                 >
                   Previous
                 </button>
                 <button
-                  className="next-button"
+                  className="next-button "
                   onClick={() => nextPage()}
                   disabled={!canNextPage}
+                  style={{color:'black'}}
                 >
                   Next
                 </button>

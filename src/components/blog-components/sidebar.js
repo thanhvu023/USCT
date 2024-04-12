@@ -7,7 +7,7 @@ class Sidebar extends Component {
   state = {
     minPrice: 100000,
     maxPrice: 2000000,
-    currentValue: 100000 // Giá trị khởi tạo ban đầu
+    currentValue: 100000 
   }
 
   handleSliderChange = (event) => {
@@ -36,10 +36,10 @@ class Sidebar extends Component {
               <div className="widget widget_catagory">
             <h4 className="widget-title">Loại Trường</h4>                                 
             <ul className="catagory-items go-top">
-              <li><Link to="/university-type">Research University <i className="fa fa-caret-right" /></Link></li>
-              <li><Link to="/university-type">Liberal Arts College <i className="fa fa-caret-right" /></Link></li>
-              <li><Link to="/university-type">National University <i className="fa fa-caret-right" /></Link></li>
-              <li><Link to="/university-type">Regional College <i className="fa fa-caret-right" /></Link></li>
+              <li><Link to="/university-type">Đại học Liberal Arts <i className="fa fa-caret-right" /></Link></li>
+              <li><Link to="/university-type">Đại học  Quốc gia<i className="fa fa-caret-right" /></Link></li>
+              <li><Link to="/university-type">Đại học miền <i className="fa fa-caret-right" /></Link></li>
+              <li><Link to="/university-type">Cao đẳng cộng đồng<i className="fa fa-caret-right" /></Link></li>
             </ul>
           </div>                 
        
@@ -50,7 +50,6 @@ class Sidebar extends Component {
               <Link to="/tag">Du học Mỹ</Link>
               <Link to="/tag">Visa</Link>
               <Link to="/tag">Học bổng</Link>
-              {/* Thêm các tags khác liên quan */}
             </div>
           </div>
             </div>

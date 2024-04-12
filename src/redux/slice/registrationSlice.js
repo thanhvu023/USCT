@@ -13,6 +13,17 @@ export const getRegistrationByCustomerId = createAsyncThunk(
     }
   }
 );
+export const getRegistrationByRegistrationFormId = createAsyncThunk(
+  "registration/getRegistrationByRegistrationFormId",
+  async (registrationFormId, thunkAPI) => {
+    try {
+      const res = await instance.get(`/registration-forms/${registrationFormId}`);
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response);
+    }
+  }
+);
 export const getRegistration = createAsyncThunk(
   "registration/getRegistration",
   async (param, thunkAPI) => {
@@ -72,6 +83,18 @@ export const registrationSlice = createSlice({
         state.error = null;
       })
       .addCase(getRegistration.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(getRegistrationByRegistrationFormId.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getRegistrationByRegistrationFormId.fulfilled, (state, action) => {
+        state.loading = false;
+        state.registrationById = action.payload;
+        state.error = null;
+      })
+      .addCase(getRegistrationByRegistrationFormId.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       });

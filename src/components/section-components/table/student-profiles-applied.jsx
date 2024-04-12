@@ -123,6 +123,7 @@ const StudentProfileAppliedList = () => {
                   className=" previous-button"
                   onClick={() => gotoPage(0)}
                   disabled={!canPreviousPage}
+
                 >
                   {"<<"}
                 </button>
@@ -131,6 +132,8 @@ const StudentProfileAppliedList = () => {
                   className="previous-button"
                   onClick={() => previousPage()}
                   disabled={!canPreviousPage}
+                  style={{color:'black'}}
+
                 >
                   Previous
                 </button>
@@ -138,6 +141,8 @@ const StudentProfileAppliedList = () => {
                   className="next-button"
                   onClick={() => nextPage()}
                   disabled={!canNextPage}
+                  style={{color:'black'}}
+
                 >
                   Next
                 </button>

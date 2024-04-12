@@ -79,11 +79,7 @@ function Navbar() {
               <img src={publicUrl + "assets/img/logo.png"} alt="img" />
             </Link>
           </div>
-          <div className="nav-right-part nav-right-part-mobile">
-            <a className="search-bar" href="#">
-              <i className="fa fa-search" />
-            </a>
-          </div>
+          
 
           <div
             className="collapse navbar-collapse go-top"

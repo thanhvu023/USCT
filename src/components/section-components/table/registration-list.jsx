@@ -11,6 +11,7 @@ const RegistrationList = () => {
   const token = useSelector((state) => state.auth.token);
   const customerId = jwtDecode(token).UserId;
   const data = useSelector((state) => state.registration.registrationById);
+  // console.log("data là:", data)
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -18,17 +19,26 @@ const RegistrationList = () => {
       dispatch(getRegistrationByCustomerId(customerId));
     }
   }, [customerId]);
+  // Fix data is null
+useEffect(() => {
+  if (!data) {
+    dispatch(getRegistrationByCustomerId(customerId));
+  }
+}, [data, dispatch, customerId]);
+
   const [selectedRow, setSelectedRow] = useState(null);
   const navigate = useNavigate();
 
-  const handleRowClick = (studentId) => {
-    navigate(`/student-profile-detail/${studentId}`);
+  const handleRowClick = (registrationFormId) => {
+    navigate(`/registration-detail/${registrationFormId}`);
   };
+
+  const normalizedData = Array.isArray(data) ? data : [data];
 
   const tableInstance = useTable(
     {
       columns,
-      data,
+      data: normalizedData,
       initialState: { pageIndex: 0 },
     },
     useFilters,
@@ -84,7 +94,20 @@ const RegistrationList = () => {
                     <tr
                       key={rowIndex}
                       {...row.getRowProps()}
-                      onClick={() => handleRowClick(row.original.id)}
+                      onClick={() => handleRowClick(row.original.registrationFormId,
+                        row.original.consultantId,
+                        row.original.customerId,
+                        row.original.area,
+                        row.original.budget,
+                        row.original.destinationReason,
+                        row.original.majorChoose,
+                        row.original.majorChooseReason,
+                        row.original.moreInformation,
+                        row.original.priorityOfStudyAbroad,
+                        row.original.programChoose,
+                        row.original.studyAbroadReason,
+                        row.original.universityChooseReason
+                      )}
                     >
                       {row.cells.map((cell, cellIndex) => {
                         return (
@@ -129,13 +152,16 @@ const RegistrationList = () => {
                   className="previous-button"
                   onClick={() => previousPage()}
                   disabled={!canPreviousPage}
+                  style={{color:'black'}}
+
                 >
                   Previous
                 </button>
                 <button
-                  className="next-button"
+                  className="next-button "
                   onClick={() => nextPage()}
                   disabled={!canNextPage}
+                  style={{color:'black'}}
                 >
                   Next
                 </button>
