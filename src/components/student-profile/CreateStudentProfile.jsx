@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Select from "react-select";
 import { createStudentProfile } from "../../redux/slice/studentSice";
+import Swal from "sweetalert2";
 
 const MultiStepProgressBar = () => {};
 
@@ -77,15 +78,24 @@ const CreateStudentProfile = () => {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-
+  
     const newErrors = validateForm();
-
+  
     if (Object.keys(newErrors).length === 0) {
       dispatch(createStudentProfile(formData));
+      
+      // Hiển thị thông báo khi hoàn tất khởi tạo thành công
+      Swal.fire({
+        icon: "success",
+        title: "Hoàn tất khởi tạo hồ sơ thành công!",
+        showConfirmButton: false,
+        timer: 1500,
+      });
     } else {
       setErrors(newErrors);
     }
   };
+  
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 

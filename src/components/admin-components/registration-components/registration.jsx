@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Dropdown } from "react-bootstrap";
 import { Row, Button, Modal, Alert } from "react-bootstrap";
 import Swal from "sweetalert2";
-import { getRegistration } from "../../../redux/slice/registrationSlice"; // Import the action for fetching registration forms
+import { getRegistrationByCustomerId,getRegistration,getRegistrationByCustomerId } from "../../../redux/slice/registrationSlice";
 
 const theadData = [
   { heading: "ID đơn", sortingVale: "id" },
@@ -20,6 +20,7 @@ const Registration = () => {
   const activePag = useRef(0);
   const [test, setTest] = useState(0);
   const [feeData, setFeeData] = useState([]); 
+  const [customerId, setCustomerId] = useState(); 
   const [searchTerm, setSearchTerm] = useState(""); 
   const [iconData, setIconDate] = useState({ complete: false, ind: null });
   const [showCheckModal, setShowCheckModal] = useState(false);
@@ -27,7 +28,15 @@ const Registration = () => {
   const [showCheckSuccess, setShowCheckSuccess] = useState(false);
   const [showDeleteSuccess, setShowDeleteSuccess] = useState(false);
   const dispatch = useDispatch();
+  
+  useEffect(() => {
+    dispatch(getRegistration()); 
+  }, [dispatch]); 
 
+  const { registrationForms, loading } = useSelector(
+    (state) => state.registration
+  );
+  console.log("registrationForms:",registrationForms)
   const handleCloseCheckModal = () => setShowCheckModal(false);
   const handleCloseDeleteModal = () => setShowDeleteModal(false);
   
@@ -89,13 +98,10 @@ const Registration = () => {
   }
 
   useEffect(() => {
-    dispatch(getRegistration()); // Fetch registration forms when the component mounts
-  }, [dispatch]);
+    dispatch(getRegistrationByCustomerId(customerId)); 
+  }, [dispatch, customerId]);
+  
 
-  const { registrationForms, loading } = useSelector(
-    (state) => state.registration
-  );
-  console.log("registrationForms:",registrationForms)
 
   useEffect(() => {
     const filteredData = registrationForms.filter((form) => {
@@ -209,7 +215,7 @@ const Registration = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {registrationForms.map((data) => (
+                          {feeData.map((data) => (
                             <tr key={data.id}>
                               <td>{data.studentProfileId}</td>
                               <td>{data.fullName}</td>

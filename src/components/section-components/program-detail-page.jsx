@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import Select from "react-select";
+import { Carousel } from "react-bootstrap"; // Import Carousel from React Bootstrap
+
 import {
   createProgramApplication,
   // getAllProgram,
@@ -24,6 +26,11 @@ function ProgramDetailPage() {
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
   const { programById } = useParams();
+const navigate = useNavigate();
+const handleCreateProfile = () => {
+  // Điều hướng đến trang create-student-profile
+  navigate("/create-student-profile");
+};
 
   const handleOpenModal = () => {
     setShowModal(true);
@@ -331,22 +338,42 @@ function ProgramDetailPage() {
                           />
                         </div>
                         <div className="form-group">
-                          <label
-                            htmlFor="cvFile"
-                            style={{ fontWeight: "bold", fontSize: "16px" }}
-                          >
-                            Hồ sơ học sinh:
-                          </label>
-                          <Select
-                            options={profileStudent.map((profile) => ({
-                              value: profile.studentProfileId,
-                              label: profile.fullName,
-                            }))}
-                            placeholder="Chọn hồ sơ học sinh"
-                            onChange={handleSelectChange}
-                            // Other props like placeholder, onChange, etc. can be added here
-                          />
-                        </div>
+  <label htmlFor="cvFile" style={{ fontWeight: "bold", fontSize: "16px", marginBottom: "5px" }}>
+    Hồ sơ học sinh:
+  </label>
+  <div style={{ display: "flex", alignItems: "center" }}>
+    {/* Select */}
+    <div style={{ flex: "1" }}>
+      {profileStudent.length > 0 ? (
+        <Select
+          options={profileStudent.map((profile) => ({
+            value: profile.studentProfileId,
+            label: profile.fullName,
+          }))}
+          placeholder="Chọn hồ sơ học sinh"
+          onChange={handleSelectChange}
+        />
+      ) : (
+        <p style={{ fontStyle: "italic" }}>Không có hồ sơ học sinh.</p>
+      )}
+    </div>
+
+    {/* Button */}
+    <div style={{ marginLeft: "10px", height: "50px", }}>
+  <button
+    className="btn btn-primary"
+    onClick={() => handleCreateProfile()}
+    style={{ height: "100%",fontSize:'14px' }}
+  >
+    Tạo hồ sơ
+  </button>
+</div>
+
+  </div>
+</div>
+
+
+
 
                         <div className="form-group">
                           <label
@@ -393,62 +420,74 @@ function ProgramDetailPage() {
             </div>
           </div>
           <div className="widget">
-            <h4 className="widget-title">Những Chương Trình Tương Tự</h4>
-            {programByType && programByType.length > 1 ? (
-              <div
-                className={
-                  "row justify-content-center" +
-                  (programByType.length > 1 ? "" : " pd-top-100")
-                }
-              >
-                {programByType
-                  .filter(
-                    (program) => program.programId.toString() !== programById
-                  )
-                  .map((program, index) => (
-                    <div key={index} className="col-lg-4 col-md-6">
-                      <div className="single-course-inner">
-                        <div className="thumb">
-                          <img
-                            src={publicUrl + "assets/img/course/programs.jpg"}
-                            alt="img"
-                          />
-                        </div>
-                        <div className="details">
-                          <div className="details-inner">
-                            <h5>
-                              <Link
-                                to={`/program-details/${program.programId}`}
-                              >
-                                {program.nameProgram}
-                              </Link>
-                            </h5>
-                          </div>
-                          <div className="emt-course-meta">
-                            <div className="row">
-                              <div className="col-6">
-                                <div className="rating">
-                                  <span>Lộ trình: {program.duration}</span>
-                                </div>
-                              </div>
-                              <div className="col-6">
-                                <div className="price text-right">
-                                  Học phí: <span>{program.tuition}$</span>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-              </div>
-            ) : (
-              <div className="text-center p-4">
-                <h4>Không có chương trình tương tự</h4>
-              </div>
-            )}
+        <h4 className="widget-title">Những Chương Trình Tương Tự</h4>
+        {programByType && programByType.length > 1 ? (
+       <Carousel
+       interval={5000}
+       fade={true}
+       pause={false}
+       nextIcon={<span className="carousel-control-next-icon" style={{ fontSize: customCarouselStyle.controlIconSize, color: customCarouselStyle.controlIconColor }} />}
+       prevIcon={<span className="carousel-control-prev-icon" style={{ fontSize: customCarouselStyle.controlIconSize, color: customCarouselStyle.controlIconColor }} />}
+     >
+       {programByType
+         .filter((program) => program.programId.toString() !== programById)
+         .reduce((acc, program, index, array) => {
+           if (index % 4 === 0) {
+             acc.push(array.slice(index, index + 4)); // Chia mảng thành các mảng con chứa 4 phần tử
+           }
+           return acc;
+         }, [])
+         .map((programsInSlide, slideIndex) => (
+           <Carousel.Item key={slideIndex}>
+             <div
+               className={
+                 "row justify-content-center" +
+                 (programByType.length > 1 ? "" : " pd-top-100")
+               }
+             >
+               {programsInSlide.map((program, index) => (
+                 <div key={index} className="col-lg-3 col-md-6">
+                   <div className="single-course-inner">
+                     <div className="thumb">
+                       <img src={publicUrl + "assets/img/course/programs.jpg"} alt="img" />
+                     </div>
+                     <div className="details">
+                       <div className="details-inner">
+                         <h5>
+                           <Link to={`/program-details/${program.programId}`}>
+                             {program.nameProgram}
+                           </Link>
+                         </h5>
+                       </div>
+                       <div className="emt-course-meta">
+                         <div className="row">
+                           <div className="col-6">
+                             <div className="rating">
+                               <span>Lộ trình: {program.duration}</span>
+                             </div>
+                           </div>
+                           <div className="col-6">
+                             <div className="price text-right">
+                               Học phí: <span>{program.tuition}$</span>
+                             </div>
+                           </div>
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+                 </div>
+               ))}
+             </div>
+           </Carousel.Item>
+         ))}
+     </Carousel>
+     
+        ) : (
+          <div className="text-center p-4">
+            <h4>Không có chương trình tương tự</h4>
           </div>
+        )}
+      </div>
 
           <div>
             <h4 className="widget-title display-5">
@@ -529,5 +568,9 @@ const modalBgStyle = {
   width: "100%",
   height: "100%",
   backgroundColor: "rgba(0,0,0,0.4)",
+};
+const customCarouselStyle = {
+  controlIconSize: "2rem", // Kích thước của biểu tượng điều khiển
+  controlIconColor: "#333", // Màu sắc của biểu tượng điều khiển
 };
 export default ProgramDetailPage;

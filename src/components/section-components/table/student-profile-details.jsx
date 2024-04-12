@@ -148,9 +148,21 @@ const StudentProfileDetails = () => {
               classNamePrefix="select"
             />
           </div>
-          <button className="btn btn-primary" type="submit">
-            Cập nhật
-          </button>
+          <div className="row">
+  <div className="col-md-6 text-left">
+    <button className="btn btn-primary" type="submit">
+      Cập nhật
+    </button>
+  </div>
+  <div className="col-md-6 text-right mb-3">
+    <Link to="/students-profile" className="btn btn-secondary">
+      Quay lại
+    </Link>
+  </div>
+</div>
+
+          
+          
         </form>
       </div>
     </div>
@@ -312,12 +324,11 @@ const StudentProfileDetails = () => {
                     Edit
                   </button>
                   {/* Thêm nút Cancel nếu cần */}
-                  <button
-                    className="btn btn-danger"
-                    onClick={handleCancelClick}
-                  >
-                    Cancel
-                  </button>
+                  <div className="text-right mb-3 ">
+                    <Link to="/students-profile" className="btn btn-secondary">
+                      Quay lại
+                    </Link>
+                  </div>
                 </div>
               )}
             </div>

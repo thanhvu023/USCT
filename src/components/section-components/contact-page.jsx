@@ -5,6 +5,7 @@ import Select from "react-select";
 import { ProgressBar, Step } from "react-step-progress-bar";
 import { createRegistration } from "../../redux/slice/registrationSlice";
 import jwtDecode from "jwt-decode";
+import Swal from "sweetalert2";
 
 const MultiStepProgressBar = ({ page, onPageNumberClick }) => {
   let stepPercentage = 0;
@@ -113,13 +114,19 @@ const Registration = () => {
 
     return newErrors;
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const newErrors = validateForm();
 
     if (Object.keys(newErrors).length === 0) {
       dispatch(createRegistration(formData));
+      await Swal.fire({
+        icon: "success",
+        title: "Đăng ký tư vấn thành công!",
+        showConfirmButton: false,
+        timer: 1500,
+      });
     } else {
       setErrors(newErrors);
     }
@@ -341,7 +348,7 @@ const Registration = () => {
   console.log(formData);
   return (
     <div>
-      <MultiStepProgressBar page={page} onPageNumberClick={nextPageNumber} />
+      {/* <MultiStepProgressBar page={page} onPageNumberClick={nextPageNumber} /> */}
       <div className="contact-list pd-top-120 pd-bottom-90">
         <div className="container">
           <div className="row justify-content-center">
@@ -555,7 +562,7 @@ const Registration = () => {
                 </div>
               </div>
             </div>
-            <div style={{ textAlign: "center", margin: "20px 0" }}>
+            {/* <div style={{ textAlign: "center", margin: "20px 0" }}>
               <button
                 className="btn btn-base"
                 style={{ width: "200px" }}
@@ -563,7 +570,7 @@ const Registration = () => {
               >
                 Tiếp tục
               </button>
-            </div>
+            </div> */}
           </div>
         )}
         {page === "uploadFile" && (

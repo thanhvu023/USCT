@@ -31,7 +31,7 @@ class HowToWork extends Component {
 			          <div className="details">
 			            <h5>Đăng Ký</h5>
 			            <p>Đăng ký tài khoản để bắt đầu quá trình tìm kiếm và so sánh các chương trình du học phù hợp với bạn.</p>
-			            <Link className="read-more-text" to="/course-details">Xem Thêm <i className="fa fa-angle-right" /></Link>
+			            <Link className="read-more-text" to="/contact">Xem Thêm <i className="fa fa-angle-right" /></Link>
 			          </div>
 			        </div>
 			      </div>
@@ -44,7 +44,7 @@ class HowToWork extends Component {
 			          <div className="details">
 			            <h5>Chọn Chương Trình</h5>
 			            <p>Khám phá và so sánh các chương trình để tìm ra lựa chọn du học tốt nhất dành cho bạn.</p>
-			            <Link className="read-more-text" to="/course-details">Xem Thêm <i className="fa fa-angle-right" /></Link>
+			            <Link className="read-more-text" to="/program">Xem Thêm <i className="fa fa-angle-right" /></Link>
 			          </div>
 			        </div>
 			      </div>
@@ -57,7 +57,7 @@ class HowToWork extends Component {
 			          <div className="details">
 			            <h5>Bắt Đầu Học</h5>
 			            <p>Đăng ký chương trình và bắt đầu hành trình du học của bạn với sự hỗ trợ từ đội ngũ chuyên gia của chúng tôi.</p>
-			            <Link className="read-more-text" to="/course-details">Xem Thêm <i className="fa fa-angle-right" /></Link>
+			            <Link className="read-more-text" to="/">Tiếp tục</Link>
 			          </div>
 			        </div>
 			      </div>
@@ -70,7 +70,7 @@ class HowToWork extends Component {
 			          <div className="details">
 			            <h5>Nhận Chứng Chỉ</h5>
 			            <p>Hoàn thành chương trình và nhận chứng chỉ du học, mở ra cơ hội nghề nghiệp và phát triển cá nhân.</p>
-			            <Link className="read-more-text" to="/course-details">Xem Thêm <i className="fa fa-angle-right" /></Link>
+			            <Link className="read-more-text" to="/course-details">Chức mừng</Link>
 			          </div>
 			        </div>
 			      </div>

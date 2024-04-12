@@ -57,20 +57,18 @@ const Footer = () => {
                 <h4 className="widget-title">Chương Trình Đào Tạo</h4>
                 <ul className="go-top">
                   <li>
-                    <Link to="/course">Kỹ Năng Sống</Link>
+                    <Link to="/course">Cao đẳng</Link>
                   </li>
                   <li>
-                    <Link to="/course">Ngôn Ngữ Anh</Link>
+                    <Link to="/course">Đại học</Link>
                   </li>
                   <li>
-                    <Link to="/course">Chuẩn Bị Hồ Sơ Du Học</Link>
+                    <Link to="/course">Sau đại học</Link>
                   </li>
                   <li>
-                    <Link to="/course">Tư Vấn Học Bổng</Link>
+                    <Link to="/course">Cao học</Link>
                   </li>
-                  <li>
-                    <Link to="/course">Phỏng Vấn Visa</Link>
-                  </li>
+                  
                 </ul>
               </div>
             </div>

@@ -6,6 +6,7 @@ import { getUserById, updateUserById } from "../../redux/slice/authSlice";
 import jwtDecode from "jwt-decode";
 import { Link } from "react-router-dom";
 import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
+import Swal from "sweetalert2";
 
 const CustomerProfilePage = () => {
   let publicUrl = process.env.PUBLIC_URL + "/";
@@ -84,7 +85,12 @@ const [gender, setGender] = useState(userDetail.gender || "");
       // Check if the checkbox is checked
       if (!isChecked) {
         // Checkbox not checked, do not send the request
-        setUpdateMessage("Vui lòng kiểm tra trước khi cập nhật.");
+        Swal.fire({
+          icon: "warning",
+          title: "Vui lòng kiểm tra trước khi cập nhật!",
+          showConfirmButton: false,
+          timer: 1500, // Hiển thị trong 1.5 giây
+        });
         return;
       }
 
@@ -96,14 +102,21 @@ const [gender, setGender] = useState(userDetail.gender || "");
       return;
     }
 
-    setFullName(updatedData.userData.fullName);
-    setPhone(updatedData.userData.phone);
-    setAddress(updatedData.userData.address);
-    setDateOfBirth(updatedData.userData.dateOfBirth);
-    setGender(updatedData.userData.gender);
-    setImageSrc(updatedData.userData.avatar);
+  
+// Cập nhật thông tin và hiển thị thông báo thành công
+setFullName(updatedData.userData.fullName);
+setPhone(updatedData.userData.phone);
+setAddress(updatedData.userData.address);
+setDateOfBirth(updatedData.userData.dateOfBirth);
+setGender(updatedData.userData.gender);
+setImageSrc(updatedData.userData.avatar);
 
-    setUpdateMessage("Cập nhật hồ sơ thành công!");
+Swal.fire({
+  icon: "success",
+  title: "Cập nhật hồ sơ thành công!",
+  showConfirmButton: false,
+  timer: 1500, // Hiển thị trong 1.5 giây
+});
   };
   return (
     <Fragment>

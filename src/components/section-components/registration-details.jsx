@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
 import { getRegistrationByRegistrationFormId } from "../../redux/slice/registrationSlice";
 import { getUserById } from "../../redux/slice/authSlice";
 import jwtDecode from "jwt-decode";
+import { useParams, Link } from "react-router-dom"; // Import Link from react-router-dom
 
 const RegistrationDetail = () => {
 
@@ -171,7 +171,11 @@ Email                                <span className="pull-right">:</span>
 
               </div>
             </div>
-
+            <div className="text-right mb-3 ">
+                    <Link to="/students-profile" className="btn btn-secondary">
+                      Quay lại
+                    </Link>
+                  </div>
      
         </div>
       </div>
