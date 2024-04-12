@@ -3,7 +3,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { Dropdown } from "react-bootstrap";
 import { Row, Button, Modal, Alert } from "react-bootstrap";
 import Swal from "sweetalert2";
-import { getRegistrationByCustomerId,getRegistration,getRegistrationByCustomerId } from "../../../redux/slice/registrationSlice";
+import {
+  getRegistrationByCustomerId,
+  getRegistration,
+} from "../../../redux/slice/registrationSlice";
 
 const theadData = [
   { heading: "ID đơn", sortingVale: "id" },
@@ -19,27 +22,27 @@ const Registration = () => {
   const [data, setData] = useState([]);
   const activePag = useRef(0);
   const [test, setTest] = useState(0);
-  const [feeData, setFeeData] = useState([]); 
-  const [customerId, setCustomerId] = useState(); 
-  const [searchTerm, setSearchTerm] = useState(""); 
+  const [feeData, setFeeData] = useState([]);
+  const [customerId, setCustomerId] = useState();
+  const [searchTerm, setSearchTerm] = useState("");
   const [iconData, setIconDate] = useState({ complete: false, ind: null });
   const [showCheckModal, setShowCheckModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showCheckSuccess, setShowCheckSuccess] = useState(false);
   const [showDeleteSuccess, setShowDeleteSuccess] = useState(false);
   const dispatch = useDispatch();
-  
+
   useEffect(() => {
-    dispatch(getRegistration()); 
-  }, [dispatch]); 
+    dispatch(getRegistration());
+  }, [dispatch]);
 
   const { registrationForms, loading } = useSelector(
     (state) => state.registration
   );
-  console.log("registrationForms:",registrationForms)
+  console.log("registrationForms:", registrationForms);
   const handleCloseCheckModal = () => setShowCheckModal(false);
   const handleCloseDeleteModal = () => setShowDeleteModal(false);
-  
+
   const handleShowCheckModal = () => {
     Swal.fire({
       icon: "success",
@@ -98,10 +101,8 @@ const Registration = () => {
   }
 
   useEffect(() => {
-    dispatch(getRegistrationByCustomerId(customerId)); 
+    dispatch(getRegistrationByCustomerId(customerId));
   }, [dispatch, customerId]);
-  
-
 
   useEffect(() => {
     const filteredData = registrationForms.filter((form) => {
