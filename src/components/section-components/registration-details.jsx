@@ -52,7 +52,7 @@ console.log("userDetail:",userDetail)
             <div className="profile-tab">
               <div className="custom-tab-1">
                 <div className="profile-personal-info mt-3">
-                  <h4 className="text-primary mb-4">Đơn tư vấn</h4>
+                  <h4 className="text-primary mb-4 text-center">Đơn tư vấn</h4>
                   <div className="col-lg-12">
                     <div
                       className="card overflow-hidden"
@@ -88,7 +88,7 @@ Email                                <span className="pull-right">:</span>
                               <span>{userDetail.email}</span>
                             </div>
                           </div>
-                          <div className="row mb-2 align-items-center">
+                          {/* <div className="row mb-2 align-items-center">
                           <div className="col-5">
                               <h5 className="f-w-500">
                               Khu vực
@@ -98,7 +98,7 @@ Email                                <span className="pull-right">:</span>
                             <div className="col-7">
                             <span>{registration.area}</span>
                             </div>
-                          </div>
+                          </div> */}
                          
                           <div className="row mb-2 align-items-center">
                           <div className="col-5">
@@ -128,27 +128,46 @@ Email                                <span className="pull-right">:</span>
                   </div>
                 </div>
                 <div className="profile-about-me">
-  <div className="pt-4 border-bottom-1 pb-3" style={{fontSize:'18px'}}>
+  <div className="pt-4 border-bottom-1 pb-3" style={{ fontSize: '18px' }}>
     <h4 className="text-primary">Chi tiết</h4>
-    <ul className="">
-      <li>
-        <span className="font-weight-bold">Tài chính:</span> {registration.budget} $
-      </li>
-      <li>
-        <span className="font-weight-bold">Thông tin thêm:</span> {registration.moreInformation}
-      </li>
-      <li>
-        <span className="font-weight-bold">Ưu tiên du học:</span> {registration.priorityOfStudyAbroad}
-      </li>
-      <li>
-        <span className="font-weight-bold">Lý do du học:</span> {registration.studyAbroadReason}
-      </li>
-      <li>
-        <span className="font-weight-bold">Lý do chọn trường đại học:</span> {registration.universityChooseReason}
-      </li>
-    </ul>
+    <div className="row">
+      <div className="col-md-6">
+        <ul className="list-unstyled">
+          <li className="mb-2">
+            <i className="la la-money mr-2"></i>
+            <span className="font-weight-bold">Tài chính:</span> {registration.budget ? registration.budget + '$' : 'chưa có'}
+          </li>
+          <li className="mb-2">
+            <i className="la la-info mr-2"></i>
+            <span className="font-weight-bold">Thông tin thêm:</span> {registration.moreInformation ? registration.moreInformation : 'chưa có'}
+          </li>
+          <li className="mb-2">
+            <i className="la la-building mr-2"></i>
+            <span className="font-weight-bold">Khu vực sinh sống:</span> {registration.area ? registration.area : 'chưa có'}
+          </li>
+        </ul>
+      </div>
+      <div className="col-md-6">
+        <ul className="list-unstyled">
+        <li className="mb-2">
+            <i className="la la-paper-plane mr-2"></i>
+            <span className="font-weight-bold">Ưu tiên du học:</span> {registration.priorityOfStudyAbroad ? registration.priorityOfStudyAbroad : 'chưa có'}
+          </li>
+          <li className="mb-2">
+            <i className="la la-thumbs-o-up mr-2"></i>
+            <span className="font-weight-bold">Lý do du học:</span> {registration.studyAbroadReason ? registration.studyAbroadReason : 'chưa có'}
+          </li>
+          <li className="mb-2">
+            <i className="la la-university mr-2"></i>
+            <span className="font-weight-bold">Lý do chọn trường đại học:</span> {registration.universityChooseReason ? registration.universityChooseReason : 'chưa có'}
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 </div>
+
+
 
               </div>
             </div>
