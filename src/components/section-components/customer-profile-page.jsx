@@ -12,18 +12,18 @@ const CustomerProfilePage = () => {
 
   const token = useSelector((state) => state.auth.token);
   const userId = jwtDecode(token).UserId;
-  const userDetail = useSelector((state) => state.auth.userById);
+  const userDetail = useSelector((state) => state.auth.userById) || {}  
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getUserById(userId));
   }, [userId]);
 
-  const [fullName, setfullName] = useState(userDetail.fullName);
-  const [phone, setPhone] = useState(userDetail.phone);
-  const [address, setAddress] = useState(userDetail.address);
-  const [email, setEmail] = useState(userDetail.email);
-  const [dateOfBirth, setDateOfBirth] = useState(userDetail.dateOfBirth);
-  const [gender, setGender] = useState(userDetail.gender);
+  const [fullName, setFullName] = useState(userDetail.fullName || "");
+const [phone, setPhone] = useState(userDetail.phone || "");
+const [address, setAddress] = useState(userDetail.address || "");
+const [email, setEmail] = useState(userDetail.email || "");
+const [dateOfBirth, setDateOfBirth] = useState(userDetail.dateOfBirth || "");
+const [gender, setGender] = useState(userDetail.gender || "");
   const [isChecked, setIsChecked] = useState(false); // State variable to track checkbox status
 
   let [avatar, setImageSrc] = useState(userDetail.avatar);
@@ -96,7 +96,7 @@ const CustomerProfilePage = () => {
       return;
     }
 
-    setfullName(updatedData.userData.fullName);
+    setFullName(updatedData.userData.fullName);
     setPhone(updatedData.userData.phone);
     setAddress(updatedData.userData.address);
     setDateOfBirth(updatedData.userData.dateOfBirth);
@@ -299,7 +299,7 @@ const CustomerProfilePage = () => {
                                             ...errors,
                                             username: "",
                                           });
-                                          setfullName(e.target.value);
+                                          setFullName(e.target.value);
                                           setUpdateMessage("");
                                         }}
                                       />

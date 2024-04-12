@@ -2,6 +2,118 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import instance from "../axiosCustom";
 import { logoutUser } from "./authSlice";
 
+export const getAllProgram = createAsyncThunk(
+  "/program/getAllProgram",
+  async (param, thunkAPI) => {
+    try {
+      const programName = param;
+      if (programName) {
+        const res = await instance.get(`programs?programName=${programName}`);
+        return res.data;
+      } else {
+        const res = await instance.get("/programs");
+        return res.data;
+      }
+      // console.log(param);
+      // const headers = {
+      //   Authorization: `Bearer ${param}`,
+      // };
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response);
+    }
+  }
+);
+
+export const getProgramById = createAsyncThunk(
+  "/program/getProgramById",
+  async (param, thunkAPI) => {
+    try {
+      const programId = param;
+      const res = await instance.get(`/programs/${programId}`, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/problem+json; charset=utf-8",
+          Accept: "application/json",
+        },
+      });
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response);
+    }
+  }
+);
+
+export const getProgramByUniId = createAsyncThunk(
+  "/program/getProgramByUniId",
+  async (param, thunkAPI) => {
+    try {
+      const res = await instance.get(`/programs?universityId=${param}`, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/problem+json; charset=utf-8",
+          Accept: "application/json",
+        },
+      });
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response);
+    }
+  }
+);
+
+export const getprogramByName = createAsyncThunk(
+  "/program/getprogramByName",
+  async (param, thunkAPI) => {
+    try {
+      const res = await instance.get(`/programs?programName=${param}`, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/problem+json; charset=utf-8",
+          Accept: "application/json",
+        },
+      });
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response);
+    }
+  }
+);
+
+export const getProgramByProgramType = createAsyncThunk(
+  "/program/getProgramByProgramType",
+  async (param, thunkAPI) => {
+    try {
+      const programTypeId = param;
+      const res = await instance.get(
+        `/programs?programTypeId=${programTypeId}`,
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/problem+json; charset=utf-8",
+            Accept: "application/json",
+          },
+        }
+      );
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response);
+    }
+  }
+);
+
+export const createProgramApplication = createAsyncThunk(
+  "/program/createProgramApplication",
+  async (param, thunkAPI) => {
+    try {
+      console.log(param);
+      const res = await instance.post("/program-applications", param);
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response);
+    }
+  }
+);
+
 export const createProgram = createAsyncThunk(
   "/program/createProgram",
   async (programData, thunkAPI) => {
@@ -30,29 +142,12 @@ export const deleteProgram = createAsyncThunk(
           Accept: "application/json",
         },
       });
-      return programId; // Trả về ID của chương trình đã bị xóa để cập nhật store
+      return programId;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
   }
 );
-
-export const getAllProgram = createAsyncThunk(
-  "/program/getAllProgram",
-  async (param, thunkAPI) => {
-    try {
-      // console.log(param);
-      // const headers = {
-      //   Authorization: `Bearer ${param}`,
-      // };
-      const res = await instance.get("/programs");
-      return res.data;    
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.response);
-    }
-  }
-);
-
 export const updateProgram = createAsyncThunk(
   "/program/updateProgram",
   async (programData, thunkAPI) => {
@@ -71,62 +166,7 @@ export const updateProgram = createAsyncThunk(
     }
   }
 );
-export const getProgramById = createAsyncThunk(
-  "/program/getProgramById",
-  async (param, thunkAPI) => {
-    try {
-      const programId = param;
-      const res = await instance.get(`/programs/${programId}`, {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/problem+json; charset=utf-8",
-          Accept: "application/json",
-        },
-      });
-      return res.data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.response);
-    }
-  }
-);
 
-export const getProgramByUniId = createAsyncThunk(
-  "/program/getProgramByUniId",
-  async (param, thunkAPI) => {
-    try {
-      const { universityId } = param;
-      const res = await instance.get(`/programs?universityId=${universityId}`, {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/problem+json; charset=utf-8",
-          Accept: "application/json",
-        },
-      });
-      return res.data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.response);
-    }
-  }
-);
-
-export const getProgramByProgramType = createAsyncThunk(
-  "/program/getProgramByProgramType",
-  async (param, thunkAPI) => {
-    try {
-      const programTypeId  = param;
-      const res = await instance.get(`/programs?programTypeId=${programTypeId}`, {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/problem+json; charset=utf-8",
-          Accept: "application/json",
-        },
-      });
-      return res.data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.response);
-    }
-  }
-);
 export const getProgramTypes = createAsyncThunk(
   "/program/getProgramTypes",
   async (_, thunkAPI) => {
@@ -156,6 +196,8 @@ export const getProgramTypeById = createAsyncThunk(
     }
   }
 );
+
+
 const initialState = {
   msg: "",
   token: null,
@@ -163,18 +205,25 @@ const initialState = {
   programs: [],
   programById: {},
   programsByUniId: [],
-  programsByProgramType:[],
-
+  programsByProgramType: [],
 };
 
 export const programSlice = createSlice({
   name: "program",
   initialState,
-  reducers: {},
-  extraReducers: (builder) => {
-    builder.addCase(logoutUser,(state)=>{
+  reducers: {
+    logoutProgram: (state) => {
       state.programs = [];
-    })
+      state.programById = {};
+      state.programsByUniId = [];
+      state.programsByProgramType = [];
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(logoutUser, (state) => {
+        state.programs = [];
+      })
       .addCase(getAllProgram.pending, (state) => {
         state.loading = true;
       })
@@ -210,7 +259,8 @@ export const programSlice = createSlice({
       .addCase(getProgramByUniId.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-      }).addCase(getProgramByProgramType.pending, (state) => {
+      })
+      .addCase(getProgramByProgramType.pending, (state) => {
         state.loading = true;
       })
       .addCase(getProgramByProgramType.fulfilled, (state, action) => {
@@ -221,8 +271,7 @@ export const programSlice = createSlice({
       .addCase(getProgramByProgramType.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-      })
-      .addCase(getProgramTypes.fulfilled, (state, action) => {
+      }) .addCase(getProgramTypes.fulfilled, (state, action) => {
         state.programTypes = action.payload;
       })
       .addCase(getProgramTypeById.pending, (state) => {
@@ -269,7 +318,11 @@ export const programSlice = createSlice({
         state.loading = false;
         state.error = action.error.message;
       });
+
   },
 });
-const { reducer: programReducer } = programSlice;
-export { programReducer as default };
+const {
+  reducer: programReducer,
+  actions: { logoutProgram },
+} = programSlice;
+export { programReducer as default, logoutProgram };

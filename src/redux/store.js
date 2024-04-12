@@ -18,6 +18,7 @@ import stateReducer from "./slice/stateSlice";
 import majorReducer from "./slice/majorSlice";
 import semesterReducer from "./slice/semesterSlice";
 import studentReducer from "./slice/studentSice";
+import registrationReducer from "./slice/registrationSlice";
 
 const persistConfig = {
   key: "root",
@@ -35,6 +36,7 @@ const rootReducer = combineReducers({
   major: majorReducer,
   semester: semesterReducer,
   student: studentReducer,
+  registration: registrationReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

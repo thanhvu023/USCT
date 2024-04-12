@@ -2,7 +2,9 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { logoutUser } from "../../redux/slice/authSlice";
+import { logoutStudent } from "../../redux/slice/studentSice";
 import { Dropdown } from "react-bootstrap";
+import { logoutProgram } from "../../redux/slice/programSlice";
 
 function Navbar() {
   const token = useSelector((state) => state.auth?.token);
@@ -10,6 +12,8 @@ function Navbar() {
   const navigate = useNavigate();
   const handleLogout = () => {
     dispatch(logoutUser());
+    dispatch(logoutStudent());
+    dispatch(logoutProgram())
     navigate("/");
   };
   let publicUrl = process.env.PUBLIC_URL + "/";
@@ -72,10 +76,7 @@ function Navbar() {
           </div>
           <div className="logo">
             <Link to="/">
-              <img
-                src={publicUrl+"assets/img/logo.png"}
-                alt="img"
-              />
+              <img src={publicUrl + "assets/img/logo.png"} alt="img" />
             </Link>
           </div>
           <div className="nav-right-part nav-right-part-mobile">
@@ -102,8 +103,7 @@ function Navbar() {
                 <Link to="/contact">Tư Vấn</Link>
               </li>
               <li>
-              <Link to="/admin">Admin</Link>
-
+                <Link to="/admin">Admin</Link>
               </li>
             </ul>
           </div>

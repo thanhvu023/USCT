@@ -184,7 +184,7 @@ const StudentProfileDetails = () => {
                                     }
                                     alt="img"
                                     className="bg-info rounded-circle mb-4"
-                                    style={{ width: "200px", height: "200px" }}
+                                    style={{ width: "100px", height: "100px" }}
                                   />
                                 </div>
                                 <h3 className="mt-3 mb-1 text-black">

@@ -30,7 +30,7 @@ export const createStudentProfile = createAsyncThunk(
   "student/createStudentProfile",
   async (studentData, thunkAPI) => {
     try {
-      console.log(studentData)  
+      console.log(studentData);
       const res = await instance.post("/profile/", studentData, {
         headers: "Access-Control-Allow-Origin",
       });
@@ -52,7 +52,12 @@ const initialState = {
 export const studentSlice = createSlice({
   name: "student",
   initialState,
-  reducers: {},
+  reducers: {
+    logoutStudent: (state) => {
+      state.studentProfileByCustomerId = [];
+      state.profileById = {};
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getStudentProfileByCustomerId.pending, (state) => {
@@ -78,7 +83,8 @@ export const studentSlice = createSlice({
       .addCase(getStudentProfileById.rejected, (state) => {
         state.loading = false;
         state.error = null;
-      }).addCase(createStudentProfile.pending, (state) => {
+      })
+      .addCase(createStudentProfile.pending, (state) => {
         state.loading = true;
       })
       .addCase(createStudentProfile.rejected, (state, action) => {
@@ -88,9 +94,12 @@ export const studentSlice = createSlice({
       .addCase(createStudentProfile.fulfilled, (state) => {
         state.loading = false;
         state.error = null;
-      })
+      });
   },
 });
 
-const { reducer: studentReducer } = studentSlice;
-export { studentReducer as default };
+const {
+  reducer: studentReducer,
+  actions: { logoutStudent },
+} = studentSlice;
+export { studentReducer as default,logoutStudent};
