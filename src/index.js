@@ -21,6 +21,7 @@ import CustomerProfile from "./components/customer-profile";
 import University from "./components/university-components/university.jsx";
 import UniversityDetail from "./components/university-components/university-details";
 import RegistrationPage from "./components/registration-page.jsx";
+import RegistrationDetailPage from "./components/registration-details-page.jsx";
 // import EditCustomer from "./components/admin-components/customer-components/edit-customer";
 
 const App = () => {
@@ -48,6 +49,10 @@ const App = () => {
         <Route
           path="/student-profile-detail/:studentProfileId"
           element={<StudentProfileDetailPage />}
+        />
+             <Route
+          path="/registration-detail/:registrationFormId"
+          element={<RegistrationDetailPage />}
         />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ConfirmPasswordPage />} />

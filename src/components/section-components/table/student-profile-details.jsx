@@ -175,7 +175,7 @@ const StudentProfileDetails = () => {
                           id="student-avatar-card"
                         >
                           <div className="row">
-                            <div className="col-lg-3">
+                            <div className="col-lg-5">
                               <div className="text-center p-3 overlay-box">
                                 <div className="profile-photo">
                                   <img
@@ -193,7 +193,7 @@ const StudentProfileDetails = () => {
                                 {/* <p className="text-black mb-0">Clerk</p> */}
                               </div>
                             </div>
-                            <div className="col-lg-9 align-self-center">
+                            <div className="col-lg-7 align-self-center">
                               <div className="row mb-2 align-items-center">
                                 <div className="col-3">
                                   <h5 className="f-w-500">
@@ -277,7 +277,7 @@ const StudentProfileDetails = () => {
                               <Link
                                 key={index}
                                 to="/app-profile"
-                                className="btn light btn-xs mb-1 me-1 mr-3"
+                                className="btn  btn-xs mb-1 me-1 mr-3"
                                 style={{
                                   backgroundColor: "#F0F1FE",
                                   color: "#6A73FA",
