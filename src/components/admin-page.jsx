@@ -7,17 +7,20 @@ import Footer from "./global-components/footer";
 import AllCustomer from "./admin-components/customer-components/all-customer";
 import Test1 from "./admin-components/customer-components/test1";
 import AllConsultant from "./admin-components/consultant-components/consutant";
-import AllProgram from "./admin-components/program-components/programs";
+import AllProgramsPage from "./admin-components/program-components/programs1";
+import AllPrograms from "./admin-components/program-components/programs";
+
 
 const AdminPage = () => {
   const [main, setMain] = useState("admin");
   console.log("main là :", main);
-  const navigate = useNavigate(); 
-
+  const handleAllConsultantClick = () => {
+    setMain("Tư vấn viên");
+  };
   const componentMap = {
     "Tư vấn viên": <AllConsultant setMain={setMain}/>,
     "Khách hàng": <AllCustomer  /> , 
-    "Chương trình": <AllProgram />,
+    "Chương trình": <AllPrograms />,
     "Lợi nhuận": <Test1 />,
     "Hồ sơ": <Test1 />,
     
@@ -25,7 +28,7 @@ const AdminPage = () => {
   
   const getContentComponent = (main) => {
 
-    const selectedComponent = componentMap[main] || <AdminHome />;
+    const selectedComponent = componentMap[main] || <AdminHome handleAllConsultantClick={handleAllConsultantClick} />;
     return selectedComponent;
   };
   

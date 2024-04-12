@@ -94,30 +94,30 @@ export const MenuList = [
     },
    
     //Fees    
-    {
-        title: 'Lợi nhuận',	
-        classsChange: 'mm-collapse',		
-        iconStyle: <i className="la la-dollar" />,
-        filterName: 'fee',
-        // content: [
-        //     {
-        //         title: 'Fees Collection',
-        //         to: 'fees-collection',	
-        //         filterName: 'Lợi nhuận',				
-        //     },
-        //     {
-        //         title: 'Add Fees',
-        //         to: 'add-fees',
-        //         filterName: 'Lợi nhuận',
-        //     },
-        //     {
-        //         title: 'Fees Receipt',
-        //         to: 'fees-receipt',
-        //         filterName: 'Lợi nhuận',
-        //     },            
+    // {
+    //     title: 'Lợi nhuận',	
+    //     classsChange: 'mm-collapse',		
+    //     iconStyle: <i className="la la-dollar" />,
+    //     filterName: 'fee',
+    //     // content: [
+    //     //     {
+    //     //         title: 'Fees Collection',
+    //     //         to: 'fees-collection',	
+    //     //         filterName: 'Lợi nhuận',				
+    //     //     },
+    //     //     {
+    //     //         title: 'Add Fees',
+    //     //         to: 'add-fees',
+    //     //         filterName: 'Lợi nhuận',
+    //     //     },
+    //     //     {
+    //     //         title: 'Fees Receipt',
+    //     //         to: 'fees-receipt',
+    //     //         filterName: 'Lợi nhuận',
+    //     //     },            
                  
-        // ],
-    },
+    //     // ],
+    // },
     
     //Forms
     {
@@ -128,11 +128,4 @@ export const MenuList = [
        
     },
 
-    {
-        title:'Chỉnh sửa',
-        classsChange: 'mm-collapse',
-        iconStyle: <i className="la la-edit" />,
-        filterName: 'Chỉnh sửa',
-       
-    },
 ] 

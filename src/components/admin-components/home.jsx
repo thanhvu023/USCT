@@ -1,16 +1,16 @@
 import React from 'react';
 import { Col, Dropdown, Row, Nav, Tab } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from "react-router-dom"; // Import Link và useNavigate từ react-router-dom
 
 
 import { ProgressCard } from './CardDesign';
 import IncomeExpense from './IncomeExpense';
 const tabelData = [
-	{no:'01', name : "Jack Ronan",  proff:"Airi Satou", date:"02 jan 2024", status:'Checkin', color:'primary', subject:'Commerce', fees:'120'},
-	{no:'02', name : "Jimmy Morris",  proff:"Angelica Ramos", date:"02 jan 2024", status:'Pending', color:'warning', subject:'Mechanical', fees:'205'},
-	{no:'03', name : "Nashid Martines",  proff:"Ashton Cox", date:"04 jan 2024", status:'Canceled', color:'danger', subject:'Science', fees:'180'},
-	{no:'04', name : "Roman Aurora",  proff:"Cara Stevens", date:"05 jan 2024", status:'Process', color:'info', subject:'Arts', fees:'200'},
-	{no:'05', name : "Samantha",  proff:"Bruno Nash", date:"06 jan 2024", status:'Checkin', color:'primary', subject:'Maths', fees:'210'},
+	{no:'01', name : "Jack Ronan",  proff:"Airi Satou", date:"02 jan 2024", status:'Inactive', color:'danger', subject:'Commerce', fees:'120'},
+	{no:'02', name : "Jimmy Morris",  proff:"Angelica Ramos", date:"02 jan 2024", status:'Active', color:'primary', subject:'Mechanical', fees:'205'},
+	{no:'03', name : "Nashid Martines",  proff:"Ashton Cox", date:"04 jan 2024", status:'Inactive', color:'danger', subject:'Science', fees:'180'},
+	{no:'04', name : "Roman Aurora",  proff:"Cara Stevens", date:"05 jan 2024", status:'Active', color:'primary', subject:'Arts', fees:'200'},
+	{no:'05', name : "Samantha",  proff:"Bruno Nash", date:"06 jan 2024", status:'Active', color:'primary', subject:'Maths', fees:'210'},
 	
 ];
 const CarddBlog = [
@@ -45,8 +45,8 @@ const salaryTable = [
     { image: "https://i.redd.it/lyhoip7h9qg11.jpg", name:"Caesar Vance", color:'success', status:'Paid', date:'10 Jan 2024', amount:'300', transId:'23654'},
 ];
 
+const AdminHome = ({handleAllConsultantClick }) => {
 
-const AdminHome = () => {
     return (
         <>
             <div className='container-fluid' style={{ backgroundColor: 'whitesmoke' }}>
@@ -90,7 +90,7 @@ const AdminHome = () => {
                             </div>
                             <div className="card-footer border-0 pt-2 bg-white">
                                 <div className="text-center">
-                                    <Link to={"/all-professors"} className="btn btn-primary">Xem tất cả</Link>
+                                <button className="btn btn-primary" onClick={handleAllConsultantClick}>Xem tất cả</button>
                                 </div>
                             </div>
                         </div>
@@ -99,50 +99,44 @@ const AdminHome = () => {
 
                 <Row>
                     <Col xl={12} style={{marginTop:"48px"}}>
-                        <div className="card">
-                            <div className="card-header" style={{ backgroundColor: 'white',  }}>
-                                <h4 className="card-title">New Student List</h4>
-                            </div>
-                            <div className="card-body pt-2">
-                                <div className="table-responsive recentOrderTable">
-                                    <table className="table verticle-middle text-nowrap table-responsive-md">
-                                    <thead>
-										<tr>
-											<th scope="col">No.</th>
-											<th scope="col">Name</th>
-											<th scope="col">Assigned Professor</th>
-											<th scope="col">Date of Admit</th>
-											<th scope="col">Status</th>
-											<th scope="col">Subject</th>
-											<th scope="col">Fees</th>
-											<th scope="col">Edit</th>
-										</tr>
-									</thead>
-									<tbody>
-										{tabelData.map((item, index)=>(
-											<tr key={index}>
-												<td>{item.no}</td>
-												<td>{item.name}</td>
-												<td>{item.proff}</td>
-												<td>{item.date}</td>
-												<td><span className={`badge badge-rounded badge-${item.color}`}>{item.status}</span></td>
-												<td>{item.subject}</td>
-												<td>{item.fees}$</td>
-                                                <td style={{ display: 'flex', alignItems: 'center' }}>
-    <Link to={"/edit-student"} className="btn btn-xs sharp btn-primary me-1" style={{ width: '30px', height: '30px', padding: '0 20px', display: 'flex', justifyContent: 'center', alignItems: 'center', marginRight:'5px' }}>
-        <i className="fa fa-pencil" />
-    </Link>
-    <Link to={"#"} className="btn btn-xs sharp btn-danger" style={{ width: '30px', height: '30px', padding: '0 20px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <i className="fa fa-trash" />
-    </Link>
-</td>
-											</tr>
-										))}
+                    <div className="card">
+    <div className="card-header" style={{ backgroundColor: 'white' }}>
+        <h4 className="card-title">Danh sách hồ sơ du học</h4>
+    </div>
+    <div className="card-body pt-2">
+        <div className="table-responsive recentOrderTable">
+            <table className="table verticle-middle text-nowrap table-responsive-md">
+                <thead>
+                    <tr>
+                        <th scope="col">ID học sinh</th>
+                        <th scope="col">Họ và tên học sinh</th>
+                        <th scope="col">Tư vấn viên phụ trách</th>
+                        <th scope="col">Ngày tạo</th>
+                        <th scope="col">Chương trình</th>
+                        <th scope="col">Trạng thái</th>
+                     
+                      
+                    </tr>
+                </thead>
+                <tbody>
+                    {tabelData.map((item, index) => (
+                        <tr key={index}>
+                            <td>{item.no}</td>
+                            <td>{item.name}</td>
+                            <td>{item.proff}</td>
+                            <td>{item.date}</td>
+                            <td>{item.subject}</td>
+                            <td><span className={`badge badge-rounded badge-${item.color}`}>{item.status}</span></td>
+                           
+                           
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
-									</tbody>                                    </table>
-                                </div>
-                            </div>
-                        </div>
                     </Col>
                 </Row>
             </div>
