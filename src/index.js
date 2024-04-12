@@ -1,61 +1,80 @@
-import React, { Component } from "react";
-import ReactDOM from "react-dom";
-import {
-  BrowserRouter as Router,
-  HashRouter,
-  Route,
-  Switch,
-} from "react-router-dom";
-import HomeV1 from "./components/home-v1";
-import HomeV2 from "./components/home-v2";
-import HomeV3 from "./components/home-v3";
-import Course from "./components/course";
-import CourseDetails from "./components/course-details";
-import About from "./components/about";
-import Event from "./components/event";
-import EventDetails from "./components/event-details";
-import Instructor from "./components/instructor";
-import InstructorDetails from "./components/instructor-details";
-import Pricing from "./components/pricing";
-import Gallery from "./components/gallery";
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import store, { persistor } from "./redux/store";
+
 import SignIn from "./components/sign-in";
 import SignUp from "./components/sign-up";
-import Contact from "./components/contact";
-import Blog from "./components/blog";
-import BlogDetails from "./components/blog-details";
+import StudentProfile from "./components/student-profile";
+import AdminPage from "./components/admin-page";
+import StudentProfileDetailPage from "./components/student-detail-page";
+import ForgotPasswordPage from "./components/forgot-password";
+import ConfirmPasswordPage from "./components/confirm-password";
+import ChangePasswordPage from "./components/change-password";
+import CreateStudentProfilePage from "./components/student-profile/create-student-profile.jsx";
+import HomePage from "./components/home";
+import Program from "./components/program";
+import ProgramDetail from "./components/program-details";
+import CustomerProfile from "./components/customer-profile";
+import University from "./components/university-components/university.jsx";
+import UniversityDetail from "./components/university-components/university-details";
+import RegistrationPage from "./components/registration-page.jsx";
+import RegistrationDetailPage from "./components/registration-details-page.jsx";
+// import EditCustomer from "./components/admin-components/customer-components/edit-customer";
 
-class Root extends Component {
-    render() {
-        return(
-                <HashRouter basename="/usct">
-	                <div>
-	                <Switch>
-                        <Route exact path="/" component={HomeV1} />
-                        <Route path="/home-v2" component={HomeV2} />
-                        <Route path="/home-v3" component={HomeV3} />
-                        <Route path="/program" component={Course} />
-                        <Route path="/program-details" component={CourseDetails} />
-                        <Route path="/about" component={About} />
-                        <Route path="/event" component={Event} />
-                        <Route path="/event-details" component={EventDetails} />
-                        <Route path="/instructor" component={Instructor} />
-                        <Route path="/instructor-details" component={InstructorDetails} />
-                        <Route path="/pricing" component={Pricing} />
-                        <Route path="/gallery" component={Gallery} />
-                        <Route path="/sign-in" component={SignIn} />
-                        <Route path="/sign-up" component={SignUp} />
-                        <Route path="/contact" component={Contact} />
-                        <Route path="/university" component={Blog} />
-                        <Route path="/blog-details" component={BlogDetails} />
-                        <Route path="/university-details" />
+const App = () => {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
 
-	                </Switch>
-	                </div>
-                </HashRouter>
-        )
-    }
-}
+        <Route path="/program" element={<Program />} />
+        <Route
+          path="/program-details/:programById"
+          element={<ProgramDetail />}
+        />
+        <Route
+          path="/university-details/:universityId"
+          element={<UniversityDetail />}
+        />
+        <Route path="/sign-in" element={<SignIn />} />
+        <Route path="/sign-up" element={<SignUp />} />
+        <Route path="/contact" element={<RegistrationPage />} />
+        <Route path="/university" element={<University />} />
+        <Route path="/customer-profile" element={<CustomerProfile />} />
+        <Route path="/students-profile" element={<StudentProfile />} />
+        <Route path="/admin" element={<AdminPage />} />
+        <Route
+          path="/student-profile-detail/:studentProfileId"
+          element={<StudentProfileDetailPage />}
+        />
+             <Route
+          path="/registration-detail/:registrationFormId"
+          element={<RegistrationDetailPage />}
+        />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ConfirmPasswordPage />} />
+        <Route
+          path="/customer/change-password"
+          element={<ChangePasswordPage />}
+        />
+        <Route
+          path="/create-student-profile"
+          element={<CreateStudentProfilePage />}
+        />
+        {/* <Route path="/customer-edit/:id" element={<EditCustomer />} /> */}
+      </Routes>
+    </Router>
+  );
+};
 
-export default Root;
-
-ReactDOM.render(<Root />, document.getElementById("edumint"));
+const root = ReactDOM.createRoot(document.getElementById("edumint"));
+root.render(
+  <Provider store={store}>
+    <PersistGate persistor={persistor}>
+      <App />
+    </PersistGate>
+  </Provider>
+);

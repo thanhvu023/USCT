@@ -1,5 +1,7 @@
 {
     "env": {
+        "node": true,
+        "commonjs": true,
         "browser": true,
         "es6": true
     },
@@ -11,20 +13,26 @@
             "experimentalObjectRestSpread": true,
             "jsx": true
         },
+        "parser": "@babel/eslint-parser",
+        "ecmaVersion": 2020,
         "sourceType": "module"
     },
     "plugins": [
         "react"
-    ],
+        ],
     "rules": {   
+    "no-mixed-spaces-and-tabs": 0,
      "react/jsx-uses-react": "error",   
      "react/jsx-uses-vars": "error" ,"no-unused-vars": [
-        "error,warn",
+        "warn", 
         {
             "varsIgnorePattern": "React"
         }
         
-    ],        "no-warning-comments": "off"
+    ],        
+    "no-warning-comments": "off",
+    "react/prop-types": "off"
 
 }
+
 }
