@@ -3,13 +3,13 @@ import { useSelector, useDispatch } from "react-redux";
 import { Dropdown } from "react-bootstrap";
 import { Row, Button, Modal, Alert } from "react-bootstrap";
 import Swal from "sweetalert2";
-import { getRegistrationByCustomerId } from "../../../redux/slice/registrationSlice";
+import { getRegistration, getRegistrationByCustomerId } from "../../../redux/slice/registrationSlice";
 import { getUserById } from "../../../redux/slice/authSlice";
 import jwtDecode from "jwt-decode";
 import { Link } from "react-router-dom";
 const theadData = [
   { heading: "ID đơn", sortingVale: "id" },
-  { heading: "Họ và tên", sortingVale: "name" },
+  // { heading: "Họ và tên", sortingVale: "name" },
   { heading: "Chuyên ngành đã chọn", sortingVale: "majorChoose" },
   { heading: "Chương trình đã chọn", sortingVale: "programChoose" },
   { heading: "Tư vấn viên phụ trách", sortingVale: "advisor" },
@@ -21,8 +21,8 @@ const Registration = () => {
   const [data, setData] = useState([]);
   const activePag = useRef(0);
   const [test, setTest] = useState(0);
-  const [feeData, setFeeData] = useState([]); 
-  const [searchTerm, setSearchTerm] = useState(""); 
+  const [feeData, setFeeData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [iconData, setIconDate] = useState({ complete: false, ind: null });
   const [showCheckModal, setShowCheckModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -30,31 +30,25 @@ const Registration = () => {
   const [showDeleteSuccess, setShowDeleteSuccess] = useState(false);
   const [selectedRegistration, setSelectedRegistration] = useState(null); // State lưu thông tin đơn tư vấn được chọn
 
-  
-const customers = useSelector((state)=>state.auth.userById)
+  const customers = useSelector((state) => state.auth.userById);
 
-
-console.log("customerName là:",customers)
+  console.log("customerName là:", customers);
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
   const customerId = jwtDecode(token).UserId;
   const registrationProfileByCustomerId = useSelector(
-    (state) => state?.registration?.registrationById
+    (state) => state?.registration?.registrationForms
   );
   const getFullName = (customerId) => {
-    const customer = customers.find((customer) => customer.id === customerId[0]);
+    const customer = Array.isArray(customers) && customers.find((customer) => customer.id === customerId[0]);
     return customer ? customer.fullName : "Không tìm thấy";
   };
-  useEffect(() => {
-    if(customerId ){
-      dispatch(getRegistrationByCustomerId(customerId)); 
-
-    }
-  }, [dispatch, customerId]);
-
-
   
-  console.log("danh sach là:",registrationProfileByCustomerId)
+  useEffect(() => {
+      dispatch(getRegistration());
+  }, [dispatch]);
+
+  console.log("danh sach là:", registrationProfileByCustomerId);
   const handleCloseCheckModal = () => setShowCheckModal(false);
   const handleCloseDeleteModal = () => setShowDeleteModal(false);
 
@@ -110,31 +104,29 @@ console.log("customerName là:",customers)
     setTest(i);
   };
 
-  function DataSearch(e) {
-    const searchTerm = e.target.value.toLowerCase();
-    setSearchTerm(searchTerm);
-  }
-
+  // function DataSearch(e) {
+  //   const searchTerm = e.target.value.toLowerCase();
+  //   setSearchTerm(searchTerm);
+  // }
 
   const { registrationForms, loading } = useSelector(
     (state) => state.registration
   );
 
-  useEffect(() => {
-    const filteredData = registrationForms.filter((form) => {
-      return (
-        form.fullName.toLowerCase().includes(searchTerm) ||
-        form.majorChoose.toLowerCase().includes(searchTerm) ||
-        form.programChoose.toLowerCase().includes(searchTerm) ||
-        form.advisor.toLowerCase().includes(searchTerm)
-      );
-    });
-    setFeeData(filteredData);
-  }, [searchTerm, registrationForms]);
+  // useEffect(() => {
+  //   const filteredData = registrationForms.filter((form) => {
+  //     return (
+  //       form.fullName.toLowerCase().includes(searchTerm) ||
+  //       form.majorChoose.toLowerCase().includes(searchTerm) ||
+  //       form.programChoose.toLowerCase().includes(searchTerm) ||
+  //       form.advisor.toLowerCase().includes(searchTerm)
+  //     );
+  //   });
+  //   setFeeData(filteredData);
+  // }, [searchTerm, registrationForms]);
   const handleClickName = (registration) => {
     setSelectedRegistration(registration);
     setShowCheckModal(true);
-  
   };
 
   return (
@@ -168,7 +160,7 @@ console.log("customerName là:",customers)
                       <div className="d-sm-flex justify-content-between align-items-center">
                         <div className="dataTables_length">
                           <label className="d-flex align-items-center">
-                            hiển thị
+                          Hiển thị
                             <Dropdown className="search-drop">
                               <Dropdown.Toggle
                                 as="div"
@@ -198,7 +190,7 @@ console.log("customerName là:",customers)
                               type="search"
                               className=""
                               placeholder=""
-                              onChange={DataSearch}
+                              // onChange={DataSearch}
                             />
                           </label>
                         </div>
@@ -237,54 +229,61 @@ console.log("customerName là:",customers)
                           </tr>
                         </thead>
                         <tbody>
-                          {registrationProfileByCustomerId.map((registration) => (
-                            <tr key={registration.id}>
-<td>
-  <Link onClick={() => handleClickName(registration)}>
-    {registration.registrationFormId}
-  </Link>
-</td>
-                                   <td>{getFullName(registration.customerId)}</td>                              <td>{registration.majorChoose}</td>
-                              <td>{registration.programChoose}</td>
-                              <td>{registration.consultantId}</td>
-                              <td
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                }}
-                              >
-                                <button
-                                  onClick={handleShowCheckModal}
-                                  className="btn btn-xs sharp btn-primary me-1"
+                          {registrationProfileByCustomerId.map(
+                            (registration) => (
+                              <tr key={registration.id}>
+                                <td>
+                                  <Link
+                                    onClick={() =>
+                                      handleClickName(registration)
+                                    }
+                                  >
+                                    {registration.registrationFormId}
+                                  </Link>
+                                </td>
+                                {/* <td>{getFullName(registration.customerId)}</td>{" "} */}
+                                <td>{registration.majorChoose}</td>
+                                <td>{registration.programChoose}</td>
+                                <td>{registration.consultantId}</td>
+                                <td
                                   style={{
-                                    width: "30px",
-                                    height: "30px",
-                                    padding: "0 20px",
                                     display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    marginRight: "5px",
-                                  }}
-                                >
-                                  <i className="fa fa-check" />
-                                </button>
-                                <button
-                                  onClick={handleShowDeleteModal}
-                                  className="btn btn-xs sharp btn-danger"
-                                  style={{
-                                    width: "30px",
-                                    height: "30px",
-                                    padding: "0 20px",
-                                    display: "flex",
-                                    justifyContent: "center",
                                     alignItems: "center",
                                   }}
                                 >
-                                  <i className="fa fa-trash" />
-                                </button>
-                              </td>
-                            </tr>
-                          ))}
+                                  <button
+                                    onClick={handleShowCheckModal}
+                                    className="btn btn-xs sharp btn-primary me-1"
+                                    style={{
+                                      width: "30px",
+                                      height: "30px",
+                                      padding: "0 20px",
+                                      display: "flex",
+                                      justifyContent: "center",
+                                      alignItems: "center",
+                                      marginRight: "5px",
+                                    }}
+                                  >
+                                    <i className="fa fa-check" />
+                                  </button>
+                                  <button
+                                    onClick={handleShowDeleteModal}
+                                    className="btn btn-xs sharp btn-danger"
+                                    style={{
+                                      width: "30px",
+                                      height: "30px",
+                                      padding: "0 20px",
+                                      display: "flex",
+                                      justifyContent: "center",
+                                      alignItems: "center",
+                                    }}
+                                  >
+                                    <i className="fa fa-trash" />
+                                  </button>
+                                </td>
+                              </tr>
+                            )
+                          )}
                         </tbody>
                       </table>
                       <div className="d-sm-flex text-center justify-content-between align-items-center mt-3">
@@ -348,45 +347,114 @@ console.log("customerName là:",customers)
               </div>
             </div>
           </Row>
-           {/* Modal */}
-           <Modal show={showCheckModal} onHide={handleCloseCheckModal} centered>
-  <Modal.Header closeButton>
-    <Modal.Title>Thông tin chi tiết đơn tư vấn - Mã ID: {selectedRegistration && selectedRegistration.registrationFormId}</Modal.Title>
-  </Modal.Header>
-  <Modal.Body>
-    {selectedRegistration && (
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
-        <div>
-          <p style={{ fontWeight: "bold", color: "#007bff" }}>Thông tin chi tiết:</p>
-          <div>
-            <span>Chuyên ngành đã chọn: <span style={{ color: "#007bff" }}>{selectedRegistration.majorChoose}</span></span>
-            <p>Chương trình đã chọn: <span style={{ color: "#007bff" }}>{selectedRegistration.programChoose}</span></p>
-            <p>Tư vấn viên phụ trách: <span style={{ color: "#007bff" }}>{selectedRegistration.consultantId}</span></p>
-            <p >Khu vực:<span style={{ color: "#007bff" }}>{selectedRegistration.area}</span> </p>
-            <p >Thông tin thêm: <span style={{ color: "#007bff" }} >{selectedRegistration.moreInformation}</span></p>
-          </div>
-        </div>
-        <div>
-          <p style={{ fontWeight: "bold", color: "#007bff" }}>Lý do và ưu tiên:</p>
-          <div>
-            <p>Lý do du học: <span style={{ color: "#007bff" }}>{selectedRegistration.studyAbroadReason}</span></p>
-            <p>Lý do chọn điểm đến: <span style={{ color: "#007bff" }}>{selectedRegistration.destinationReason}</span></p>
-            <p>Lý do chọn chuyên ngành: <span style={{ color: "#007bff" }}>{selectedRegistration.majorChooseReason}</span></p>
-            <p>Lý do chọn trường: <span style={{ color: "#007bff" }}> {selectedRegistration.universityChooseReason}</span></p>
-            <p>Ưu tiên du học: <span style={{ color: "#007bff" }}>{selectedRegistration.priorityOfStudyAbroad}</span></p>
-            <p >Ngân sách: <span style={{ color: "#007bff" }}>{selectedRegistration.budget}</span></p>
-          </div>
-        </div>
-      </div>
-    )}
-  </Modal.Body>
-  <Modal.Footer>
-    <Button variant="secondary" onClick={handleCloseCheckModal}>
-      Đóng
-    </Button>
-  </Modal.Footer>
-</Modal>
-
+          {/* Modal */}
+          <Modal show={showCheckModal} onHide={handleCloseCheckModal} centered>
+            <Modal.Header closeButton>
+              <Modal.Title>
+                Thông tin chi tiết đơn tư vấn - Mã ID:{" "}
+                {selectedRegistration &&
+                  selectedRegistration.registrationFormId}
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              {selectedRegistration && (
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    gap: "20px",
+                  }}
+                >
+                  <div>
+                    <p style={{ fontWeight: "bold", color: "#007bff" }}>
+                      Thông tin chi tiết:
+                    </p>
+                    <div>
+                      <span>
+                        Chuyên ngành đã chọn:{" "}
+                        <span style={{ color: "#007bff" }}>
+                          {selectedRegistration.majorChoose}
+                        </span>
+                      </span>
+                      <p>
+                        Chương trình đã chọn:{" "}
+                        <span style={{ color: "#007bff" }}>
+                          {selectedRegistration.programChoose}
+                        </span>
+                      </p>
+                      <p>
+                        Tư vấn viên phụ trách:{" "}
+                        <span style={{ color: "#007bff" }}>
+                          {selectedRegistration.consultantId}
+                        </span>
+                      </p>
+                      <p>
+                        Khu vực:
+                        <span style={{ color: "#007bff" }}>
+                          {selectedRegistration.area}
+                        </span>{" "}
+                      </p>
+                      <p>
+                        Thông tin thêm:{" "}
+                        <span style={{ color: "#007bff" }}>
+                          {selectedRegistration.moreInformation}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    <p style={{ fontWeight: "bold", color: "#007bff" }}>
+                      Lý do và ưu tiên:
+                    </p>
+                    <div>
+                      <p>
+                        Lý do du học:{" "}
+                        <span style={{ color: "#007bff" }}>
+                          {selectedRegistration.studyAbroadReason}
+                        </span>
+                      </p>
+                      <p>
+                        Lý do chọn điểm đến:{" "}
+                        <span style={{ color: "#007bff" }}>
+                          {selectedRegistration.destinationReason}
+                        </span>
+                      </p>
+                      <p>
+                        Lý do chọn chuyên ngành:{" "}
+                        <span style={{ color: "#007bff" }}>
+                          {selectedRegistration.majorChooseReason}
+                        </span>
+                      </p>
+                      <p>
+                        Lý do chọn trường:{" "}
+                        <span style={{ color: "#007bff" }}>
+                          {" "}
+                          {selectedRegistration.universityChooseReason}
+                        </span>
+                      </p>
+                      <p>
+                        Ưu tiên du học:{" "}
+                        <span style={{ color: "#007bff" }}>
+                          {selectedRegistration.priorityOfStudyAbroad}
+                        </span>
+                      </p>
+                      <p>
+                        Ngân sách:{" "}
+                        <span style={{ color: "#007bff" }}>
+                          {selectedRegistration.budget}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleCloseCheckModal}>
+                Đóng
+              </Button>
+            </Modal.Footer>
+          </Modal>
         </>
       )}
     </div>

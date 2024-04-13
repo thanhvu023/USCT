@@ -28,7 +28,7 @@ export const getRegistration = createAsyncThunk(
   "registration/getRegistration",
   async (param, thunkAPI) => {
     try {
-      const res = await instance.get(`/registration-form`);
+      const res = await instance.get(`/registration-forms`);
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response);
