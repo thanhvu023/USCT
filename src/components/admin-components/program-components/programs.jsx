@@ -11,7 +11,6 @@ import {
   import { getAllMajor, getMajorById } from "../../../redux/slice/majorSlice";
   import { getAllSemester } from "../../../redux/slice/semesterSlice";
   import{getAllUniversity} from '../../../redux/slice/universitySlice'
-
 import "./program.css";
 import { Row, Dropdown, Modal, Button, Form, Col } from "react-bootstrap";
 import Swal from "sweetalert2";
@@ -667,21 +666,24 @@ Xem thêm
         </div>
         <div>
           <p><strong>Mô tả:</strong> {selectedProgram.description}</p>
-          <p><strong>Học phí:</strong> {selectedProgram.tuition}</p>
           <p>
-  <strong>Trách nhiệm:</strong>{" "}
-  <span
-    dangerouslySetInnerHTML={{ __html:selectedProgram.responsibilities.replace(/\\r\\n/g, "<br/>• ")  }}
-  ></span>
-</p>
-          <p><strong>Yêu cầu:</strong>  <span
-    dangerouslySetInnerHTML={{ __html: selectedProgram.requirement.replace(/\\r\\n/g, "<br/>• ") }}
-  ></span></p>
+            <strong>Học phí:<br/></strong>
+            <span dangerouslySetInnerHTML={{ __html: selectedProgram?.tuition?.replace(/\\\\r\\\\n/g, "<br/>• ") || '' }} />
+          </p>
+          <p>
+            <strong>Trách nhiệm:</strong>{" "}
+            <span dangerouslySetInnerHTML={{ __html: selectedProgram?.responsibilities?.replace(/\\r\\n/g, "<br/>• ") || '' }} />
+          </p>
+          <p>
+            <strong>Yêu cầu:</strong>  
+            <span dangerouslySetInnerHTML={{ __html: selectedProgram?.requirement?.replace(/\\r\\n/g, "<br/>• ") || '' }} />
+          </p>
         </div>
       </div>
     </div>
   )}
 </Modal.Body>
+
 
   <Modal.Footer>
     <Button variant="secondary" onClick={handleCloseDetailModal} >

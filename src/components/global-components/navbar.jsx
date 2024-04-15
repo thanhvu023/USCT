@@ -5,9 +5,11 @@ import { logoutUser } from "../../redux/slice/authSlice";
 import { logoutStudent } from "../../redux/slice/studentSice";
 import { Dropdown } from "react-bootstrap";
 import { logoutProgram } from "../../redux/slice/programSlice";
+import Swal from "sweetalert2"; // Import Swal
 
 function Navbar() {
   const token = useSelector((state) => state.auth?.token);
+  
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleLogout = () => {
@@ -19,6 +21,23 @@ function Navbar() {
   let publicUrl = process.env.PUBLIC_URL + "/";
 
   const isLoggedIn = useSelector((state) => state.auth?.token);
+
+  
+  // Hàm kiểm tra token và hiển thị cảnh báo nếu cần
+  const checkTokenAndRedirect = (path) => {
+    if (!isLoggedIn) {
+      Swal.fire({
+        icon: "warning",
+        title: "Bạn cần đăng nhập!",
+        text: "Vui lòng đăng nhập để tiếp tục.",
+        showConfirmButton: true,
+      }).then(() => {
+        navigate("/sign-in");
+      });
+    } else {
+      navigate(path);
+    }
+  };
   return (
     <div className="navbar-area">
       <div className="navbar-top">
@@ -96,7 +115,7 @@ function Navbar() {
                 <Link to="/university">Trường học</Link>
               </li>
               <li>
-                <Link to="/contact">Tư Vấn</Link>
+              <Link to="/contact" onClick={() => checkTokenAndRedirect("/contact")}>Tư Vấn</Link>
               </li>
               <li>
                 <Link to="/admin">Admin</Link>

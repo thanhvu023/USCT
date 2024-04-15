@@ -8,7 +8,7 @@ import { Carousel } from "react-bootstrap"; // Import Carousel from React Bootst
 
 import {
   createProgramApplication,
-  // getAllProgram,
+  getAllProgram,
   getProgramById,
   getProgramByProgramType,
   getProgramByUniId,
@@ -24,6 +24,7 @@ import {
   getStudentProfileById,
   resetStdeunt,
 } from "../../redux/slice/studentSice";
+import { getProgramTypes } from "../../redux/slice/programSlice";
 import jwtDecode from "jwt-decode";
 
 function ProgramDetailPage() {
@@ -76,9 +77,18 @@ function ProgramDetailPage() {
   const programDetail = useSelector((state) => state?.program?.programById);
   const stateDetail = useSelector((state) => state?.state?.stateById);
   const majorDetail = useSelector((state) => state?.major?.majorById);
+  const programType = useSelector((state)=>state?.program?.programTypes)
+
+  // console.log("programs:",programs)
   const profileStudent = useSelector(
     (state) => state?.student?.studentProfileByCustomerId
   );
+  useEffect(()=>{
+   
+      dispatch(getProgramTypes());
+  
+    
+  },[dispatch]);
   useEffect(() => {
     if (programById) {
       dispatch(getProgramById(programById));
@@ -126,6 +136,11 @@ function ProgramDetailPage() {
       dispatch(getStudentProfileByCustomerId(customerId));
     }
   }, [dispatch, customerId]);
+  const getTypeName = (typeId) => {
+    if (!programType) return "";
+    const type = programType.find((type) => type.programTypeId === typeId);
+    return type ? type.typeName : "";
+  };
 
   const [formData, setFormData] = useState({
     studentProfileId: undefined,
@@ -245,6 +260,11 @@ function ProgramDetailPage() {
                     <h4 className="title ">Yêu cầu của chương trình</h4>
                     <p>{programDetail?.requirement}</p>
                   </div>
+                  <div className="col-lg-12">
+                    <h4 className="title ">Chi phí kham khảo</h4>
+                    <p dangerouslySetInnerHTML={{ __html: programDetail?.tuition?.replace(/\\\\r\\\\n/g, "<br/>• ") }} />
+
+                  </div>
                 </div>
               </div>
             </div>
@@ -268,12 +288,11 @@ function ProgramDetailPage() {
                     </li>
                     <li>
                       <i className="fa fa-clipboard" />
-                      <span>Lộ trình học:</span> 8 buổi học
+                      <span>Lộ trình học:</span> {programDetail.duration}
                     </li>
                     <li>
                       <i className="fa fa-language" />
-                      <span>Trình độ Tiếng Anh:</span> Cần có trình độ Tiếng Anh
-                      cơ bản
+                      <span>Trình độ Tiếng Anh:</span> {programDetail.level}
                     </li>
                     <li>
                       <i className="fa fa-calendar" />
@@ -281,7 +300,10 @@ function ProgramDetailPage() {
                     </li>
                     <li>
                       <i className="fa fa-graduation-cap" />
-                      <span>Loại chương trình:</span> Full-time
+                      <span>Loại chương trình:</span>
+                      {getTypeName(programDetail.programTypeId)}
+
+
                     </li>
                   </ul>
                   <div className="price-wrap text-center">
@@ -293,7 +315,7 @@ function ProgramDetailPage() {
                       className="btn btn-base btn-radius"
                       onClick={handleOpenModal}
                     >
-                      ĐĂNG KÝ KHÓA HỌC
+                      ĐĂNG KÝ 
                     </a>
                   </div>
                 </div>

@@ -23,6 +23,7 @@ import UniversityDetail from "./components/university-components/university-deta
 import RegistrationPage from "./components/registration-page.jsx";
 import StudentProfileRegistrationPage from "./components/studentProfileRegistration.jsx";
 import StudentProfileAppliedPage from "./components/StudentProfileAppliedPage.jsx";
+import RegistrationDetailPage from "./components/registration-details-page.jsx";
 // import EditCustomer from "./components/admin-components/customer-components/edit-customer";
 
 const App = () => {
@@ -51,10 +52,10 @@ const App = () => {
           path="/student-profile-detail/:studentProfileId"
           element={<StudentProfileDetailPage />}
         />
-             {/* <Route
+             <Route
           path="/registration-detail/:registrationFormId"
           element={<RegistrationDetailPage />}
-        /> */}
+        />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ConfirmPasswordPage />} />
         <Route

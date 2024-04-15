@@ -34,15 +34,18 @@ const Registration = () => {
 const customers = useSelector((state)=>state.auth.userById)
 
 
-console.log("customerName là:",customers)
+// console.log("customerName là:",customers)
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
   const customerId = jwtDecode(token).UserId;
+
   const registrationProfileByCustomerId = useSelector(
     (state) => state?.registration?.registrationById
   );
+  console.log("registrationProfileByCustomerId la:",registrationProfileByCustomerId)
   const getFullName = (customerId) => {
     const customer = customers.find((customer) => customer.id === customerId[0]);
+
     return customer ? customer.fullName : "Không tìm thấy";
   };
   useEffect(() => {

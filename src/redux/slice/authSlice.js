@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { setUserAuthToken } from "../authService";
 import instance from "../axiosCustom";
-
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 export const login = createAsyncThunk(
   "customer/login",
   async (param, thunkAPI) => {
@@ -54,7 +55,14 @@ export const signup = createAsyncThunk(
       const res = await instance.post("account/signup", signupData, {
         headers: "Access-Control-Allow-Origin",
       });
-      navigate("/sign-in");
+      Swal.fire({
+        icon: 'success',
+        title: 'Tạo tài khoản thành công!',
+        showConfirmButton: false,
+        timer: 1500
+      });
+      navigate("/sign-in")
+      ;
       return res.data;
     } catch (err) {
       throw new Error(err.response.data);
