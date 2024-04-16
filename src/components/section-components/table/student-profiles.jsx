@@ -5,12 +5,13 @@ import { useFilters, usePagination, useTable } from "react-table";
 import { getStudentProfileByCustomerId } from "../../../redux/slice/studentSice";
 import { COLUMNS } from "./columns";
 import "./student-profile.css";
+import jwtDecode from "jwt-decode";
 
 const StudentProfileList = () => {
   const columns = useMemo(() => COLUMNS, []);
 
-  const userId = useSelector((state) => state.auth.userById.customerId);
-
+  const token = useSelector((state) => state.auth.token);
+  const customerId = jwtDecode(token).UserId;
   const data = useSelector(
     (state) => state.student.studentProfileByCustomerId
   );
@@ -24,8 +25,8 @@ const StudentProfileList = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getStudentProfileByCustomerId(userId));
-  }, [userId]);
+    dispatch(getStudentProfileByCustomerId(customerId));
+  }, [customerId]);
   const [selectedRow, setSelectedRow] = useState(null);
   const navigate = useNavigate();
 

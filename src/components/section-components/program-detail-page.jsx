@@ -49,6 +49,7 @@ function ProgramDetailPage() {
       studentProfileId: "",
       programId: "",
     });
+    dispatch(resetStdeunt())
   };
 
   const programTypeId = useSelector(
@@ -293,7 +294,7 @@ function ProgramDetailPage() {
                       className="btn btn-base btn-radius"
                       onClick={handleOpenModal}
                     >
-                      ĐĂNG KÝ KHÓA HỌC
+                      GỬI ĐƠN ĐĂNG KÝ CHƯƠNG TRÌNH
                     </a>
                   </div>
                 </div>
