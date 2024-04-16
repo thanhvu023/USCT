@@ -9,7 +9,7 @@ import Swal from "sweetalert2"
 const theadData = [
   { heading: "ID học sinh", sortingVale: "id" },
   { heading: "Họ và tên", sortingVale: "name" },
-  { heading: "Tư vấn viên phụ trách", sortingVale: "advisor" },
+  // { heading: "Tư vấn viên phụ trách", sortingVale: "advisor" },
   { heading: "Ngày tạo", sortingVale: "date" },
   { heading: "Chương trình", sortingVale: "program" },
   { heading: "Trạng thái", sortingVale: "status" },
@@ -247,7 +247,7 @@ const Test1 = () => {
                             {data.studentProfileId}
                             </td>
                             <td>{data.fullName}</td>
-                            <td>{data.customerId}</td>
+                            {/* <td>{data.customerId}</td> */}
                             <td>{data.createDate}</td>
                             <td>{data.phone}</td>
                             <td>{data.customerId}</td>

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { signup } from "../../redux/slice/authSlice";
 import { Form, Button } from "react-bootstrap";
+import Swal from "sweetalert2";
 
 function SignUp() {
   const [formData, setFormData] = useState({
@@ -20,6 +21,7 @@ function SignUp() {
   const dispatch = useDispatch();
 
   const [errors, setErrors] = useState({});
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false); 
 
   const validateForm = () => {
     const newErrors = {};
@@ -78,7 +80,26 @@ function SignUp() {
     const newErrors = validateForm();
 
     if (Object.keys(newErrors).length === 0) {
-      dispatch(signup({ formData, navigate }));
+      // Gửi yêu cầu đăng ký
+      dispatch(signup({ formData, navigate }))
+        .then(() => {
+          // Nếu đăng ký thành công, hiển thị alert và thiết lập lại form
+          setShowSuccessAlert(true);
+          setFormData({
+            fullName: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+            gender: "",
+            address: "",
+            dateOfBirth: "",
+            phone: "",
+          });
+        })
+        .catch((error) => {
+          // Xử lý lỗi nếu có
+          console.error("Đã xảy ra lỗi khi đăng ký:", error);
+        });
     } else {
       setErrors(newErrors);
     }
@@ -238,6 +259,11 @@ function SignUp() {
                 </div>
               </div>
             </form>
+            {showSuccessAlert && (
+              <div className="alert alert-success" role="alert">
+                Tạo tài khoản thành công!
+              </div>
+            )}
           </div>
         </div>
       </div>

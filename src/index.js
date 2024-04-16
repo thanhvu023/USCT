@@ -24,6 +24,7 @@ import RegistrationPage from "./components/registration-page.jsx";
 import StudentProfileRegistrationPage from "./components/studentProfileRegistration.jsx";
 import StudentProfileAppliedPage from "./components/StudentProfileAppliedPage.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
+import RegistrationDetailPage from "./components/registration-details-page.jsx";
 // import EditCustomer from "./components/admin-components/customer-components/edit-customer";
 
 const App = () => {
@@ -39,8 +40,15 @@ const App = () => {
         <Route path="/university" element={<University />} />
         <Route path="/customer-profile" element={<CustomerProfile />} />
         <Route path="/students-profile" element={<StudentProfile />} />
-        <Route path="/admin" element={<PrivateRoute><AdminPage /></PrivateRoute>} />
-        <Route path="/student-profile-detail/:studentProfileId" element={<StudentProfileDetailPage />} />
+        <Route path="/admin" element={<AdminPage />} />
+        <Route
+          path="/student-profile-detail/:studentProfileId"
+          element={<StudentProfileDetailPage />}
+        />
+             <Route
+          path="/registration-detail/:registrationFormId"
+          element={<RegistrationDetailPage />}
+        />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ConfirmPasswordPage />} />
         <Route path="/customer/change-password" element={<ChangePasswordPage />} />

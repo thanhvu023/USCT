@@ -10,6 +10,7 @@ import AllConsultant from "./admin-components/consultant-components/consutant";
 import AllProgramsPage from "./admin-components/program-components/programs1";
 import AllPrograms from "./admin-components/program-components/programs";
 import Registration from "./admin-components/registration-components/registration";
+import ProgramApplicationPage from "./admin-components/program-application-components/program-apllicationbyStudentprofileId";
 
 
 const AdminPage = () => {
@@ -25,6 +26,7 @@ const AdminPage = () => {
     "Lợi nhuận": <Test1 />,
     "Hồ sơ học sinh": <Test1 />,
     "Đơn tư vấn": <Registration />,
+    "ProgramApplication": <ProgramApplicationPage/>
     
   };
   

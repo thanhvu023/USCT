@@ -135,5 +135,13 @@ export const MenuList = [
         filterName: 'Đơn tư vấn',
        
     },
+    {
+        title:'ProgramApplication',
+        classsChange: 'mm-collapse',
+        iconStyle: <i className="
+        la la-pencil-square" />,
+        filterName: 'ProgramApplication',
+       
+    },
 
 ] 

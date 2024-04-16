@@ -140,11 +140,11 @@ function ProgramsPage() {
                                 <span>Lộ trình: {program.duration}</span>
                               </div>
                             </div>
-                            <div className="col-6">
+                            {/* <div className="col-6">
                               <div className="price text-right">
                                 Học phí: <span>{program.tuition}$</span>
                               </div>
-                            </div>
+                            </div> */}
                           </div>
                         </div>
                       </div>

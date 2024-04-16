@@ -30,17 +30,22 @@ const Registration = () => {
   const [showDeleteSuccess, setShowDeleteSuccess] = useState(false);
   const [selectedRegistration, setSelectedRegistration] = useState(null); // State lưu thông tin đơn tư vấn được chọn
 
-  const customers = useSelector((state) => state.auth.userById);
+  
+const customers = useSelector((state)=>state.auth.userById)
 
-  console.log("customerName là:", customers);
+
+// console.log("customerName là:",customers)
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
   const customerId = jwtDecode(token).UserId;
+
   const registrationProfileByCustomerId = useSelector(
     (state) => state?.registration?.registrationForms
   );
+  console.log("registrationProfileByCustomerId la:",registrationProfileByCustomerId)
   const getFullName = (customerId) => {
-    const customer = Array.isArray(customers) && customers.find((customer) => customer.id === customerId[0]);
+    const customer = customers.find((customer) => customer.id === customerId[0]);
+
     return customer ? customer.fullName : "Không tìm thấy";
   };
   
