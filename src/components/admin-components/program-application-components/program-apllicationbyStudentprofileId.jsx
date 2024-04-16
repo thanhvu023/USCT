@@ -4,21 +4,21 @@ import { getAllProgramApplication } from '../../../redux/slice/programApplicatio
 
 const ProgramApplicationPage = () => {
   const dispatch = useDispatch();
-  const { allProgramApplication, loading, error } = useSelector((state) => state.programApplication);
+  const { programApplications, loading, error } = useSelector((state) => state.programApplication);
 
   useEffect(() => {
     dispatch(getAllProgramApplication());
   }, [dispatch]);
-console.log("allProgramApplications:",allProgramApplication)
+console.log("programApplications:",programApplications)
   return (
     <div>
       <h1>All Program Applications</h1>
-      {loading || !allProgramApplication ? (
+      {loading || !programApplications ? (
         <p>Loading...</p>
       ) : error ? (
         <p>{error}</p>
       ) : (
-        allProgramApplication.map((application) => (
+        programApplications.map((application) => (
           <div key={application.programApplicationId}>
             <h2>{application.programId.nameProgram}</h2>
             <p>Apply Stage: {application.applyStage.stageName}</p>

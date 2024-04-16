@@ -69,8 +69,8 @@ const Registration = () => {
     const file = event.target.files[0];
   };
 
-  const token = useSelector((state) => state.auth.token);
-  const customerId = jwtDecode(token).UserId;
+  const token = useSelector((state) => state?.auth?.token);
+  const customerId = jwtDecode(token)?.UserId;
   const [formData, setFormData] = useState({
     area: "",
     moreInformation: "",
@@ -345,7 +345,6 @@ const Registration = () => {
     { value: "Theo định hướng gia đình", label: "Theo định hướng gia đình" },
   ];
   let publicUrl = process.env.PUBLIC_URL + "/";
-  console.log(formData);
   return (
     <div>
       {/* <MultiStepProgressBar page={page} onPageNumberClick={nextPageNumber} /> */}
