@@ -11,7 +11,7 @@ import "./customer.css";
 const theadData = [
   { heading: "Id khách hàng", sortingVale: "customerId" },
   { heading: "Họ và tên", sortingVale: "name" },
-  { heading: "Giới tính", sortingVale: "gender" },
+  // { heading: "Giới tính", sortingVale: "gender" },
   { heading: "Ngày sinh", sortingVale: "dob" },
   { heading: "Số điện thoại", sortingVale: "mobile" },
   { heading: "Email", sortingVale: "email" },
@@ -26,7 +26,8 @@ const AllCustomer = () => {
   const activePag = useRef(0);
   const dispatch = useDispatch();
   const [test, settest] = useState(0);
-  const [feeData, setFeeDate] = useState([]);
+  const [feeData, setFeeData] = useState([]);
+  const [originalData, setOriginalData] = useState([]);
   const [iconData, setIconDate] = useState({ complete: false, ind: null });
   const [showCheckModal, setShowCheckModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -40,11 +41,13 @@ useEffect(() => {
 }, [dispatch]);
 
 
-  useEffect(() => {
-    if (userData) {
-      setFeeDate(userData); // Cập nhật state feeData với dữ liệu từ API
-    }
-  }, [userData]);
+useEffect(() => {
+  if (userData) {
+    setFeeData(userData);
+    setOriginalData(userData);
+  }
+}, [userData]);
+
   const handleCloseCheckModal = () => setShowCheckModal(false);
   const handleCloseDeleteModal = () => setShowDeleteModal(false);
 
@@ -119,20 +122,24 @@ useEffect(() => {
       default:
         break;
     }
-    setFeeDate(sortedPeople);
+    setFeeData(sortedPeople);
   }
   
 
   
   function DataSearch(e) {
-    const updatesDate = feeData.filter((item) => {
-      const searchData = `${item.fullName} ${item.customerId} ${item.gender} ${item.dateOfBirth} ${item.phone} ${item.email} ${item.address}`.toLowerCase();
-      return searchData.includes(e.target.value.toLowerCase());
-    });
-    setFeeDate([...updatesDate]);
+    const searchTerm = e.target.value.toLowerCase();
+    if (searchTerm === "") {
+      setFeeData(originalData);
+    } else {
+      const updatedData = originalData.filter((item) => {
+        const searchData = `${item.fullName} ${item.customerId} ${item.gender} ${item.dateOfBirth} ${item.phone} ${item.email} ${item.address}`.toLowerCase();
+        return searchData.includes(searchTerm);
+      });
+      setFeeData(updatedData);
+    }
   }
   
-
   return (
     <>
       <Row>
@@ -238,7 +245,7 @@ useEffect(() => {
                            <td>{data.customerId}</td>
                           <td>{data.fullName}</td>
                        
-                          <td>{data.gender}</td>
+                          {/* <td>{data.gender}</td> */}
                           <td>{data.dateOfBirth}</td>
                           <td>
                             <Link to="#">
