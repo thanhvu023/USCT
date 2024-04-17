@@ -50,7 +50,7 @@ function ProgramDetailPage() {
       studentProfileId: "",
       programId: "",
     });
-    dispatch(resetStdeunt())
+    dispatch(resetStdeunt());
   };
 
   const programTypeId = useSelector(
@@ -78,18 +78,15 @@ function ProgramDetailPage() {
   const programDetail = useSelector((state) => state?.program?.programById);
   const stateDetail = useSelector((state) => state?.state?.stateById);
   const majorDetail = useSelector((state) => state?.major?.majorById);
-  const programType = useSelector((state)=>state?.program?.programTypes)
+  const programType = useSelector((state) => state?.program?.programTypes);
 
   // console.log("programs:",programs)
   const profileStudent = useSelector(
     (state) => state?.student?.studentProfileByCustomerId
   );
-  useEffect(()=>{
-   
-      dispatch(getProgramTypes());
-  
-    
-  },[dispatch]);
+  useEffect(() => {
+    dispatch(getProgramTypes());
+  }, [dispatch]);
   useEffect(() => {
     if (programById) {
       dispatch(getProgramById(programById));
@@ -147,17 +144,17 @@ function ProgramDetailPage() {
     studentProfileId: undefined,
     programId: programById,
   });
-  const profileStudentId = formData.studentProfileId
+  const profileStudentId = formData.studentProfileId;
   useEffect(() => {
     if (profileStudentId) {
       dispatch(getStudentProfileById(profileStudentId));
-      dispatch(resetStdeunt())
+      dispatch(resetStdeunt());
     }
   }, [profileStudentId]);
   const studentProfileDetail = useSelector(
     (state) => state?.student?.profileById
   );
-  
+
   const handleSelectChange = (selectedOption) => {
     // Update the formData state with the selected option
     setFormData({
@@ -171,6 +168,12 @@ function ProgramDetailPage() {
       console.log(formData);
       dispatch(createProgramApplication(formData));
     }
+  };
+  const handleScrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
   return (
     <>
@@ -262,9 +265,13 @@ function ProgramDetailPage() {
                     <p>{programDetail?.requirement}</p>
                   </div>
                   <div className="col-lg-12">
-                    <h4 className="title ">Chi phí kham khảo</h4>
-                    <p dangerouslySetInnerHTML={{ __html: programDetail?.tuition?.replace(/\\\\r\\\\n/g, "<br/>• ") }} />
-
+                    <h4 className="title">Chi phí khám khảo</h4>
+                    <ul>
+                      {programDetail?.tuition &&
+                        programDetail.tuition
+                          .split("\\r\\n")
+                          .map((item, index) => <li key={index}>{item}</li>)}
+                    </ul>
                   </div>
                 </div>
               </div>
@@ -303,8 +310,6 @@ function ProgramDetailPage() {
                       <i className="fa fa-graduation-cap" />
                       <span>Loại chương trình:</span>
                       {getTypeName(programDetail.programTypeId)}
-
-
                     </li>
                   </ul>
                   <div className="price-wrap text-center">
@@ -500,7 +505,7 @@ function ProgramDetailPage() {
                         }
                       >
                         {programsInSlide.map((program, index) => (
-                          <div key={index} className="col-lg-3 col-md-6">
+                          <div key={index} className="col-lg-4 col-md-6">
                             <div className="single-course-inner">
                               <div className="thumb">
                                 <img
@@ -514,6 +519,7 @@ function ProgramDetailPage() {
                                 <div className="details-inner">
                                   <h5>
                                     <Link
+                                      onClick={handleScrollToTop}
                                       to={`/program-details/${program.programId}`}
                                     >
                                       {program.nameProgram}
@@ -522,16 +528,11 @@ function ProgramDetailPage() {
                                 </div>
                                 <div className="emt-course-meta">
                                   <div className="row">
-                                    <div className="col-6">
+                                    <div className="col-12">
                                       <div className="rating">
                                         <span>
                                           Lộ trình: {program.duration}
                                         </span>
-                                      </div>
-                                    </div>
-                                    <div className="col-6">
-                                      <div className="price text-right">
-                                        Học phí: <span>{program.tuition}$</span>
                                       </div>
                                     </div>
                                   </div>
