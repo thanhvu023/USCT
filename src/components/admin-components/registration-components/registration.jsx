@@ -7,12 +7,12 @@ import { getRegistration, getRegistrationByCustomerId } from "../../../redux/sli
 import { getUserById } from "../../../redux/slice/authSlice";
 import jwtDecode from "jwt-decode";
 import { Link } from "react-router-dom";
+
 const theadData = [
-  { heading: "ID đơn", sortingVale: "id" },
-  // { heading: "Họ và tên", sortingVale: "name" },
+  { heading: "ID đơn", sortingVale: "id" },  
+  { heading: "Tên khách hàng ", sortingVale: "advisor" },
   { heading: "Chuyên ngành đã chọn", sortingVale: "majorChoose" },
   { heading: "Chương trình đã chọn", sortingVale: "programChoose" },
-  { heading: "Tư vấn viên phụ trách", sortingVale: "advisor" },
   { heading: "Thao tác", sortingVale: "action" },
 ];
 
@@ -22,19 +22,16 @@ const Registration = () => {
   const activePag = useRef(0);
   const [test, setTest] = useState(0);
   const [feeData, setFeeData] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
   const [iconData, setIconDate] = useState({ complete: false, ind: null });
   const [showCheckModal, setShowCheckModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showCheckSuccess, setShowCheckSuccess] = useState(false);
   const [showDeleteSuccess, setShowDeleteSuccess] = useState(false);
   const [selectedRegistration, setSelectedRegistration] = useState(null); // State lưu thông tin đơn tư vấn được chọn
+  const [searchResults, setSearchResults] = useState([]);
+  const [initialList, setInitialList] = useState([]);
 
-  
-const customers = useSelector((state)=>state.auth.userById)
-
-
-// console.log("customerName là:",customers)
+  const customers = useSelector((state)=>state.auth.userById);
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
   const customerId = jwtDecode(token).UserId;
@@ -42,18 +39,28 @@ const customers = useSelector((state)=>state.auth.userById)
   const registrationProfileByCustomerId = useSelector(
     (state) => state?.registration?.registrationForms
   );
-  console.log("registrationProfileByCustomerId la:",registrationProfileByCustomerId)
-  const getFullName = (customerId) => {
-    const customer = customers.find((customer) => customer.id === customerId[0]);
 
+  const getFullName = (customerId) => {
+    const customer = customers.find((customer) => customer.customerId === customerId);
     return customer ? customer.fullName : "Không tìm thấy";
   };
   
   useEffect(() => {
-      dispatch(getRegistration());
+    if (customers) {
+      setFeeData(customers);
+    }
+  }, [customers]);
+
+  useEffect(() => {
+    if (registrationProfileByCustomerId) {
+      setInitialList(registrationProfileByCustomerId);
+    }
+  }, [registrationProfileByCustomerId]);
+
+  useEffect(() => {
+    dispatch(getRegistration());
   }, [dispatch]);
 
-  console.log("danh sach là:", registrationProfileByCustomerId);
   const handleCloseCheckModal = () => setShowCheckModal(false);
   const handleCloseDeleteModal = () => setShowDeleteModal(false);
 
@@ -109,26 +116,23 @@ const customers = useSelector((state)=>state.auth.userById)
     setTest(i);
   };
 
-  // function DataSearch(e) {
-  //   const searchTerm = e.target.value.toLowerCase();
-  //   setSearchTerm(searchTerm);
-  // }
+  const { loading } = useSelector((state) => state.registration);
 
-  const { registrationForms, loading } = useSelector(
-    (state) => state.registration
-  );
+  function searchData(searchTerm) {
+    if (searchTerm.trim() !== "") {
+      const filteredData = initialList.filter((registration) => {
+        return (
+          registration.majorChoose.toLowerCase().includes(searchTerm) ||
+          registration.programChoose.toLowerCase().includes(searchTerm) ||
+          getFullName(registration.customerId).toLowerCase().includes(searchTerm)
+        );
+      });
+      setSearchResults(filteredData);
+    } else {
+      setSearchResults(initialList);
+    }
+  }
 
-  // useEffect(() => {
-  //   const filteredData = registrationForms.filter((form) => {
-  //     return (
-  //       form.fullName.toLowerCase().includes(searchTerm) ||
-  //       form.majorChoose.toLowerCase().includes(searchTerm) ||
-  //       form.programChoose.toLowerCase().includes(searchTerm) ||
-  //       form.advisor.toLowerCase().includes(searchTerm)
-  //     );
-  //   });
-  //   setFeeData(filteredData);
-  // }, [searchTerm, registrationForms]);
   const handleClickName = (registration) => {
     setSelectedRegistration(registration);
     setShowCheckModal(true);
@@ -195,7 +199,7 @@ const customers = useSelector((state)=>state.auth.userById)
                               type="search"
                               className=""
                               placeholder=""
-                              // onChange={DataSearch}
+                              onChange={(e) => searchData(e.target.value.toLowerCase())}
                             />
                           </label>
                         </div>
@@ -234,7 +238,7 @@ const customers = useSelector((state)=>state.auth.userById)
                           </tr>
                         </thead>
                         <tbody>
-                          {registrationProfileByCustomerId.map(
+                          {(searchResults.length > 0 ? searchResults : initialList).map(
                             (registration) => (
                               <tr key={registration.id}>
                                 <td>
@@ -246,10 +250,9 @@ const customers = useSelector((state)=>state.auth.userById)
                                     {registration.registrationFormId}
                                   </Link>
                                 </td>
-                                {/* <td>{getFullName(registration.customerId)}</td>{" "} */}
+                                <td>{getFullName(registration.customerId)}</td>
                                 <td>{registration.majorChoose}</td>
                                 <td>{registration.programChoose}</td>
-                                <td>{registration.consultantId}</td>
                                 <td
                                   style={{
                                     display: "flex",

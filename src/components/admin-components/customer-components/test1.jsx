@@ -2,34 +2,100 @@ import React, { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getStudentProfileByCustomerId } from "../../../redux/slice/studentSice";
 import { Dropdown } from "react-bootstrap";
+import { getProgramById } from '../../../redux/slice/programSlice';
+import { getProgramApplicationsByStudentProfileId } from "../../../redux/slice/programApplicationSlice";
 import { Link } from "react-router-dom";
 import { IMAGES } from "./contants/theme-student";
 import { Row, Button, Modal, Alert } from "react-bootstrap";
 import Swal from "sweetalert2"
 const theadData = [
-  { heading: "ID học sinh", sortingVale: "id" },
+  { heading: "StudentProfileId", sortingVale: "id" },
   { heading: "Họ và tên", sortingVale: "name" },
   // { heading: "Tư vấn viên phụ trách", sortingVale: "advisor" },
   { heading: "Ngày tạo", sortingVale: "date" },
-  { heading: "Chương trình", sortingVale: "program" },
-  { heading: "Trạng thái", sortingVale: "status" },
+  { heading: "Chương trình ứng tuyển", sortingVale: "program" },
+  { heading: "Trạng thái hồ sơ", sortingVale: "status" },
   { heading: "Thao tác", sortingVale: "action" },
 ];
 
 const Test1 = () => {
-
+  const dispatch = useDispatch();
   const [sort, setSortata] = useState(10);
   const [data, setData] = useState([]);
   const activePag = useRef(0);
   const [test, settest] = useState(0);
   const [feeData, setFeeData] = useState([]); 
   const [searchTerm, setSearchTerm] = useState(""); 
+  const [programApplications, setProgramApplications] = useState([]);
+  const [studentProfileId, setStudentProfileId] = useState(null);
+  useEffect(() => {
+    const fetchProgramApplications = async () => {
+      try {
+        const response = await dispatch(getProgramApplicationsByStudentProfileId(studentProfileId));
+        if (response.payload) {
+          setProgramApplications(response.payload);
+        }
+      } catch (error) {
+        console.error("Error fetching program applications:", error);
+      }
+    };
+
+    fetchProgramApplications();
+
+    // Cleanup function to clear the programApplications state
+    return () => {
+      setProgramApplications([]);
+    };
+  }, [dispatch, studentProfileId]);
+ 
+
+ 
+  // Sử dụng useEffect để lấy thông tin chi tiết của từng chương trình từ programId
+  useEffect(() => {
+    const fetchPrograms = async () => {
+      const programIds = programApplications.map(application => application.programId);
+      for (const programId of programIds) {
+        try {
+          const response = await dispatch(getProgramById(programId));
+          if (response.payload) {
+            // Cập nhật thông tin chi tiết chương trình vào programApplications
+            setProgramApplications(prevState => prevState.map(application => {
+              if (application.programId === programId) {
+                return {
+                  ...application,
+                  programName: response.payload.nameProgram
+                };
+              }
+              return application;
+            }));
+          }
+        } catch (error) {
+          console.error(`Error fetching program with ID ${programId}:`, error);
+        }
+      }
+    };
+
+    // Gọi hàm fetchPrograms khi programApplications có dữ liệu
+    if (programApplications.length > 0) {
+      fetchPrograms();
+    }
+  }, [dispatch, programApplications]);
+ 
   const [iconData, setIconDate] = useState({ complete: false, ind: null });
   const [showCheckModal, setShowCheckModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showCheckSuccess, setShowCheckSuccess] = useState(false);
   const [showDeleteSuccess, setShowDeleteSuccess] = useState(false);
-  const dispatch = useDispatch();
+  const [selectedStudentProfileId, setSelectedStudentProfileId] = useState(null); // State lưu thông tin đơn tư vấn được chọn
+ const handleStudentProfile = (student) =>{
+  setSelectedStudentProfileId(student);
+  setShowCheckModal(true)
+ }
+  
+  
+  
+  
+
 
   const handleCloseCheckModal = () => setShowCheckModal(false);
   const handleCloseDeleteModal = () => setShowDeleteModal(false);
@@ -73,6 +139,8 @@ const Test1 = () => {
     setData(document.querySelectorAll("#holidayList tbody tr"));
   }, [test]);
 
+
+  
   activePag.current === 0 && chageData(0, sort);
 
   let paggination = Array(Math.ceil(data.length / sort))
@@ -137,6 +205,8 @@ const Test1 = () => {
   useEffect(() => {
     dispatch(getStudentProfileByCustomerId(1)); // Thay userId bằng giá trị tương ứng
   }, [dispatch]);
+  // console.log("feeData:",feeData)
+
   return (
     <div>
       {loading ? (
@@ -145,14 +215,7 @@ const Test1 = () => {
         <>
         <Row>
           <div className="col-lg-12">
-            <Alert
-              show={showDeleteSuccess}
-              variant="danger"
-              onClose={() => setShowDeleteSuccess(false)}
-              dismissible
-            >
-              Xóa thành công!
-            </Alert>
+         
             <div className="card">
               <div className="card-header d-flex justify-content-between align-items-center">
                 <h4 className="card-title">Danh sách hồ sơ</h4>
@@ -241,126 +304,133 @@ const Test1 = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {feeData.map((data) => (
-                          <tr key={data.id}>
-                            <td>
-                            {data.studentProfileId}
-                            </td>
-                            <td>{data.fullName}</td>
-                            {/* <td>{data.customerId}</td> */}
-                            <td>{data.createDate}</td>
-                            <td>{data.phone}</td>
-                            <td>{data.customerId}</td>
-                            {/* <td>{data.dob}</td> */}
-                            {/* <td>
-                              <Link to="#">
-                                <strong>{data.mobile}</strong>
-                              </Link>
-                            </td>
-                            <td>
-                              <Link to="#">
-                                <strong>{data.email}</strong>
-                              </Link>
-                            </td>
-                            <td>{data.address}</td>
-                            <td>{data.join}</td> */}
-                            <td style={{ display: "flex", alignItems: "center" }}>
-                              <button
-                              
-                                onClick={handleShowCheckModal}
-                                className="btn btn-xs sharp btn-primary me-1"
-                                style={{
-                                  width: "30px",
-                                  height: "30px",
-                                  padding: "0 20px",
-                                  display: "flex",
-                                  justifyContent: "center",
-                                  alignItems: "center",
-                                  marginRight: "5px",
-                                }}
-                              >
-                                <i className="fa fa-check" />
-                              </button>
-                              <button
-                                onClick={handleShowDeleteModal}
-                                className="btn btn-xs sharp btn-danger"
-                                style={{
-                                  width: "30px",
-                                  height: "30px",
-                                  padding: "0 20px",
-                                  display: "flex",
-                                  justifyContent: "center",
-                                  alignItems: "center",
-                                }}
-                              >
-                                <i className="fa fa-trash" />
-                              </button>
-                              <Modal
-                                className="custom-modal"
-                                show={showCheckModal}
-                                onHide={handleCloseCheckModal}
-                                backdrop="static"
-                                centered
-                              >
-                                <Modal.Header>
-                                  <Modal.Title>Modal Check Title</Modal.Title>
-                                </Modal.Header>
-                                <Modal.Body>
-                                  Bạn có chắc chắn muốn thực hiện hành động này?
-                                </Modal.Body>
-                                <Modal.Footer>
-                                  <Button
-                                    variant="secondary"
-                                    onClick={handleCloseCheckModal}
-                                  >
-                                    Hủy
-                                  </Button>
-                                  <Button
-                                    variant="primary"
-                                    onClick={() => {
-                                      handleCloseCheckModal();
-                                      setShowCheckSuccess(true);
-                                    }}
-                                  >
-                                    Đồng ý
-                                  </Button>
-                                </Modal.Footer>
-                              </Modal>
+                      {feeData.map((data) => {
+  const programApplication = programApplications.find(
+    (application) => application.studentProfileId === data.studentProfileId
+  );
+  // Check if programApplication is defined before accessing nested properties
+  const programStageName = programApplication ? 
+    programApplication.applyStage.programStage.stageName : '';
+  const programName = programApplication ? 
+    programApplication.applyStage.programStage.program.nameProgram : '';
   
-                              <Modal
-                                className="custom-modal"
-                                show={showDeleteModal}
-                                onHide={handleCloseDeleteModal}
-                                backdrop="static"
-                                centered
-                              >
-                                <Modal.Header>
-                                  <Modal.Title>Modal Delete Title</Modal.Title>
-                                </Modal.Header>
-                                <Modal.Body>
-                                  Bạn có chắc chắn muốn xóa mục này?
-                                </Modal.Body>
-                                <Modal.Footer>
-                                  <Button
-                                    variant="secondary"
-                                    onClick={handleCloseDeleteModal}
+  return (
+    <tr key={data.id}>
+      <td>{data.studentProfileId}</td>
+      <td>
+      <Link
+                                    onClick={() =>
+                                      handleStudentProfile(data)
+                                    }
                                   >
-                                    Hủy
-                                  </Button>
-                                  <Button
-                                    variant="danger"
-                                    onClick={() => {
-                                      handleCloseDeleteModal();
-                                      setShowDeleteSuccess(true);
-                                    }}
-                                  >
-                                    Xóa
-                                  </Button>
-                                </Modal.Footer>
-                              </Modal>
-                            </td>
-                          </tr>
-                        ))}
+                                    {data.fullName}
+                                  </Link>
+      </td>
+      {/* <td>{data.fullName}</td> */}
+      <td>{data.createDate}</td>
+      <td>{programName}</td>
+      <td>{programStageName}</td> {/* Render the program name */}
+      <td style={{ display: "flex", alignItems: "center" }}>
+                            <button
+                            
+                              onClick={handleShowCheckModal}
+                              className="btn btn-xs sharp btn-primary me-1"
+                              style={{
+                                width: "30px",
+                                height: "30px",
+                                padding: "0 20px",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                marginRight: "5px",
+                              }}
+                            >
+                              <i className="fa fa-check" />
+                            </button>
+                            <button
+                              onClick={handleShowDeleteModal}
+                              className="btn btn-xs sharp btn-danger"
+                              style={{
+                                width: "30px",
+                                height: "30px",
+                                padding: "0 20px",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                              }}
+                            >
+                              <i className="fa fa-trash" />
+                            </button>
+                            <Modal
+                              className="custom-modal"
+                              show={showCheckModal}
+                              onHide={handleCloseCheckModal}
+                              backdrop="static"
+                              centered
+                            >
+                              <Modal.Header>
+                                <Modal.Title>  {selectedStudentProfileId &&
+                  selectedStudentProfileId.programApplicationId}</Modal.Title>
+                              </Modal.Header>
+                              <Modal.Body>
+                                Bạn có chắc chắn muốn thực hiện hành động này?
+                              </Modal.Body>
+                              <Modal.Footer>
+                                <Button
+                                  variant="secondary"
+                                  onClick={handleCloseCheckModal}
+                                >
+                                  Hủy
+                                </Button>
+                                <Button
+                                  variant="primary"
+                                  onClick={() => {
+                                    handleCloseCheckModal();
+                                    setShowCheckSuccess(true);
+                                  }}
+                                >
+                                  Đồng ý
+                                </Button>
+                              </Modal.Footer>
+                            </Modal>
+
+                            <Modal
+                              className="custom-modal"
+                              show={showDeleteModal}
+                              onHide={handleCloseDeleteModal}
+                              backdrop="static"
+                              centered
+                            >
+                              <Modal.Header>
+                                <Modal.Title>Modal Delete Title</Modal.Title>
+                              </Modal.Header>
+                              <Modal.Body>
+                                Bạn có chắc chắn muốn xóa mục này?
+                              </Modal.Body>
+                              <Modal.Footer>
+                                <Button
+                                  variant="secondary"
+                                  onClick={handleCloseDeleteModal}
+                                >
+                                  Hủy
+                                </Button>
+                                <Button
+                                  variant="danger"
+                                  onClick={() => {
+                                    handleCloseDeleteModal();
+                                    setShowDeleteSuccess(true);
+                                  }}
+                                >
+                                  Xóa
+                                </Button>
+                              </Modal.Footer>
+                            </Modal>
+                          </td>
+    </tr>
+  );
+})}
+
+                      
                       </tbody>
                     </table>
                     <div className="d-sm-flex text-center justify-content-between align-items-center mt-3">
