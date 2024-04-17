@@ -1,15 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { logoutUser } from "../../redux/slice/authSlice";
+import { getUserById, logoutUser } from "../../redux/slice/authSlice";
 import { logoutStudent } from "../../redux/slice/studentSice";
 import { Dropdown } from "react-bootstrap";
 import { logoutProgram } from "../../redux/slice/programSlice";
 import Swal from "sweetalert2"; // Import Swal
+import jwtDecode from "jwt-decode";
 
 function Navbar() {
   const token = useSelector((state) => state.auth?.token);
-  
+  const userId = token ? jwtDecode(token).UserId : null;
+  useEffect(() => {
+    if (userId) {
+      dispatch(getUserById(userId));
+    }
+  }, [userId]);
+
+  const userDetail = useSelector((state) => state.auth.userById);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleLogout = () => {
@@ -20,9 +28,8 @@ function Navbar() {
   };
   let publicUrl = process.env.PUBLIC_URL + "/";
 
-  const isLoggedIn = useSelector((state) => state.auth?.token);
+  const isLoggedIn = useSelector((state) => state?.auth?.token);
 
-  
   // Hàm kiểm tra token và hiển thị cảnh báo nếu cần
   const checkTokenAndRedirect = (path) => {
     if (!isLoggedIn) {
@@ -114,7 +121,12 @@ function Navbar() {
                 <Link to="/university">Trường học</Link>
               </li>
               <li>
-              <Link to="/contact" onClick={() => checkTokenAndRedirect("/contact")}>Tư Vấn</Link>
+                <Link
+                  to="/contact"
+                  onClick={() => checkTokenAndRedirect("/contact")}
+                >
+                  Tư Vấn
+                </Link>
               </li>
               <li>
                 <Link to="/admin">Admin</Link>
@@ -145,10 +157,10 @@ function Navbar() {
                     as="div"
                   >
                     <img
-                      src={publicUrl + "assets/img/author/pic2.jpg"}
+                      src={userDetail.img}
                       alt="img"
-                      className="bg-info rounded-circle"
-                      style={{ height: "50px" }}
+                      className=" rounded-circle"
+                      style={{ height: "50px", width: "50px" }}
                     />
                   </Dropdown.Toggle>
                   <Dropdown.Menu
@@ -171,7 +183,7 @@ function Navbar() {
                       className="dropdown-item ai-icon"
                       onClick={handleLogout}
                     >
-                     Đăng xuất
+                      Đăng xuất
                     </button>
                   </Dropdown.Menu>
                 </Dropdown>

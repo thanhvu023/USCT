@@ -162,6 +162,9 @@ a i {
 img {
   max-width: 100%;
 }
+#avatar-img {
+  max-width: none !important; /* Use none instead of auto */
+}
 
 ol {
   counter-reset: counter;

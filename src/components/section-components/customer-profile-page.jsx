@@ -7,42 +7,49 @@ import jwtDecode from "jwt-decode";
 import { Link } from "react-router-dom";
 import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 import Swal from "sweetalert2";
-
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { imageDb } from "../FirebaseImage/Config.js";
 const CustomerProfilePage = () => {
   let publicUrl = process.env.PUBLIC_URL + "/";
 
   const token = useSelector((state) => state.auth.token);
   const userId = jwtDecode(token).UserId;
-  const userDetail = useSelector((state) => state.auth.userById) || {}  
+  const userDetail = useSelector((state) => state.auth.userById) || {};
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getUserById(userId));
   }, [userId]);
 
   const [fullName, setFullName] = useState(userDetail.fullName || "");
-const [phone, setPhone] = useState(userDetail.phone || "");
-const [address, setAddress] = useState(userDetail.address || "");
-const [email, setEmail] = useState(userDetail.email || "");
-const [dateOfBirth, setDateOfBirth] = useState(userDetail.dateOfBirth || "");
-const [gender, setGender] = useState(userDetail.gender || "");
+  const [phone, setPhone] = useState(userDetail.phone || "");
+  const [address, setAddress] = useState(userDetail.address || "");
+  const [email, setEmail] = useState(userDetail.email || "");
+  const [dateOfBirth, setDateOfBirth] = useState(userDetail.dateOfBirth || "");
+  const [gender, setGender] = useState(userDetail.gender || "");
   const [isChecked, setIsChecked] = useState(false); // State variable to track checkbox status
-
-  let [avatar, setImageSrc] = useState(userDetail.avatar);
 
   const [errors, setErrors] = useState({});
   const [updateMessage, setUpdateMessage] = useState("");
-  //   const handleUpload = async (selectedFile) => {
-  //     const imgRef = ref(imageDb, `files/${selectedFile.name}`);
-  //     try {
-  //       await uploadBytes(imgRef, selectedFile);
-  //       const imageUrl = await getDownloadURL(imgRef);
-  //       console.log(imageUrl);
-  //       setImageSrc(imageUrl); // Set the state variable with the uploaded image URL.
-  //       console.log(`Đã tải lên: ${selectedFile.name}`);
-  //     } catch (error) {
-  //       console.error(`Lỗi khi tải lên ${selectedFile.name}:`, error);
-  //     }
-  //   };
+  let [avatar, setImageSrc] = useState(userDetail.img);
+  const handleUpload = async (e) => {
+    const selectedFile = e.target.files && e.target.files[0]; // Check if files exist before accessing the first file
+
+    console.log("Selected File:", selectedFile);
+    if (selectedFile) {
+      const imgRef = ref(imageDb, `Image/customerAvatar/${selectedFile.name}`);
+      try {
+        await uploadBytes(imgRef, selectedFile);
+        const imageUrl = await getDownloadURL(imgRef);
+        console.log(imageUrl);
+        setImageSrc(imageUrl);
+      } catch (error) {
+        console.error(`Error uploading ${selectedFile.name}:`, error);
+      }
+    } else {
+      console.error("No file selected.");
+    }
+  };
+
   const validateForm = () => {
     const newErrors = {};
     if (fullName.trim() === "") {
@@ -74,13 +81,12 @@ const [gender, setGender] = useState(userDetail.gender || "");
         phone,
         address,
         email,
-        avatar,
+        img: avatar,
         gender,
         dateOfBirth,
       },
     };
     const newErrors = validateForm();
-
     if (Object.keys(newErrors).length === 0) {
       // Check if the checkbox is checked
       if (!isChecked) {
@@ -102,27 +108,26 @@ const [gender, setGender] = useState(userDetail.gender || "");
       return;
     }
 
-  
-// Cập nhật thông tin và hiển thị thông báo thành công
-setFullName(updatedData.userData.fullName);
-setPhone(updatedData.userData.phone);
-setAddress(updatedData.userData.address);
-setDateOfBirth(updatedData.userData.dateOfBirth);
-setGender(updatedData.userData.gender);
-setImageSrc(updatedData.userData.avatar);
+    // Cập nhật thông tin và hiển thị thông báo thành công
+    setFullName(updatedData.userData.fullName);
+    setPhone(updatedData.userData.phone);
+    setAddress(updatedData.userData.address);
+    setDateOfBirth(updatedData.userData.dateOfBirth);
+    setGender(updatedData.userData.gender);
+    setImageSrc(updatedData.userData.img);
 
-Swal.fire({
-  icon: "success",
-  title: "Cập nhật hồ sơ thành công!",
-  showConfirmButton: false,
-  timer: 1500, // Hiển thị trong 1.5 giây
-});
+    Swal.fire({
+      icon: "success",
+      title: "Cập nhật hồ sơ thành công!",
+      showConfirmButton: false,
+      timer: 1500, // Hiển thị trong 1.5 giây
+    });
   };
   return (
     <Fragment>
       <PageTitle activeMenu="Profile" motherMenu="App" />
       <div className="bc-grey">
-        <div className="row mb-5 mr-0 ml-0 border-0">
+        <div className="row mb-5 mr-0 border-0">
           <div className="col-lg-12 mt-12">
             <div className="profile card card-body px-3 pt-3 pb-0 border rounded">
               <div className="profile-head">
@@ -132,7 +137,7 @@ Swal.fire({
                 <div className="profile-info d-flex">
                   <div className="profile-photo ">
                     <img
-                      src={publicUrl + "assets/img/author/pic2.jpg"}
+                      src={avatar}
                       alt="img"
                       className="bg-info rounded-circle mb-4 "
                       style={{ width: "100px", height: "100px" }}
@@ -157,17 +162,21 @@ Swal.fire({
           </div>
         </div>
         <div className="row mb-5">
-          <Sidebar className="ml-4">
-            <Menu>
-              <MenuItem component={<Link to={`/customer-profile`}></Link>}>
-                Hồ sơ của tôi
-              </MenuItem>
-              <MenuItem component={<Link to={`/customer/change-password`}></Link>}>
-                Đổi mật khẩu
-              </MenuItem>
-            </Menu>
-          </Sidebar>
-          <div className="col-xl-8">
+          <div className="col-xl-2">
+            <Sidebar className="">
+              <Menu>
+                <MenuItem component={<Link to={`/customer-profile`}></Link>}>
+                  Hồ sơ của tôi
+                </MenuItem>
+                <MenuItem
+                  component={<Link to={`/customer/change-password`}></Link>}
+                >
+                  Đổi mật khẩu
+                </MenuItem>
+              </Menu>
+            </Sidebar>
+          </div>
+          <div className="col-xl-9">
             <div className="card">
               <div className="inner-content">
                 <div className="card-body">
@@ -242,7 +251,6 @@ Swal.fire({
                               </div>
                               <div className="row mb-2">
                                 <div className="col-3">
-                                  {" "}
                                   <h5 className="f-w-500">Họ và Tên : </h5>
                                 </div>
                                 <div className="col-9 ">
@@ -295,8 +303,11 @@ Swal.fire({
                           </Tab.Pane>
                           <Tab.Pane id="profile-settings" eventKey="Setting">
                             <div className="pt-3">
-                              <div className="settings-form">
-                                <form onSubmit={submitHandler}>
+                              <div className="settings-form row ">
+                                <form
+                                  onSubmit={submitHandler}
+                                  className="col-md-8"
+                                >
                                   <div className="row">
                                     <div className="form-group mb-3 col-md-6">
                                       <label className="form-label">
@@ -342,7 +353,7 @@ Swal.fire({
                                           className="form-control"
                                           value={userDetail.password}
                                           readOnly // Make input readOnly based on isEditingPassword state
-                                        />                                        
+                                        />
                                       </div>
                                     </div>
                                     <div className="form-group mb-3 col-md-6">
@@ -364,6 +375,7 @@ Swal.fire({
                                       </select>
                                     </div>
                                   </div>
+
                                   <div className="row">
                                     <div className="form-group mb-3 col-md-6">
                                       <label className="form-label">
@@ -409,6 +421,7 @@ Swal.fire({
                                       />
                                     </div>
                                   </div>
+
                                   {/* <div className="form-group mb-3">
                                     <label className="form-label">
                                       ID Quốc gia
@@ -419,22 +432,25 @@ Swal.fire({
                                       className="form-control"
                                     />
                                   </div> */}
-                                  <div className="form-group mb-3">
-                                    <label className="form-label">
-                                      Địa chỉ
-                                    </label>
-                                    <input
-                                      type="text"
-                                      placeholder="Apartment, studio, or floor"
-                                      className="form-control"
-                                      value={address}
-                                      onChange={(e) => {
-                                        setErrors({ ...errors, address: "" });
-                                        setAddress(e.target.value);
-                                        setUpdateMessage("");
-                                      }}
-                                    />
+                                  <div className="row">
+                                    <div className="form-group mb-3 col-md-12">
+                                      <label className="form-label">
+                                        Địa chỉ
+                                      </label>
+                                      <input
+                                        type="text"
+                                        placeholder="Apartment, studio, or floor"
+                                        className="form-control"
+                                        value={address}
+                                        onChange={(e) => {
+                                          setErrors({ ...errors, address: "" });
+                                          setAddress(e.target.value);
+                                          setUpdateMessage("");
+                                        }}
+                                      />
+                                    </div>
                                   </div>
+
                                   {/* <div className="row">
                                     <div className="form-group mb-3 col-md-12">
                                       <label className="form-label">
@@ -469,6 +485,28 @@ Swal.fire({
                                     Cập nhật
                                   </button>
                                 </form>
+                                <div className="col-md-3">
+                                  <div className="form-group mb-3 col-md-6">
+                                    <label className="form-label">Avatar</label>
+                                    <img
+                                      src={avatar}
+                                      alt="Avatar"
+                                      className="bg-info rounded-circle mb-4"
+                                      style={{
+                                        height: "200px",
+                                        width: "300px",
+                                        maxWidth: "auto !important", // Add !important to override the external CSS rule
+                                      }}
+                                      id="avatar-img"
+                                    />
+                                  </div>
+                                  <div className="form-group mb-3 col-md-6">
+                                    <input
+                                      type="file"
+                                      onChange={(e) => handleUpload(e)}
+                                    />
+                                  </div>
+                                </div>
                               </div>
                             </div>
                           </Tab.Pane>
