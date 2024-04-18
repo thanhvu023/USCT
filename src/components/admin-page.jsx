@@ -23,10 +23,9 @@ const AdminPage = () => {
     "Tư vấn viên": <AllConsultant setMain={setMain}/>,
     "Khách hàng": <AllCustomer  /> , 
     "Chương trình": <AllPrograms />,
-    "Lợi nhuận": <Test1 />,
-    "Hồ sơ học sinh": <Test1 />,
+    "Hồ sơ học sinh": <ProgramApplicationPage />,
     "Đơn tư vấn": <Registration />,
-    "ProgramApplication": <ProgramApplicationPage/>
+    "Test1": <Test1/>
     
   };
   

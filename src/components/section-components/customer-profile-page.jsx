@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 import Swal from "sweetalert2";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { imageDb } from "../FirebaseImage/Config.js";
+import { imageDb } from "../FirebaseImage/Config";
 const CustomerProfilePage = () => {
   let publicUrl = process.env.PUBLIC_URL + "/";
 

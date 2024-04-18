@@ -136,11 +136,11 @@ export const MenuList = [
        
     },
     {
-        title:'ProgramApplication',
+        title:'Test1',
         classsChange: 'mm-collapse',
         iconStyle: <i className="
         la la-pencil-square" />,
-        filterName: 'ProgramApplication',
+        filterName: 'Test1',
        
     },
 

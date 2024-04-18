@@ -16,203 +16,34 @@ import { Row, Dropdown, Modal, Button, Form, Col } from "react-bootstrap";
 import Swal from "sweetalert2";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-const CreateProgramModal = ({ show, onClose, onSubmit, formData, setFormData }) => {
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { imageDb } from "../../FirebaseImage/Config";
+import CreateProgramModal from './create-program'
 
-  return (
-<Modal show={show} onHide={onClose} centered>
-  <Modal.Header closeButton>
-    <Modal.Title>Tạo chương trình mới</Modal.Title>
-  </Modal.Header>
-  <Modal.Body>
-    <div className="row">
-      <div className="col">
-        <form onSubmit={onSubmit}>
-          <div className="form-group">
-            <label htmlFor="nameProgram">Tên chương trình:</label>
-            <input
-              type="text"
-              className="form-control"
-              id="nameProgram"
-              name="nameProgram"
-              value={formData.nameProgram}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="status">Trạng thái:</label>
-            <input
-              type="text"
-              className="form-control"
-              id="status"
-              name="status"
-              value={formData.status}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="universityId">University ID:</label>
-            <input
-              type="text"
-              className="form-control"
-              id="universityId"
-              name="universityId"
-              value={formData.universityId}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="majorId">Major ID:</label>
-            <input
-              type="text"
-              className="form-control"
-              id="majorId"
-              name="majorId"
-              value={formData.majorId}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="semesterId">Semester ID:</label>
-            <input
-              type="text"
-              className="form-control"
-              id="semesterId"
-              name="semesterId"
-              value={formData.semesterId}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="programTypeId">Program Type ID:</label>
-            <input
-              type="text"
-              className="form-control"
-              id="programTypeId"
-              name="programTypeId"
-              value={formData.programTypeId}
-              onChange={handleChange}
-            />
-          </div>
-        </form>
-      </div>
-      <div className="col">
-        <form onSubmit={onSubmit}>
-          <div className="form-group">
-            <label htmlFor="duration">Thời lượng:</label>
-            <input
-              type="text"
-              className="form-control"
-              id="duration"
-              name="duration"
-              value={formData.duration}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="description">Mô tả:</label>
-            <textarea
-              className="form-control"
-              id="description"
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="tuition">Học phí:</label>
-            <input
-              type="text"
-              className="form-control"
-              id="tuition"
-              name="tuition"
-              value={formData.tuition}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="level">Level:</label>
-            <input
-              type="text"
-              className="form-control"
-              id="level"
-              name="level"
-              value={formData.level}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="img">Ảnh:</label>
-            <input
-              type="text"
-              className="form-control"
-              id="img"
-              name="img"
-              value={formData.img}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="responsibilities">Trách nhiệm:</label>
-            <textarea
-              className="form-control"
-              id="responsibilities"
-              name="responsibilities"
-              value={formData.responsibilities}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="requirement">Yêu cầu:</label>
-            <textarea
-              className="form-control"
-              id="requirement"
-              name="requirement"
-              value={formData.requirement}
-              onChange={handleChange}
-            />
-          </div>
-        </form>
-      </div>
-    </div>
-  </Modal.Body>
-  <Modal.Footer>
-    <Button variant="secondary" onClick={onClose}>
-      Đóng
-    </Button>
-    <Button variant="primary" onClick={onSubmit}>
-      Tạo mới
-    </Button>
-  </Modal.Footer>
-</Modal>
-
-  );
-};
 const AllPrograms = () => {
   const dispatch = useDispatch();
   const [feeData, setFeeData] = useState([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedProgramForEdit, setSelectedProgramForEdit] = useState(null);
-  // Thêm trạng thái mới để theo dõi sự thay đổi của dữ liệu chương trình sau khi chỉnh sửa
 const [programUpdated, setProgramUpdated] = useState(false);
   const programTypes = useSelector((state) => state.program.programTypes);
   const majors = useSelector((state) => state.major.allMajor);
   const programs = useSelector((state) => state.program.programs);
   const semesters = useSelector((state)=> state.semester.allSemester)
   const universities = useSelector((state)=> state.university.universities)
+  const [imgURL, setImgURL]= useState(null);
+
   // console.log("semesters:",programs)
   const [selectedProgramId, setSelectedProgramId] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState(null);
+
   const loading = useSelector((state) => state.program.loading);
   const [showAllPrograms, setShowAllPrograms] = useState(true);
+
+
+
   const [editedProgram, setEditedProgram] = useState({
     programId: '',
     nameProgram: '',
@@ -226,7 +57,8 @@ const [programUpdated, setProgramUpdated] = useState(false);
     universityId: '',
     majorId: '',
     semesterId: '',
-    programTypeId: ''
+    programTypeId: '',
+    img: "",
   } ?? {});
 
   const [formData, setFormData] = useState({
@@ -236,47 +68,77 @@ const [programUpdated, setProgramUpdated] = useState(false);
     description: "",
     tuition: '',
     level: "",
-    img: "",
     responsibilities: "",
     requirement: "",
     universityId: '',
     majorId: '',
     semesterId: '',
     programTypeId: '',
+    img: "",
   });
 
+
+  const handleImageUpload = async (file) => {
+    // Check if file exists
+    console.log("Selected File:", file);
+  
+    if (file) {
+      const imgRef = ref(imageDb, `Image/Program/${file.name}`);
+      try {
+        await uploadBytes(imgRef, file);
+        const imageUrl = await getDownloadURL(imgRef);
+        // console.log("imageUrl là:", imageUrl);
+      const editedProgramCopy = {
+        ...selectedProgramForEdit,
+        img: imageUrl,
+        major: {
+          majorId: selectedProgramForEdit.majorId 
+        }
+      };
+// console.log("editedProgramCopy:",editedProgramCopy)
+      setEditedProgram(editedProgramCopy);
+      setSelectedProgramForEdit(editedProgramCopy);
+      // setImgURL(imgURL);
+      
+      } catch (error) {
+        console.error(`Error uploading ${file.name}:`, error);
+      }
+    } else {
+      console.error("No file selected.");
+    }
+  };
+  
+  
+
   const handleDelete = (programId) => {
-    // Gọi hàm deleteProgram khi người dùng xác nhận xóa chương trình
     dispatch(deleteProgram(programId));
   };
-  // Hàm mở modal tạo mới chương trình
   const handleShowCreateModal = () => {
     setShowCreateModal(true);
   };
 
-  // Hàm đóng modal tạo mới chương trình
   const handleCloseCreateModal = () => {
     setShowCreateModal(false);
-    // Có thể làm gì đó sau khi đóng modal, ví dụ: làm mới dữ liệu form, vv.
   };
 
-  const handleSubmitCreateProgram = () => {
-    // Gọi hàm createProgram để tạo mới một chương trình
+  const handleSubmitCreateProgram = async() => {
+    if (formData.img) {
+      // Upload ảnh lên Firebase
+      await handleImageUpload(formData.img);
+  }
     dispatch(createProgram(formData)).then(() => {
-        // Hiển thị thông báo tạo chương trình thành công
         Swal.fire({
             icon: "success",
             title: "Tạo chương trình thành công!",
             showConfirmButton: false,
-            timer: 1500 // Thời gian hiển thị thông báo
+            timer: 1500 
         });
         // Gọi lại API để lấy danh sách tất cả các chương trình
         dispatch(getAllProgram());
     });
-    handleCloseCreateModal(); // Đóng modal sau khi tạo chương trình thành công
+    handleCloseCreateModal(); 
 };
 
-  // Gọi API để lấy danh sách tất cả các chương trình khi trang được tải
   useEffect(() => {
     dispatch(getAllProgram());
     dispatch(getAllSemester());
@@ -286,47 +148,45 @@ const [programUpdated, setProgramUpdated] = useState(false);
 
   }, [dispatch]);
 
-  // Hàm xử lý khi nhấp vào nút "Xem chi tiết"
   const handleShowDetailModal = (programId) => {
-    setSelectedProgramId(programId); // Lưu ID của chương trình được chọn
-    setShowModal(true); // Mở modal
+    setSelectedProgramId(programId); 
+    setShowModal(true);
   };
 
-  // Hàm đóng modal
   const handleCloseDetailModal = () => {
     setShowModal(false);
-    setSelectedProgramId(null); // Reset ID của chương trình được chọn
-    setSelectedProgram(null); // Reset thông tin của chương trình được chọn
+    setSelectedProgramId(null); 
+    setSelectedProgram(null); 
   };
   const handleShowEditModal = (programId) => {
     const program = programs.find((p) => p.programId === programId);
     setSelectedProgramForEdit(program);
-    // Truyền giá trị của programId vào state editedProgram
+ 
     setEditedProgram({
       ...editedProgram,
       programId: programId,
-      nameProgram: program.nameProgram, // Nếu bạn muốn hiển thị tên chương trình
-      semesterId: program.semesterId, // Nếu bạn muốn hiển thị semesterId
-      // Các trường thông tin khác
+      nameProgram: program.nameProgram, 
+      semesterId: program.semesterId,
+     
     });
     setShowEditModal(true);
   };
-  // Xử lý hiển thị thông tin của chương trình được chọn trong modal
   useEffect(() => {
-    if (selectedProgramId) {
-      // Lấy thông tin chi tiết của chương trình từ danh sách đã có
+    console.log("programs",programs)
+    if (selectedProgramId && programs) {
       const program = programs.find((p) => p.programId === selectedProgramId);
+
       setSelectedProgram(program);
   
     }
-  }, [selectedProgramId, programs]);
+  }, [selectedProgramId]);
   
 
 // console.log("edit:",selectedProgramForEdit)
 const handleCloseEditModal = () => {
-  setShowEditModal(false); // Đóng modal chỉnh sửa chương trình
+  setShowEditModal(false); 
   if (selectedProgramForEdit) {
-    setEditedProgram(null); // Đặt lại dữ liệu của chương trình đang chỉnh sửa về null
+    setEditedProgram(null); 
   }
 };
 
@@ -421,7 +281,8 @@ const handleCloseEditModal = () => {
             // Xử lý khi có lỗi xảy ra trong quá trình cập nhật
             console.error("Error updating program:", error);
         });
-};
+  };
+  
 
   useEffect(() => {
     // Nếu trạng thái cập nhật chương trình là true, gọi lại API để lấy danh sách chương trình mới
@@ -623,7 +484,8 @@ Xem thêm
         onClose={handleCloseCreateModal} // Truyền hàm đóng modal
         onSubmit={handleSubmitCreateProgram} // Truyền hàm xử lý khi gửi form tạo mới chương trình
         formData={formData} // Truyền dữ liệu form vào modal
-        setFormData={setFormData} // Truyền hàm setFormData để cập nhật dữ liệu form
+        setFormData={setFormData}
+        imgURL ={imgURL} // Truyền hàm setFormData để cập nhật dữ liệu form
       />
    
             </div>
@@ -642,11 +504,11 @@ Xem thêm
   {selectedProgram && (
     <div className="row">
       <div className="col-md-5">
-        <img
-          src={"assets/img/course/programs.jpg"}
-          alt="img"
-          className="img-fluid"
-        />
+      <img
+        src={selectedProgram?.img}
+        alt="Uploaded Image"
+        style={{ maxWidth: "100%", height: "auto" }}
+    />
       </div>
       <div className="col-md-7">
         <h4>{selectedProgram.nameProgram}</h4>
@@ -693,7 +555,8 @@ Xem thêm
 </Modal>
 
                            {/* Edit */}
-                           <Modal show={showEditModal} onHide={handleCloseEditModal} centered>
+                       
+                          <Modal show={showEditModal} onHide={handleCloseEditModal} centered>
   <Modal.Header>
     <Modal.Title><strong>Chỉnh sửa chương trình</strong></Modal.Title>
   </Modal.Header>
@@ -713,6 +576,25 @@ Xem thêm
               />
             </div>
             <div className="form-group">
+  <label htmlFor="image"><strong>Ảnh:</strong></label>
+  <div className="align-items-center">
+    <img
+      src={selectedProgramForEdit?.img}
+      alt="Uploaded Image"
+      style={{ maxWidth: "50%", height: "auto", marginRight: "10px", marginBottom:'10px' }}
+    />
+    <input
+      type="file"
+      className="form-control"
+      id="image"
+      onChange={(e) => handleImageUpload(e.target.files[0])} 
+    />
+  </div>
+</div>
+
+          </div>
+          <div className="col-md-6">
+          <div className="form-group">
               <label htmlFor="semesterId"><strong>Học kỳ bắt đầu:</strong></label>
               <input
                 type="text"
@@ -723,17 +605,15 @@ Xem thêm
               />
             </div>
             <div className="form-group">
-              <label htmlFor="status"><strong>Trạng thái:</strong></label>
+              <label htmlFor="status"><strong>Major:</strong></label>
               <input
                 type="text"
                 className="form-control"
                 id="status"
-                defaultValue={selectedProgramForEdit.status}
-                onChange={(e) => setEditedProgram({ ...selectedProgramForEdit, status: e.target.value })}
+                defaultValue={selectedProgramForEdit.majorId}
+                onChange={(e) => setEditedProgram({ ...selectedProgramForEdit, majorId: e.target.value })}
               />
             </div>
-          </div>
-          <div className="col-md-6">
             <div className="form-group">
               <label htmlFor="duration"><strong>Thời lượng:</strong></label>
               <input
@@ -811,6 +691,7 @@ Xem thêm
     )}
   </Modal.Body>
 </Modal>
+                         )
 
     </div>
   );

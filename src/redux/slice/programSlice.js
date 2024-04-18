@@ -118,6 +118,7 @@ export const createProgramApplication = createAsyncThunk(
 export const createProgram = createAsyncThunk(
   "/program/createProgram",
   async (programData, thunkAPI) => {
+    // console.log("programData",programData)
     try {
       const res = await instance.post(`/programs`, programData, {
         headers: {
