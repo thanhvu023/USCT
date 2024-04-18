@@ -11,7 +11,7 @@ const CreateProgramModal = ({
   setFormData,
 }) => {
   const [selectedFile, setSelectedFile] = useState(null);
-  const [img, setImg] = useState();
+  const [img, setImg] = useState(null);
   useEffect(() => {
     if (setSelectedFile) {
       let OBJ = { ...formData, img: selectedFile };
@@ -25,44 +25,6 @@ const CreateProgramModal = ({
       [name]: value,
     });
   };
-  // const handleImageUpload = async (e) => {
-  //   // Check if file exists
-  // const file = e.target.file[0]
-  //   if (file) {
-  //     const imgRef = ref(imageDb, `Image/Program/${file.name}`);
-  //     uploadBytes(imgRef, file).then(() => {
-  //       getDownloadURL(imgRef).then((downloadURL) => {
-  //         setSelectedFile(downloadURL);
-  //         console.log(downloadURL);
-  //         // onUpload({
-  //         //   url: downloadURL,
-  //         // });
-  //         // console.log(`File available at ${downloadURL}`);
-  //       });
-  //     });
-  //     // try {
-  //     //   await uploadBytes(imgRef, file);
-  //     //   const imageUrl = await getDownloadURL(imgRef);
-  //     //   // console.log("imageUrl là:", imageUrl);
-
-  //     //   // const editedProgramCopy = {
-  //     //   // ...selectedProgramForEdit,
-  //     //   // img: imageUrl,
-  //     //   // major: {
-  //     //   //   majorId: selectedProgramForEdit.majorId
-  //     //   // }
-  //     //   // };
-  //     //   // setEditedProgram(editedProgramCopy);
-  //     //   // setSelectedProgramForEdit(editedProgramCopy);
-  //     //   console.log(imageUrl);
-  //     //   setSelectedFile(imageUrl);
-  //     // } catch (error) {
-  //     //   console.error(`Error uploading ${file.name}:`, error);
-  //     // }
-  //   } else {
-  //     console.error("No file selected.");
-  //   }
-  // };
 
   const handleUpload = async () => {
     if (!img) return;
@@ -79,6 +41,7 @@ const CreateProgramModal = ({
   };
   const handleSubmit = (e) => {
     onSubmit();
+    setSelectedFile(null); 
   };
 
   useEffect(() => {
@@ -104,6 +67,8 @@ const CreateProgramModal = ({
                   onChange={handleChange}
                 />
               </div>
+              <img src={selectedFile} alt="Uploaded Image" style={{ maxWidth: "100%" }} />
+
               <div className="form-group">
                 <label htmlFor="img">Ảnh:</label>
                 <input
@@ -115,6 +80,7 @@ const CreateProgramModal = ({
                   onChange={(e) => setImg(e.target.files[0])}
                 />
               </div>
+
               <div className="form-group">
                 <label htmlFor="universityId">University ID:</label>
                 <input
