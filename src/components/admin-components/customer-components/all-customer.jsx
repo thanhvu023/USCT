@@ -240,7 +240,7 @@ useEffect(() => {
                       </tr>
                     </thead>
                     <tbody>
-                    {feeData.map((data) => (
+                    {Array.isArray(feeData) && feeData.map((data) => (
                           <tr key={data.id}>
                            <td>{data.customerId}</td>
                           <td>{data.fullName}</td>

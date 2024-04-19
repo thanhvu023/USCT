@@ -2,3 +2,10 @@
     background-color: #007bff; /* Màu xanh */
   
   }
+  .img-container {
+    float: left;
+    width: 550px;
+    height: 370px;
+    margin-right: 20px; /* Để tạo khoảng cách giữa hình ảnh và nội dung */
+  }
+  

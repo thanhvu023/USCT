@@ -19,6 +19,7 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { imageDb } from "../../FirebaseImage/Config";
 import CreateProgramModal from "./create-program";
+import './program.css'
 
 const AllPrograms = () => {
   const dispatch = useDispatch();
@@ -304,7 +305,7 @@ const AllPrograms = () => {
           programs.map((program, index) => (
             <div className="col-lg-4 col-md-6 col-sm-6 col-12 mb-4" key={index}>
               <div className="card mx-4 mt-4">
-                <div className="card-body">
+                <div className="card-body" >
                   <div className="d-flex justify-content-end">
                     <Dropdown>
                       <Dropdown.Toggle
@@ -419,7 +420,7 @@ const AllPrograms = () => {
                   </div>
 
                   <div className="text-center">
-                    <h3 className="mt-4 mb-1">{program.nameProgram}</h3>
+                    <h3 className="mt-4 mb-1 "style={{ fontSize: "24px" }}>{program.nameProgram}</h3>
                     {/* <img
         src={"assets/img/course/programs.jpg"}
         alt="img"
@@ -507,48 +508,56 @@ const AllPrograms = () => {
           {selectedProgram && (
             <div className="row">
               <div className="col-md-5">
-                <img
-                  src={selectedProgram?.img}
-                  alt="Uploaded Image"
-                  style={{ maxWidth: "100%", height: "auto" }}
-                />
+              <div className="img-container">
+          <img
+            src={selectedProgram?.img}
+            alt="Uploaded Image"
+            style={{ maxWidth: "100%", height: "auto" }}
+          />
+        </div>
+        <div className="col-md-12">
+  <div className="row d-flex ">
+    <div className="col-md-6">
+      <p>
+        <strong>Học kỳ bắt đầu:</strong>{" "}
+        {getSemesterStartDate(selectedProgram.semesterId)}
+      </p>
+      <p>
+        <strong>Kết thúc học kỳ:</strong>{" "}
+        {getSemesterEndDate(selectedProgram.semesterId)}
+      </p>
+      <p>
+        <strong>Thời gian:</strong> {selectedProgram.duration}
+      </p>
+      <p>
+        <strong>Trình độ:</strong> {selectedProgram.level}
+      </p>
+    </div>
+    <div className="col-md-6">
+      <p>
+        <strong>Trường:</strong>{" "}
+        {getUniversityName(selectedProgram.universityName)}
+      </p>
+      <p>
+        <strong>Chuyên ngành:</strong>{" "}
+        {getMajorName(selectedProgram.majorId)}
+      </p>
+      <p>
+        <strong>Loại chương trình :</strong>{" "}
+        {getTypeName(selectedProgram.programTypeId)}
+      </p>
+      <p>
+        <strong>Trạng thái :</strong> {selectedProgram.status}
+      </p>
+    </div>
+  </div>
+</div>
+
+                 
               </div>
               <div className="col-md-7">
                 <h4>{selectedProgram.nameProgram}</h4>
                 <div className="row">
-                  <div className="col-md-6">
-                    <p>
-                      <strong>Start Semester:</strong>{" "}
-                      {getSemesterStartDate(selectedProgram.semesterId)}
-                    </p>
-                    <p>
-                      <strong>End Semester:</strong>{" "}
-                      {getSemesterEndDate(selectedProgram.semesterId)}
-                    </p>
-                    <p>
-                      <strong>Thời lượng:</strong> {selectedProgram.duration}
-                    </p>
-                    <p>
-                      <strong>Level:</strong> {selectedProgram.level}
-                    </p>
-                  </div>
-                  <div className="col-md-6">
-                    <p>
-                      <strong>University ID:</strong>{" "}
-                      {getUniversityName(selectedProgram.universityName)}
-                    </p>
-                    <p>
-                      <strong>Major ID:</strong>{" "}
-                      {getMajorName(selectedProgram.majorId)}
-                    </p>
-                    <p>
-                      <strong>Program Type ID:</strong>{" "}
-                      {getTypeName(selectedProgram.programTypeId)}
-                    </p>
-                    <p>
-                      <strong>Status:</strong> {selectedProgram.status}
-                    </p>
-                  </div>
                 </div>
                 <div>
                   <p>
@@ -560,10 +569,19 @@ const AllPrograms = () => {
                       <br />
                     </strong>
                     <span
+  dangerouslySetInnerHTML={{
+    __html: selectedProgram?.tuition?.replace(/\\r\\n/g, "<br/>• ") || "",
+  }}
+/>
+
+                  </p>
+                  <p>
+                    <strong>Yêu cầu:</strong>
+                    <span
                       dangerouslySetInnerHTML={{
                         __html:
-                          selectedProgram?.tuition?.replace(
-                            /\\\\r\\\\n/g,
+                          selectedProgram?.requirement?.replace(
+                            /\\r\\n/g,
                             "<br/>• "
                           ) || "",
                       }}
@@ -581,18 +599,7 @@ const AllPrograms = () => {
                       }}
                     />
                   </p>
-                  <p>
-                    <strong>Yêu cầu:</strong>
-                    <span
-                      dangerouslySetInnerHTML={{
-                        __html:
-                          selectedProgram?.requirement?.replace(
-                            /\\r\\n/g,
-                            "<br/>• "
-                          ) || "",
-                      }}
-                    />
-                  </p>
+                 
                 </div>
               </div>
             </div>

@@ -41,9 +41,15 @@ const Registration = () => {
   );
 
   const getFullName = (customerId) => {
-    const customer = customers.find((customer) => customer.customerId === customerId);
-    return customer ? customer.fullName : "Không tìm thấy";
+    // Kiểm tra xem customers có tồn tại và là một mảng không
+    if (Array.isArray(customers)) {
+      const customer = customers.find((customer) => customer.customerId === customerId);
+      return customer ? customer.fullName : "Không tìm thấy";
+    } else {
+      return "Không tìm thấy";
+    }
   };
+  
   
   useEffect(() => {
     if (customers) {
