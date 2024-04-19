@@ -128,9 +128,9 @@ function Navbar() {
                   Tư Vấn
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link to="/admin">Admin</Link>
-              </li>
+              </li> */}
             </ul>
           </div>
           <div className="nav-right-part nav-right-part-desktop d-flex  align-items-center">
@@ -157,7 +157,11 @@ function Navbar() {
                     as="div"
                   >
                     <img
-                      src={userDetail.img}
+                      src={
+                        userDetail.img
+                          ? userDetail.img
+                          : publicUrl + "assets/img/author/pic2.jpg"
+                      }
                       alt="img"
                       className=" rounded-circle"
                       style={{ height: "50px", width: "50px" }}

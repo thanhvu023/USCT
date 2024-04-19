@@ -1,8 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { setUserAuthToken } from "../authService";
 import instance from "../axiosCustom";
-import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
+import jwtDecode from "jwt-decode";
 export const login = createAsyncThunk(
   "customer/login",
   async (param, thunkAPI) => {
@@ -16,7 +15,12 @@ export const login = createAsyncThunk(
       });
       const token = res.data;
       setUserAuthToken(token);
-      navigate("/");
+      const role = jwtDecode(token).Role;
+      if (role === "ROLE_ADMIN") {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
       return token;
     } catch (error) {
       throw new Error("Invalid email or password");
@@ -52,20 +56,15 @@ export const signup = createAsyncThunk(
     try {
       const signupData = param.formData;
       const navigate = param.navigate;
-      const res = await instance.post("account/signup", signupData, {
-        headers: "Access-Control-Allow-Origin",
-      });
-      Swal.fire({
-        icon: 'success',
-        title: 'Tạo tài khoản thành công!',
-        showConfirmButton: false,
-        timer: 1500
-      });
-      navigate("/sign-in")
-      ;
+      console.log(param);
+      const res = await instance.post("account/signup", signupData);
+
+      navigate("/sign-in");
       return res.data;
     } catch (err) {
-      throw new Error(err.response.data);
+      // Log and rethrow any errors
+      console.error("Error creating account:", err);
+      throw err;
     }
   }
 );
@@ -127,7 +126,7 @@ export const authSlice = createSlice({
       state.token = null;
       state.msg = null;
       state.user = [];
-      state.userById={}
+      state.userById = {};
     },
     resetMessage: (state) => {
       state.error = null;

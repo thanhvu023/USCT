@@ -207,47 +207,47 @@ const StudentProfileDetails = () => {
                             </div>
                             <div className="col-lg-7 align-self-center">
                               <div className="row mb-2 align-items-center">
-                                <div className="col-3">
+                                <div className="col-4">
                                   <h5 className="f-w-500">
                                     Nơi Sinh
                                     <span className="pull-right">:</span>
                                   </h5>
                                 </div>
-                                <div className="col-9">
+                                <div className="col-6">
                                   <span>{studentDetail.placeOfBirth}</span>
                                 </div>
                               </div>
                               <div className="row mb-2 align-items-center">
-                                <div className="col-3">
+                                <div className="col-4">
                                   <h5 className="f-w-500">
                                     Email
                                     <span className="pull-right">:</span>
                                   </h5>
                                 </div>
-                                <div className="col-9">
+                                <div className="col-6">
                                   <span>{studentDetail.email}</span>
                                 </div>
                               </div>
                              
                               <div className="row mb-2 align-items-center">
-                                <div className="col-3">
+                                <div className="col-4">
                                   <h5 className="f-w-500">
                                     Số điện thoại
                                     <span className="pull-right">:</span>
                                   </h5>
                                 </div>
-                                <div className="col-9">
+                                <div className="col-6">
                                   <span>{studentDetail.phone}</span>
                                 </div>
                               </div>
                               <div className="row mb-2 align-items-center">
-                                <div className="col-3">
+                                <div className="col-4">
                                   <h5 className="f-w-500">
                                     ID Quốc Gia
                                     <span className="pull-right">:</span>
                                   </h5>
                                 </div>
-                                <div className="col-9">
+                                <div className="col-6">
                                   <span>{studentDetail.nationalId}</span>
                                 </div>
                               </div>

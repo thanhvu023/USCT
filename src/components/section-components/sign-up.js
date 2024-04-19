@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { Form } from "react-bootstrap";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { signup } from "../../redux/slice/authSlice";
-import { Form, Button } from "react-bootstrap";
-import Swal from "sweetalert2";
 
 function SignUp() {
   const [formData, setFormData] = useState({
@@ -21,7 +20,7 @@ function SignUp() {
   const dispatch = useDispatch();
 
   const [errors, setErrors] = useState({});
-  const [showSuccessAlert, setShowSuccessAlert] = useState(false); 
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
   const validateForm = () => {
     const newErrors = {};
@@ -73,33 +72,13 @@ function SignUp() {
     // }
     return newErrors;
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const newErrors = validateForm();
-
     if (Object.keys(newErrors).length === 0) {
-      // Gửi yêu cầu đăng ký
-      dispatch(signup({ formData, navigate }))
-        .then(() => {
-          // Nếu đăng ký thành công, hiển thị alert và thiết lập lại form
-          setShowSuccessAlert(true);
-          setFormData({
-            fullName: "",
-            email: "",
-            password: "",
-            confirmPassword: "",
-            gender: "",
-            address: "",
-            dateOfBirth: "",
-            phone: "",
-          });
-        })
-        .catch((error) => {
-          // Xử lý lỗi nếu có
-          console.error("Đã xảy ra lỗi khi đăng ký:", error);
-        });
+      dispatch(signup({ formData, navigate }));
+      setShowSuccessAlert(true);
     } else {
       setErrors(newErrors);
     }
@@ -232,6 +211,7 @@ function SignUp() {
                   <Form.Group controlId="gender">
                     <Form.Check
                       type="radio"
+                      id="genderMale" // Unique id for male option
                       name="gender"
                       value="Male"
                       checked={formData.gender === "Male"}
@@ -240,6 +220,7 @@ function SignUp() {
                     />
                     <Form.Check
                       type="radio"
+                      id="genderFemale" // Unique id for female option
                       name="gender"
                       value="Female"
                       checked={formData.gender === "Female"}
@@ -253,7 +234,7 @@ function SignUp() {
                 </div>
                 <div className="col-12">
                   <span>Đã có tài khoản trước đó?</span>
-                  <Link className="ml-2"to='/sign-in'>
+                  <Link className="ml-2" to="/sign-in">
                     <strong>Đăng nhập</strong>
                   </Link>
                 </div>
