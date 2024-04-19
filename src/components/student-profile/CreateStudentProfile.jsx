@@ -5,6 +5,8 @@ import Select from "react-select";
 import { createStudentProfile } from "../../redux/slice/studentSice";
 import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
 import Swal from "sweetalert2";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { imageDb } from "../FirebaseImage/Config";
 
 const MultiStepProgressBar = () => {};
 
@@ -21,9 +23,7 @@ const CreateStudentProfile = () => {
     studyProcess: "",
     placeOfBirth: "",
     dateOfBirth: "",
-    fileString: [
-      "https://firebasestorage.googleapis.com/v0/b/capstone-project-5362d.appspot.com/o/Image%2FProfileStudent%2FResume.pdf?alt=media&token=9912665c-f830-415f-9ee6-4daa96bbeb24",
-    ],
+    fileString: [],
     customerId,
   });
   const [errors, setErrors] = useState({});
@@ -36,11 +36,31 @@ const CreateStudentProfile = () => {
   //     fileString: [...prevState.fileString, ...fileNames],
   //   }));
   // };
+  const handleUpload = async (e) => {
+    const selectedFile = e.target.files && e.target.files[0]; // Check if files exist before accessing the first file
+
+    if (selectedFile) {
+      const imgRef = ref(imageDb, `Image/ProfileStudent/${selectedFile.name}`);
+      try {
+        await uploadBytes(imgRef, selectedFile);
+        const imageUrl = await getDownloadURL(imgRef);
+        console.log(imageUrl);
+        setFormData((prevState) => ({
+          ...prevState,
+          fileString: [...prevState.fileString, imageUrl],
+        }));
+      } catch (error) {
+        console.error(`Error uploading ${selectedFile.name}:`, error);
+      }
+    } else {
+      console.error("No file selected.");
+    }
+  };
 
   const nextPageNumber = (pageNumber) => {
     setPage(pageNumber);
   };
-
+  console.log(formData);
   const handleNextStep = () => {
     switch (page) {
       case "basicInfo":
@@ -145,12 +165,12 @@ const CreateStudentProfile = () => {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-  
+
     const newErrors = validateForm();
-  
+
     if (Object.keys(newErrors).length === 0) {
       dispatch(createStudentProfile(formData));
-      
+
       // Hiển thị thông báo khi hoàn tất khởi tạo thành công
       Swal.fire({
         icon: "success",
@@ -162,7 +182,7 @@ const CreateStudentProfile = () => {
       setErrors(newErrors);
     }
   };
-  
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
@@ -345,7 +365,9 @@ const CreateStudentProfile = () => {
                             type="file"
                             // onChange={handleFileChange}
                             name="fileString"
-                            multiple
+                            onChange={(e) => {
+                              handleUpload(e);
+                            }}
                           />
                         </div>
                       </div>

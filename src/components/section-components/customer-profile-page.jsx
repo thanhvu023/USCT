@@ -31,16 +31,15 @@ const CustomerProfilePage = () => {
   const [errors, setErrors] = useState({});
   const [updateMessage, setUpdateMessage] = useState("");
   let [avatar, setImageSrc] = useState(userDetail.img);
+
   const handleUpload = async (e) => {
     const selectedFile = e.target.files && e.target.files[0]; // Check if files exist before accessing the first file
 
-    console.log("Selected File:", selectedFile);
     if (selectedFile) {
       const imgRef = ref(imageDb, `Image/customerAvatar/${selectedFile.name}`);
       try {
         await uploadBytes(imgRef, selectedFile);
         const imageUrl = await getDownloadURL(imgRef);
-        console.log(imageUrl);
         setImageSrc(imageUrl);
       } catch (error) {
         console.error(`Error uploading ${selectedFile.name}:`, error);
@@ -137,7 +136,11 @@ const CustomerProfilePage = () => {
                 <div className="profile-info d-flex">
                   <div className="profile-photo ">
                     <img
-                      src={avatar}
+                      src={
+                        avatar
+                          ? avatar
+                          : publicUrl + "assets/img/author/pic2.jpg"
+                      }
                       alt="img"
                       className="bg-info rounded-circle mb-4 "
                       style={{ width: "100px", height: "100px" }}
@@ -489,7 +492,12 @@ const CustomerProfilePage = () => {
                                   <div className="form-group mb-3 col-md-6">
                                     <label className="form-label">Avatar</label>
                                     <img
-                                      src={avatar}
+                                      src={
+                                        avatar
+                                          ? avatar
+                                          : publicUrl +
+                                            "assets/img/author/pic2.jpg"
+                                      }
                                       alt="Avatar"
                                       className="bg-info rounded-circle mb-4"
                                       style={{

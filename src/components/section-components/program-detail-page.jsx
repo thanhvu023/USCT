@@ -26,6 +26,8 @@ import {
 } from "../../redux/slice/studentSice";
 import { getProgramTypes } from "../../redux/slice/programSlice";
 import jwtDecode from "jwt-decode";
+import { getDownloadURL, ref } from "firebase/storage";
+import { imageDb } from "../FirebaseImage/Config";
 
 function ProgramDetailPage() {
   let publicUrl = process.env.PUBLIC_URL + "/";
@@ -174,6 +176,16 @@ function ProgramDetailPage() {
       top: 0,
       behavior: "smooth",
     });
+  };
+
+  const downloadFileFromStorage = async (fileName) => {
+    try {
+      const fileRef = ref(imageDb, `Image/ProfileStudent/${fileName}`);
+      const downloadURL = await getDownloadURL(fileRef);
+      window.open(downloadURL);
+    } catch (error) {
+      console.error("Error downloading file:", error);
+    }
   };
   return (
     <>
@@ -433,6 +445,13 @@ function ProgramDetailPage() {
 
                             {/* Button */}
                             <div style={{ marginLeft: "10px", height: "50px" }}>
+                              <button
+                                onClick={() =>
+                                  downloadFileFromStorage('DSC_7398.JPG')
+                                }
+                              >
+                                Download File
+                              </button>
                               <button
                                 className="btn btn-primary"
                                 onClick={() => handleCreateProfile()}
