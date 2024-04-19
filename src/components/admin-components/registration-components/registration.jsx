@@ -41,13 +41,13 @@ const Registration = () => {
   );
 
   const getFullName = (customerId) => {
-    // Kiểm tra xem customers có tồn tại và là một mảng không
-    if (Array.isArray(customers)) {
-      const customer = customers.find((customer) => customer.customerId === customerId);
-      return customer ? customer.fullName : "Không tìm thấy";
-    } else {
+    if (!customers || !Array.isArray(customers)) {
       return "Không tìm thấy";
     }
+  
+    const customer = customers.find((customer) => customer.customerId === customerId);
+    
+    return customer ? customer.fullName : "Không tìm thấy";
   };
   
   
