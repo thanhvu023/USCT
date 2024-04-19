@@ -5,6 +5,7 @@ import { COLUMNS } from "./registration-columns";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import jwtDecode from "jwt-decode";
+import './registration-list.css'
 import { getRegistrationByCustomerId } from "../../../redux/slice/registrationSlice";
 const RegistrationList = () => {
   const columns = useMemo(() => COLUMNS, []);
@@ -109,13 +110,20 @@ useEffect(() => {
                         row.original.universityChooseReason
                       )}
                     >
-                      {row.cells.map((cell, cellIndex) => {
-                        return (
-                          <td key={cellIndex} {...cell.getCellProps()}>
-                            {cell.render("Cell")}
-                          </td>
-                        );
-                      })}
+                     {row.cells.map((cell, cellIndex) => {
+  return (
+    <td key={cellIndex} {...cell.getCellProps()}>
+      {cell.column.id === "status" ? (
+        <span className={row.original.status === 0 ? 'status-red' : 'status-green'}>
+          {row.original.status === 0 ? 'Chưa duyệt' : cell.render("Cell")}
+        </span>
+      ) : (
+        cell.render("Cell")
+      )}
+    </td>
+  );
+})}
+
                       <td>
                         {/* <button
                           onClick={() =>

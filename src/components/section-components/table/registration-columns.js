@@ -2,9 +2,9 @@ import {format} from 'date-fns';
 import { ColumnFilter } from './column-filter';
 export const COLUMNS = [
 	{
-		Header : 'Mã đơn tư vấn',
-		Footer : 'Mã đơn tư vấn',
-		accessor: 'registrationFormId',
+		Header : 'Chuyên ngành tư vấn',
+		Footer : 'Chuyên ngành tư vấn',
+		accessor: 'majorChoose',
 		Filter: ColumnFilter,
 		//disableFilters: true,
 	},
@@ -14,12 +14,23 @@ export const COLUMNS = [
 		accessor: 'destinationReason',
 		Filter: ColumnFilter,
 	},	{
+		Header : 'Trường mong muốn',
+		Footer : 'Trường mong muốn',
+		accessor: 'programChoose',
+		Filter: ColumnFilter,
+	},
+	{
 		Header : 'Mã tư vấn viên',
 		Footer : 'Mã tư vấn viên',
 		accessor: 'consultantId',
 		Filter: ColumnFilter,
 	},
-	
+	{
+		Header : 'Trạng thái',
+		Footer : 'Trạng thái',
+		accessor: 'status',
+		Filter: ColumnFilter,
+	},
 	
 
 ];

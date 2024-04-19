@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import Swal from "sweetalert2"
 
 const theadData = [
-  { heading: "ProgramApplicationId", sortingVale: "id" },
+  { heading: "PAId", sortingVale: "id" },
   { heading: "Hồ sơ sinh viên", sortingVale: "name" },
   // { heading: "Tư vấn viên phụ trách", sortingVale: "advisor" },
   { heading: "Ngày tạo", sortingVale: "date" },
