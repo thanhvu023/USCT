@@ -6,7 +6,6 @@ import { COLUMNS } from "./columns";
 // import "./student-profile.css";
 import jwtDecode from "jwt-decode";
 import { getRegistrationByConsultantId } from "../../redux/slice/consultantSlice";
-import { getAllUsers } from "../../redux/slice/authSlice";
 
 const ConsultantList = () => {
   const columns = useMemo(() => COLUMNS, []);
@@ -20,15 +19,15 @@ const ConsultantList = () => {
     dispatch(getRegistrationByConsultantId(customerId));
   }, [customerId]);
   const data = useSelector((state)=>state?.consultant?.registrationByConsultantId);
-  // console.log("?",data)
+  console.log(data)
 
-  const userData = useSelector((state) => state.auth.userById);
-  console.log("userData:",userData)
-  useEffect(() => {
-    dispatch(getAllUsers());
-  }, [dispatch]);
+  const userData = useSelector((state) => state?.auth?.userById);
+//   console.log("userData:",userData)
+//   useEffect(() => {
+//     dispatch(getAllUsers());
+//   }, [dispatch]);
   const getFullName = (customerId) => {
-    const user = userData.find((user) => user.customerId === customerId);
+    const user = userData.find((user) => user?.customerId === customerId);
     return user ? user.fullName : "Không biết";
   };  
 
@@ -42,7 +41,7 @@ const ConsultantList = () => {
   const navigate = useNavigate();
 
   const handleRowClick = (studentProfileId) => {
-    navigate(`/student-profile-detail/${studentProfileId}`);
+    navigate(`/consultant/registrationForm/${studentProfileId}`);
   };
   
 
@@ -110,16 +109,16 @@ const ConsultantList = () => {
                       {...row.getRowProps()}
                       onClick={() =>
                         handleRowClick(
-                          row.original.studentProfileId,
-                          row.original.fullName,
-                          row.original.email,
-                          row.original.createDate,
-                          row.original.phone,
-                          row.original.nationalId,
-                          row.original.gender,
-                          row.original.dateOfBirth,
-                          row.original.placeOfBirth,
-                          row.original.studyProcess
+                          row.original.registrationFormId,
+                          // row.original.area,
+                          // row.original.budget,
+                          // row.original.createDate,
+                          // row.original.consultantId,
+                          // row.original.customerId,
+                          // row.original.gender,
+                          // row.original.dateOfBirth,
+                          // row.original.placeOfBirth,
+                          // row.original.studyProcess
                         )
                       }
                     >

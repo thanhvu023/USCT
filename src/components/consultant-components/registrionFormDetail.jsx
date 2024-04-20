@@ -5,38 +5,35 @@ import { getUserById } from "../../redux/slice/authSlice";
 import jwtDecode from "jwt-decode";
 import { useParams, Link } from "react-router-dom"; // Import Link from react-router-dom
 
-const RegistrationDetail = () => {
+const RegistrationFormDetail = () => {
   let publicUrl = process.env.PUBLIC_URL + "/";
 
   const { registrationFormId } = useParams();
   const dispatch = useDispatch();
   const registration = useSelector(
-    (state) => state.registration.registrationById
+    (state) => state?.registration?.registrationById
   );
-  const [loading, setLoading] = useState(true);
-  const token = useSelector((state) => state.auth.token);
-  const userId = jwtDecode(token).UserId;
+  const userId = useSelector(
+    (state) => state?.registration?.registrationById?.customerId
+  );
   const userDetail = useSelector((state) => state.auth.userById) || {};
   useEffect(() => {
     dispatch(getUserById(userId));
   }, [userId]);
+  console.log("userDetail:", userDetail);
   useEffect(() => {
-    dispatch(getRegistrationByRegistrationFormId(registrationFormId))
-      .then(() => setLoading(false))
-      .catch((error) => {
-        console.error("Error fetching registration details:", error);
-        setLoading(false);
-      });
+    dispatch(getRegistrationByRegistrationFormId(registrationFormId));
   }, [dispatch, registrationFormId]);
+  console.log(registration);
   // useEffect(() => {
   //   if (registration.customerId) {
   //     dispatch(getUserById(registration.customerId));
   //   }
   // }, [dispatch, registration.customerId]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  //   if (loading) {
+  //     return <div>Loading...</div>;
+  //   }
 
   return (
     <div className="col-xl-8 mx-auto mt-5">
@@ -75,7 +72,7 @@ const RegistrationDetail = () => {
                           <div className="row mb-2 align-items-center">
                             <div className="col-6">
                               <h5 className="f-w-500">
-                                Email <span className="pull-right">:</span>
+                                Email: <span className="pull-right">:</span>
                               </h5>
                             </div>
                             <div className="col-6">
@@ -132,11 +129,9 @@ const RegistrationDetail = () => {
                         <ul className="list-unstyled">
                           <li className="mb-2">
                             <i className="la la-money mr-2"></i>
-                            <span className="font-weight-bold">
-                              Tài chính:
-                            </span>{" "}
+                            <span className="font-weight-bold">Tài chính:</span>
                             {registration.budget
-                              ? registration.budget + "$"
+                              ? registration.budget
                               : "chưa có"}
                           </li>
                           <li className="mb-2">
@@ -205,4 +200,4 @@ const RegistrationDetail = () => {
   );
 };
 
-export default RegistrationDetail;
+export default RegistrationFormDetail;

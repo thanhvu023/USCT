@@ -31,7 +31,7 @@ const StudentProfileList = () => {
   const navigate = useNavigate();
 
   const handleRowClick = (studentProfileId) => {
-    navigate(`/student-profile-detail/${studentProfileId}`);
+    navigate(`/student-profile/${studentProfileId}`);
   };
   
   const tableInstance = useTable(

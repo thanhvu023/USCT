@@ -37,14 +37,16 @@ const CreateStudentProfile = () => {
   //   }));
   // };
   const handleUpload = async (e) => {
-    const selectedFile = e.target.files && e.target.files[0]; // Check if files exist before accessing the first file
-
-    if (selectedFile) {
+    const selectedFiles = e.target.files; // Get all selected files
+    // Loop through each file and upload to Firebase Storage
+    for (let i = 0; i < selectedFiles.length; i++) {
+      const selectedFile = selectedFiles[i];
       const imgRef = ref(imageDb, `Image/ProfileStudent/${selectedFile.name}`);
       try {
         await uploadBytes(imgRef, selectedFile);
         const imageUrl = await getDownloadURL(imgRef);
         console.log(imageUrl);
+        // Update the state properly to append the new file URL
         setFormData((prevState) => ({
           ...prevState,
           fileString: [...prevState.fileString, imageUrl],
@@ -52,8 +54,6 @@ const CreateStudentProfile = () => {
       } catch (error) {
         console.error(`Error uploading ${selectedFile.name}:`, error);
       }
-    } else {
-      console.error("No file selected.");
     }
   };
 
@@ -363,6 +363,7 @@ const CreateStudentProfile = () => {
                         <div className=" style-bg-border mb-4">
                           <input
                             type="file"
+                            multiple
                             // onChange={handleFileChange}
                             name="fileString"
                             onChange={(e) => {

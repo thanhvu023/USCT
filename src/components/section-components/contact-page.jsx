@@ -250,7 +250,6 @@ const Registration = () => {
   const priorityOfStudyAbroadOptions = [
     { value: "Ngành học", label: "Ngành học" },
     { value: "Trường học", label: "Trường học" },
-    { value: "Nước du học", label: "Nước du học" },
     { value: "Chi phí du học", label: "Chi phí du học" },
     { value: "Học bổng du học", label: "Học bổng du học" },
     { value: "Hồ sơ cư trú và làm việc", label: "Hồ sơ cư trú và làm việc" },

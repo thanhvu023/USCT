@@ -40,7 +40,7 @@ export const getUserById = createAsyncThunk(
   }
 );
 export const getAllUsers = createAsyncThunk(
-  "customer/getUserById",
+  "customer/getAllUsers",
   async (_, thunkAPI) => {
     try {
       const res = await instance.get("/account/customer"); 
@@ -166,6 +166,18 @@ export const authSlice = createSlice({
         state.error = action.error;
       })
       .addCase(signup.fulfilled, (state) => {
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(getAllUsers.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getAllUsers.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+        state.error = action.error;
+      })
+      .addCase(getAllUsers.rejected, (state) => {
         state.loading = false;
         state.error = null;
       })

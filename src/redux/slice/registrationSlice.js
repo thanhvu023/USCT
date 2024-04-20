@@ -5,8 +5,18 @@ export const getRegistrationByCustomerId = createAsyncThunk(
   "registration/getRegistrationById",
   async (param, thunkAPI) => {
     try {
-      const majorId = param;
       const res = await instance.get(`/registration-forms/customer/${param}`);
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response);
+    }
+  }
+);
+export const getRegistrationByConsultantId = createAsyncThunk(
+  "registration/getRegistrationByConsultantId",
+  async (param, thunkAPI) => {
+    try {
+      const res = await instance.get(`/registration-forms/consultant/${param}`);
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response);
@@ -54,6 +64,8 @@ const initialState = {
   loading: false,
   registrationForms: [],
   registrationById: [],
+  registrationByCustomerId: [],
+  registrationByConsultantId: [],
 };
 
 export const registrationSlice = createSlice({
@@ -67,10 +79,22 @@ export const registrationSlice = createSlice({
       })
       .addCase(getRegistrationByCustomerId.fulfilled, (state, action) => {
         state.loading = false;
-        state.registrationById = action.payload;
+        state.registrationByCustomerId = action.payload;
         state.error = null;
       })
       .addCase(getRegistrationByCustomerId.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(getRegistrationByConsultantId.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getRegistrationByConsultantId.fulfilled, (state, action) => {
+        state.loading = false;
+        state.registrationByConsultantId = action.payload;
+        state.error = null;
+      })
+      .addCase(getRegistrationByConsultantId.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       })

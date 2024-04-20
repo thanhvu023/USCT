@@ -5,7 +5,7 @@ import { COLUMNS } from "./registration-columns";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import jwtDecode from "jwt-decode";
-import './registration-list.css'
+import "./registration-list.css";
 import { getRegistrationByCustomerId } from "../../../redux/slice/registrationSlice";
 const RegistrationList = () => {
   const columns = useMemo(() => COLUMNS, []);
@@ -21,17 +21,17 @@ const RegistrationList = () => {
     }
   }, [customerId]);
   // Fix data is null
-useEffect(() => {
-  if (!data) {
-    dispatch(getRegistrationByCustomerId(customerId));
-  }
-}, [data, dispatch, customerId]);
+  useEffect(() => {
+    if (!data) {
+      dispatch(getRegistrationByCustomerId(customerId));
+    }
+  }, [data, dispatch, customerId]);
 
   const [selectedRow, setSelectedRow] = useState(null);
   const navigate = useNavigate();
 
   const handleRowClick = (registrationFormId) => {
-    navigate(`/registration-detail/${registrationFormId}`);
+    navigate(`/student-profile/registration-detail/${registrationFormId}`);
   };
 
   const normalizedData = Array.isArray(data) ? data : [data];
@@ -95,34 +95,45 @@ useEffect(() => {
                     <tr
                       key={rowIndex}
                       {...row.getRowProps()}
-                      onClick={() => handleRowClick(row.original.registrationFormId,
-                        row.original.consultantId,
-                        row.original.customerId,
-                        row.original.area,
-                        row.original.budget,
-                        row.original.destinationReason,
-                        row.original.majorChoose,
-                        row.original.majorChooseReason,
-                        row.original.moreInformation,
-                        row.original.priorityOfStudyAbroad,
-                        row.original.programChoose,
-                        row.original.studyAbroadReason,
-                        row.original.universityChooseReason
-                      )}
+                      onClick={() =>
+                        handleRowClick(
+                          row.original.registrationFormId,
+                          row.original.consultantId,
+                          row.original.customerId,
+                          row.original.area,
+                          row.original.budget,
+                          row.original.destinationReason,
+                          row.original.majorChoose,
+                          row.original.majorChooseReason,
+                          row.original.moreInformation,
+                          row.original.priorityOfStudyAbroad,
+                          row.original.programChoose,
+                          row.original.studyAbroadReason,
+                          row.original.universityChooseReason
+                        )
+                      }
                     >
-                     {row.cells.map((cell, cellIndex) => {
-  return (
-    <td key={cellIndex} {...cell.getCellProps()}>
-      {cell.column.id === "status" ? (
-        <span className={row.original.status === 0 ? 'status-red' : 'status-green'}>
-          {row.original.status === 0 ? 'Chưa duyệt' : cell.render("Cell")}
-        </span>
-      ) : (
-        cell.render("Cell")
-      )}
-    </td>
-  );
-})}
+                      {row.cells.map((cell, cellIndex) => {
+                        return (
+                          <td key={cellIndex} {...cell.getCellProps()}>
+                            {cell.column.id === "status" ? (
+                              <span
+                                className={
+                                  row.original.status === 0
+                                    ? "status-red"
+                                    : "status-green"
+                                }
+                              >
+                                {row.original.status === 0
+                                  ? "Chưa duyệt"
+                                  : cell.render("Cell")}
+                              </span>
+                            ) : (
+                              cell.render("Cell")
+                            )}
+                          </td>
+                        );
+                      })}
 
                       <td>
                         {/* <button
@@ -160,8 +171,7 @@ useEffect(() => {
                   className="previous-button"
                   onClick={() => previousPage()}
                   disabled={!canPreviousPage}
-                  style={{color:'black'}}
-
+                  style={{ color: "black" }}
                 >
                   Previous
                 </button>
@@ -169,7 +179,7 @@ useEffect(() => {
                   className="next-button "
                   onClick={() => nextPage()}
                   disabled={!canNextPage}
-                  style={{color:'black'}}
+                  style={{ color: "black" }}
                 >
                   Next
                 </button>
