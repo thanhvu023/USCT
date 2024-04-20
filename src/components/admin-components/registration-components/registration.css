@@ -1,0 +1,24 @@
+.status-label {
+    padding: 5px 10px;
+    border-radius: 3px;
+    border-width: 1px;
+    border-style: solid;
+  }
+  
+  .status-label.red {
+    border-color: darkred;
+    background-color: red;
+    color: white;
+  }
+  
+  .status-label.yellow {
+    border-color: darkgoldenrod;
+    background-color: yellow;
+    color: black;
+  }
+  
+  .status-label.blue {
+    border-color: darkblue;
+    background-color: blue;
+  }
+  

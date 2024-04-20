@@ -11,6 +11,7 @@ import AllProgramsPage from "./admin-components/program-components/programs1";
 import AllPrograms from "./admin-components/program-components/programs";
 import Registration from "./admin-components/registration-components/registration";
 import ProgramApplicationPage from "./admin-components/program-application-components/program-apllicationbyStudentprofileId";
+import Test2 from "./admin-components/customer-components/test2";
 
 
 const AdminPage = () => {
@@ -25,7 +26,8 @@ const AdminPage = () => {
     "Chương trình": <AllPrograms />,
     "Hồ sơ học sinh": <ProgramApplicationPage />,
     "Đơn tư vấn": <Registration />,
-    "Test1": <Test1/>
+    "Test1": <Test1/>,
+    "Test2": <Test2/>
     
   };
   

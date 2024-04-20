@@ -13,7 +13,7 @@ const getConsultantEmail = (consultantId) => {
     const userData = useSelector((state) => state.auth.userById);
 
     if (!Array.isArray(userData)) {
-        return "chưa load array"; 
+        return "Không biết"; 
     }
 
     const user = userData.find((user) => user.customerId === customerId);
