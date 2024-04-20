@@ -4,7 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import Select from "react-select";
-import { Carousel } from "react-bootstrap"; // Import Carousel from React Bootstrap
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
 
 import {
   createProgramApplication,
@@ -480,144 +483,137 @@ function ProgramDetailPage() {
             </div>
           </div>
           <div className="widget">
-            <h4 className="widget-title">Những Chương Trình Tương Tự</h4>
-            {programByType && programByType.length > 1 ? (
-              <Carousel
-                interval={5000}
-                fade={true}
-                pause={false}
-                nextIcon={
-                  <span
-                    className="carousel-control-next-icon"
-                    style={{
-                      fontSize: customCarouselStyle.controlIconSize,
-                      color: customCarouselStyle.controlIconColor,
-                    }}
-                  />
-                }
-                prevIcon={
-                  <span
-                    className="carousel-control-prev-icon"
-                    style={{
-                      fontSize: customCarouselStyle.controlIconSize,
-                      color: customCarouselStyle.controlIconColor,
-                    }}
-                  />
-                }
-              >
-                {programByType
-                  .filter(
-                    (program) => program.programId.toString() !== programById
-                  )
-                  .reduce((acc, program, index, array) => {
-                    if (index % 4 === 0) {
-                      acc.push(array.slice(index, index + 4)); // Chia mảng thành các mảng con chứa 4 phần tử
-                    }
-                    return acc;
-                  }, [])
-                  .map((programsInSlide, slideIndex) => (
-                    <Carousel.Item key={slideIndex}>
-                      <div
-                        className={
-                          "row justify-content-center" +
-                          (programByType.length > 1 ? "" : " pd-top-100")
-                        }
-                      >
-                        {programsInSlide.map((program, index) => (
-                          <div key={index} className="col-lg-4 col-md-6">
-                            <div className="single-course-inner">
-                              <div className="thumb">
-                                <img
-                                  src={
-                                    publicUrl + "assets/img/course/programs.jpg"
-                                  }
-                                  alt="img"
-                                />
-                              </div>
-                              <div className="details">
-                                <div className="details-inner">
-                                  <h5>
-                                    <Link
-                                      onClick={handleScrollToTop}
-                                      to={`/program-details/${program.programId}`}
-                                    >
-                                      {program.nameProgram}
-                                    </Link>
-                                  </h5>
-                                </div>
-                                <div className="emt-course-meta">
-                                  <div className="row">
-                                    <div className="col-12">
-                                      <div className="rating">
-                                        <span>
-                                          Lộ trình: {program.duration}
-                                        </span>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </Carousel.Item>
-                  ))}
-              </Carousel>
-            ) : (
-              <div className="text-center p-4">
-                <h4>Không có chương trình tương tự</h4>
+  <h4 className="widget-title">Những Chương Trình Tương Tự</h4>
+  {programByType && programByType.length > 1 ? (
+    <Slider
+      dots={true}
+      infinite={true}
+      speed={500}
+      slidesToShow={4}
+      slidesToScroll={1}
+      autoplay={true}
+      autoplaySpeed={3000}
+      nextArrow={
+        <span
+          className="carousel-control-next-icon"
+          style={{
+            fontSize: customCarouselStyle.controlIconSize,
+            color: customCarouselStyle.controlIconColor,
+          }}
+        />
+      }
+      prevArrow={
+        <span
+          className="carousel-control-prev-icon"
+          style={{
+            fontSize: customCarouselStyle.controlIconSize,
+            color: customCarouselStyle.controlIconColor,
+          }}
+        />
+      }
+    >
+      {programByType
+        .filter((program) => program.programId.toString() !== programById)
+        .map((program, index) => (
+          <div key={index} className="col-lg-12 col-md-6">
+            <div className="single-course-inner">
+              <div className="thumb">
+                <img
+                  src={publicUrl + "assets/img/course/programs.jpg"}
+                  alt="img"
+                />
               </div>
-            )}
-          </div>
-
-          <div>
-            <h4 className="widget-title display-5">
-              Những Trường Đại Học Có Mở Chương Trình Này
-            </h4>
-            <div className="row justify-content-center pd-top-100">
-              {UniversityDetails.map((university, index) => (
-                <div key={index} className="col-lg-4 col-md-6">
-                  <div className="single-course-inner">
-                    <div className="thumb">
-                      <img
-                        src={publicUrl + "assets/img/course/programs.jpg"}
-                        alt="img"
-                      />
-                    </div>
-                    <div className="details">
-                      <div className="details-inner">
-                        <h5 className="h6">
-                          <Link to={`/program-details/${university.programId}`}>
-                            {university.nameProgram}
-                          </Link>
-                        </h5>
-                        <div className="specialization-icon mb-2">
-                          <i className="fa fa-univers ity mr-1"></i>
-                          <span className="fw-bold">Trường Đại Học Ohana</span>
-                        </div>
-                        <div className="specialization-icon">
-                          <i className="fa fa-map-marker mr-2" />
-
-                          <span className="fw-bold">Tiểu Bang: Ohana</span>
-                        </div>
-                        <div className="emt-course-meta">
-                          <div className="price text-right mt-3">
-                            <Link
-                              to="/instructor-details"
-                              className="btn btn-primary"
-                            >
-                              Xem Thêm
-                            </Link>
-                          </div>
-                        </div>
+              <div className="details">
+                <div className="details-inner">
+                  <h5>
+                    <Link
+                      onClick={handleScrollToTop}
+                      to={`/program-details/${program.programId}`}
+                    >
+                      {program.nameProgram}
+                    </Link>
+                  </h5>
+                </div>
+                <div className="emt-course-meta">
+                  <div className="row">
+                    <div className="col-12">
+                      <div className="rating">
+                        <span>Lộ trình: {program.duration}</span>
                       </div>
                     </div>
                   </div>
                 </div>
-              ))}
+              </div>
             </div>
           </div>
+        ))}
+    </Slider>
+  ) : (
+    <div className="text-center p-4 ">
+      <h4>Không có chương trình tương tự</h4>
+    </div>
+  )}
+</div>
+
+
+<div className="mt-4">
+  <h4 className="widget-title display-5">
+    Những Trường Đại Học Có Mở Chương Trình Này
+  </h4>
+  <Slider
+    dots={true}
+    infinite={true}
+    speed={500}
+    slidesToShow={3} // Hiển thị 3 trường đại học trên mỗi slide
+    slidesToScroll={1}
+    autoplay={true}
+    autoplaySpeed={5000}
+    nextArrow={<div className="slick-arrow slick-next" style={{color: 'black', width:'50px'}}>Next</div>}
+    prevArrow={<div className="slick-arrow slick-prev" style={{color: 'black'}}>Previous</div>}
+  >
+    {UniversityDetails.map((university, index) => (
+      <div key={index} className="col-lg-12 col-md-6">
+        <div className="single-course-inner">
+          <div className="thumb">
+            <img
+              src={publicUrl + "assets/img/course/programs.jpg"}
+              alt="img"
+            />
+          </div>
+          <div className="details">
+            <div className="details-inner">
+              <h5 className="h6">
+                <Link to={`/program-details/${university.programId}`}>
+                  {university.nameProgram}
+                </Link>
+              </h5>
+              <div className="specialization-icon mb-2">
+                <i className="fa fa-university mr-1"></i>
+                <span className="fw-bold">Trường Đại Học Ohana</span>
+              </div>
+              <div className="specialization-icon">
+                <i className="fa fa-map-marker mr-2" />
+                <span className="fw-bold">Tiểu Bang: Ohana</span>
+              </div>
+              <div className="emt-course-meta">
+                <div className="price text-right mt-3">
+                  <Link
+                    to="/instructor-details"
+                    className="btn btn-primary"
+                  >
+                    Xem Thêm
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    ))}
+  </Slider>
+</div>
+
+
         </div>
       </div>
     </>
