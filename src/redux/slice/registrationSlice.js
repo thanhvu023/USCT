@@ -58,7 +58,17 @@ export const createRegistration = createAsyncThunk(
     }
   }
 );
-
+export const updateRegistrationById = createAsyncThunk(
+  "registration/updateRegistrationById",
+  async ({ registrationFormId, consultantId, status }, thunkAPI) => {
+    try {
+      const res = await instance.put(`/registration-forms/${registrationFormId}`, { consultantId, status });
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response);
+    }
+  }
+);
 const initialState = {
   msg: "",
   loading: false,
@@ -119,6 +129,18 @@ export const registrationSlice = createSlice({
         state.error = null;
       })
       .addCase(getRegistrationByRegistrationFormId.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(updateRegistrationById.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updateRegistrationById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.msg = "Update successful"; 
+
+      })
+      .addCase(updateRegistrationById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       });

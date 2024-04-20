@@ -143,5 +143,13 @@ export const MenuList = [
         filterName: 'Test1',
        
     },
+    {
+        title:'Test2',
+        classsChange: 'mm-collapse',
+        iconStyle: <i className="
+        la la-pencil-square" />,
+        filterName: 'Test2',
+       
+    },
 
 ] 
