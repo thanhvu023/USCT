@@ -47,8 +47,9 @@ export const getProgramApplicationsByCustomerId = createAsyncThunk(
   async (customerId, thunkAPI) => {
     try {
       const res = await instance.get(
-        `/program-applications?customerId=${customerId}`
+        `/program-applications/customer/${customerId}`
       );
+      console.log(res.data)
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response);

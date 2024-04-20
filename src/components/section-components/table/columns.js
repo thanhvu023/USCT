@@ -19,6 +19,12 @@ export const COLUMNS = [
 		accessor: 'email',
 		Filter: ColumnFilter,
 	},
+	// {
+	// 	Header : 'Chương trình đăng ký',
+	// 	Footer : 'Chương trình đăng ký',
+	// 	accessor: '',
+	// 	Filter: ColumnFilter,
+	// },
 	{
 		Header : 'Ngày tạo',
 		Footer : 'Ngày tạo',

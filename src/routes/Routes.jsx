@@ -24,6 +24,7 @@ import { useSelector } from "react-redux";
 import jwtDecode from "jwt-decode";
 import PrivateRoute from "./PrivateRoute.jsx";
 import AdminRoute from "./AdminRoute.jsx";
+import ConsultantPage from "../components/consultant-page.jsx";
 
 const Routers = () => {
   const token = useSelector((state) => state?.auth?.token);
@@ -145,6 +146,7 @@ const Routers = () => {
             </PrivateRoute>
           }
         />
+        <Route path="/consultant" element={<ConsultantPage/>}/>
         <Route path="*" element={<p>There is nothing here: 404!</p>} />
       </Routes>
     </Router>

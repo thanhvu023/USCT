@@ -6,7 +6,6 @@ const PrivateRoute = (props) => {
   //   return <Navigate to="/" replace />;
   // }
   const { userRole } = props;
-  console.log(userRole);
   if (!userRole) {
     return <Navigate to="/sign-in" />;
   }
