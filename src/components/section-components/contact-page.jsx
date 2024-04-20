@@ -87,11 +87,19 @@ const Registration = () => {
   const [errors, setErrors] = useState({});
   const dispatch = useDispatch();
   const handleInputChange = (selectedOption, name) => {
+  if (selectedOption && selectedOption.value) {
     setFormData({
       ...formData,
-      [name]: selectedOption.value, // Assuming you want to store the value of the selected option
+      [name]: selectedOption.value,
     });
-  };
+  } else {
+    setFormData({
+      ...formData,
+      [name]: null, // or whatever default value you want
+    });
+  }
+};
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;

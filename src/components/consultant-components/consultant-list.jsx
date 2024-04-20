@@ -16,16 +16,16 @@ const ConsultantList = () => {
   useEffect(() => {
     dispatch(getRegistrationByConsultantId(customerId));
   }, [customerId]);
-  const data = useSelector((state)=>state?.consultant?.registrationByConsultantId);
-  console.log(data)
+  const data = useSelector(
+    (state) => state?.consultant?.registrationByConsultantId
+  );
+  console.log(data);
 
   // const studentProfileId = useSelector(
   //   (state) => state.student.studentProfileByCustomerId[0].studentProfileId
   // );
   // console.log("studentId là:", studentProfileId)
-    // console.log("ProfileList :", data)
-
-
+  // console.log("ProfileList :", data)
 
   const [selectedRow, setSelectedRow] = useState(null);
   const navigate = useNavigate();
@@ -33,7 +33,7 @@ const ConsultantList = () => {
   const handleRowClick = (studentProfileId) => {
     navigate(`/student-profile-detail/${studentProfileId}`);
   };
-  
+
   const tableInstance = useTable(
     {
       columns,
@@ -93,8 +93,21 @@ const ConsultantList = () => {
                     <tr
                       key={rowIndex}
                       {...row.getRowProps()}
-                      onClick={() => handleRowClick(row.original.studentProfileId, row.original.fullName, row.original.email, row.original.createDate, row.original.phone, row.original.nationalId, row.original.gender, row.original.dateOfBirth, row.original.placeOfBirth, row.original.studyProcess)}
-                      >
+                      onClick={() =>
+                        handleRowClick(
+                          row.original.studentProfileId,
+                          row.original.fullName,
+                          row.original.email,
+                          row.original.createDate,
+                          row.original.phone,
+                          row.original.nationalId,
+                          row.original.gender,
+                          row.original.dateOfBirth,
+                          row.original.placeOfBirth,
+                          row.original.studyProcess
+                        )
+                      }
+                    >
                       {row.cells.map((cell, cellIndex) => {
                         return (
                           <td key={cellIndex} {...cell.getCellProps()}>
@@ -138,8 +151,7 @@ const ConsultantList = () => {
                   className="previous-button"
                   onClick={() => previousPage()}
                   disabled={!canPreviousPage}
-                  style={{color:'black'}}
-
+                  style={{ color: "black" }}
                 >
                   Previous
                 </button>
@@ -147,7 +159,7 @@ const ConsultantList = () => {
                   className="next-button "
                   onClick={() => nextPage()}
                   disabled={!canNextPage}
-                  style={{color:'black'}}
+                  style={{ color: "black" }}
                 >
                   Next
                 </button>
