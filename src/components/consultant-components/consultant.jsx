@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Nav, Tab } from "react-bootstrap";
 import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
 import { Link } from "react-router-dom";
-import StudenProfileList from "./table/student-profiles";
 
 import PropTypes from "prop-types";
+import StudentProfileList from "../section-components/table/student-profiles";
+import { useDispatch, useSelector } from "react-redux";
+import jwtDecode from "jwt-decode";
+import { getRegistrationByConsultantId } from "../../redux/slice/consultantSlice";
 const options = [
   { value: "basic_english", label: "Tiếng Anh cơ bản" },
   { value: "ielts", label: "IELTS" },
@@ -47,7 +50,7 @@ const AchievementList = ({ achievements }) => (
   </ul>
 );
 
-const StudentProfilePage = () => {
+const ConsultantProgram = () => {
   // const [name, setName] = useState('');
   // const [customerId, setCustomerId] = useState('');
   // const [dob, setDob] = useState(null);
@@ -67,18 +70,25 @@ const StudentProfilePage = () => {
     e.preventDefault();
     // Add your submit logic here
   };
-
+  const token = useSelector((state) => state?.auth?.token);
+  const customerId = jwtDecode(token).UserId;
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getRegistrationByConsultantId(customerId));
+  }, [customerId]);
+  const registration = useSelector((state)=>state?.consultant?.registrationByConsultantId);
+  console.log(registration)
   return (
     <div className="row mb-5 mt-5">
       <Sidebar className="ml-4">
         <Menu className="mt-5">
-          <MenuItem component={<Link to={`/students-profile`}></Link>}>
-            Hồ sơ học sinh
-          </MenuItem>
           <MenuItem
             component={<Link to={`/students-profile/registrationList`}></Link>}
           >
             Danh sách đơn tư vấn
+          </MenuItem>
+          <MenuItem component={<Link to={`/students-profile`}></Link>}>
+            Hồ sơ học sinh
           </MenuItem>
           <MenuItem
             component={<Link to={`/students-profile/appliedList`}></Link>}
@@ -114,7 +124,7 @@ const StudentProfilePage = () => {
                     </Nav>
                     <Tab.Content>
                       <Tab.Pane id="about-mefdsaf" eventKey="StudentList">
-                        <StudenProfileList />
+                        <StudentProfileList />
                       </Tab.Pane>
                     </Tab.Content>
                   </Tab.Container>
@@ -138,4 +148,4 @@ SkillsList.propTypes = {
 AchievementList.propTypes = {
   achievements: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
-export default StudentProfilePage;
+export default ConsultantProgram;

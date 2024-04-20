@@ -10,10 +10,10 @@ import jwtDecode from "jwt-decode";
 const StudentProfileList = () => {
   const columns = useMemo(() => COLUMNS, []);
 
-  const token = useSelector((state) => state.auth.token);
-  const customerId = jwtDecode(token).UserId;
+  const token = useSelector((state) => state?.auth?.token);
+  const customerId = jwtDecode(token)?.UserId;
   const data = useSelector(
-    (state) => state.student.studentProfileByCustomerId
+    (state) => state?.student?.studentProfileByCustomerId
   );
 
   // const studentProfileId = useSelector(
