@@ -1,6 +1,27 @@
 import {format} from 'date-fns';
 import { ColumnFilter } from './column-filter';
+import { useDispatch, useSelector } from "react-redux";
+
+const getConsultantEmail = (consultantId) => {
+
+	const consultants = useSelector((state) => state.auth.consultants);
+
+	const consultant = consultants.find((consultant) => consultant.consultantId === consultantId);
+	return consultant ? consultant.email : 'Không biết';
+  };
+  const getFullName = (customerId) => {
+    const userData = useSelector((state) => state.auth.userById);
+
+    if (!Array.isArray(userData)) {
+        return "chưa load array"; 
+    }
+
+    const user = userData.find((user) => user.customerId === customerId);
+    return user ? user.fullName : "Không biết";
+};
+
 export const COLUMNS = [
+	
 	{
 		Header : 'Mã đơn tư vấn',
 		Footer : 'Mã đơn tư vấn',
@@ -11,20 +32,19 @@ export const COLUMNS = [
 	{
 		Header : 'Họ và tên',
 		Footer : 'Họ và tên',
-		accessor: 'fullName',
+		accessor: 'customerId',
+			Cell: ({ row }) => getFullName(row.original.customerId),
+
 		Filter: ColumnFilter,
 	},	{
 		Header : 'Email',
 		Footer : 'Email',
-		accessor: 'majorChoose',
+		accessor: 'consultantId',
+		Cell: ({ row }) => getConsultantEmail(row.original.consultantId),
+
 		Filter: ColumnFilter,
 	},
-	// {
-	// 	Header : 'Chương trình đăng ký',
-	// 	Footer : 'Chương trình đăng ký',
-	// 	accessor: '',
-	// 	Filter: ColumnFilter,
-	// },
+
 	{
 		Header : 'Ngày tạo',
 		Footer : 'Ngày tạo',

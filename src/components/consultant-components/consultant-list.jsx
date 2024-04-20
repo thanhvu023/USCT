@@ -6,18 +6,31 @@ import { COLUMNS } from "./columns";
 // import "./student-profile.css";
 import jwtDecode from "jwt-decode";
 import { getRegistrationByConsultantId } from "../../redux/slice/consultantSlice";
+import { getAllUsers } from "../../redux/slice/authSlice";
 
 const ConsultantList = () => {
   const columns = useMemo(() => COLUMNS, []);
 
   const token = useSelector((state) => state?.auth?.token);
   const customerId = jwtDecode(token).UserId;
+
+
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getRegistrationByConsultantId(customerId));
   }, [customerId]);
   const data = useSelector((state)=>state?.consultant?.registrationByConsultantId);
-  console.log(data)
+  // console.log("?",data)
+
+  const userData = useSelector((state) => state.auth.userById);
+  console.log("userData:",userData)
+  useEffect(() => {
+    dispatch(getAllUsers());
+  }, [dispatch]);
+  const getFullName = (customerId) => {
+    const user = userData.find((user) => user.customerId === customerId);
+    return user ? user.fullName : "Không biết";
+  };  
 
   // const studentProfileId = useSelector(
   //   (state) => state.student.studentProfileByCustomerId[0].studentProfileId
@@ -33,6 +46,10 @@ const ConsultantList = () => {
   const handleRowClick = (studentProfileId) => {
     navigate(`/student-profile-detail/${studentProfileId}`);
   };
+  
+
+  
+  // console.log(getConsultantEmail(row.original.consultantId));
   
   const tableInstance = useTable(
     {
