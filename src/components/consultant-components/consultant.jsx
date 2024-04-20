@@ -8,6 +8,7 @@ import StudentProfileList from "../section-components/table/student-profiles";
 import { useDispatch, useSelector } from "react-redux";
 import jwtDecode from "jwt-decode";
 import { getRegistrationByConsultantId } from "../../redux/slice/consultantSlice";
+import ConsultantList from "./consultant-list";
 const options = [
   { value: "basic_english", label: "Tiếng Anh cơ bản" },
   { value: "ielts", label: "IELTS" },
@@ -70,14 +71,7 @@ const ConsultantProgram = () => {
     e.preventDefault();
     // Add your submit logic here
   };
-  const token = useSelector((state) => state?.auth?.token);
-  const customerId = jwtDecode(token).UserId;
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(getRegistrationByConsultantId(customerId));
-  }, [customerId]);
-  const registration = useSelector((state)=>state?.consultant?.registrationByConsultantId);
-  console.log(registration)
+
   return (
     <div className="row mb-5 mt-5">
       <Sidebar className="ml-4">
@@ -124,7 +118,7 @@ const ConsultantProgram = () => {
                     </Nav>
                     <Tab.Content>
                       <Tab.Pane id="about-mefdsaf" eventKey="StudentList">
-                        <StudentProfileList />
+                        <ConsultantList />
                       </Tab.Pane>
                     </Tab.Content>
                   </Tab.Container>
