@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import { IMAGES } from "./contants/theme-student";
 import { Row, Button, Modal, Alert } from "react-bootstrap";
 import Swal from "sweetalert2"
+import { getConsultants } from "../../../redux/slice/authSlice";
 const theadData = [
   { heading: "StudentProfileId", sortingVale: "id" },
   { heading: "Họ và tên", sortingVale: "name" },
@@ -19,484 +20,49 @@ const theadData = [
 ];
 
 const Test1 = () => {
-  const dispatch = useDispatch();
-  const [sort, setSortata] = useState(10);
-  const [data, setData] = useState([]);
-  const activePag = useRef(0);
-  const [test, settest] = useState(0);
-  const [feeData, setFeeData] = useState([]); 
-  const [searchTerm, setSearchTerm] = useState(""); 
-  const [programApplications, setProgramApplications] = useState([]);
-  const [studentProfileId, setStudentProfileId] = useState(null);
-  useEffect(() => {
-    const fetchProgramApplications = async () => {
-      try {
-        const response = await dispatch(getProgramApplicationsByStudentProfileId(studentProfileId));
-        if (response.payload) {
-          setProgramApplications(response.payload);
-        }
-      } catch (error) {
-        console.error("Error fetching program applications:", error);
-      }
-    };
-
-    fetchProgramApplications();
-
-    // Cleanup function to clear the programApplications state
-    return () => {
-      setProgramApplications([]);
-    };
-  }, [dispatch, studentProfileId]);
- 
-
- 
-  // Sử dụng useEffect để lấy thông tin chi tiết của từng chương trình từ programId
-  useEffect(() => {
-    const fetchPrograms = async () => {
-      const programIds = programApplications.map(application => application.programId);
-      for (const programId of programIds) {
-        try {
-          const response = await dispatch(getProgramById(programId));
-          if (response.payload) {
-            // Cập nhật thông tin chi tiết chương trình vào programApplications
-            setProgramApplications(prevState => prevState.map(application => {
-              if (application.programId === programId) {
-                return {
-                  ...application,
-                  programName: response.payload.nameProgram
-                };
-              }
-              return application;
-            }));
-          }
-        } catch (error) {
-          console.error(`Error fetching program with ID ${programId}:`, error);
-        }
-      }
-    };
-
-    // Gọi hàm fetchPrograms khi programApplications có dữ liệu
-    if (programApplications.length > 0) {
-      fetchPrograms();
-    }
-  }, [dispatch, programApplications]);
- 
-  const [iconData, setIconDate] = useState({ complete: false, ind: null });
-  const [showCheckModal, setShowCheckModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showCheckSuccess, setShowCheckSuccess] = useState(false);
-  const [showDeleteSuccess, setShowDeleteSuccess] = useState(false);
-  const [selectedStudentProfileId, setSelectedStudentProfileId] = useState(null); // State lưu thông tin đơn tư vấn được chọn
- const handleStudentProfile = (student) =>{
-  setSelectedStudentProfileId(student);
-  setShowCheckModal(true)
- }
-  
-  
-  
-  
-
-
-  const handleCloseCheckModal = () => setShowCheckModal(false);
-  const handleCloseDeleteModal = () => setShowDeleteModal(false);
-  const handleShowCheckModal = () => {
-    Swal.fire({
-      icon: "success",
-      title: "Duyệt thành công!",
-      showConfirmButton: false,
-      timer: 3000,
-    });
-    setShowCheckSuccess(true);
-  };
-
-  const handleShowDeleteModal = () => {
-    Swal.fire({
-      title: "Bạn có chắc muốn xóa không?",
-      text: "Once deleted, you will not be able to recover this imaginary file!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#dd6b55",
-      cancelButtonColor: "#aaa",
-      confirmButtonText: "Đồng ý",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire("Deleted!", "Your file has been deleted.", "success");
-      }
-    });
-  };
-
-  const chageData = (frist, sec) => {
-    for (var i = 0; i < data.length; ++i) {
-      if (i >= frist && i < sec) {
-        data[i].classList.remove("d-none");
-      } else {
-        data[i].classList.add("d-none");
-      }
-    }
-  };
-
-  useEffect(() => {
-    setData(document.querySelectorAll("#holidayList tbody tr"));
-  }, [test]);
-
 
   
-  activePag.current === 0 && chageData(0, sort);
-
-  let paggination = Array(Math.ceil(data.length / sort))
-    .fill()
-    .map((_, i) => i + 1);
-
-  const onClick = (i) => {
-    activePag.current = i;
-    chageData(activePag.current * sort, (activePag.current + 1) * sort);
-    settest(i);
-  };
-
-  function SotingData(name) {
-    const sortedPeople = [...feeData];
-    switch (name) {
-      case "sno":
-        sortedPeople.sort((a, b) => (a.sno < b.sno ? -1 : 1));
-        break;
-      case "name":
-      case "designation":
-      case "mobile":
-      case "address":
-        sortedPeople.sort((a, b) => {
-          return iconData.complete
-            ? a[name].localeCompare(b[name])
-            : b[name].localeCompare(a[name]);
-        });
-        break;
-      default:
-        break;
-    }
-    setFeeData(sortedPeople);
-  }
-
-  function DataSearch(e) {
-    const searchTerm = e.target.value.toLowerCase();
-    setSearchTerm(searchTerm);
-  }
+    const dispatch = useDispatch();
+    const consultants = useSelector((state) => state.auth.consultants);
+    console.log("consultants:",consultants)
+    const loading = useSelector((state) => state.auth.loading);
   
+    useEffect(() => {
+      dispatch(getConsultants());
+    }, [dispatch]);
   
-  
-  const studentProfileByCustomerId = useSelector(
-    (state) => state.student.studentProfileByCustomerId
-  );
-  const loading = useSelector((state) => state.student.loading);
-  useEffect(() => {
-    const filteredData = studentProfileByCustomerId.filter((student) => {
-      return (
-        student.fullName.toLowerCase().includes(searchTerm) ||
-        student.address.toLowerCase().includes(searchTerm) ||
-        student.email.toLowerCase().includes(searchTerm) ||
-        student.createDate.toLowerCase().includes(searchTerm)
-
-      );
-    });
-    setFeeData(filteredData);
-  }, [searchTerm, studentProfileByCustomerId]);
-  
-  useEffect(() => {
-    setFeeData(studentProfileByCustomerId); // Cập nhật feeData bằng dữ liệu từ API
-  }, [studentProfileByCustomerId]);
-  useEffect(() => {
-    dispatch(getStudentProfileByCustomerId(1)); // Thay userId bằng giá trị tương ứng
-  }, [dispatch]);
-  // console.log("feeData:",feeData)
-
-  return (
-    <div>
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <>
-        <Row>
-          <div className="col-lg-12">
-         
-            <div className="card">
-              <div className="card-header d-flex justify-content-between align-items-center">
-                <h4 className="card-title">Danh sách hồ sơ</h4>
-                <Link to="/add-staff" className="btn btn-primary">
-                  + Thêm mới
-                </Link>
-              </div>
-              <div className="card-body">
-                <div className="table-responsive">
-                  <div id="holidayList" className="dataTables_wrapper no-footer">
-                    <div className="d-sm-flex justify-content-between align-items-center">
-                      <div className="dataTables_length">
-                        <label className="d-flex align-items-center">
-                          hiển thị
-                          <Dropdown className="search-drop">
-                            <Dropdown.Toggle as="div" className="search-drop-btn">
-                              {sort}
-                            </Dropdown.Toggle>
-                            <Dropdown.Menu>
-                              <Dropdown.Item onClick={() => setSortata("10")}>
-                                10
-                              </Dropdown.Item>
-                              <Dropdown.Item onClick={() => setSortata("20")}>
-                                20
-                              </Dropdown.Item>
-                              <Dropdown.Item onClick={() => setSortata("30")}>
-                                30
-                              </Dropdown.Item>
-                            </Dropdown.Menu>
-                          </Dropdown>
-                          hàng
-                        </label>
-                      </div>
-                      <div className="dataTables_filter">
-                        <label>
-                          Tìm kiếm :{" "}
-                          <input
-                            type="search"
-                            className=""
-                            placeholder=""
-                            onChange={DataSearch}
-                          />
-                        </label>
-                      </div>
-                    </div>
-                    <table
-                      id="example4"
-                      className="display dataTable no-footer w-100"
-                    >
-                      <thead>
-                        <tr>
-                          {theadData.map((item, ind) => (
-                            <th
-                              key={ind}
-                              onClick={() => {
-                                SotingData(item.sortingVale);
-                                setIconDate((prevState) => ({
-                                  complete: !prevState.complete,
-                                  ind: ind,
-                                }));
-                              }}
-                            >
-                              {item.heading}
-                              <span>
-                                {ind !== iconData.ind && (
-                                  <i
-                                    className="fa fa-sort ms-2 fs-12"
-                                    style={{ opacity: "0.3" }}
-                                  />
-                                )}
-                                {ind === iconData.ind &&
-                                  (iconData.complete ? (
-                                    <i
-                                      className="fa fa-arrow-down ms-2 fs-12"
-                                      style={{ opacity: "0.7" }}
-                                    />
-                                  ) : (
-                                    <i
-                                      className="fa fa-arrow-up ms-2 fs-12"
-                                      style={{ opacity: "0.7" }}
-                                    />
-                                  ))}
-                              </span>
-                            </th>
-                          ))}
-                        </tr>
-                      </thead>
-                      <tbody>
-                      {feeData.map((data) => {
-  const programApplication = programApplications.find(
-    (application) => application.studentProfileId === data.studentProfileId
-  );
-  // Check if programApplication is defined before accessing nested properties
-  const programStageName = programApplication ? 
-    programApplication.applyStage.programStage.stageName : '';
-  const programName = programApplication ? 
-    programApplication.applyStage.programStage.program.nameProgram : '';
-  
-  return (
-    <tr key={data.id}>
-      <td>{data.studentProfileId}</td>
-      <td>
-      <Link
-                                    onClick={() =>
-                                      handleStudentProfile(data)
-                                    }
-                                  >
-                                    {data.fullName}
-                                  </Link>
-      </td>
-      {/* <td>{data.fullName}</td> */}
-      <td>{data.createDate}</td>
-      <td>{programName}</td>
-      <td>{programStageName}</td> {/* Render the program name */}
-      <td style={{ display: "flex", alignItems: "center" }}>
-                            <button
-                            
-                              onClick={handleShowCheckModal}
-                              className="btn btn-xs sharp btn-primary me-1"
-                              style={{
-                                width: "30px",
-                                height: "30px",
-                                padding: "0 20px",
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                marginRight: "5px",
-                              }}
-                            >
-                              <i className="fa fa-check" />
-                            </button>
-                            <button
-                              onClick={handleShowDeleteModal}
-                              className="btn btn-xs sharp btn-danger"
-                              style={{
-                                width: "30px",
-                                height: "30px",
-                                padding: "0 20px",
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                              }}
-                            >
-                              <i className="fa fa-trash" />
-                            </button>
-                            <Modal
-                              className="custom-modal"
-                              show={showCheckModal}
-                              onHide={handleCloseCheckModal}
-                              backdrop="static"
-                              centered
-                            >
-                              <Modal.Header>
-                                <Modal.Title>  {selectedStudentProfileId &&
-                  selectedStudentProfileId.programApplicationId}</Modal.Title>
-                              </Modal.Header>
-                              <Modal.Body>
-                                Bạn có chắc chắn muốn thực hiện hành động này?
-                              </Modal.Body>
-                              <Modal.Footer>
-                                <Button
-                                  variant="secondary"
-                                  onClick={handleCloseCheckModal}
-                                >
-                                  Hủy
-                                </Button>
-                                <Button
-                                  variant="primary"
-                                  onClick={() => {
-                                    handleCloseCheckModal();
-                                    setShowCheckSuccess(true);
-                                  }}
-                                >
-                                  Đồng ý
-                                </Button>
-                              </Modal.Footer>
-                            </Modal>
-
-                            <Modal
-                              className="custom-modal"
-                              show={showDeleteModal}
-                              onHide={handleCloseDeleteModal}
-                              backdrop="static"
-                              centered
-                            >
-                              <Modal.Header>
-                                <Modal.Title>Modal Delete Title</Modal.Title>
-                              </Modal.Header>
-                              <Modal.Body>
-                                Bạn có chắc chắn muốn xóa mục này?
-                              </Modal.Body>
-                              <Modal.Footer>
-                                <Button
-                                  variant="secondary"
-                                  onClick={handleCloseDeleteModal}
-                                >
-                                  Hủy
-                                </Button>
-                                <Button
-                                  variant="danger"
-                                  onClick={() => {
-                                    handleCloseDeleteModal();
-                                    setShowDeleteSuccess(true);
-                                  }}
-                                >
-                                  Xóa
-                                </Button>
-                              </Modal.Footer>
-                            </Modal>
-                          </td>
-    </tr>
-  );
-})}
-
-                      
-                      </tbody>
-                    </table>
-                    <div className="d-sm-flex text-center justify-content-between align-items-center mt-3">
-                      <div className="dataTables_info">
-                        Showing {activePag.current * sort + 1} to{" "}
-                        {(activePag.current + 1) * sort < data.length
-                          ? (activePag.current + 1) * sort
-                          : data.length}{" "}
-                        of {data.length} entries
-                      </div>
-                      <div
-                        className="dataTables_paginate paging_simple_numbers"
-                        id="example5_paginate"
-                      >
-                        <button
-                          className={`btn btn-outline-secondary paginate_button previous ${
-                            activePag.current === 0 ? "disabled" : ""
-                          }`}
-                          onClick={() =>
-                            activePag.current > 0 &&
-                            onClick(activePag.current - 1)
-                          }
-                          disabled={activePag.current === 0}
-                        >
-                          Previous
-                        </button>
-                        <span>
-                          {paggination.map((number, i) => (
-                            <button
-                              key={i}
-                              className={`btn btn-outline-secondary paginate_button ${
-                                activePag.current === i ? "current" : ""
-                              }`}
-                              onClick={() => onClick(i)}
-                            >
-                              {number}
-                            </button>
-                          ))}
-                        </span>
-                        <button
-                          className={`btn btn-outline-secondary paginate_button next ${
-                            activePag.current === paggination.length - 1
-                              ? "disabled"
-                              : ""
-                          }`}
-                          onClick={() =>
-                            activePag.current + 1 < paggination.length &&
-                            onClick(activePag.current + 1)
-                          }
-                          disabled={activePag.current === paggination.length - 1}
-                        >
-                          Next
-                        </button>
-                      </div>
-                    </div>
+    return (
+      <div className="container">
+        <h2 className="mt-4 mb-4">Danh Sách Consultants</h2>
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          <div className="row">
+            {consultants.map((consultant) => (
+              <div key={consultant.consultantId} className="col-lg-6 mb-4">
+                <div className="card">
+                  <div className="card-body">
+                    <h5 className="card-title">{consultant.email}</h5>
+                    <p className="card-text">
+                      <strong>Introduction:</strong> {consultant.introduction}
+                    </p>
+                    <p className="card-text">
+                      <strong>Education:</strong> {consultant.education}
+                    </p>
+                    <p className="card-text">
+                      <strong>Specialize:</strong> {consultant.specialize}
+                    </p>
                   </div>
                 </div>
               </div>
-            </div>
+            ))}
           </div>
-        </Row>
-      </>
-      )}
-      
-    </div>
-  );
-};
+        )}
+      </div>
+    );
+  }
+  
+
+  
 
 export default Test1;

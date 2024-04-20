@@ -43,7 +43,7 @@ export const getAllUsers = createAsyncThunk(
   "customer/getUserById",
   async (_, thunkAPI) => {
     try {
-      const res = await instance.get("/account/customer"); // Gọi endpoint API để lấy danh sách tất cả các userId
+      const res = await instance.get("/account/customer"); 
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.res.data);
@@ -108,6 +108,17 @@ export const sendEmailForgotPassword = createAsyncThunk(
 //     return null;
 //   }
 // };
+export const getConsultants = createAsyncThunk(
+  "customer/getConsultants",
+  async (_, thunkAPI) => {
+    try {
+      const res = await instance.get("/account/consultants");
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
 
 const initialState = {
   msg: "",
@@ -116,6 +127,7 @@ const initialState = {
   loading: false,
   error: "",
   userById: {},
+  consultants: [],
 };
 
 export const authSlice = createSlice({
@@ -192,7 +204,20 @@ export const authSlice = createSlice({
       .addCase(sendEmailForgotPassword.rejected, (state) => {
         state.loading = false;
         state.error = null;
+      })
+      .addCase(getConsultants.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getConsultants.fulfilled, (state, action) => {
+        state.loading = false;
+        state.consultants = action.payload;
+        state.error = null;
+      })
+      .addCase(getConsultants.rejected, (state) => {
+        state.loading = false;
+        state.error = null;
       });
+      
   },
 });
 

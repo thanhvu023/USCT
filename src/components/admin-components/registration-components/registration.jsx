@@ -13,6 +13,7 @@ const theadData = [
   { heading: "Tên khách hàng ", sortingVale: "advisor" },
   { heading: "Chuyên ngành đã chọn", sortingVale: "majorChoose" },
   { heading: "Chương trình đã chọn", sortingVale: "programChoose" },
+  { heading: "Tư vấn viên", sortingVale: "consultant" },
   { heading: "Thao tác", sortingVale: "action" },
 ];
 
@@ -27,7 +28,7 @@ const Registration = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showCheckSuccess, setShowCheckSuccess] = useState(false);
   const [showDeleteSuccess, setShowDeleteSuccess] = useState(false);
-  const [selectedRegistration, setSelectedRegistration] = useState(null); // State lưu thông tin đơn tư vấn được chọn
+  const [selectedRegistration, setSelectedRegistration] = useState(null);
   const [searchResults, setSearchResults] = useState([]);
   const [initialList, setInitialList] = useState([]);
 
