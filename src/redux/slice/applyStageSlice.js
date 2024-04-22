@@ -13,21 +13,17 @@ export const getAllStage = createAsyncThunk(
   }
 );
 
-// Thêm hàm logoutStage vào phần reducers nếu cần
 
-// Khởi tạo state ban đầu
 const initialState = {
-  stages: [], // Danh sách các stage
+  stages: [], 
   loading: false,
   error: null,
 };
 
-// Tạo slice
 export const applyStageSlice = createSlice({
   name: "applyStage",
   initialState,
   reducers: {
-    // Định nghĩa reducers nếu cần
   },
   extraReducers: (builder) => {
     builder
@@ -45,7 +41,6 @@ export const applyStageSlice = createSlice({
   },
 });
 
-// Export reducer và action nếu cần
 const {
   reducer: applyStageReducer,
 } = applyStageSlice;
