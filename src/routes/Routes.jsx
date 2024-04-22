@@ -25,6 +25,8 @@ import jwtDecode from "jwt-decode";
 import PrivateRoute from "./PrivateRoute.jsx";
 import AdminRoute from "./AdminRoute.jsx";
 import ConsultantPage from "../components/consultant-page.jsx";
+import RegistrationDetailConsultantPage from "../components/RegistrationFormConsultant.jsx";
+import ConsultantProfilePage from "../components/consultantProfilePage.jsx";
 
 const Routers = () => {
   const token = useSelector((state) => state?.auth?.token);
@@ -92,6 +94,7 @@ const Routers = () => {
             </PrivateRoute>
           }
         />
+        {/* asdasdsa */}
         <Route
           path="/students-profile"
           element={
@@ -101,7 +104,7 @@ const Routers = () => {
           }
         />
         <Route
-          path="/student-profile-detail/:studentProfileId"
+          path="/student-profile/:studentProfileId"
           element={
             <PrivateRoute userRole={userRole}>
               <StudentProfileDetailPage />
@@ -109,13 +112,14 @@ const Routers = () => {
           }
         />
         <Route
-          path="/registration-detail/:registrationFormId"
+          path="/student-profile/registration-detail/:registrationFormId"
           element={
             <PrivateRoute userRole={userRole}>
               <RegistrationDetailPage />
             </PrivateRoute>
           }
         />
+        {/* 2 cai nay chua loading */}
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ConfirmPasswordPage />} />
         <Route
@@ -138,6 +142,7 @@ const Routers = () => {
             </PrivateRoute>
           }
         />
+        {/* chua loading */}
         <Route
           path="/students-profile/appliedList"
           element={
@@ -146,7 +151,12 @@ const Routers = () => {
             </PrivateRoute>
           }
         />
-        <Route path="/consultant" element={<ConsultantPage/>}/>
+        <Route path="/consultant" element={<ConsultantPage />} />
+        <Route path="/consultant-profile" element={<ConsultantProfilePage />} />
+        <Route
+          path="/consultant/registrationForm/:registrationFormId"
+          element={<RegistrationDetailConsultantPage />}
+        />
         <Route path="*" element={<p>There is nothing here: 404!</p>} />
       </Routes>
     </Router>

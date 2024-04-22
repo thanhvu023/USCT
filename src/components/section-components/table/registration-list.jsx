@@ -5,33 +5,34 @@ import { COLUMNS } from "./registration-columns";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import jwtDecode from "jwt-decode";
-import './registration-list.css'
+import "./registration-list.css";
 import { getRegistrationByCustomerId } from "../../../redux/slice/registrationSlice";
+import { Backdrop, CircularProgress } from "@mui/material";
 const RegistrationList = () => {
   const columns = useMemo(() => COLUMNS, []);
-  const token = useSelector((state) => state.auth.token);
+  const token = useSelector((state) => state?.auth?.token);
   const customerId = jwtDecode(token).UserId;
-  const data = useSelector((state) => state.registration.registrationById);
+  const data = useSelector(
+    (state) => state?.registration?.registrationByCustomerId
+  );
   // console.log("data là:", data)
   const dispatch = useDispatch();
-
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
+    setLoading(true); // Set loading to true before fetching data
     if (customerId) {
-      dispatch(getRegistrationByCustomerId(customerId));
+      dispatch(getRegistrationByCustomerId(customerId))
+        .then(() => setLoading(false))
+        .catch(() => setLoading(false));
     }
-  }, [customerId]);
-  // Fix data is null
-useEffect(() => {
-  if (!data) {
-    dispatch(getRegistrationByCustomerId(customerId));
-  }
-}, [data, dispatch, customerId]);
+  }, [customerId, dispatch]);
+  
 
   const [selectedRow, setSelectedRow] = useState(null);
   const navigate = useNavigate();
 
   const handleRowClick = (registrationFormId) => {
-    navigate(`/registration-detail/${registrationFormId}`);
+    navigate(`/student-profile/registration-detail/${registrationFormId}`);
   };
 
   const normalizedData = Array.isArray(data) ? data : [data];
@@ -67,6 +68,12 @@ useEffect(() => {
   return (
     <div>
       <div className="card">
+      <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={loading}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
         <div className="card-body">
           <div className="table-responsive">
             <table
@@ -95,34 +102,45 @@ useEffect(() => {
                     <tr
                       key={rowIndex}
                       {...row.getRowProps()}
-                      onClick={() => handleRowClick(row.original.registrationFormId,
-                        row.original.consultantId,
-                        row.original.customerId,
-                        row.original.area,
-                        row.original.budget,
-                        row.original.destinationReason,
-                        row.original.majorChoose,
-                        row.original.majorChooseReason,
-                        row.original.moreInformation,
-                        row.original.priorityOfStudyAbroad,
-                        row.original.programChoose,
-                        row.original.studyAbroadReason,
-                        row.original.universityChooseReason
-                      )}
+                      onClick={() =>
+                        handleRowClick(
+                          row.original.registrationFormId,
+                          row.original.consultantId,
+                          row.original.customerId,
+                          row.original.area,
+                          row.original.budget,
+                          row.original.destinationReason,
+                          row.original.majorChoose,
+                          row.original.majorChooseReason,
+                          row.original.moreInformation,
+                          row.original.priorityOfStudyAbroad,
+                          row.original.programChoose,
+                          row.original.studyAbroadReason,
+                          row.original.universityChooseReason
+                        )
+                      }
                     >
-                     {row.cells.map((cell, cellIndex) => {
-  return (
-    <td key={cellIndex} {...cell.getCellProps()}>
-      {cell.column.id === "status" ? (
-        <span className={row.original.status === 0 ? 'status-red' : 'status-green'}>
-          {row.original.status === 0 ? 'Chưa duyệt' : cell.render("Cell")}
-        </span>
-      ) : (
-        cell.render("Cell")
-      )}
-    </td>
-  );
-})}
+                      {row.cells.map((cell, cellIndex) => {
+                        return (
+                          <td key={cellIndex} {...cell.getCellProps()}>
+                            {cell.column.id === "status" ? (
+                              <span
+                                className={
+                                  row.original.status === 0
+                                    ? "status-red"
+                                    : "status-green"
+                                }
+                              >
+                                {row.original.status === 0
+                                  ? "Chưa duyệt"
+                                  : cell.render("Cell")}
+                              </span>
+                            ) : (
+                              cell.render("Cell")
+                            )}
+                          </td>
+                        );
+                      })}
 
                       <td>
                         {/* <button
@@ -160,8 +178,7 @@ useEffect(() => {
                   className="previous-button"
                   onClick={() => previousPage()}
                   disabled={!canPreviousPage}
-                  style={{color:'black'}}
-
+                  style={{ color: "black" }}
                 >
                   Previous
                 </button>
@@ -169,7 +186,7 @@ useEffect(() => {
                   className="next-button "
                   onClick={() => nextPage()}
                   disabled={!canNextPage}
-                  style={{color:'black'}}
+                  style={{ color: "black" }}
                 >
                   Next
                 </button>

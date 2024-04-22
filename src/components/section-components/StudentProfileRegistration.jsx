@@ -1,17 +1,10 @@
-import React, { useEffect } from "react";
-import Select from "react-select";
-import { Tab, Nav } from "react-bootstrap";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import StudenProfileList from "./table/student-profiles";
-import { Link } from "react-router-dom";
+import React from "react";
+import { Nav, Tab } from "react-bootstrap";
 import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
+import { Link } from "react-router-dom";
 
 import PropTypes from "prop-types";
-import { useDispatch, useSelector } from "react-redux";
-import { getStudentProfileByCustomerId } from "../../redux/slice/studentSice";
 import RegistrationList from "./table/registration-list";
-import StudentProfileAppliedList from "./table/student-profiles-applied";
 const options = [
   { value: "basic_english", label: "Tiếng Anh cơ bản" },
   { value: "ielts", label: "IELTS" },

@@ -19,7 +19,6 @@ export const getStudentProfileById = createAsyncThunk(
   async (profileId, thunkAPI) => {
     try {
       const res = await instance.get(`/profile/${profileId}`);
-      console.log(res.data);
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.res.data);

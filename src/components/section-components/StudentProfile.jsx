@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import StudenProfileList from "./table/student-profiles";
 
 import PropTypes from "prop-types";
+import { useSelector } from "react-redux";
+import { Backdrop, CircularProgress } from "@mui/material";
 const options = [
   { value: "basic_english", label: "Tiếng Anh cơ bản" },
   { value: "ielts", label: "IELTS" },
@@ -14,7 +16,6 @@ const options = [
 ];
 
 // Options for country select
-
 const EducationItem = ({ year, details, achievements }) => (
   <div className="education-item">
     <p
@@ -67,9 +68,16 @@ const StudentProfilePage = () => {
     e.preventDefault();
     // Add your submit logic here
   };
+  const loading = useSelector((state)=>state?.student?.loading)
 
   return (
     <div className="row mb-5 mt-5">
+       <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={loading}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
       <Sidebar className="ml-4">
         <Menu className="mt-5">
           <MenuItem component={<Link to={`/students-profile`}></Link>}>

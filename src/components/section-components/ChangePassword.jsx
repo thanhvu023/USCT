@@ -9,7 +9,6 @@ import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
 import { Link } from "react-router-dom";
 
 const ChangePassword = () => {
-  let publicUrl = process.env.PUBLIC_URL + "/";
 
   const token = useSelector((state) => state.auth.token);
   const userId = jwtDecode(token).UserId;
@@ -97,7 +96,7 @@ const ChangePassword = () => {
                 <div className="profile-info d-flex">
                   <div className="profile-photo ">
                     <img
-                      src={publicUrl + "assets/img/author/pic2.jpg"}
+                      src={userDetail.img}
                       alt="img"
                       className="bg-info rounded-circle mb-4 "
                       style={{ width: "100px", height: "100px" }}

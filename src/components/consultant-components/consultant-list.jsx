@@ -6,7 +6,6 @@ import { COLUMNS } from "./columns";
 // import "./student-profile.css";
 import jwtDecode from "jwt-decode";
 import { getRegistrationByConsultantId } from "../../redux/slice/consultantSlice";
-import { getAllUsers } from "../../redux/slice/authSlice";
 
 const ConsultantList = () => {
   const columns = useMemo(() => COLUMNS, []);
@@ -20,15 +19,15 @@ const ConsultantList = () => {
     dispatch(getRegistrationByConsultantId(customerId));
   }, [customerId]);
   const data = useSelector((state)=>state?.consultant?.registrationByConsultantId);
-  // console.log("?",data)
+  console.log(data)
 
-  const userData = useSelector((state) => state.auth.userById);
-  console.log("userData:",userData)
-  useEffect(() => {
-    dispatch(getAllUsers());
-  }, [dispatch]);
+  const userData = useSelector((state) => state?.auth?.userById);
+//   console.log("userData:",userData)
+//   useEffect(() => {
+//     dispatch(getAllUsers());
+//   }, [dispatch]);
   const getFullName = (customerId) => {
-    const user = userData.find((user) => user.customerId === customerId);
+    const user = userData.find((user) => user?.customerId === customerId);
     return user ? user.fullName : "Không biết";
   };  
 
@@ -36,15 +35,13 @@ const ConsultantList = () => {
   //   (state) => state.student.studentProfileByCustomerId[0].studentProfileId
   // );
   // console.log("studentId là:", studentProfileId)
-    // console.log("ProfileList :", data)
-
-
+  // console.log("ProfileList :", data)
 
   const [selectedRow, setSelectedRow] = useState(null);
   const navigate = useNavigate();
 
   const handleRowClick = (studentProfileId) => {
-    navigate(`/student-profile-detail/${studentProfileId}`);
+    navigate(`/consultant/registrationForm/${studentProfileId}`);
   };
   
 
@@ -110,8 +107,21 @@ const ConsultantList = () => {
                     <tr
                       key={rowIndex}
                       {...row.getRowProps()}
-                      onClick={() => handleRowClick(row.original.studentProfileId, row.original.fullName, row.original.email, row.original.createDate, row.original.phone, row.original.nationalId, row.original.gender, row.original.dateOfBirth, row.original.placeOfBirth, row.original.studyProcess)}
-                      >
+                      onClick={() =>
+                        handleRowClick(
+                          row.original.registrationFormId,
+                          // row.original.area,
+                          // row.original.budget,
+                          // row.original.createDate,
+                          // row.original.consultantId,
+                          // row.original.customerId,
+                          // row.original.gender,
+                          // row.original.dateOfBirth,
+                          // row.original.placeOfBirth,
+                          // row.original.studyProcess
+                        )
+                      }
+                    >
                       {row.cells.map((cell, cellIndex) => {
                         return (
                           <td key={cellIndex} {...cell.getCellProps()}>
@@ -135,8 +145,8 @@ const ConsultantList = () => {
             </table>
             <div className="d-flex justify-content-between">
               <span>
-                Page
-                <strong>
+                Số trang
+                <strong className="ml-2">
                   {pageIndex + 1} of {pageOptions.length}
                 </strong>
               </span>
@@ -155,18 +165,17 @@ const ConsultantList = () => {
                   className="previous-button"
                   onClick={() => previousPage()}
                   disabled={!canPreviousPage}
-                  style={{color:'black'}}
-
+                  style={{ color: "black" }}
                 >
-                  Previous
+                  Trước
                 </button>
                 <button
                   className="next-button "
                   onClick={() => nextPage()}
                   disabled={!canNextPage}
-                  style={{color:'black'}}
+                  style={{ color: "black" }}
                 >
-                  Next
+                  Sau
                 </button>
                 <button
                   className=" next-button"

@@ -1,16 +1,17 @@
-import React, { useState, useRef, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { Dropdown } from "react-bootstrap";
-import { Row, Button, Modal, Alert, Form, Badge  } from "react-bootstrap";
-import Swal from "sweetalert2";
-import { getRegistration, getRegistrationByCustomerId, updateRegistrationById } from "../../../redux/slice/registrationSlice";
-import { getUserById } from "../../../redux/slice/authSlice";
-import { getConsultants } from "../../../redux/slice/authSlice";
 import jwtDecode from "jwt-decode";
+import React, { useEffect, useRef, useState } from "react";
+import { Alert, Badge, Button, Dropdown, Form, Modal, Row } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
+import { getConsultants } from "../../../redux/slice/authSlice";
+import {
+  getRegistration,
+  updateRegistrationById
+} from "../../../redux/slice/registrationSlice";
 // import './registration.css'
 const theadData = [
-  { heading: "ID đơn", sortingVale: "id" },  
+  { heading: "ID đơn", sortingVale: "id" },
   { heading: "Chuyên ngành đã chọn", sortingVale: "majorChoose" },
   { heading: "Chương trình đã chọn", sortingVale: "programChoose" },
   { heading: "Tư vấn viên", sortingVale: "consultant" },
@@ -28,7 +29,7 @@ const getStatusLabel = (status) => {
     case 1:
       return (
         <Badge bg="  " className='badge-warning '>
-          ĐANG ĐANG TƯ VẤN
+          ĐANG TƯ VẤN
         </Badge>
       );
     case 2:
@@ -38,7 +39,7 @@ const getStatusLabel = (status) => {
         </Badge>
       );
     default:
-      return null; 
+      return null;
   }
 };
 const Registration = () => {
@@ -59,10 +60,7 @@ const Registration = () => {
   // const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedConsultantName, setSelectedConsultantName] = useState("");
 
-
-  const customers = useSelector((state)=>state.auth.userById);
-
-
+  const customers = useSelector((state) => state.auth.userById);
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
   const customerId = jwtDecode(token).UserId;
@@ -70,24 +68,28 @@ const Registration = () => {
   const registrationProfileByCustomerId = useSelector(
     (state) => state?.registration?.registrationForms
   );
-// console.log("registrationProfileByCustomerId:",registrationProfileByCustomerId)
-const getFullName = (customerId) => {
-  if (!customers || !Array.isArray(customers)) {
-    return "Không tìm thấy";
-  }
-
-  const customer = customers.find((customer) => customer.customerId == customerId);
-
-  return customer ? customer.fullName : "Không tìm thấy tên";
-};
-
-  const getCustomerImage  = (customerId) => {
+  // console.log("registrationProfileByCustomerId:",registrationProfileByCustomerId)
+  const getFullName = (customerId) => {
     if (!customers || !Array.isArray(customers)) {
       return "Không tìm thấy";
     }
-  
-    const customer = customers.find((customer) => customer.customerId === customerId);
-    
+
+    const customer = customers.find(
+      (customer) => customer.customerId == customerId
+    );
+
+    return customer ? customer.fullName : "Không tìm thấy tên";
+  };
+
+  const getCustomerImage = (customerId) => {
+    if (!customers || !Array.isArray(customers)) {
+      return "Không tìm thấy";
+    }
+
+    const customer = customers.find(
+      (customer) => customer.customerId === customerId
+    );
+
     return customer ? customer.img : "Không tìm thấy ảnh";
   };
   const getFullNameByConsultantId = (consultantId) => {
@@ -99,7 +101,6 @@ const getFullName = (customerId) => {
   useEffect(() => {
     dispatch(getConsultants());
   }, [dispatch]);
-
 
   useEffect(() => {
     if (customers) {
@@ -182,7 +183,9 @@ const getFullName = (customerId) => {
         return (
           registration.majorChoose.toLowerCase().includes(searchTerm) ||
           registration.programChoose.toLowerCase().includes(searchTerm) ||
-          getFullName(registration.customerId).toLowerCase().includes(searchTerm)
+          getFullName(registration.customerId)
+            .toLowerCase()
+            .includes(searchTerm)
         );
       });
       setSearchResults(filteredData);
@@ -209,29 +212,26 @@ const getFullName = (customerId) => {
           registrationFormId: selectedRegistration.registrationFormId,
           consultantId: selectedConsultantId,
         })
-      ).then(() => {
-        setShowCheckSuccess(true);
-        handleCloseCheckModal();
-  
-        dispatch(getRegistration());
+      )
+        .then(() => {
+          setShowCheckSuccess(true);
+          handleCloseCheckModal();
+
+          dispatch(getRegistration());
           Swal.fire({
-        icon: "success",
-        title: "Cập nhật tư vấn viên thành công!",
-        text: `Đã cập nhật tư vấn viên cho đơn tư vấn có ID: ${selectedRegistration.registrationFormId}`,
-        showConfirmButton: false,
-        timer: 3000,
-      });
-      }).catch((error) => {
-        console.error("Error updating registration:", error);
-      });
+            icon: "success",
+            title: "Cập nhật tư vấn viên thành công!",
+            text: `Đã cập nhật tư vấn viên cho đơn tư vấn có ID: ${selectedRegistration.registrationFormId}`,
+            showConfirmButton: false,
+            timer: 3000,
+          });
+        })
+        .catch((error) => {
+          console.error("Error updating registration:", error);
+        });
     }
   };
-  
 
-  
-  
-  
-  
   return (
     <div>
       {loading ? (
@@ -293,7 +293,9 @@ const getFullName = (customerId) => {
                               type="search"
                               className=""
                               placeholder=""
-                              onChange={(e) => searchData(e.target.value.toLowerCase())}
+                              onChange={(e) =>
+                                searchData(e.target.value.toLowerCase())
+                              }
                             />
                           </label>
                         </div>
@@ -332,26 +334,41 @@ const getFullName = (customerId) => {
                           </tr>
                         </thead>
                         <tbody>
-                          {(searchResults.length > 0 ? searchResults : initialList).map(
-                            (registration) => (
-                              <tr key={registration.id}>
-                                <td>
-                                  <Link
-                                    onClick={() =>
-                                      handleClickName(registration)
-                                    }
-                                  >
-                                    {registration.registrationFormId}
-                                  </Link>
-                                </td>
-                                <td>{registration.majorChoose}</td>
-                                <td>{registration.programChoose}</td>
-                                <td>{getFullNameByConsultantId(registration.consultantId)}</td>
-                                <td>
-                                {getStatusLabel(registration.status)}
-
-                                </td>
-                                {/* <td style={{ display: "flex", alignItems: "center" }}>
+                          {(searchResults.length > 0
+                            ? searchResults
+                            : initialList
+                          ).map((registration) => (
+                            <tr key={registration.id}>
+                              <td>
+                                <Link
+                                  onClick={() => handleClickName(registration)}
+                                >
+                                  {registration.registrationFormId}
+                                </Link>
+                              </td>
+                              <td>{registration.majorChoose}</td>
+                              <td>{registration.programChoose}</td>
+                              <td>
+                                {getFullNameByConsultantId(
+                                  registration.consultantId
+                                )}
+                              </td>
+                              <td>
+                                <span
+                                  className="badge badge-rounded"
+                                  style={{
+                                    backgroundColor: getStatusLabel(
+                                      registration.status
+                                    ).backgroundColor,
+                                    borderColor: getStatusLabel(
+                                      registration.status
+                                    ).borderColor,
+                                  }}
+                                >
+                                  {getStatusLabel(registration.status).text}
+                                </span>
+                              </td>
+                              {/* <td style={{ display: "flex", alignItems: "center" }}>
                                  
                                   <button
                                     onClick={handleShowCheckModal}
@@ -383,9 +400,8 @@ const getFullName = (customerId) => {
                                     <i className="fa fa-trash" />
                                   </button>
                                 </td> */}
-                              </tr>
-                            )
-                          )}
+                            </tr>
+                          ))}
                         </tbody>
                       </table>
                       <div className="d-sm-flex text-center justify-content-between align-items-center mt-3">
@@ -460,7 +476,7 @@ const getFullName = (customerId) => {
             </Modal.Header>
             <Modal.Body>
               {selectedRegistration && (
-                <div style={{ display: "flex",  }}>
+                <div style={{ display: "flex" }}>
                   <div>
                     <img
                       src={getCustomerImage(selectedRegistration.customerId)}
@@ -495,11 +511,13 @@ const getFullName = (customerId) => {
                       </span>
                     </p>
                     <p>
-  Tư vấn viên phụ trách:{" "}
-  <span style={{ color: "#007bff" }}>
-    {getFullNameByConsultantId(selectedRegistration.consultantId)}
-  </span>
-</p>
+                      Tư vấn viên phụ trách:{" "}
+                      <span style={{ color: "#007bff" }}>
+                        {getFullNameByConsultantId(
+                          selectedRegistration.consultantId
+                        )}
+                      </span>
+                    </p>
 
                     <p>
                       Khu vực:{" "}
@@ -507,7 +525,6 @@ const getFullName = (customerId) => {
                         {selectedRegistration.area}
                       </span>{" "}
                     </p>
-                  
                   </div>
                   <div className="ml-4">
                     <p style={{ fontWeight: "bold", color: "#007bff" }}>
@@ -527,26 +544,30 @@ const getFullName = (customerId) => {
                         </span>
                       </p>
                       <p>
-                      Thông tin thêm:{" "}
-                      <span style={{ color: "#007bff" }}>
-                        {selectedRegistration.moreInformation}
-                      </span>
-                    </p>
-                    <p>
-                    <Form.Select
-  value={selectedConsultantId}
-  onChange={(e) => setSelectedConsultantId(e.target.value)}
->
-  <option value="">Chọn Consultant</option>
-  {consultants.map((consultant) => (
-    <option key={consultant.consultantId} value={consultant.consultantId}>
-      {consultant.userName}
-    </option>
-  ))}
-</Form.Select>
-
-        </p>
-        {/* <p>
+                        Thông tin thêm:{" "}
+                        <span style={{ color: "#007bff" }}>
+                          {selectedRegistration.moreInformation}
+                        </span>
+                      </p>
+                      <p>
+                        <Form.Select
+                          value={selectedConsultantId}
+                          onChange={(e) =>
+                            setSelectedConsultantId(e.target.value)
+                          }
+                        >
+                          <option value="">Chọn Consultant</option>
+                          {consultants.map((consultant) => (
+                            <option
+                              key={consultant.consultantId}
+                              value={consultant.consultantId}
+                            >
+                              {consultant.userName}
+                            </option>
+                          ))}
+                        </Form.Select>
+                      </p>
+                      {/* <p>
           <Dropdown>
             <Dropdown.Toggle variant="success" id="dropdown-basic">
               Chọn Trạng thái
@@ -578,11 +599,16 @@ const getFullName = (customerId) => {
               </Button>
             </Modal.Footer>
           </Modal>
-          <Modal show={showDeleteModal} onHide={handleCloseDeleteModal} centered>
+          <Modal
+            show={showDeleteModal}
+            onHide={handleCloseDeleteModal}
+            centered
+          >
             <Modal.Header closeButton>
               <Modal.Title>
                 Xóa đơn tư vấn - Mã ID:{" "}
-                {selectedRegistration && selectedRegistration.registrationFormId}
+                {selectedRegistration &&
+                  selectedRegistration.registrationFormId}
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -592,9 +618,7 @@ const getFullName = (customerId) => {
               <Button variant="secondary" onClick={handleCloseDeleteModal}>
                 Hủy
               </Button>
-              <Button variant="danger">
-                Xóa
-              </Button>
+              <Button variant="danger">Xóa</Button>
             </Modal.Footer>
           </Modal>
         </>
