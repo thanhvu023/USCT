@@ -43,7 +43,7 @@ const rootReducer = combineReducers({
   programApplication: programApplicationReducer,
   consultant: consultantReducer,
   applyStage: applyStageReducer,
-  programStage : programStageReducer
+  programStages : programStageReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

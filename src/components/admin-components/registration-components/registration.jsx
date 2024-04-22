@@ -22,20 +22,20 @@ const getStatusLabel = (status) => {
   switch (status) {
     case 0:
       return (
-        <Badge bg=" badge-lg " className="badge-danger light">
-          CHƯA DUYỆT
+        <Badge bg=" badge-lg " className='badge-danger '>
+         CHƯA TƯ VẤN
         </Badge>
       );
     case 1:
       return (
-        <Badge bg=" badge-xl " className="badge-warning light">
-          ĐANG XỬ LÝ
+        <Badge bg="  " className='badge-warning '>
+          ĐANG TƯ VẤN
         </Badge>
       );
     case 2:
       return (
-        <Badge bg="" className="badge-success light">
-          ĐÃ DUYỆT
+        <Badge bg="" className='badge-success '>
+        ĐÃ TƯ VẤN  
         </Badge>
       );
     default:

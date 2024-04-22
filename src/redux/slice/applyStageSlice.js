@@ -63,7 +63,10 @@ export const applyStageSlice = createSlice({
       })
   },
 });
-
+// Thêm selector để lấy thông tin applyStage theo applyStageId
+export const selectApplyStageById = (applyStageId) => (state) => {
+  return state.applyStage.stages.find((stage) => stage.applyStageId === applyStageId);
+};
 const {
   reducer: applyStageReducer,
 } = applyStageSlice;
