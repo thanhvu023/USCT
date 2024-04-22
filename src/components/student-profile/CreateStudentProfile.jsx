@@ -7,13 +7,14 @@ import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
 import Swal from "sweetalert2";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { imageDb } from "../FirebaseImage/Config";
+import { Backdrop, CircularProgress } from "@mui/material";
 
 const MultiStepProgressBar = () => {};
 
 const CreateStudentProfile = () => {
   const [page, setPage] = useState("basicInfo");
   const customerId = useSelector((state) => state.auth.userById.customerId);
-  const [loading, setLoading] = useState(false);
+  const loading = useSelector((state) => state?.student?.loading);
   const [formData, setFormData] = useState({
     fullName: "",
     nationalId: "",
@@ -487,7 +488,12 @@ const CreateStudentProfile = () => {
             </div>
           </div>
         )}
-
+        <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={loading}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
         {page === "complete" && (
           <div className="container">
             <div

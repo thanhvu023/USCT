@@ -7,25 +7,26 @@ import { useDispatch, useSelector } from "react-redux";
 import jwtDecode from "jwt-decode";
 import "./registration-list.css";
 import { getRegistrationByCustomerId } from "../../../redux/slice/registrationSlice";
+import { Backdrop, CircularProgress } from "@mui/material";
 const RegistrationList = () => {
   const columns = useMemo(() => COLUMNS, []);
-  const token = useSelector((state) => state.auth.token);
+  const token = useSelector((state) => state?.auth?.token);
   const customerId = jwtDecode(token).UserId;
-  const data = useSelector((state) => state.registration.registrationById);
+  const data = useSelector(
+    (state) => state?.registration?.registrationByCustomerId
+  );
   // console.log("data là:", data)
   const dispatch = useDispatch();
-
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
+    setLoading(true); // Set loading to true before fetching data
     if (customerId) {
-      dispatch(getRegistrationByCustomerId(customerId));
+      dispatch(getRegistrationByCustomerId(customerId))
+        .then(() => setLoading(false))
+        .catch(() => setLoading(false));
     }
-  }, [customerId]);
-  // Fix data is null
-  useEffect(() => {
-    if (!data) {
-      dispatch(getRegistrationByCustomerId(customerId));
-    }
-  }, [data, dispatch, customerId]);
+  }, [customerId, dispatch]);
+  
 
   const [selectedRow, setSelectedRow] = useState(null);
   const navigate = useNavigate();
@@ -67,6 +68,12 @@ const RegistrationList = () => {
   return (
     <div>
       <div className="card">
+      <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={loading}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
         <div className="card-body">
           <div className="table-responsive">
             <table

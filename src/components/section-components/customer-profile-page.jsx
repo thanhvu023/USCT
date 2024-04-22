@@ -9,6 +9,7 @@ import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 import Swal from "sweetalert2";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { imageDb } from "../FirebaseImage/Config";
+import { Backdrop, CircularProgress } from "@mui/material";
 const CustomerProfilePage = () => {
   let publicUrl = process.env.PUBLIC_URL + "/";
 
@@ -19,6 +20,7 @@ const CustomerProfilePage = () => {
   useEffect(() => {
     dispatch(getUserById(userId));
   }, [userId]);
+  const loadingPage = useSelector((state) => state?.auth?.loading);
 
   const [fullName, setFullName] = useState(userDetail.fullName || "");
   const [phone, setPhone] = useState(userDetail.phone || "");
@@ -129,6 +131,12 @@ const CustomerProfilePage = () => {
     <Fragment>
       <PageTitle activeMenu="Profile" motherMenu="App" />
       <div className="bc-grey">
+      <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={loadingPage}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
         <div className="row mb-5 mr-0 border-0">
           <div className="col-lg-12 mt-12">
             <div className="profile card card-body px-3 pt-3 pb-0 border rounded">

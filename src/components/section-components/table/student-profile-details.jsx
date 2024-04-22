@@ -6,6 +6,7 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getStudentProfileById } from "../../../redux/slice/studentSice";
+import { Backdrop, CircularProgress } from "@mui/material";
 
 const StudentProfileDetails = () => {
   const { studentProfileId } = useParams();
@@ -162,10 +163,17 @@ const StudentProfileDetails = () => {
       </div>
     </div>
   );
+  const loading = useSelector((state) => state?.student?.loading);
 
   return (
     <>
       <div className="col-xl-8 mx-auto mt-5">
+        <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={loading}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
         <div className="card">
           <div className="inner-content">
             <div className="card-body">
@@ -285,8 +293,13 @@ const StudentProfileDetails = () => {
                               ></p>
                               <div className="education-details">
                                 <ul>
-                                  <li>Chứng chỉ tiếng anh: {studentDetail.grade}</li>
-                                  <li>Trình độ tiếng anh: {studentDetail.englishLevel}</li>
+                                  <li>
+                                    Chứng chỉ tiếng anh: {studentDetail.grade}
+                                  </li>
+                                  <li>
+                                    Trình độ tiếng anh:{" "}
+                                    {studentDetail.englishLevel}
+                                  </li>
                                 </ul>
                               </div>
                             </div>

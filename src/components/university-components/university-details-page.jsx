@@ -10,9 +10,11 @@ import { getProgramByUniId } from "../../redux/slice/programSlice";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { Backdrop, CircularProgress } from "@mui/material";
 
 function UniversityDetailPage() {
   let publicUrl = process.env.PUBLIC_URL + "/";
+  const loading = useSelector((state) => state?.university?.loading);
 
   const dispatch = useDispatch();
 
@@ -62,6 +64,12 @@ function UniversityDetailPage() {
   return (
     <div className="main-blog-area pd-top-120 pd-bottom-90">
       <div className="container">
+      <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={loading}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
         <div className="team-details-page">
           <div className="row">
             <div className="col-lg-3">

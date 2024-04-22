@@ -1,17 +1,14 @@
-import React, { useState, useRef, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { Dropdown } from "react-bootstrap";
-import { Row, Button, Modal, Alert, Form } from "react-bootstrap";
+import jwtDecode from "jwt-decode";
+import React, { useEffect, useRef, useState } from "react";
+import { Alert, Badge, Button, Dropdown, Form, Modal, Row } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import { getConsultants } from "../../../redux/slice/authSlice";
 import {
   getRegistration,
-  getRegistrationByCustomerId,
-  updateRegistrationById,
+  updateRegistrationById
 } from "../../../redux/slice/registrationSlice";
-import { getUserById } from "../../../redux/slice/authSlice";
-import { getConsultants } from "../../../redux/slice/authSlice";
-import jwtDecode from "jwt-decode";
-import { Link } from "react-router-dom";
 // import './registration.css'
 const theadData = [
   { heading: "ID đơn", sortingVale: "id" },
@@ -25,24 +22,24 @@ const getStatusLabel = (status) => {
   switch (status) {
     case 0:
       return (
-        <Badge bg=" badge-lg " className='badge-danger light'>
-         CHƯA DUYỆT
+        <Badge bg=" badge-lg " className="badge-danger light">
+          CHƯA DUYỆT
         </Badge>
       );
     case 1:
       return (
-        <Badge bg=" badge-xl " className='badge-warning light'>
+        <Badge bg=" badge-xl " className="badge-warning light">
           ĐANG XỬ LÝ
         </Badge>
       );
     case 2:
       return (
-        <Badge bg="" className='badge-success light'>
-        ĐÃ DUYỆT  
+        <Badge bg="" className="badge-success light">
+          ĐÃ DUYỆT
         </Badge>
       );
     default:
-      return null; 
+      return null;
   }
 };
 const Registration = () => {
@@ -71,18 +68,20 @@ const Registration = () => {
   const registrationProfileByCustomerId = useSelector(
     (state) => state?.registration?.registrationForms
   );
-// console.log("registrationProfileByCustomerId:",registrationProfileByCustomerId)
-const getFullName = (customerId) => {
-  if (!customers || !Array.isArray(customers)) {
-    return "Không tìm thấy";
-  }
+  // console.log("registrationProfileByCustomerId:",registrationProfileByCustomerId)
+  const getFullName = (customerId) => {
+    if (!customers || !Array.isArray(customers)) {
+      return "Không tìm thấy";
+    }
 
-  const customer = customers.find((customer) => customer.customerId == customerId);
+    const customer = customers.find(
+      (customer) => customer.customerId == customerId
+    );
 
-  return customer ? customer.fullName : "Không tìm thấy tên";
-};
+    return customer ? customer.fullName : "Không tìm thấy tên";
+  };
 
-  const getCustomerImage  = (customerId) => {
+  const getCustomerImage = (customerId) => {
     if (!customers || !Array.isArray(customers)) {
       return "Không tìm thấy";
     }

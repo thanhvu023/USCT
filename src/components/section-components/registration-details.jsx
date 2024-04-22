@@ -4,6 +4,7 @@ import { getRegistrationByRegistrationFormId } from "../../redux/slice/registrat
 import { getUserById } from "../../redux/slice/authSlice";
 import jwtDecode from "jwt-decode";
 import { useParams, Link } from "react-router-dom"; // Import Link from react-router-dom
+import { Backdrop, CircularProgress } from "@mui/material";
 
 const RegistrationDetail = () => {
   let publicUrl = process.env.PUBLIC_URL + "/";
@@ -13,7 +14,7 @@ const RegistrationDetail = () => {
   const registration = useSelector(
     (state) => state.registration.registrationById
   );
-  const [loading, setLoading] = useState(true);
+  const loading = useSelector((state)=>state?.registration?.loading)
   const token = useSelector((state) => state.auth.token);
   const userId = jwtDecode(token).UserId;
   const userDetail = useSelector((state) => state.auth.userById) || {};
@@ -21,12 +22,7 @@ const RegistrationDetail = () => {
     dispatch(getUserById(userId));
   }, [userId]);
   useEffect(() => {
-    dispatch(getRegistrationByRegistrationFormId(registrationFormId))
-      .then(() => setLoading(false))
-      .catch((error) => {
-        console.error("Error fetching registration details:", error);
-        setLoading(false);
-      });
+    dispatch(getRegistrationByRegistrationFormId(registrationFormId));
   }, [dispatch, registrationFormId]);
   // useEffect(() => {
   //   if (registration.customerId) {
@@ -34,13 +30,15 @@ const RegistrationDetail = () => {
   //   }
   // }, [dispatch, registration.customerId]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <div className="col-xl-8 mx-auto mt-5">
       <div className="card">
+      <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={loading}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
         <div className="inner-content">
           <div className="card-body">
             <div className="profile-tab">
@@ -134,7 +132,7 @@ const RegistrationDetail = () => {
                             <i className="la la-money mr-2"></i>
                             <span className="font-weight-bold">
                               Tài chính:
-                            </span>{" "}
+                            </span>
                             {registration.budget
                               ? registration.budget + "$"
                               : "chưa có"}
@@ -143,7 +141,7 @@ const RegistrationDetail = () => {
                             <i className="la la-info mr-2"></i>
                             <span className="font-weight-bold">
                               Thông tin thêm:
-                            </span>{" "}
+                            </span>
                             {registration.moreInformation
                               ? registration.moreInformation
                               : "chưa có"}
@@ -152,7 +150,7 @@ const RegistrationDetail = () => {
                             <i className="la la-building mr-2"></i>
                             <span className="font-weight-bold">
                               Khu vực sinh sống:
-                            </span>{" "}
+                            </span>
                             {registration.area ? registration.area : "chưa có"}
                           </li>
                         </ul>
@@ -163,7 +161,7 @@ const RegistrationDetail = () => {
                             <i className="la la-paper-plane mr-2"></i>
                             <span className="font-weight-bold">
                               Ưu tiên du học:
-                            </span>{" "}
+                            </span>
                             {registration.priorityOfStudyAbroad
                               ? registration.priorityOfStudyAbroad
                               : "chưa có"}
@@ -172,7 +170,7 @@ const RegistrationDetail = () => {
                             <i className="la la-thumbs-o-up mr-2"></i>
                             <span className="font-weight-bold">
                               Lý do du học:
-                            </span>{" "}
+                            </span>
                             {registration.studyAbroadReason
                               ? registration.studyAbroadReason
                               : "chưa có"}
@@ -181,7 +179,7 @@ const RegistrationDetail = () => {
                             <i className="la la-university mr-2"></i>
                             <span className="font-weight-bold">
                               Lý do chọn trường đại học:
-                            </span>{" "}
+                            </span>
                             {registration.universityChooseReason
                               ? registration.universityChooseReason
                               : "chưa có"}

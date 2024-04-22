@@ -3,6 +3,7 @@ import { Alert } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { login, resetMessage } from "../../redux/slice/authSlice";
+import { Backdrop, CircularProgress } from "@mui/material";
 
 function Signin() {
   const [email, setEmail] = useState("");
@@ -10,9 +11,9 @@ function Signin() {
   const [error, setError] = useState();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const loading = useSelector((state) => state.auth.loading);
-  const errMsg = useSelector((state) => state.auth.error?.message);
-  const isError = useSelector((state) => state.auth.error?.name);
+  const loading = useSelector((state) => state?.auth?.loading);
+  const errMsg = useSelector((state) => state?.auth?.error?.message);
+  const isError = useSelector((state) => state?.auth?.error?.name);
 
   useEffect(() => {
     if (isError) {
@@ -50,11 +51,12 @@ function Signin() {
   return (
     <div className="signin-page-area pd-top-120 pd-bottom-120">
       <div className="container">
-        {loading && (
-          <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-80 z-50">
-            <div className="w-20 h-20 animate-spin border-t-4 border-blue-500 border-b-4 rounded-full"></div>
-          </div>
-        )}
+        <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={loading}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
         <div className="row justify-content-center">
           <div className="col-xl-6 col-lg-7">
             <form className="signin-inner" onSubmit={handleSubmit}>

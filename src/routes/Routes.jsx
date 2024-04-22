@@ -94,6 +94,7 @@ const Routers = () => {
             </PrivateRoute>
           }
         />
+        {/* asdasdsa */}
         <Route
           path="/students-profile"
           element={
@@ -118,6 +119,7 @@ const Routers = () => {
             </PrivateRoute>
           }
         />
+        {/* 2 cai nay chua loading */}
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ConfirmPasswordPage />} />
         <Route
@@ -140,6 +142,7 @@ const Routers = () => {
             </PrivateRoute>
           }
         />
+        {/* chua loading */}
         <Route
           path="/students-profile/appliedList"
           element={

@@ -31,6 +31,7 @@ import { getProgramTypes } from "../../redux/slice/programSlice";
 import jwtDecode from "jwt-decode";
 import { getDownloadURL, ref } from "firebase/storage";
 import { imageDb } from "../FirebaseImage/Config";
+import { Backdrop, CircularProgress } from "@mui/material";
 
 function ProgramDetailPage() {
   let publicUrl = process.env.PUBLIC_URL + "/";
@@ -80,6 +81,8 @@ function ProgramDetailPage() {
   const UniversityDetails = useSelector(
     (state) => state?.program?.programsByUniId
   );
+  const loading = useSelector((state) => state?.program?.loading);
+
   const programDetail = useSelector((state) => state?.program?.programById);
   const stateDetail = useSelector((state) => state?.state?.stateById);
   const majorDetail = useSelector((state) => state?.major?.majorById);
@@ -190,10 +193,17 @@ function ProgramDetailPage() {
       console.error("Error downloading file:", error);
     }
   };
+  
   return (
     <>
       <div className="course-single-area pd-top-120 pd-bottom-90">
         <div className="container">
+        <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={loading}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
           <div className="row">
             <div className="col-lg-8">
               <div className="course-course-detaila-inner">
