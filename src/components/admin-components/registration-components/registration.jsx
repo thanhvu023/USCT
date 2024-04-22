@@ -24,21 +24,25 @@ const theadData = [
 const getStatusLabel = (status) => {
   switch (status) {
     case 0:
-      return { text: "Đã hủy", backgroundColor: "red", borderColor: "darkred" };
+      return (
+        <Badge bg=" badge-lg " className='badge-danger light'>
+         CHƯA DUYỆT
+        </Badge>
+      );
     case 1:
-      return {
-        text: "Chưa duyệt",
-        backgroundColor: "yellow",
-        borderColor: "darkgoldenrod",
-      };
+      return (
+        <Badge bg=" badge-xl " className='badge-warning light'>
+          ĐANG XỬ LÝ
+        </Badge>
+      );
     case 2:
-      return {
-        text: "Đã duyệt",
-        backgroundColor: "blue",
-        borderColor: "darkblue",
-      };
+      return (
+        <Badge bg="" className='badge-success light'>
+        ĐÃ DUYỆT  
+        </Badge>
+      );
     default:
-      return { text: "", backgroundColor: "white", borderColor: "black" };
+      return null; 
   }
 };
 const Registration = () => {
@@ -67,19 +71,18 @@ const Registration = () => {
   const registrationProfileByCustomerId = useSelector(
     (state) => state?.registration?.registrationForms
   );
-  // console.log("registrationProfileByCustomerId:",registrationProfileByCustomerId)
-  const getFullName = (customerId) => {
-    if (!customers || !Array.isArray(customers)) {
-      return "Không tìm thấy";
-    }
+// console.log("registrationProfileByCustomerId:",registrationProfileByCustomerId)
+const getFullName = (customerId) => {
+  if (!customers || !Array.isArray(customers)) {
+    return "Không tìm thấy";
+  }
 
-    const customer = customers.find(
-      (customer) => customer.customerId === customerId
-    );
+  const customer = customers.find((customer) => customer.customerId == customerId);
 
-    return customer ? customer.fullName : "Không tìm thấy tên";
-  };
-  const getCustomerImage = (customerId) => {
+  return customer ? customer.fullName : "Không tìm thấy tên";
+};
+
+  const getCustomerImage  = (customerId) => {
     if (!customers || !Array.isArray(customers)) {
       return "Không tìm thấy";
     }

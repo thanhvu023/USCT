@@ -12,7 +12,7 @@ const theadData = [
   { heading: "Id khách hàng", sortingVale: "customerId" },
   { heading: "Họ và tên", sortingVale: "name" },
   // { heading: "Giới tính", sortingVale: "gender" },
-  { heading: "Ngày sinh", sortingVale: "dob" },
+  // { heading: "Ngày sinh", sortingVale: "dob" },
   { heading: "Số điện thoại", sortingVale: "mobile" },
   { heading: "Email", sortingVale: "email" },
   { heading: "Địa chỉ", sortingVale: "address" },
@@ -246,7 +246,7 @@ useEffect(() => {
                           <td>{data.fullName}</td>
                        
                           {/* <td>{data.gender}</td> */}
-                          <td>{data.dateOfBirth}</td>
+                          {/* <td>{data.dateOfBirth}</td> */}
                           <td>
                             <Link to="#">
                               <strong>{data.phone}</strong>
