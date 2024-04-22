@@ -38,7 +38,7 @@ const getStatusLabel = (status) => {
         </Badge>
       );
     default:
-      return null; // Trường hợp mặc định không trả về gì
+      return null; 
   }
 };
 const Registration = () => {

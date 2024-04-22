@@ -22,7 +22,7 @@ import registrationReducer from "./slice/registrationSlice";
 import programApplicationReducer from "./slice/programApplicationSlice";
 import consultantReducer from "./slice/consultantSlice";
 import applyStageReducer from "./slice/applyStageSlice";
-
+import programStageReducer from './slice/programStageSlice'
 const persistConfig = {
   key: "root",
   storage,
@@ -43,7 +43,7 @@ const rootReducer = combineReducers({
   programApplication: programApplicationReducer,
   consultant: consultantReducer,
   applyStage: applyStageReducer,
-
+  programStage : programStageReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

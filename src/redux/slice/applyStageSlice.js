@@ -13,12 +13,25 @@ export const getAllStage = createAsyncThunk(
   }
 );
 
-
+export const updateApplyStageById = createAsyncThunk(
+    "/applyStage/updateById",
+    async ({ applyStageId, programStageId }, thunkAPI) => {
+      try {
+        const res = await instance.put(`/apply-stage/${applyStageId}`, {
+          programStageId: programStageId
+        });
+        return res.data;
+      } catch (error) {
+        return thunkAPI.rejectWithValue(error.response.data);
+      }
+    }
+  );
 const initialState = {
   stages: [], 
   loading: false,
   error: null,
 };
+
 
 export const applyStageSlice = createSlice({
   name: "applyStage",
@@ -37,7 +50,17 @@ export const applyStageSlice = createSlice({
       .addCase(getAllStage.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      });
+      })
+      .addCase(updateApplyStageById.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updateApplyStageById.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(updateApplyStageById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
   },
 });
 
