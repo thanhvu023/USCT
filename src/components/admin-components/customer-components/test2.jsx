@@ -1,65 +1,47 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { getRegistration, getRegistrationByCustomerId } from '../../../redux/slice/registrationSlice';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Badge, Button } from 'react-bootstrap';
+import { getStudentProfileByCustomerId } from '../../../redux/slice/studentSice';
 
 const Test2 = () => {
-    const dispatch = useDispatch();
-  
-    const registrations = useSelector(state => state.registration.registrationForms);
-    const registrationsByCustomerId = useSelector(state => state.registration.registrationById);
-    const loading = useSelector(state => state.registration.loading);
-  
-    const [customerId, setCustomerId] = useState(null);
-    const [uniqueCustomerIds, setUniqueCustomerIds] = useState([]);
-  
-    useEffect(() => {
-      dispatch(getRegistration());
-    }, [dispatch]);
-  
-    useEffect(() => {
-      // Tạo mảng chứa các customerId duy nhất
-      const uniqueIds = Array.from(new Set(registrations.map(registration => registration.customerId)));
-      console.log("uniqueIds:",uniqueIds)
-      setUniqueCustomerIds(uniqueIds);
-    }, [registrations]);
-  
-    const handleCustomerIdChange = (event) => {
-      const selectedCustomerId = event.target.value;
-      setCustomerId(selectedCustomerId);
-      if (selectedCustomerId) {
-        dispatch(getRegistrationByCustomerId(selectedCustomerId));
-      }
-    };
-  
-    return (
-      <div>
-        <h1>Registration Forms</h1>
-        <label htmlFor="customerId">Select CustomerId:</label>
-        <select id="customerId" onChange={handleCustomerIdChange}>
-          <option value="">-- Select --</option>
-          {/* Sử dụng mảng uniqueCustomerIds để render các customerId duy nhất */}
-          {uniqueCustomerIds.map((id, index) => (
-            <option key={index} value={id}>
-              {id}
-            </option>
-          ))}
-        </select>
-  
-        {loading && <p>Loading...</p>}
-  
-        <div>
-          {registrationsByCustomerId.map((registration, index) => (
-            <div key={index}>
-              <h2>Đơn tư vấn #{index + 1}</h2>
-              <p>Customer ID: {registration.customerId}</p>
-              <p>Chuyên ngành đã chọn: {registration.majorChoose}</p>
-              <p>Chương trình đã chọn: {registration.programChoose}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
+  const dispatch = useDispatch();
+  const studentProfiles = useSelector(state => state.student.studentProfileByCustomerId);
+
+  useEffect(() => {
+    // Gọi API để lấy thông tin student profiles khi component được mount
+    dispatch(getStudentProfileByCustomerId(1)); // Thay 34 bằng customerId của bạn
+  }, [dispatch]);
+
+  const handleDownloadFile = (fileAttach) => {
+    if (fileAttach) {
+      // Tạo một link tải file từ URL
+      const link = document.createElement('a');
+      link.href = fileAttach;
+      link.download = 'fileAttach'; // Tên mặc định của file khi tải xuống
+      link.click();
+    } else {
+      alert('File không tồn tại');
+    }
   };
-  
-  export default Test2;
-  
+
+  return (
+    <div>
+      <h1>Danh sách Student Profiles</h1>
+      {studentProfiles.map(profile => (
+        <div key={profile.studentProfileId}>
+          <p>Họ và tên: {profile.fullName}</p>
+          <p>Email: {profile.email}</p>
+          <p>Ngày sinh: {profile.dateOfBirth}</p>
+          {/* Hiển thị badge trạng thái */}
+          <Badge variant="primary">{profile.gender}</Badge>
+          <Button onClick={() => handleDownloadFile(profile.fileUploads[0].fileAttach)}>
+            Tải file
+          </Button>
+          <hr />
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default Test2;

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Dropdown } from "react-bootstrap";
-import { Row, Button, Modal, Alert, Form  } from "react-bootstrap";
+import { Row, Button, Modal, Alert, Form, Badge  } from "react-bootstrap";
 import Swal from "sweetalert2";
 import { getRegistration, getRegistrationByCustomerId, updateRegistrationById } from "../../../redux/slice/registrationSlice";
 import { getUserById } from "../../../redux/slice/authSlice";
@@ -20,13 +20,25 @@ const theadData = [
 const getStatusLabel = (status) => {
   switch (status) {
     case 0:
-      return { text: "Đã hủy", backgroundColor: "red", borderColor: "darkred", };
+      return (
+        <Badge bg=" badge-lg " className='badge-danger light'>
+         CHƯA DUYỆT
+        </Badge>
+      );
     case 1:
-      return { text: "Chưa duyệt", backgroundColor: "yellow", borderColor: "darkgoldenrod" };
+      return (
+        <Badge bg=" badge-xl " className='badge-warning light'>
+          ĐANG XỬ LÝ
+        </Badge>
+      );
     case 2:
-      return { text: "Đã duyệt", backgroundColor: "blue", borderColor: "darkblue" };
+      return (
+        <Badge bg="" className='badge-success light'>
+        ĐÃ DUYỆT  
+        </Badge>
+      );
     default:
-      return { text: "", backgroundColor: "white", borderColor: "black" };
+      return null; // Trường hợp mặc định không trả về gì
   }
 };
 const Registration = () => {
@@ -49,6 +61,8 @@ const Registration = () => {
 
 
   const customers = useSelector((state)=>state.auth.userById);
+
+
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
   const customerId = jwtDecode(token).UserId;
@@ -57,15 +71,16 @@ const Registration = () => {
     (state) => state?.registration?.registrationForms
   );
 // console.log("registrationProfileByCustomerId:",registrationProfileByCustomerId)
-  const getFullName = (customerId) => {
-    if (!customers || !Array.isArray(customers)) {
-      return "Không tìm thấy";
-    }
-  
-    const customer = customers.find((customer) => customer.customerId === customerId);
-    
-    return customer ? customer.fullName : "Không tìm thấy tên";
-  };
+const getFullName = (customerId) => {
+  if (!customers || !Array.isArray(customers)) {
+    return "Không tìm thấy";
+  }
+
+  const customer = customers.find((customer) => customer.customerId == customerId);
+
+  return customer ? customer.fullName : "Không tìm thấy tên";
+};
+
   const getCustomerImage  = (customerId) => {
     if (!customers || !Array.isArray(customers)) {
       return "Không tìm thấy";
@@ -333,15 +348,8 @@ const Registration = () => {
                                 <td>{registration.programChoose}</td>
                                 <td>{getFullNameByConsultantId(registration.consultantId)}</td>
                                 <td>
-                                  <span
-                                    className="badge badge-rounded"
-                                    style={{
-                                      backgroundColor: getStatusLabel(registration.status).backgroundColor,
-                                      borderColor: getStatusLabel(registration.status).borderColor
-                                    }}
-                                  >
-                                    {getStatusLabel(registration.status).text}
-                                  </span>
+                                {getStatusLabel(registration.status)}
+
                                 </td>
                                 {/* <td style={{ display: "flex", alignItems: "center" }}>
                                  

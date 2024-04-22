@@ -329,7 +329,7 @@ function ProgramDetailPage() {
                   </ul>
                   <div className="price-wrap text-center">
                     <h5>
-                      Chi phí dự kiến:<span>$20000</span>
+                      Tham gia ngay !!!
                     </h5>
 
                     <a
@@ -515,7 +515,7 @@ function ProgramDetailPage() {
       {programByType
         .filter((program) => program.programId.toString() !== programById)
         .map((program, index) => (
-          <div key={index} className="col-lg-12 col-md-6">
+<div key={index} className="col-lg-12 col-md-6" >
             <div className="single-course-inner">
               <div className="thumb">
                 <img
@@ -523,12 +523,13 @@ function ProgramDetailPage() {
                   alt="img"
                 />
               </div>
-              <div className="details">
-                <div className="details-inner">
+              <div className="details" >
+                <div className="details-inner" style={{ height: '100px' }}>
                   <h5>
                     <Link
                       onClick={handleScrollToTop}
                       to={`/program-details/${program.programId}`}
+                      style={{fontSize:'16px'}}
                     >
                       {program.nameProgram}
                     </Link>
@@ -582,7 +583,7 @@ function ProgramDetailPage() {
           </div>
           <div className="details">
             <div className="details-inner">
-              <h5 className="h6">
+              <h5 className="h6" style={{height:'50px',marginBottom:'12px'}}>
                 <Link to={`/program-details/${university.programId}`}>
                   {university.nameProgram}
                 </Link>

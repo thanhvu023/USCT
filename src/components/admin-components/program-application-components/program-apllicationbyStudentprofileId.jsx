@@ -39,7 +39,7 @@ const ProgramApplicationPage = () => {
   const dispatch = useDispatch();
   const [sort, setSortata] = useState(10);
   const { programApplications, loading, error } = useSelector((state) => state.programApplication);
-  const [selectedProfileId, setSelectedProfileId] = useState(null);
+  const [selectedProfileId, setSelectedProfileId] = useState(false);
   const [studentProfile, setStudentProfile] = useState(null);
   const [programs, setPrograms] = useState({});
   const [studentProfiles, setStudentProfiles] = useState({});
@@ -48,7 +48,17 @@ const ProgramApplicationPage = () => {
   const [showCheckSuccess, setShowCheckSuccess] = useState(false);
   const [showDeleteSuccess, setShowDeleteSuccess] = useState(false);
   const [selectedStudentProfileId, setSelectedStudentProfileId] = useState(null);
+  const customers = useSelector((state)=>state.auth.userById);
 
+  const getCustomerName  = (customerId) => {
+    if (!customers || !Array.isArray(customers)) {
+      return "Không tìm thấy";
+    }
+  
+    const customer = customers.find((customer) => customer.customerId === customerId);
+    
+    return customer ? customer.fullName : "Không tìm thấy ảnh";
+  };
   // sort and search data 
   const [sortedApplications, setSortedApplications] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -148,6 +158,8 @@ const ProgramApplicationPage = () => {
     }
   };
 
+
+
   const handleCloseModal = () => {
     setSelectedProfileId(null);
   };
@@ -232,6 +244,14 @@ const ProgramApplicationPage = () => {
     fetchStudentProfiles();
   }, [dispatch, programApplications]);
 
+
+  const handleDownloadFile = (fileAttach) => {
+    const link = document.createElement('a');
+    link.href = fileAttach;
+    link.download = 'fileAttach'; 
+    link.click();
+  };
+  
   return (
     <div>
   
@@ -338,81 +358,61 @@ const ProgramApplicationPage = () => {
                       >
                         <i className="fa fa-trash" />
                       </button>
-                      <Modal show={selectedProfileId !== null} onHide={handleCloseModal} centered>
+                      <Modal show={selectedProfileId} onHide={handleCloseModal} centered>
             <Modal.Header closeButton>
-              <Modal.Title>Student Profile</Modal.Title>
+              <Modal.Title style={{ fontSize:'32px'}}>Hồ sơ học sinh</Modal.Title>
             </Modal.Header>
             <Modal.Body>
   {studentProfile && (
     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
       <div>
-        <p style={{ fontWeight: "bold" }}>Thông tin cá nhân:</p>
-        <p><span style={{ fontWeight: "bold" }}>Họ và tên:</span> {studentProfile.fullName}</p>
+        <p style={{ fontWeight: "bold", fontSize:'24px' }}>Thông tin học sinh:</p>
+        <p><span style={{ fontWeight: "bold" }}>Họ và tên học sinh:</span> {studentProfile.fullName}</p>
         <p><span style={{ fontWeight: "bold" }}>Email:</span> {studentProfile.email}</p>
         <p><span style={{ fontWeight: "bold" }}>Ngày sinh:</span> {studentProfile.dateOfBirth}</p>
         <p><span style={{ fontWeight: "bold" }}>Giới tính:</span> {studentProfile.gender}</p>
+        <p className='d-flex'>
+  <span style={{ fontWeight: "bold" }}>Bộ hồ sơ</span>
+  {studentProfile && studentProfile.fileUploads && studentProfile.fileUploads.length > 0 ? (
+    studentProfile.fileUploads.map((file, index) => (
+      <div key={index} className='m-2'>
+        
+        <Button className="me-2" variant="secondary btn-rounded"
+         onClick={() => handleDownloadFile(file.fileAttach)}
+        >
+                  <span className="btn-icon-start text-warning mr-2">
+                    <i className="fa fa-download" />
+                  </span>
+                  PDF {index + 1}
+                </Button>
+      </div>
+    ))
+  ) : (
+    <span className="ml-2">Chưa bổ sung file PDF</span>
+  )}
+</p>
+
       </div>
       <div>
-        <p style={{ fontWeight: "bold" }}>Thông tin liên hệ:</p>
+        <p style={{ fontWeight: "bold" , fontSize:'24px'}}>Thông tin liên hệ:</p>
+        <p><span style={{ fontWeight: "bold" }}>Họ và tên khách hàng:</span>{getCustomerName(studentProfile.customerId)}</p>
         <p><span style={{ fontWeight: "bold" }}>Điện thoại:</span> {studentProfile.phone}</p>
         <p><span style={{ fontWeight: "bold" }}>Địa chỉ:</span> {studentProfile.address}</p>
         <p><span style={{ fontWeight: "bold" }}>Ngày tạo:</span> {studentProfile.createDate}</p>
         <p><span style={{ fontWeight: "bold" }}>Nơi sinh:</span> {studentProfile.placeOfBirth}</p>
         <p><span style={{ fontWeight: "bold" }}>Số CMND:</span> {studentProfile.nationalId}</p>
-        <p><span style={{ fontWeight: "bold" }}>Mã khách hàng:</span> {studentProfile.customerId}</p>
       </div>
     </div>
   )}
 </Modal.Body>
 
-            <Modal.Footer></Modal.Footer>
+            <Modal.Footer>
+       
+            </Modal.Footer>
           </Modal>
         
 
-          <Modal
-            className="custom-modal"
-            show={showDeleteModal}
-            onHide={handleCloseDeleteModal}
-            backdrop="static"
-            centered
-          >
-            <Modal.Header style={style.modalHeader}>
-              <Modal.Title>Modal Delete Title</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-            {studentProfile && (
-    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
-      <div>
-        <p style={{ fontWeight: "bold" }}>Thông tin cá nhân:</p>
-        <p><span style={{ fontWeight: "bold" }}>Họ và tên:</span> {studentProfile.fullName}</p>
-        <p><span style={{ fontWeight: "bold" }}>Email:</span> {studentProfile.email}</p>
-        <p><span style={{ fontWeight: "bold" }}>Ngày sinh:</span> {studentProfile.dateOfBirth}</p>
-        <p><span style={{ fontWeight: "bold" }}>Giới tính:</span> {studentProfile.gender}</p>
-      </div>
-      <div>
-        <p style={{ fontWeight: "bold" }}>Thông tin liên hệ:</p>
-        <p><span style={{ fontWeight: "bold" }}>Điện thoại:</span> {studentProfile.phone}</p>
-        <p><span style={{ fontWeight: "bold" }}>Địa chỉ:</span> {studentProfile.address}</p>
-        <p><span style={{ fontWeight: "bold" }}>Ngày tạo:</span> {studentProfile.createDate}</p>
-        <p><span style={{ fontWeight: "bold" }}>Nơi sinh:</span> {studentProfile.placeOfBirth}</p>
-        <p><span style={{ fontWeight: "bold" }}>Số CMND:</span> {studentProfile.nationalId}</p>
-        <p><span style={{ fontWeight: "bold" }}>Mã khách hàng:</span> {studentProfile.customerId}</p>
-      </div>
-    </div>
-  )}
-            </Modal.Body>
-            <Modal.Footer style={style.modalFooter}>
-              <Button variant="secondary" onClick={handleCloseDeleteModal}>
-                Hủy
-              </Button>
-              <Button variant="danger" onClick={() => {
-                handleCloseDeleteModal();
-                setShowDeleteSuccess(true);
-              }}>
-                Xóa
-              </Button>
-            </Modal.Footer>
-          </Modal>
+   
                     </td>
                   </tr>
                 ))}
