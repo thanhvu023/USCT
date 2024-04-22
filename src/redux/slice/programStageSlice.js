@@ -1,5 +1,5 @@
 import instance from "../axiosCustom";
-import { createAsyncThunk, createSlice, createSelector } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 
 export const getAllProgramStages = createAsyncThunk(
@@ -84,12 +84,8 @@ const programStagesSlice = createSlice({
   },
 });
 
-export const selectStagesByProgramId = createSelector(
-  (state) => state.programStages.stages,
-  (_, programId) => programId,
-  (stages, programId) => stages.filter((stage) => stage.programId === programId)
-);
+const {
+  reducer: programStageReducer,
+} = programStagesSlice;
 
-const programStageReducer = programStagesSlice.reducer;
-
-export default programStageReducer;
+export { programStageReducer as default };
