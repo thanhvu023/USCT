@@ -336,15 +336,16 @@ const getFullName = (customerId) => {
                             (registration) => (
                               <tr key={registration.id}>
                                 <td>
-                                  <Link
+                                 
+                                    {registration.registrationFormId}
+                                </td>
+                                <Link
                                     onClick={() =>
                                       handleClickName(registration)
                                     }
                                   >
-                                    {registration.registrationFormId}
-                                  </Link>
-                                </td>
                                 <td>{registration.majorChoose}</td>
+                                </Link>
                                 <td>{registration.programChoose}</td>
                                 <td>{getFullNameByConsultantId(registration.consultantId)}</td>
                                 <td>

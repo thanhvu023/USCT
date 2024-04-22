@@ -3,9 +3,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getAllProgramApplication } from '../../../redux/slice/programApplicationSlice';
 import { getStudentProfileById } from '../../../redux/slice/studentSice';
 import { getProgramById } from '../../../redux/slice/programSlice';
-import { Modal, Button, Row, Dropdown } from 'react-bootstrap';
-import { Link } from "react-router-dom";
+import { Modal, Button, Row, Dropdown, Form, Col, Image, Card } from 'react-bootstrap';
 
+import { Link } from "react-router-dom";
+import { getAllProgramStages } from "../../../redux/slice/programStageSlice";
+import { getAllStage, selectApplyStageById, updateApplyStageById } from "../../../redux/slice/applyStageSlice";
 import Swal from "sweetalert2"
 
 const theadData = [
@@ -44,11 +46,13 @@ const ProgramApplicationPage = () => {
   const [programs, setPrograms] = useState({});
   const [studentProfiles, setStudentProfiles] = useState({});
   const [showCheckModal, setShowCheckModal] = useState(false);
+  const[showProfileModal,setShowProfileModal] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showCheckSuccess, setShowCheckSuccess] = useState(false);
   const [showDeleteSuccess, setShowDeleteSuccess] = useState(false);
   const [selectedStudentProfileId, setSelectedStudentProfileId] = useState(null);
   const customers = useSelector((state)=>state.auth.userById);
+  const programStages = useSelector((state) => state.programStages.stages);
 
   const getCustomerName  = (customerId) => {
     if (!customers || !Array.isArray(customers)) {
@@ -59,8 +63,62 @@ const ProgramApplicationPage = () => {
     
     return customer ? customer.fullName : "Không tìm thấy ảnh";
   };
+// update ApplyStage
+const [selectedApplication, setSelectedApplication] = useState(null);
+console.log("seldfasfsafa:",selectedApplication)
+
+
+const handleShowDetailsModal = (application) => {
+  setSelectedApplication(application);
+  setShowCheckModal(true); // Mở modal chi tiết thông tin
+};
+
+const [selectedProgramStageId, setSelectedProgramStageId] = useState(null);
+
+const handleProgramStageChange = (e) => {
+  setSelectedProgramStageId(parseInt(e.target.value));
+};
+
+  const getProgramStagesByProgramId = (programId) => {
+    const stages = programStages.filter((stage) => stage.programId === programId);
+    return stages.map((stage) => ({
+      programStageId: stage.programStageId,
+      programId: stage.programId,
+      stageName: stage.stageName,
+    }));
+  };
+// Hàm để lấy danh sách các programStage dựa trên programId
+const handleUpdateApplyStage = () => {
+  if (selectedApplication && selectedProgramStageId) {
+    dispatch(updateApplyStageById({ applyStageId: selectedApplication.applyStage.applyStageId, programStageId: selectedProgramStageId }))
+      .then(() => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Cập nhật trạng thái hồ sơ thành công!',
+          showConfirmButton: false,
+          timer: 2000
+        }).then(() => {
+          setShowCheckSuccess(true); // Hiển thị thông báo thành công
+          setShowCheckModal(false); // Đóng modal
+          dispatch(getAllProgramApplication()); // Cập nhật lại danh sách hồ sơ
+        });
+      })
+      .catch((error) => {
+        console.error('Error updating apply stage:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Đã xảy ra lỗi khi cập nhật trạng thái hồ sơ!',
+        });
+      });
+  } else {
+    alert('Vui lòng chọn cả Hồ sơ ứng tuyển và Giai đoạn chương trình để cập nhật.');
+  }
+};
+
   // sort and search data 
   const [sortedApplications, setSortedApplications] = useState([]);
+  console.log("sortedApplications là",sortedApplications)
   const [searchTerm, setSearchTerm] = useState('');
   const sortData = (sortBy) => {
     const sortedData = [...programApplications];
@@ -96,6 +154,11 @@ const ProgramApplicationPage = () => {
   }, [dispatch]);
 
   useEffect(() => {
+    dispatch(getAllProgramStages());
+    dispatch(getAllStage());
+  }, [dispatch]);
+
+  useEffect(() => {
     setSortedApplications(programApplications);
   }, [programApplications]);
 
@@ -108,12 +171,6 @@ const ProgramApplicationPage = () => {
   
 
   
-//  console.log("đơn đã duyệt là:",programApplications)
-  const handleStudentProfile = (student) => {
-    setSelectedStudentProfileId(student);
-    setShowCheckModal(true);
-    console.log("hồ sơ đã duyệt là:",student)
-  };
 
 
   const handleCloseCheckModal = () => setShowCheckModal(false);
@@ -146,7 +203,7 @@ const ProgramApplicationPage = () => {
 
   const handleOpenModal = async (studentProfileId) => {
     setSelectedProfileId(studentProfileId);
-    setShowCheckModal(true);
+    setShowProfileModal(true);
 
     try {
       const response = await dispatch(getStudentProfileById(studentProfileId));
@@ -327,22 +384,22 @@ const ProgramApplicationPage = () => {
                     <td>{programs[application.programId]?.nameProgram}</td>
                     <td>{application.applyStage?.programStage?.stageName}</td>
                     <td style={{ display: "flex", alignItems: "center" }}>
-                      <button
-                        onClick={handleShowCheckModal}
-                        className="btn btn-xs sharp btn-primary me-1"
-                        style={{
-                          ...style.button,
-                          width: "30px",
-                          height: "30px",
-                          padding: "0 20px",
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          marginRight: "5px",
-                        }}
-                      >
-                        <i className="fa fa-check" />
-                      </button>
+                    <button
+  onClick={() => handleShowDetailsModal(application)}
+  className="btn btn-xs sharp btn-primary me-1"
+  style={{
+    ...style.button,
+    width: "30px",
+    height: "30px",
+    padding: "0 20px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: "5px",
+  }}
+>
+  <i className="fa fa-info-circle" /> {/* Thay icon thành icon chi tiết thông tin */}
+</button>
                       <button
                         onClick={handleShowDeleteModal}
                         className="btn btn-xs sharp btn-danger"
@@ -410,7 +467,81 @@ const ProgramApplicationPage = () => {
        
             </Modal.Footer>
           </Modal>
-        
+          ;
+
+          <Modal show={showCheckModal} onHide={handleCloseCheckModal} centered>
+  <Modal.Header closeButton>
+    <Modal.Title style={{ fontSize: '32px' }}>
+      {selectedApplication && selectedApplication.applyStage.programStage.program.nameProgram}
+    </Modal.Title>
+  </Modal.Header>
+  <Modal.Body>
+    {selectedApplication && (
+      <Row>
+        <Col xs={12} md={6}>
+          <Card>
+            <Card.Body>
+              <Card.Title className="text-primary mb-3">Trường đại học:   {selectedApplication.applyStage.programStage.program.university.universityName}</Card.Title>
+              <Card.Text className="mb-3">
+                <span className="font-weight-bold">Bang:</span> {selectedApplication.applyStage.programStage.program.university.state.stateName}
+              </Card.Text>
+              <Card.Text className="mb-3">
+              <span className="font-weight-bold">Tầm nhìn và giá trị: </span>   {selectedApplication.applyStage.programStage.program.university.slogan}
+              </Card.Text>
+              <Card.Text className="mb-3">
+              <span className="font-weight-bold"> Trang web</span>  : {selectedApplication.applyStage.programStage.program.university.website}
+              </Card.Text>
+              <Image src={selectedApplication.applyStage.programStage.program.university.img} alt="University Image" fluid />
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col xs={12} md={6}>
+          <Card>
+            <Card.Body>
+              <Card.Title className="text-success mb-3">Chương trình</Card.Title>
+              <Card.Text className="mb-3">
+                <span className="font-weight-bold">Chuyên ngành:</span> {selectedApplication.applyStage.programStage.program.major.majorName}
+              </Card.Text>
+              <Card.Text className="mb-3">
+                <span className="font-weight-bold">Trạng thái:</span> {selectedApplication.applyStage.programStage.program.status}
+              </Card.Text>
+              <Card.Text className="mb-3">
+                <span className="font-weight-bold">Loại chương trình:</span> {selectedApplication.applyStage.programStage.program.programType.typeName}
+              </Card.Text>
+              <Card.Text className="mb-3">
+                <span className="font-weight-bold">Mô tả:</span> {selectedApplication.applyStage.programStage.program.description}
+              </Card.Text>
+              <Card.Text className="mb-3">
+                <span className="font-weight-bold">Thời gian:</span> {selectedApplication.applyStage.programStage.program.duration}
+              </Card.Text>
+              <Card.Text className="mb-3">
+                <span className="font-weight-bold">Trạng thái hồ sơ:</span> {selectedApplication.applyStage.programStage.stageName}
+              </Card.Text>
+              <Form.Select value={selectedProgramStageId} onChange={handleProgramStageChange}>
+                <option value="">Chọn giai đoạn hồ sơ ứng tuyển chương trình</option>
+                {getProgramStagesByProgramId(selectedApplication.applyStage.programStage.program.programId).map((stage) => (
+                  <option key={stage.programStageId} value={stage.programStageId}>
+                    {stage.stageName}
+                  </option>
+                ))}
+              </Form.Select>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    )}
+  </Modal.Body>
+  <Modal.Footer>
+    <Button variant="primary" onClick={handleUpdateApplyStage}>Update Program Stage</Button>
+    {/* Các nút hoặc chức năng khác có thể thêm ở đây */}
+  </Modal.Footer>
+</Modal>
+
+
+
+
+
+
 
    
                     </td>
