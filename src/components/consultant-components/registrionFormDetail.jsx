@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getRegistrationByRegistrationFormId } from "../../redux/slice/registrationSlice";
+import {
+  getRegistrationByRegistrationFormId,
+  updateRegistrationById,
+} from "../../redux/slice/registrationSlice";
 import { getUserById } from "../../redux/slice/authSlice";
-import jwtDecode from "jwt-decode";
 import { useParams, Link } from "react-router-dom"; // Import Link from react-router-dom
-
+import Select from "react-select";
 const RegistrationFormDetail = () => {
-  let publicUrl = process.env.PUBLIC_URL + "/";
-
   const { registrationFormId } = useParams();
   const dispatch = useDispatch();
   const registration = useSelector(
@@ -17,23 +17,40 @@ const RegistrationFormDetail = () => {
     (state) => state?.registration?.registrationById?.customerId
   );
   const userDetail = useSelector((state) => state.auth.userById) || {};
+  const consultantId = useSelector(
+    (state) => state?.consultant?.consultantById?.consultantId
+  );
+  const [status, setStatus] = useState(registration.status);
+  const statusOptions = [
+    { value: 0, label: "Chưa tư vấn" },
+    { value: 1, label: "Đang tư vấn" },
+    { value: 2, label: "Đã tư vấn" },
+  ];
+  const matchValue = useMemo(
+    () => statusOptions.find((option) => option.value === status),
+    [status]
+  );
   useEffect(() => {
-    dispatch(getUserById(userId));
+    if (userId) {
+      dispatch(getUserById(userId));
+    }
   }, [userId]);
-  console.log("userDetail:", userDetail);
   useEffect(() => {
-    dispatch(getRegistrationByRegistrationFormId(registrationFormId));
+    if (registrationFormId) {
+      dispatch(getRegistrationByRegistrationFormId(registrationFormId));
+    }
   }, [dispatch, registrationFormId]);
-  console.log(registration);
-  // useEffect(() => {
-  //   if (registration.customerId) {
-  //     dispatch(getUserById(registration.customerId));
-  //   }
-  // }, [dispatch, registration.customerId]);
-
-  //   if (loading) {
-  //     return <div>Loading...</div>;
-  //   }
+  useEffect(() => {
+    setStatus(registration.status);
+  }, [registration.status]);
+  const handleChangeStatus = (e) => {
+    setStatus(e.value);
+  };
+  const handleSubmitChangeStatus = () => {
+    dispatch(
+      updateRegistrationById({ status, consultantId, registrationFormId })
+    );
+  };
 
   return (
     <div className="col-xl-8 mx-auto mt-5">
@@ -54,7 +71,7 @@ const RegistrationFormDetail = () => {
                           <div className="text-center p-3 overlay-box">
                             <div className="profile-photo">
                               <img
-                                src={publicUrl + "assets/img/author/pic2.jpg"}
+                                src={userDetail.img}
                                 alt="img"
                                 className="bg-info rounded-circle mb-4"
                                 style={{ width: "100px", height: "100px" }}
@@ -135,19 +152,19 @@ const RegistrationFormDetail = () => {
                               : "chưa có"}
                           </li>
                           <li className="mb-2">
-                            <i className="la la-info mr-2"></i>
+                            <i className="la la-university mr-2"></i>
                             <span className="font-weight-bold">
-                              Thông tin thêm:
-                            </span>{" "}
-                            {registration.moreInformation
-                              ? registration.moreInformation
+                              Lý do chọn trường đại học:
+                            </span>
+                            {registration.universityChooseReason
+                              ? registration.universityChooseReason
                               : "chưa có"}
                           </li>
                           <li className="mb-2">
                             <i className="la la-building mr-2"></i>
                             <span className="font-weight-bold">
                               Khu vực sinh sống:
-                            </span>{" "}
+                            </span>
                             {registration.area ? registration.area : "chưa có"}
                           </li>
                         </ul>
@@ -158,7 +175,7 @@ const RegistrationFormDetail = () => {
                             <i className="la la-paper-plane mr-2"></i>
                             <span className="font-weight-bold">
                               Ưu tiên du học:
-                            </span>{" "}
+                            </span>
                             {registration.priorityOfStudyAbroad
                               ? registration.priorityOfStudyAbroad
                               : "chưa có"}
@@ -167,18 +184,19 @@ const RegistrationFormDetail = () => {
                             <i className="la la-thumbs-o-up mr-2"></i>
                             <span className="font-weight-bold">
                               Lý do du học:
-                            </span>{" "}
+                            </span>
                             {registration.studyAbroadReason
                               ? registration.studyAbroadReason
                               : "chưa có"}
                           </li>
+
                           <li className="mb-2">
-                            <i className="la la-university mr-2"></i>
+                            <i className="la la-info mr-2"></i>
                             <span className="font-weight-bold">
-                              Lý do chọn trường đại học:
-                            </span>{" "}
-                            {registration.universityChooseReason
-                              ? registration.universityChooseReason
+                              Thông tin thêm:
+                            </span>
+                            {registration.moreInformation
+                              ? registration.moreInformation
                               : "chưa có"}
                           </li>
                         </ul>
@@ -188,10 +206,29 @@ const RegistrationFormDetail = () => {
                 </div>
               </div>
             </div>
-            <div className="text-right mb-3 ">
-              <Link to="/students-profile" className="btn btn-secondary">
-                Quay lại
-              </Link>
+            <div className="row">
+              <div className="col-md-6 text-left">
+                <Link to="/consultant" className="btn btn-secondary">
+                  Quay lại
+                </Link>
+              </div>
+              <div className="col-md-6 text-right">
+                <div className="d-inline-block mr-2">
+                  <Select
+                    placeholder="Trạng thái"
+                    name="status"
+                    options={statusOptions}
+                    onChange={handleChangeStatus}
+                    value={matchValue ? matchValue : 0}
+                  />
+                </div>
+                <button
+                  onClick={handleSubmitChangeStatus}
+                  className="btn btn-secondary"
+                >
+                  Cập nhật
+                </button>
+              </div>
             </div>
           </div>
         </div>

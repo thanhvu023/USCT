@@ -26,6 +26,7 @@ import PrivateRoute from "./PrivateRoute.jsx";
 import AdminRoute from "./AdminRoute.jsx";
 import ConsultantPage from "../components/consultant-page.jsx";
 import RegistrationDetailConsultantPage from "../components/RegistrationFormConsultant.jsx";
+import ConsultantProfilePage from "../components/consultantProfilePage.jsx";
 
 const Routers = () => {
   const token = useSelector((state) => state?.auth?.token);
@@ -148,6 +149,7 @@ const Routers = () => {
           }
         />
         <Route path="/consultant" element={<ConsultantPage />} />
+        <Route path="/consultant-profile" element={<ConsultantProfilePage />} />
         <Route
           path="/consultant/registrationForm/:registrationFormId"
           element={<RegistrationDetailConsultantPage />}

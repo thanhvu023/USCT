@@ -82,24 +82,24 @@ const Registration = () => {
     universityChooseReason: "",
     priorityOfStudyAbroad: "",
     budget: "",
+    status: 0,
     customerId,
   });
   const [errors, setErrors] = useState({});
   const dispatch = useDispatch();
   const handleInputChange = (selectedOption, name) => {
-  if (selectedOption && selectedOption.value) {
-    setFormData({
-      ...formData,
-      [name]: selectedOption.value,
-    });
-  } else {
-    setFormData({
-      ...formData,
-      [name]: null, // or whatever default value you want
-    });
-  }
-};
-
+    if (selectedOption && selectedOption.value) {
+      setFormData({
+        ...formData,
+        [name]: selectedOption.value,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: null, // or whatever default value you want
+      });
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -561,11 +561,7 @@ const Registration = () => {
                         </div>
                       </div>
                       <div className="col-12 d-flex justify-content-end">
-                        <button
-                          className="btn btn-base"
-                        >
-                          Hoàn tất
-                        </button>
+                        <button className="btn btn-base">Hoàn tất</button>
                       </div>
                     </div>
                   </form>

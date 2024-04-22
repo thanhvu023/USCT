@@ -2,7 +2,8 @@ import { format } from "date-fns";
 import { ColumnFilter } from "./column-filter";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllUsers, getUserById } from "../../redux/slice/authSlice";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
+import { Badge } from "react-bootstrap";
 
 const getConsultantEmail = (consultantId) => {
   const dispatch = useDispatch();
@@ -31,7 +32,21 @@ const getConsultantEmail = (consultantId) => {
   );
   return consultant ? consultant.email : "Không biết";
 };
+const status = {
+  0: "Chưa tư vấn",
+  1: "Đang tư vấn",
+  2: "Đã tư vấn",
+};
 
+const statusColor = {
+  0: "badge-danger light ",
+  1: "badge-warning light",
+  2: "badge-success light",
+};
+
+const getStatusLabel = (statusNumber) => {
+  return <Badge bg=" " className={statusColor[statusNumber]}>{status[statusNumber]}</Badge>;
+};
 const getFullName = (customerId) => {
   const dispatch = useDispatch();
 
@@ -86,7 +101,9 @@ export const COLUMNS = [
     Header: "Trạng thái",
     Footer: "Trạng thái",
     accessor: "status",
-    // Cell: ({ value }) => {return format(new Date(value), 'mm/dd/yyyy')},
+    Cell: ({ value }) => {
+      return getStatusLabel(value);
+    },
     Filter: ColumnFilter,
   },
 ];

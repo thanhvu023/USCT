@@ -145,8 +145,8 @@ const ConsultantList = () => {
             </table>
             <div className="d-flex justify-content-between">
               <span>
-                Page
-                <strong>
+                Số trang
+                <strong className="ml-2">
                   {pageIndex + 1} of {pageOptions.length}
                 </strong>
               </span>
@@ -167,7 +167,7 @@ const ConsultantList = () => {
                   disabled={!canPreviousPage}
                   style={{ color: "black" }}
                 >
-                  Previous
+                  Trước
                 </button>
                 <button
                   className="next-button "
@@ -175,7 +175,7 @@ const ConsultantList = () => {
                   disabled={!canNextPage}
                   style={{ color: "black" }}
                 >
-                  Next
+                  Sau
                 </button>
                 <button
                   className=" next-button"

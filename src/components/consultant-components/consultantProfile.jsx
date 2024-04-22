@@ -1,26 +1,28 @@
-import React, { Fragment, useEffect, useState } from "react";
-import { Tab, Nav, Button } from "react-bootstrap";
-import PageTitle from "./PageTitle";
-import { useDispatch, useSelector } from "react-redux";
-import { getUserById, updateUserById } from "../../redux/slice/authSlice";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import jwtDecode from "jwt-decode";
+import React, { Fragment, useEffect, useState } from "react";
+import { Nav, Tab } from "react-bootstrap";
+import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 import Swal from "sweetalert2";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { updateUserById } from "../../redux/slice/authSlice";
 import { imageDb } from "../FirebaseImage/Config";
-const CustomerProfilePage = () => {
+import { getConsultantById } from "../../redux/slice/consultantSlice";
+const ConsultantProfile = () => {
   let publicUrl = process.env.PUBLIC_URL + "/";
 
-  const token = useSelector((state) => state.auth.token);
+  const token = useSelector((state) => state?.auth?.token);
   const userId = jwtDecode(token).UserId;
-  const userDetail = useSelector((state) => state.auth.userById) || {};
+  const userDetail =
+    useSelector((state) => state?.consultant?.consultantById) || {};
+  console.log(userDetail);
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getUserById(userId));
+    dispatch(getConsultantById(userId));
   }, [userId]);
 
-  const [fullName, setFullName] = useState(userDetail.fullName || "");
+  const [userName, setuserName] = useState(userDetail.userName || "");
   const [phone, setPhone] = useState(userDetail.phone || "");
   const [address, setAddress] = useState(userDetail.address || "");
   const [email, setEmail] = useState(userDetail.email || "");
@@ -31,19 +33,16 @@ const CustomerProfilePage = () => {
   const [errors, setErrors] = useState({});
   const [updateMessage, setUpdateMessage] = useState("");
   let [avatar, setImageSrc] = useState(userDetail.img);
-  const [loading, setLoading] = useState(false);
-  console.log(loading);
+
   const handleUpload = async (e) => {
     const selectedFile = e.target.files && e.target.files[0]; // Check if files exist before accessing the first file
+
     if (selectedFile) {
       const imgRef = ref(imageDb, `Image/customerAvatar/${selectedFile.name}`);
       try {
-        setLoading(true);
         await uploadBytes(imgRef, selectedFile);
         const imageUrl = await getDownloadURL(imgRef);
         setImageSrc(imageUrl);
-        console.log(loading);
-        setLoading(false);
       } catch (error) {
         console.error(`Error uploading ${selectedFile.name}:`, error);
       }
@@ -54,8 +53,8 @@ const CustomerProfilePage = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    if (fullName.trim() === "") {
-      newErrors.fullName = "Họ và tên không hợp lệ!";
+    if (userName.trim() === "") {
+      newErrors.userName = "Họ và tên không hợp lệ!";
     }
 
     if (phone.trim() === "" || !/^\d+$/.test(phone)) {
@@ -79,7 +78,7 @@ const CustomerProfilePage = () => {
       userData: {
         ...userDetail,
         userId,
-        fullName,
+        userName,
         phone,
         address,
         email,
@@ -111,7 +110,7 @@ const CustomerProfilePage = () => {
     }
 
     // Cập nhật thông tin và hiển thị thông báo thành công
-    setFullName(updatedData.userData.fullName);
+    setuserName(updatedData.userData.userName);
     setPhone(updatedData.userData.phone);
     setAddress(updatedData.userData.address);
     setDateOfBirth(updatedData.userData.dateOfBirth);
@@ -127,7 +126,6 @@ const CustomerProfilePage = () => {
   };
   return (
     <Fragment>
-      <PageTitle activeMenu="Profile" motherMenu="App" />
       <div className="bc-grey">
         <div className="row mb-5 mr-0 border-0">
           <div className="col-lg-12 mt-12">
@@ -149,11 +147,10 @@ const CustomerProfilePage = () => {
                       style={{ width: "100px", height: "100px" }}
                     />
                   </div>
-
                   <div className="profile-details d-flex">
                     <div className="profile-name px-3 pt-2">
                       <h4 className="text-primary mb-0">
-                        {userDetail.fullName}
+                        {userDetail.userName}
                       </h4>
                       <p>Khách hàng</p>
                     </div>
@@ -249,10 +246,10 @@ const CustomerProfilePage = () => {
                               </h4>
                               <div className="row mb-2">
                                 <div className="col-3">
-                                  <h5 className="f-w-200">Mã KH:</h5>
+                                  <h5 className="f-w-200">Giới thiệu:</h5>
                                 </div>
                                 <div className="col-9 ">
-                                  <span>048321842</span>
+                                  <p>{userDetail.introduction}</p>
                                 </div>
                               </div>
                               <div className="row mb-2">
@@ -260,10 +257,10 @@ const CustomerProfilePage = () => {
                                   <h5 className="f-w-500">Họ và Tên : </h5>
                                 </div>
                                 <div className="col-9 ">
-                                  <span>{userDetail.fullName}</span>
+                                  <span>{userDetail.userName}</span>
                                 </div>
                               </div>
-                              <div className="row mb-2">
+                              {/* <div className="row mb-2">
                                 <div className="col-3">
                                   <h5 className="f-w-500">
                                     Căn cước công dân :
@@ -272,16 +269,16 @@ const CustomerProfilePage = () => {
                                 <div className="col-9 ">
                                   <span>4890327148921</span>
                                 </div>
-                              </div>
+                              </div> */}
                               <div className="row mb-2">
                                 <div className="col-3">
-                                  <h5 className="f-w-500">Giới tính : </h5>
+                                  <h5 className="f-w-500">Chuyên ngành : </h5>
                                 </div>
                                 <div className="col-9  ">
-                                  <span>{userDetail.gender}</span>
+                                  <span>{userDetail.specialize}</span>
                                 </div>
                               </div>
-                              <div className="row mb-2">
+                              {/* <div className="row mb-2">
                                 <div className="col-3">
                                   <h5 className="f-w-500">Ngày sinh :</h5>
                                 </div>
@@ -296,15 +293,15 @@ const CustomerProfilePage = () => {
                                 <div className="col-9 ">
                                   <span>{userDetail.address}</span>
                                 </div>
-                              </div>
-                              <div className="row mb-2">
+                              </div> */}
+                              {/* <div className="row mb-2">
                                 <div className="col-3">
                                   <h5 className="f-w-500">Số điện thoại:</h5>
                                 </div>
                                 <div className="col-5 ">
                                   <span>{userDetail.phone}</span>
                                 </div>
-                              </div>
+                              </div> */}
                             </div>
                           </Tab.Pane>
                           <Tab.Pane id="profile-settings" eventKey="Setting">
@@ -323,13 +320,13 @@ const CustomerProfilePage = () => {
                                         type="text"
                                         placeholder="Họ và tên"
                                         className="form-control"
-                                        value={fullName}
+                                        value={userName}
                                         onChange={(e) => {
                                           setErrors({
                                             ...errors,
                                             username: "",
                                           });
-                                          setFullName(e.target.value);
+                                          setuserName(e.target.value);
                                           setUpdateMessage("");
                                         }}
                                       />
@@ -362,7 +359,7 @@ const CustomerProfilePage = () => {
                                         />
                                       </div>
                                     </div>
-                                    <div className="form-group mb-3 col-md-6">
+                                    {/* <div className="form-group mb-3 col-md-6">
                                       <label className="form-label">
                                         Giới tính
                                       </label>
@@ -379,10 +376,10 @@ const CustomerProfilePage = () => {
                                         <option value="female">Nữ</option>
                                         <option value="other">Khác</option>
                                       </select>
-                                    </div>
+                                    </div> */}
                                   </div>
 
-                                  <div className="row">
+                                  {/* <div className="row">
                                     <div className="form-group mb-3 col-md-6">
                                       <label className="form-label">
                                         Ngày sinh
@@ -426,7 +423,7 @@ const CustomerProfilePage = () => {
                                         }}
                                       />
                                     </div>
-                                  </div>
+                                  </div> */}
 
                                   {/* <div className="form-group mb-3">
                                     <label className="form-label">
@@ -438,7 +435,7 @@ const CustomerProfilePage = () => {
                                       className="form-control"
                                     />
                                   </div> */}
-                                  <div className="row">
+                                  {/* <div className="row">
                                     <div className="form-group mb-3 col-md-12">
                                       <label className="form-label">
                                         Địa chỉ
@@ -455,7 +452,7 @@ const CustomerProfilePage = () => {
                                         }}
                                       />
                                     </div>
-                                  </div>
+                                  </div> */}
 
                                   {/* <div className="row">
                                     <div className="form-group mb-3 col-md-12">
@@ -492,7 +489,7 @@ const CustomerProfilePage = () => {
                                   </button>
                                 </form>
                                 <div className="col-md-3">
-                                  <div className="form-group mb-3">
+                                  <div className="form-group mb-3 col-md-6">
                                     <label className="form-label">Avatar</label>
                                     <img
                                       src={
@@ -511,15 +508,11 @@ const CustomerProfilePage = () => {
                                       id="avatar-img"
                                     />
                                   </div>
-                                  <div className="form-group mb-3 d-flex align-items-center">
-                                    {loading && (
-                                      <i className="fa fa-refresh fa-spin mr-2" />
-                                    )}
+                                  <div className="form-group mb-3 col-md-6">
                                     <input
                                       type="file"
                                       onChange={(e) => handleUpload(e)}
-                                      style={{ flex: 1, minWidth: '0', width: 'auto' }} // Adjust width properties
-                                      />
+                                    />
                                   </div>
                                 </div>
                               </div>
@@ -539,4 +532,4 @@ const CustomerProfilePage = () => {
   );
 };
 
-export default CustomerProfilePage;
+export default ConsultantProfile;
