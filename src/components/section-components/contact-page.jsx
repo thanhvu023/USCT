@@ -6,6 +6,7 @@ import { ProgressBar, Step } from "react-step-progress-bar";
 import { createRegistration } from "../../redux/slice/registrationSlice";
 import jwtDecode from "jwt-decode";
 import Swal from "sweetalert2";
+import { Backdrop, CircularProgress } from "@mui/material";
 
 const MultiStepProgressBar = ({ page, onPageNumberClick }) => {
   let stepPercentage = 0;
@@ -82,15 +83,23 @@ const Registration = () => {
     universityChooseReason: "",
     priorityOfStudyAbroad: "",
     budget: "",
+    status: 0,
     customerId,
   });
   const [errors, setErrors] = useState({});
   const dispatch = useDispatch();
   const handleInputChange = (selectedOption, name) => {
-    setFormData({
-      ...formData,
-      [name]: selectedOption.value, // Assuming you want to store the value of the selected option
-    });
+    if (selectedOption && selectedOption.value) {
+      setFormData({
+        ...formData,
+        [name]: selectedOption.value,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: null, // or whatever default value you want
+      });
+    }
   };
 
   const handleChange = (e) => {
@@ -242,7 +251,6 @@ const Registration = () => {
   const priorityOfStudyAbroadOptions = [
     { value: "Ngành học", label: "Ngành học" },
     { value: "Trường học", label: "Trường học" },
-    { value: "Nước du học", label: "Nước du học" },
     { value: "Chi phí du học", label: "Chi phí du học" },
     { value: "Học bổng du học", label: "Học bổng du học" },
     { value: "Hồ sơ cư trú và làm việc", label: "Hồ sơ cư trú và làm việc" },
@@ -344,57 +352,17 @@ const Registration = () => {
     { value: "Ngành nhiều người chọn", label: "Ngành nhiều người chọn" },
     { value: "Theo định hướng gia đình", label: "Theo định hướng gia đình" },
   ];
-  let publicUrl = process.env.PUBLIC_URL + "/";
+  const loading = useSelector((state) => state?.registration?.loading);
+
   return (
     <div>
-      {/* <MultiStepProgressBar page={page} onPageNumberClick={nextPageNumber} /> */}
-      {/* <div className="contact-list pd-top-120 pd-bottom-90">
-        <div className="container">
-          <div className="row justify-content-center">
-            <div className="col-lg-4">
-              <div className="contact-list-inner">
-                <div className="media">
-                  <div className="media-left">
-                    <img src={publicUrl + "assets/img/icon/17.png"} alt="img" />
-                  </div>
-                  <div className="media-body align-self-center">
-                    <h5>Số Điện Thoại</h5>
-                    <p>000 2324 39493</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-4">
-              <div className="contact-list-inner">
-                <div className="media">
-                  <div className="media-left">
-                    <img src={publicUrl + "assets/img/icon/18.png"} alt="img" />
-                  </div>
-                  <div className="media-body align-self-center">
-                    <h5>Email Của Chúng Tôi</h5>
-                    <p>name@website.com</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-4">
-              <div className="contact-list-inner">
-                <div className="media">
-                  <div className="media-left">
-                    <img src={publicUrl + "assets/img/icon/16.png"} alt="img" />
-                  </div>
-                  <div className="media-body align-self-center">
-                    <h5>Địa Chỉ Của Chúng Tôi</h5>
-                    <p>2 St, Loskia, amukara.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> */}
-
       <div className="counter-area pd-bottom-120">
+      <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={loading}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
         {page === "basicInfo" && (
           <div>
             <div className="container mt-5">
@@ -554,11 +522,7 @@ const Registration = () => {
                         </div>
                       </div>
                       <div className="col-12 d-flex justify-content-end">
-                        <button
-                          className="btn btn-base"
-                        >
-                          Hoàn tất
-                        </button>
+                        <button className="btn btn-base">Hoàn tất</button>
                       </div>
                     </div>
                   </form>

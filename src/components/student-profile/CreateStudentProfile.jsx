@@ -7,12 +7,14 @@ import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
 import Swal from "sweetalert2";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { imageDb } from "../FirebaseImage/Config";
+import { Backdrop, CircularProgress } from "@mui/material";
 
 const MultiStepProgressBar = () => {};
 
 const CreateStudentProfile = () => {
   const [page, setPage] = useState("basicInfo");
   const customerId = useSelector((state) => state.auth.userById.customerId);
+  const loading = useSelector((state) => state?.student?.loading);
   const [formData, setFormData] = useState({
     fullName: "",
     nationalId: "",
@@ -24,6 +26,9 @@ const CreateStudentProfile = () => {
     placeOfBirth: "",
     dateOfBirth: "",
     fileString: [],
+    englishLevel: "",
+    grade: "",
+    img: "",
     customerId,
   });
   const [errors, setErrors] = useState({});
@@ -37,14 +42,16 @@ const CreateStudentProfile = () => {
   //   }));
   // };
   const handleUpload = async (e) => {
-    const selectedFile = e.target.files && e.target.files[0]; // Check if files exist before accessing the first file
-
-    if (selectedFile) {
+    const selectedFiles = e.target.files; // Get all selected files
+    // Loop through each file and upload to Firebase Storage
+    for (let i = 0; i < selectedFiles.length; i++) {
+      const selectedFile = selectedFiles[i];
       const imgRef = ref(imageDb, `Image/ProfileStudent/${selectedFile.name}`);
       try {
         await uploadBytes(imgRef, selectedFile);
         const imageUrl = await getDownloadURL(imgRef);
         console.log(imageUrl);
+        // Update the state properly to append the new file URL
         setFormData((prevState) => ({
           ...prevState,
           fileString: [...prevState.fileString, imageUrl],
@@ -52,11 +59,28 @@ const CreateStudentProfile = () => {
       } catch (error) {
         console.error(`Error uploading ${selectedFile.name}:`, error);
       }
-    } else {
-      console.error("No file selected.");
     }
   };
-
+  const handleImageUpload = async (e) => {
+    const selectedFiles = e.target.files; // Get all selected files
+    // Loop through each file and upload to Firebase Storage
+    for (let i = 0; i < selectedFiles.length; i++) {
+      const selectedFile = selectedFiles[i];
+      const imgRef = ref(imageDb, `Image/ProfileStudent/${selectedFile.name}`);
+      try {
+        await uploadBytes(imgRef, selectedFile);
+        const imageUrl = await getDownloadURL(imgRef);
+        console.log(imageUrl);
+        // Update the state properly to append the new file URL
+        setFormData((prevState) => ({
+          ...prevState,
+          img: imageUrl,
+        }));
+      } catch (error) {
+        console.error(`Error uploading ${selectedFile.name}:`, error);
+      }
+    }
+  };
   const nextPageNumber = (pageNumber) => {
     setPage(pageNumber);
   };
@@ -149,6 +173,22 @@ const CreateStudentProfile = () => {
     { value: "Đà Nẵng", label: "Đà Nẵng" },
     { value: "Hải Phòng", label: "Hải Phòng" },
     { value: "Hà Nội", label: "Hà Nội" },
+  ];
+
+  // value grade
+  const gradeOptions = [
+    { value: "TOIEC", label: "TOIEC" },
+    { value: "IETLS", label: "IETLS" },
+    { value: "TOEFL", label: "TOEFL " },
+    { value: "Other", label: "Other " },
+  ];
+  // value english level
+  const englishLevelOptions = [
+    { value: "A1, A2", label: "A1, A2 " },
+    { value: "B1", label: "B1" },
+    { value: "B2", label: "B2 " },
+    { value: "C1", label: "C1 " },
+    { value: "C2", label: "C2 " },
   ];
   const dispatch = useDispatch();
 
@@ -339,8 +379,44 @@ const CreateStudentProfile = () => {
                           />
                         </div>
                       </div>
+                      <div className="col-lg-6 mb-3">
+                        <Select
+                          placeholder="Chứng chỉ tiếng anh"
+                          name="grade"
+                          value={gradeOptions.find(
+                            (option) => option.value === formData.grade
+                          )}
+                          onChange={(e) => {
+                            handleInputChange({
+                              target: {
+                                name: "grade",
+                                value: e.value,
+                              },
+                            });
+                          }}
+                          options={gradeOptions}
+                        />
+                      </div>
+                      <div className="col-lg-6 mb-3">
+                        <Select
+                          placeholder="Trình độ tiếng anh"
+                          name="englishLevel"
+                          value={englishLevelOptions.find(
+                            (option) => option.value === formData.englishLevel
+                          )}
+                          onChange={(e) => {
+                            handleInputChange({
+                              target: {
+                                name: "englishLevel",
+                                value: e.value,
+                              },
+                            });
+                          }}
+                          options={englishLevelOptions}
+                        />
+                      </div>
                       {/* Gender */}
-                      <div className="col-lg-6">
+                      <div className="col-lg-6 mb-3">
                         <Select
                           value={genderOptions.find(
                             (option) => option.value === formData.gender
@@ -363,6 +439,7 @@ const CreateStudentProfile = () => {
                         <div className=" style-bg-border mb-4">
                           <input
                             type="file"
+                            multiple
                             // onChange={handleFileChange}
                             name="fileString"
                             onChange={(e) => {
@@ -371,6 +448,27 @@ const CreateStudentProfile = () => {
                           />
                         </div>
                       </div>
+                      <div className="col-lg-6">
+                        <div className=" style-bg-border mb-4">
+                          <label
+                            htmlFor="imageInput"
+                            className="custom-file-upload"
+                          >
+                            Chọn ảnh đại diện
+                          </label>
+                          <input
+                            id="imageInput"
+                            type="file"
+                            name="image"
+                            onChange={(e) => {
+                              handleImageUpload(e);
+                            }}
+                            title="Chọn hình đại diện hồ sơ"
+                            className="hidden"
+                          />
+                        </div>
+                      </div>
+
                       {/* Additional Information */}
                       <div className="col-12">
                         <div className="single-input-inner style-bg-border">
@@ -390,7 +488,12 @@ const CreateStudentProfile = () => {
             </div>
           </div>
         )}
-
+        <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={loading}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
         {page === "complete" && (
           <div className="container">
             <div

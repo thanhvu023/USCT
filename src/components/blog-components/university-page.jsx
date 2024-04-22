@@ -4,16 +4,23 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { getAllUniversity } from "../../redux/slice/universitySlice";
 import Sidebar from "./sidebar";
+import { Backdrop, CircularProgress } from "@mui/material";
 function UniversityPage() {
   const dispatch = useDispatch();
   const universities = useSelector((state) => state.university.universities);
   useEffect(() => {
     dispatch(getAllUniversity());
   }, []);
-
+  const loading = useSelector((state) => state?.university?.loading);
   return (
     <div className="blog-area pd-top-120 pd-bottom-120 go-top">
       <div className="container">
+      <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={loading}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
         <div className="row">
           <div className="col-lg-8">
             {/* Giả sử mỗi đoạn sau đây là một trường đại học cụ thể */}

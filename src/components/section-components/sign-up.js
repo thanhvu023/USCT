@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Form } from "react-bootstrap";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { signup } from "../../redux/slice/authSlice";
+import { Backdrop, CircularProgress } from "@mui/material";
 
 function SignUp() {
   const [formData, setFormData] = useState({
@@ -21,7 +22,7 @@ function SignUp() {
 
   const [errors, setErrors] = useState({});
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
-
+  const loading = useSelector((state) => state?.auth?.loading);
   const validateForm = () => {
     const newErrors = {};
 
@@ -99,6 +100,12 @@ function SignUp() {
   return (
     <div className="signup-page-area pd-top-120 pd-bottom-120">
       <div className="container">
+      <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={loading}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
         <div className="row justify-content-center">
           <div className="col-xl-6 col-lg-7">
             <form className="signin-inner" onSubmit={handleSubmit}>

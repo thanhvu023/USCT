@@ -5,8 +5,18 @@ export const getRegistrationByCustomerId = createAsyncThunk(
   "registration/getRegistrationById",
   async (param, thunkAPI) => {
     try {
-      const majorId = param;
       const res = await instance.get(`/registration-forms/customer/${param}`);
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response);
+    }
+  }
+);
+export const getRegistrationByConsultantId = createAsyncThunk(
+  "registration/getRegistrationByConsultantId",
+  async (param, thunkAPI) => {
+    try {
+      const res = await instance.get(`/registration-forms/consultant/${param}`);
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response);
@@ -17,7 +27,9 @@ export const getRegistrationByRegistrationFormId = createAsyncThunk(
   "registration/getRegistrationByRegistrationFormId",
   async (registrationFormId, thunkAPI) => {
     try {
-      const res = await instance.get(`/registration-forms/${registrationFormId}`);
+      const res = await instance.get(
+        `/registration-forms/${registrationFormId}`
+      );
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response);
@@ -41,8 +53,8 @@ export const createRegistration = createAsyncThunk(
   async (param, thunkAPI) => {
     try {
       console.log(param);
-      const res = await instance.post(`/registration-forms`,param);
-      return res.data
+      const res = await instance.post(`/registration-forms`, param);
+      return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response);
     }
@@ -52,7 +64,10 @@ export const updateRegistrationById = createAsyncThunk(
   "registration/updateRegistrationById",
   async ({ registrationFormId, consultantId, status }, thunkAPI) => {
     try {
-      const res = await instance.put(`/registration-forms/${registrationFormId}`, { consultantId, status });
+      const res = await instance.put(
+        `/registration-forms/${registrationFormId}`,
+        { consultantId, status }
+      );
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response);
@@ -64,12 +79,21 @@ const initialState = {
   loading: false,
   registrationForms: [],
   registrationById: [],
+  registrationByCustomerId: [],
+  registrationByConsultantId: [],
 };
 
 export const registrationSlice = createSlice({
   name: "registration",
   initialState,
-  reducers: {},
+  reducers: {
+    resetRegistration: (state) => {
+      (state.registrationForms = []),
+        (state.registrationById = []),
+        (state.registrationByConsultantId = []),
+        (state.registrationByCustomerId = []);
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getRegistrationByCustomerId.pending, (state) => {
@@ -77,10 +101,22 @@ export const registrationSlice = createSlice({
       })
       .addCase(getRegistrationByCustomerId.fulfilled, (state, action) => {
         state.loading = false;
-        state.registrationById = action.payload;
+        state.registrationByCustomerId = action.payload;
         state.error = null;
       })
       .addCase(getRegistrationByCustomerId.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(getRegistrationByConsultantId.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getRegistrationByConsultantId.fulfilled, (state, action) => {
+        state.loading = false;
+        state.registrationByConsultantId = action.payload;
+        state.error = null;
+      })
+      .addCase(getRegistrationByConsultantId.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       })
@@ -99,22 +135,27 @@ export const registrationSlice = createSlice({
       .addCase(getRegistrationByRegistrationFormId.pending, (state) => {
         state.loading = true;
       })
-      .addCase(getRegistrationByRegistrationFormId.fulfilled, (state, action) => {
-        state.loading = false;
-        state.registrationById = action.payload;
-        state.error = null;
-      })
-      .addCase(getRegistrationByRegistrationFormId.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message;
-      })
+      .addCase(
+        getRegistrationByRegistrationFormId.fulfilled,
+        (state, action) => {
+          state.loading = false;
+          state.registrationById = action.payload;
+          state.error = null;
+        }
+      )
+      .addCase(
+        getRegistrationByRegistrationFormId.rejected,
+        (state, action) => {
+          state.loading = false;
+          state.error = action.error.message;
+        }
+      )
       .addCase(updateRegistrationById.pending, (state) => {
         state.loading = true;
       })
       .addCase(updateRegistrationById.fulfilled, (state, action) => {
         state.loading = false;
-        state.msg = "Update successful"; 
-
+        state.msg = "Update successful";
       })
       .addCase(updateRegistrationById.rejected, (state, action) => {
         state.loading = false;
@@ -123,5 +164,5 @@ export const registrationSlice = createSlice({
   },
 });
 
-const { reducer: registrationReducer } = registrationSlice;
-export { registrationReducer as default };
+const { reducer: registrationReducer,actions:{resetRegistration} } = registrationSlice;
+export { registrationReducer as default ,resetRegistration};

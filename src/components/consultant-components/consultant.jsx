@@ -1,21 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Nav, Tab } from "react-bootstrap";
 import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
 import { Link } from "react-router-dom";
 
 import PropTypes from "prop-types";
-import StudentProfileList from "../section-components/table/student-profiles";
-import { useDispatch, useSelector } from "react-redux";
-import jwtDecode from "jwt-decode";
-import { getRegistrationByConsultantId } from "../../redux/slice/consultantSlice";
 import ConsultantList from "./consultant-list";
-const options = [
-  { value: "basic_english", label: "Tiếng Anh cơ bản" },
-  { value: "ielts", label: "IELTS" },
-  { value: "toefl", label: "TOEFL" },
-  { value: "toeic", label: "TOEIC" },
-  { value: "esol", label: "ESOL" },
-];
+
 
 // Options for country select
 
@@ -77,11 +67,11 @@ const ConsultantProgram = () => {
       <Sidebar className="ml-4">
         <Menu className="mt-5">
           <MenuItem
-            component={<Link to={`/students-profile/registrationList`}></Link>}
+            component={<Link to={`/consultant`}></Link>}
           >
             Danh sách đơn tư vấn
           </MenuItem>
-          <MenuItem component={<Link to={`/students-profile`}></Link>}>
+          {/* <MenuItem component={<Link to={`/students-profile`}></Link>}>
             Hồ sơ học sinh
           </MenuItem>
           <MenuItem
@@ -91,7 +81,7 @@ const ConsultantProgram = () => {
           </MenuItem>
           <MenuItem component={<Link to={`/create-student-profile`}></Link>}>
             Khởi tạo hồ sơ học sinh
-          </MenuItem>
+          </MenuItem> */}
         </Menu>
       </Sidebar>
       <div className="col-xl-8">
@@ -110,7 +100,7 @@ const ConsultantProgram = () => {
                               style={{ fontWeight: "bold" }}
                             ></i>
                             <strong style={{ fontSize: "1.2rem" }}>
-                              Danh sách hồ sơ du học
+                              Danh sách đơn tư vấn
                             </strong>
                           </span>
                         </Nav.Link>

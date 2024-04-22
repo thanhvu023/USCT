@@ -6,17 +6,16 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getStudentProfileById } from "../../../redux/slice/studentSice";
+import { Backdrop, CircularProgress } from "@mui/material";
 
 const StudentProfileDetails = () => {
-  let publicUrl = process.env.PUBLIC_URL + "/";
-
   const { studentProfileId } = useParams();
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getStudentProfileById(studentProfileId));
   }, []);
-  const studentDetail = useSelector((state)=>state.student.profileById)
-  console.log(studentDetail)
+  const studentDetail = useSelector((state) => state.student.profileById);
+  console.log(studentDetail);
   const [editMode, setEditMode] = useState(false);
   const handleEditClick = () => {
     setEditMode(true);
@@ -149,28 +148,32 @@ const StudentProfileDetails = () => {
             />
           </div>
           <div className="row">
-  <div className="col-md-6 text-left">
-    <button className="btn btn-primary" type="submit">
-      Cập nhật
-    </button>
-  </div>
-  <div className="col-md-6 text-right mb-3">
-    <Link to="/students-profile" className="btn btn-secondary">
-      Quay lại
-    </Link>
-  </div>
-</div>
-
-          
-          
+            <div className="col-md-6 text-left">
+              <button className="btn btn-primary" type="submit">
+                Cập nhật
+              </button>
+            </div>
+            <div className="col-md-6 text-right mb-3">
+              <Link to="/students-profile" className="btn btn-secondary">
+                Quay lại
+              </Link>
+            </div>
+          </div>
         </form>
       </div>
     </div>
   );
+  const loading = useSelector((state) => state?.student?.loading);
 
   return (
     <>
       <div className="col-xl-8 mx-auto mt-5">
+        <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={loading}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
         <div className="card">
           <div className="inner-content">
             <div className="card-body">
@@ -191,9 +194,7 @@ const StudentProfileDetails = () => {
                               <div className="text-center p-3 overlay-box">
                                 <div className="profile-photo">
                                   <img
-                                    src={
-                                      publicUrl + "assets/img/author/pic2.jpg"
-                                    }
+                                    src={studentDetail.img}
                                     alt="img"
                                     className="bg-info rounded-circle mb-4"
                                     style={{ width: "100px", height: "100px" }}
@@ -207,7 +208,7 @@ const StudentProfileDetails = () => {
                             </div>
                             <div className="col-lg-7 align-self-center">
                               <div className="row mb-2 align-items-center">
-                                <div className="col-4">
+                                <div className="col-6">
                                   <h5 className="f-w-500">
                                     Nơi Sinh
                                     <span className="pull-right">:</span>
@@ -218,7 +219,7 @@ const StudentProfileDetails = () => {
                                 </div>
                               </div>
                               <div className="row mb-2 align-items-center">
-                                <div className="col-4">
+                                <div className="col-6">
                                   <h5 className="f-w-500">
                                     Email
                                     <span className="pull-right">:</span>
@@ -228,9 +229,9 @@ const StudentProfileDetails = () => {
                                   <span>{studentDetail.email}</span>
                                 </div>
                               </div>
-                             
+
                               <div className="row mb-2 align-items-center">
-                                <div className="col-4">
+                                <div className="col-6">
                                   <h5 className="f-w-500">
                                     Số điện thoại
                                     <span className="pull-right">:</span>
@@ -241,9 +242,9 @@ const StudentProfileDetails = () => {
                                 </div>
                               </div>
                               <div className="row mb-2 align-items-center">
-                                <div className="col-4">
+                                <div className="col-6">
                                   <h5 className="f-w-500">
-                                    ID Quốc Gia
+                                    Căn cước công dân
                                     <span className="pull-right">:</span>
                                   </h5>
                                 </div>
@@ -283,9 +284,26 @@ const StudentProfileDetails = () => {
 
                           <div className="profile-skills mb-5">
                             <h4 className="text-primary mb-2">
-                              Trình độ tiếng Anh
+                              Văn bằng tiếng anh
                             </h4>
-                            {options.map((option, index) => (
+                            <div className="education-item">
+                              <p
+                                className="education-year"
+                                style={{ fontSize: "16px", fontWeight: "bold" }}
+                              ></p>
+                              <div className="education-details">
+                                <ul>
+                                  <li>
+                                    Chứng chỉ tiếng anh: {studentDetail.grade}
+                                  </li>
+                                  <li>
+                                    Trình độ tiếng anh:{" "}
+                                    {studentDetail.englishLevel}
+                                  </li>
+                                </ul>
+                              </div>
+                            </div>
+                            {/* {options.map((option, index) => (
                               <Link
                                 key={index}
                                 to="/app-profile"
@@ -307,7 +325,7 @@ const StudentProfileDetails = () => {
                               >
                                 {option.label}
                               </Link>
-                            ))}
+                            ))} */}
                           </div>
                         </div>
                       </div>

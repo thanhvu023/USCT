@@ -18,6 +18,8 @@ export const login = createAsyncThunk(
       const role = jwtDecode(token).Role;
       if (role === "ROLE_ADMIN") {
         navigate("/admin");
+      } else if (role === "ROLE_CONSULTANT") {
+        navigate("/consultant");
       } else {
         navigate("/");
       }
@@ -40,10 +42,10 @@ export const getUserById = createAsyncThunk(
   }
 );
 export const getAllUsers = createAsyncThunk(
-  "customer/getUserById",
+  "customer/getAllUsers",
   async (_, thunkAPI) => {
     try {
-      const res = await instance.get("/account/customer"); 
+      const res = await instance.get("/account/customer");
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.res.data);
@@ -169,6 +171,18 @@ export const authSlice = createSlice({
         state.loading = false;
         state.error = null;
       })
+      .addCase(getAllUsers.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getAllUsers.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+        state.error = action.error;
+      })
+      .addCase(getAllUsers.rejected, (state) => {
+        state.loading = false;
+        state.error = null;
+      })
       .addCase(getUserById.pending, (state) => {
         state.loading = true;
       })
@@ -217,7 +231,6 @@ export const authSlice = createSlice({
         state.loading = false;
         state.error = null;
       });
-      
   },
 });
 

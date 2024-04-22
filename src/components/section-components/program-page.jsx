@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { getAllProgram } from "../../redux/slice/programSlice";
+import { Backdrop, CircularProgress } from "@mui/material";
 
 // const handleSliderChange = (event, setCurrentValue) => {
 //   setCurrentValue(event.target.value);
@@ -100,58 +101,59 @@ function ProgramsPage() {
     setProgramName(event.target.value); // Update the program name state with the input value
   };
   const dispatch = useDispatch();
-  const programs = useSelector((state) => state.program.programs);
-  const loading = useSelector((state) => state.program.loading);
-
+  const programs = useSelector((state) => state?.program?.programs);
+  const loading = useSelector((state) => state?.program?.loading);
   // const token = useSelector((state) => state.auth?.token);
   useEffect(() => {
     dispatch(getAllProgram(programName)); // Dispatch action with program name
   }, [dispatch, programName]);
   return (
-    <div className="blog-area pd-top-120 pd-bottom-120">
+    <div className="blog-area pd-top-60 pd-bottom-60">
       <div className="container">
+        <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={loading}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
         <div className="row">
           <div className="col-lg-8 order-lg-12 m-0">
             <div className="row go-top">
-              {loading ? (
-                <div>Loading...</div>
-              ) : (
-                programs.map((program, index) => (
-                  <div key={index} className="col-md-6">
-                    <div className="single-course-inner">
-                      <div className="thumb">
-                        <img src={"assets/img/course/programs.jpg"} alt="img" />
-                      </div>
-                      <div className="details">
-                        <div className="details-inner ">
-                          {/* <div className="emt-user">
+              {programs.map((program, index) => (
+                <div key={index} className="col-md-6">
+                  <div className="single-course-inner">
+                    <div className="thumb">
+                      <img src={"assets/img/course/programs.jpg"} alt="img" />
+                    </div>
+                    <div className="details">
+                      <div className="details-inner ">
+                        {/* <div className="emt-user">
                             <span className="align-self-center">abc</span>
                           </div> */}
-                          <h6>
-                            <Link to={`/program-details/${program.programId}`}>
-                              {program.nameProgram}
-                            </Link>
-                          </h6>
-                        </div>
-                        <div className="emt-course-meta">
-                          <div className="row">
-                            <div className="col-6">
-                              <div className="rating">
-                                <span>Lộ trình: {program.duration}</span>
-                              </div>
+                        <h6>
+                          <Link to={`/program-details/${program.programId}`}>
+                            {program.nameProgram}
+                          </Link>
+                        </h6>
+                      </div>
+                      <div className="emt-course-meta">
+                        <div className="row">
+                          <div className="col-6">
+                            <div className="rating">
+                              <span>Lộ trình: {program.duration}</span>
                             </div>
-                            {/* <div className="col-6">
+                          </div>
+                          {/* <div className="col-6">
                               <div className="price text-right">
                                 Học phí: <span>{program.tuition}$</span>
                               </div>
                             </div> */}
-                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                ))
-              )}
+                </div>
+              ))}
             </div>
             {/* <nav className="td-page-navigation">
               <ul className="pagination">
