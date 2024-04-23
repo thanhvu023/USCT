@@ -24,9 +24,23 @@ export const getConsultantById = createAsyncThunk(
     }
   }
 );
+export const getAllConsultants = createAsyncThunk(
+  "consultant/getAllConsultants",
+  async (_, thunkAPI) => {
+    try {
+      const res = await instance.get("/account/consultants");
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response);
+    }
+  }
+);
+
 const initialState = {
   registrationByConsultantId: [],
   consultantById: {},
+  consultants: [],
+
 };
 
 export const consultantSlice = createSlice({
@@ -58,6 +72,17 @@ export const consultantSlice = createSlice({
         state.consultantById = action.payload;
       })
       .addCase(getConsultantById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(getAllConsultants.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getAllConsultants.fulfilled, (state, action) => {
+        state.loading = false;
+        state.consultants = action.payload;
+      })
+      .addCase(getAllConsultants.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       });

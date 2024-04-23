@@ -13,55 +13,45 @@ import Registration from "./admin-components/registration-components/registratio
 import ProgramApplicationPage from "./admin-components/program-application-components/program-apllicationbyStudentprofileId";
 
 
-
 const AdminPage = () => {
   const [main, setMain] = useState("admin");
-  console.log("main là :", main);
+
   const handleAllConsultantClick = () => {
     setMain("Tư vấn viên");
   };
+
   const componentMap = {
-    "Tư vấn viên": <AllConsultant setMain={setMain}/>,
-    "Khách hàng": <AllCustomer  /> , 
+    "Tư vấn viên": <AllConsultant setMain={setMain} />,
+    "Khách hàng": <AllCustomer />,
     "Chương trình": <AllPrograms />,
-    "Hồ sơ học sinh": <ProgramApplicationPage />,
+    "Hồ sơ đăng ký": <ProgramApplicationPage />,
     "Đơn tư vấn": <Registration />,
-    "Test1": <Test1/>,
-
-    
+    "Test1": <Test1 />,
   };
-  
+
   const getContentComponent = (main) => {
+    const selectedComponent = componentMap[main];
+    return selectedComponent || <AdminHome handleAllConsultantClick={handleAllConsultantClick} />;
+  };
 
-    const selectedComponent = componentMap[main] || <AdminHome handleAllConsultantClick={handleAllConsultantClick} />;
-    return selectedComponent;
-  };
-  
-  const renderContent = () => {
-        return (
-        <div className="content-wrapper" style={{ flex: '10', display: 'flex', flexDirection: 'column' }}> 
-        {getContentComponent(main)}
-      </div>
-        )
-    
-    
-  };
-  
-  return (
-    <>
-      <div id="main-wrapper">  
-        <div id="content-wrapper" className="d-flex flex-row"> 
-          <div className="sidebar-wrapper" style={{ flex: '2' }}> 
-            <Fragment>
-              <NavHader/>
-              <SideBarAd setMain={setMain} />
-            </Fragment>
-          </div>
-          {renderContent()}
-        </div>
-        <Footer/>
-      </div>
-    </>
+  const renderContent = () => (
+    <div className="content-wrapper" style={{ flex: '10', display: 'flex', flexDirection: 'column' }}> 
+      {getContentComponent(main)}
+    </div>
   );
-}
+
+  return (
+    <div id="main-wrapper" >  
+      <div id="content-wrapper" className="d-flex flex-row"> 
+        <div className="sidebar-wrapper" style={{ flex: '2' }}> 
+          <NavHader/>
+          <SideBarAd setMain={setMain} />
+        </div>
+        {renderContent()}
+      </div>
+    </div>
+  );
+};
+
 export default AdminPage;
+

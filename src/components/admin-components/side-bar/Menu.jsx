@@ -6,7 +6,7 @@ export const MenuList = [
     {
         title: 'Thống kê',	
         to: 'admin',
-        classsChange: 'mm-collapse',		
+        classChange: 'mm-collapse',		
         iconStyle: <i className="la la-home" />,
         filterName: 'admin'
     },
@@ -17,7 +17,7 @@ export const MenuList = [
     //Professors    
     {
         title: 'Tư vấn viên',	
-        classsChange: 'mm-collapse',		
+        classChange: 'mm-collapse',		
         iconStyle: <i className="la la-user" />,
         filterName: 'consultant',
         // content: [
@@ -53,36 +53,36 @@ export const MenuList = [
     //Programs    
     {
         title: 'Chương trình',	
-        classsChange: 'mm-collapse',		
+        classChange: 'mm-collapse',		
         iconStyle: <i className="la la-graduation-cap" />,
         filterName: 'program',
     },
     /// Student Profile
     {
-        title:'Hồ sơ học sinh',
-        classsChange: 'mm-collapse',
+        title:'Hồ sơ đăng ký',
+        classChange: 'mm-collapse',
         iconStyle: <i className="la la-file-text" />,
-        filterName: 'Hồ sơ học sinh',
+        filterName: 'programApplication',
        
     },
 
     /// Registration Forms
     {
         title:'Đơn tư vấn',
-        classsChange: 'mm-collapse',
+        classChange: 'mm-collapse',
         iconStyle: <i className="
         la la-pencil-square" />,
-        filterName: 'Đơn tư vấn',
+        filterName: 'registrationForms',
        
     },
 
     /// Test
     {
         title:'Test1',
-        classsChange: 'mm-collapse',
+        classChange: 'mm-collapse',
         iconStyle: <i className="
         la la-pencil-square" />,
-        filterName: 'Test1',
+        filterName: 'test1',
        
     },
  

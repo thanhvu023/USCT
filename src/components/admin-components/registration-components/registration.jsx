@@ -9,6 +9,8 @@ import {
   getRegistration,
   updateRegistrationById
 } from "../../../redux/slice/registrationSlice";
+import { getAllUsers } from "../../../redux/slice/authSlice";
+
 // import './registration.css'
 const theadData = [
   { heading: "ID đơn", sortingVale: "id" },
@@ -60,7 +62,7 @@ const Registration = () => {
   // const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedConsultantName, setSelectedConsultantName] = useState("");
 
-  const customers = useSelector((state) => state.auth.userById);
+  const customers = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
   const customerId = jwtDecode(token).UserId;
@@ -118,6 +120,9 @@ const Registration = () => {
     dispatch(getRegistration());
   }, [dispatch]);
 
+  useEffect(() => {
+    dispatch(getAllUsers());
+  }, [dispatch]);
   // const registrationStatusList = useSelector((state) => state.auth.registrationStatusList);
   // console.log("registrationStatusList",registrationStatusList)
   const handleCloseCheckModal = () => setShowCheckModal(false);
@@ -238,7 +243,7 @@ const Registration = () => {
         <p>Loading...</p>
       ) : (
         <>
-          <Row>
+          <Row >
             <div className="col-lg-12">
               <Alert
                 show={showDeleteSuccess}
@@ -248,7 +253,7 @@ const Registration = () => {
               >
                 Xóa thành công!
               </Alert>
-              <div className="card">
+              <div className="card " >
                 <div className="card-header d-flex justify-content-between align-items-center">
                   <h4 className="card-title">
                     Danh sách đơn tư vấn của khách hàng
@@ -336,18 +341,19 @@ const Registration = () => {
                         <tbody>
                           {(searchResults.length > 0 ? searchResults : initialList).map(
                             (registration) => (
-                              <tr key={registration.id}>
+                              <tr key={registration.id}  
+                              className="table-row-border"
+                               onClick={() =>
+                                handleClickName(registration)
+                              }>
                                 <td>
                                  
                                     {registration.registrationFormId}
                                 </td>
-                                <Link
-                                    onClick={() =>
-                                      handleClickName(registration)
-                                    }
-                                  >
-                                <td>{registration.majorChoose}</td>
-                                </Link>
+                                <td title={`Tên khách hàng: ${getFullName(registration.customerId)}`}>
+  {registration.majorChoose}
+</td>
+
                                 <td>{registration.programChoose}</td>
                                 <td>{getFullNameByConsultantId(registration.consultantId)}</td>
                                 <td>

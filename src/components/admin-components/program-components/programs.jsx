@@ -39,8 +39,8 @@ const AllPrograms = () => {
   const [selectedProgramId, setSelectedProgramId] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState(null);
-
   const loading = useSelector((state) => state.program.loading);
+ 
   const [showAllPrograms, setShowAllPrograms] = useState(true);
 
   const [editedProgram, setEditedProgram] = useState(
@@ -225,19 +225,16 @@ const AllPrograms = () => {
     const university = universities.find(
       (university) => university.id === universityId
     );
-    return university ? university.universityName : "Unknownhihi";
+    return university ? university.universityName : "Unknown";
   };
 
   const dataSearch = (e) => {
     const searchValue = e.target.value.toLowerCase();
     if (searchValue === "") {
-      // Nếu không có giá trị tìm kiếm, hiển thị tất cả chương trình
       setFeeData([...programs]);
       setShowAllPrograms(true);
     } else {
-      // Nếu có giá trị tìm kiếm, lọc dữ liệu từ API
       const updatedData = programs.filter((item) => {
-        // Hãy thay thế các trường sau với các trường tương ứng từ API của bạn
         let searchData =
           `${item.nameProgram} ${item.programTypeId} ${item.majorId} ${item.createDate}`.toLowerCase();
         return searchData.includes(searchValue);
@@ -265,44 +262,45 @@ const AllPrograms = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Gọi hàm dispatch để gửi thông tin chương trình đã chỉnh sửa lên server
     dispatch(updateProgram(editedProgram))
       .unwrap()
       .then((data) => {
-        // Hiển thị thông báo chỉnh sửa chương trình thành công
         Swal.fire({
           icon: "success",
           title: "Chỉnh sửa chương trình thành công!",
           showConfirmButton: false,
-          timer: 1500, // Thời gian hiển thị thông báo
+          timer: 1500, 
         });
-        // Đặt trạng thái cập nhật chương trình thành true
         setProgramUpdated(true);
-        // Đóng modal chỉnh sửa chương trình
         handleCloseEditModal();
       })
       .catch((error) => {
-        // Xử lý khi có lỗi xảy ra trong quá trình cập nhật
         console.error("Error updating program:", error);
       });
   };
 
   useEffect(() => {
-    // Nếu trạng thái cập nhật chương trình là true, gọi lại API để lấy danh sách chương trình mới
     if (programUpdated) {
       dispatch(getAllProgram());
-      // Đặt lại trạng thái cập nhật chương trình về false sau khi đã cập nhật xong
       setProgramUpdated(false);
     }
   }, [programUpdated, dispatch]);
 
   const RenderPrograms = () => {
+    const itemsPerPage = 6;
+    const [currentPage, setCurrentPage] = useState(1);
+  
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentPrograms = showAllPrograms ? programs.slice(indexOfFirstItem, indexOfLastItem) : feeData.slice(indexOfFirstItem, indexOfLastItem);
+  
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
     return (
       <div className="row">
         {loading ? (
           <div>Loading...</div>
         ) : showAllPrograms ? (
-          programs.map((program, index) => (
+          currentPrograms.map((program, index) => (
             <div className="col-lg-4 col-md-6 col-sm-6 col-12 mb-4" key={index}>
               <div className="card mx-4 mt-4">
                 <div className="card-body" >
@@ -381,9 +379,9 @@ const AllPrograms = () => {
               </div>
             </div>
           ))
-        ) : (
-          feeData.map((program, index) => (
-            <div className="col-lg-4 col-md-6 col-sm-6 col-12 mb-4" key={index}>
+          ) : (
+            currentPrograms.map((program, index) => (
+              <div className="col-lg-4 col-md-6 col-sm-6 col-12 mb-4" key={index}>
               <div className="card mx-4 mt-4">
                 <div className="card-body">
                   <div className="d-flex justify-content-end">
@@ -460,6 +458,25 @@ const AllPrograms = () => {
             </div>
           ))
         )}
+          <div className="col-12 mt-4">
+        <ul className="pagination justify-content-center">
+          {showAllPrograms
+            ? Array.from({ length: Math.ceil(programs.length / itemsPerPage) }).map((_, index) => (
+                <li key={index} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
+                  <button onClick={() => paginate(index + 1)} className="page-link">
+                    {index + 1}
+                  </button>
+                </li>
+              ))
+            : Array.from({ length: Math.ceil(feeData.length / itemsPerPage) }).map((_, index) => (
+                <li key={index} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
+                  <button onClick={() => paginate(index + 1)} className="page-link">
+                    {index + 1}
+                  </button>
+                </li>
+              ))}
+        </ul>
+      </div>
       </div>
     );
   };
