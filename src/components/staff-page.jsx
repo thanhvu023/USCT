@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate từ react-router-dom
 import AdminHome from "./admin-components/home";
-import SideBarAd from "./admin-components/side-bar/SideBar";
+import SideBarAd from "./admin-components/side-bar/side-bar-admin";
 import NavHader from "./admin-components/NavHader";
 import Footer from "./global-components/footer";
 import AllCustomer from "./admin-components/customer-components/all-customer";
@@ -25,7 +25,7 @@ const StaffPage = () => {
     "Chương trình": <AllPrograms />,
     "Hồ sơ đăng ký": <ProgramApplicationPage />,
     "Đơn tư vấn": <Registration />,
-    "Test1": <Test1 />,
+   
   };
 
   const getContentComponent = (main) => {

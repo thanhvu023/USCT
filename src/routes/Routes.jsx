@@ -25,7 +25,7 @@ import jwtDecode from "jwt-decode";
 import PrivateRoute from "./PrivateRoute.jsx";
 import AdminRoute from "./AdminRoute.jsx";
 import ConsultantPage from "../components/consultant-page.jsx";
-import RegistrationDetailConsultantPage from "../components/RegistrationFormConsultant.jsx";
+import RegistrationDetailConsultantPage from "../components/registration-form-consultant.jsx";
 import ConsultantProfilePage from "../components/consultantProfilePage.jsx";
 
 const Routers = () => {

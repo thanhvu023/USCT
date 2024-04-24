@@ -3,7 +3,7 @@ import { Col, Dropdown, Row, Nav, Tab } from 'react-bootstrap';
 import { Link, useNavigate } from "react-router-dom"; // Import Link và useNavigate từ react-router-dom
 
 
-import { ProgressCard } from './CardDesign';
+import { ProgressCard } from './card-design';
 import IncomeExpense from './IncomeExpense';
 const tabelData = [
 	{no:'01', name : "Jack Ronan",  proff:"Airi Satou", date:"02 jan 2024", status:'Inactive', color:'danger', subject:'Commerce', fees:'120'},
