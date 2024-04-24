@@ -13,7 +13,7 @@ import Registration from "./admin-components/registration-components/registratio
 import ProgramApplicationPage from "./admin-components/program-application-components/program-apllicationbyStudentprofileId";
 
 
-const AdminPage = () => {
+const StaffPage = () => {
   const [main, setMain] = useState("admin");
 
   const handleAllConsultantClick = () => {
@@ -21,8 +21,7 @@ const AdminPage = () => {
   };
 
   const componentMap = {
-    "Tư vấn viên": <AllConsultant setMain={setMain} />,
-    "Khách hàng": <AllCustomer />,
+
     "Chương trình": <AllPrograms />,
     "Hồ sơ đăng ký": <ProgramApplicationPage />,
     "Đơn tư vấn": <Registration />,
@@ -53,5 +52,5 @@ const AdminPage = () => {
   );
 };
 
-export default AdminPage;
+export default StaffPage;
 

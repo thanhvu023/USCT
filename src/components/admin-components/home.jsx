@@ -49,7 +49,7 @@ const AdminHome = ({handleAllConsultantClick }) => {
 
     return (
         <>
-            <div className='container-fluid' style={{ backgroundColor: 'whitesmoke' }}>
+            <div className='container-fluid' style={{ backgroundColor: 'whitesmoke',paddingBottom:'50px' }}>
                 <Row>
                     {CarddBlog.map((item, index) => (
                         <Col key={index} xl={3} lg={4} md={6} sm={6}>

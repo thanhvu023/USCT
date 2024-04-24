@@ -133,18 +133,18 @@ export const createProgram = createAsyncThunk(
     }
   }
 );
-export const deleteProgram = createAsyncThunk(
-  "/program/deleteProgram",
+export const hideProgram = createAsyncThunk(
+  "/program/hideProgram",
   async (programId, thunkAPI) => {
     try {
-      await instance.delete(`/programs/${programId}`, {
+      const res = await instance.put(`/programs/${programId}`, { status: "Inactive" }, {
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json",
           Accept: "application/json",
         },
       });
-      return programId;
+      return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -281,7 +281,6 @@ export const programSlice = createSlice({
       })
       .addCase(getProgramTypeById.fulfilled, (state, action) => {
         state.loading = false;
-        // Lưu ý: Chỉ cập nhật state.programTypeById nếu cần thiết
         state.programTypeById = action.payload;
         state.error = null;
       })
@@ -292,33 +291,25 @@ export const programSlice = createSlice({
       .addCase(updateProgram.pending, (state) => {
         state.loading = true;
       })
-      // Xử lý action updateProgram.fulfilled
       .addCase(updateProgram.fulfilled, (state, action) => {
         state.loading = false;
-        // Cập nhật thông tin chương trình đã được cập nhật trong state
-        // Ví dụ:
         // state.programs = state.programs.map((program) =>
         //   program.programId === action.payload.programId ? action.payload : program
         // );
         state.error = null;
       })
-      // Xử lý action updateProgram.rejected
       .addCase(updateProgram.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       })
-      .addCase(deleteProgram.pending, (state) => {
+      .addCase(hideProgram.pending, (state) => {
         state.loading = true;
       })
-      .addCase(deleteProgram.fulfilled, (state, action) => {
+      .addCase(hideProgram.fulfilled, (state, action) => {
         state.loading = false;
-        // Xóa chương trình khỏi danh sách dựa trên ID đã trả về
-        state.programs = state.programs.filter(
-          (program) => program.id !== action.payload
-        );
         state.error = null;
       })
-      .addCase(deleteProgram.rejected, (state, action) => {
+      .addCase(hideProgram.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       });

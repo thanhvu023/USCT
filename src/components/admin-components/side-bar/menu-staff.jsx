@@ -42,13 +42,13 @@ export const MenuList = [
         // ],
     },
     //Customer    
-    {
-        title: 'Khách hàng',	
-        classsChange: 'mm-collapse',		
-        iconStyle: <i className="la la-users" />,
-        filterName: 'customer',
+    // {
+    //     title: 'Khách hàng',	
+    //     classsChange: 'mm-collapse',		
+    //     iconStyle: <i className="la la-users" />,
+    //     filterName: 'customer',
    
-    },
+    // },
 
     //Programs    
     {

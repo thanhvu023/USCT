@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, createSelector } from "@reduxjs/toolkit";
 import instance from "../axiosCustom";
 
 export const getRegistrationByConsultantId = createAsyncThunk(
@@ -23,6 +23,29 @@ export const getConsultantById = createAsyncThunk(
       return thunkAPI.rejectWithValue(error.response);
     }
   }
+);
+export const getAllConsultants = createAsyncThunk(
+  "consultant/getAllConsultants",
+  async (_, thunkAPI) => {
+    try {
+      const res = await instance.get("/account/consultants");
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response);
+    }
+  }
+);
+export const setFilteredConsultants = createAsyncThunk(
+  "consultant/setFilteredConsultants",
+  async (filteredConsultants, thunkAPI) => {
+    return filteredConsultants;
+  }
+);
+// Define the selector function
+export const selectFilteredConsultants = createSelector(
+  // Pass the input selectors as arguments
+  state => state.consultant.filteredConsultants, // Input selector 1: Extract filteredConsultants from state
+  filteredConsultants => filteredConsultants // Output selector: Return filteredConsultants as is
 );
 
 export const getConsultantBySpecializeId = createAsyncThunk(
@@ -59,6 +82,8 @@ export const updateConsultantById = createAsyncThunk(
 const initialState = {
   registrationByConsultantId: [],
   consultantById: {},
+  consultants: [],
+
   consultantBySpecializeId: [],
 };
 
@@ -92,6 +117,28 @@ export const consultantSlice = createSlice({
         state.consultantById = action.payload;
       })
       .addCase(getConsultantById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(getAllConsultants.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getAllConsultants.fulfilled, (state, action) => {
+        state.loading = false;
+        state.consultants = action.payload;
+      })
+      .addCase(getAllConsultants.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(setFilteredConsultants.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(setFilteredConsultants.fulfilled, (state, action) => {
+        state.loading = false;
+        state.filteredConsultants = action.payload; 
+      })
+      .addCase(setFilteredConsultants.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       })

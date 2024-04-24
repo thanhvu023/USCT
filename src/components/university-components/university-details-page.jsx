@@ -8,8 +8,7 @@ import {
 import { getStateById } from "../../redux/slice/stateSlice";
 import { getProgramByUniId } from "../../redux/slice/programSlice";
 import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+
 import { Backdrop, CircularProgress } from "@mui/material";
 
 function UniversityDetailPage() {
