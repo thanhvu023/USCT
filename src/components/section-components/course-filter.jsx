@@ -3,33 +3,39 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { getProgramByMajorId } from "../../redux/slice/programSlice";
 
-const Course = ({ course }) => (
+const Program = ({ program }) => (
   <div className="col-lg-4 col-md-6">
     <div className="single-course-inner">
       <div className="thumb">
-        <img src={course.image} alt="img" />
+        <img src={program.img} alt="Program" />
       </div>
       <div className="details">
         <div className="details-inner">
           <div className="emt-user">
             <span className="u-thumb">
-              <img src={course.authorImage} alt="img" />
+              <img src={program.university.img} alt="University" />
             </span>
-            <span className="align-self-center">{course.authorName}</span>
+            <span className="align-self-center">
+              {program.university.universityName}
+            </span>
           </div>
           <h6>
-            <Link to={`/course-details/${course.id}`}>{course.title}</Link>
+            <Link to={`/program-details/${program.programId}`}>
+              {program.nameProgram}
+            </Link>
           </h6>
         </div>
         <div className="emt-course-meta ">
-          <div className="row  d-flex justify-content-evenly">
+          <div className="row d-flex justify-content-evenly">
             <div className="col-6">
               <i className="fa fa-university" />
-              <span>{course.state}</span>
+              <span>{program.university.universityName}</span>
             </div>
             <div className="col-6">
               <div className="price text-right">
-                <Link to={`/course-details/${course.id}`}>Xem thêm</Link>
+                <Link to={`/program-details/${program.programId}`}>
+                  Xem thêm
+                </Link>
               </div>
             </div>
           </div>
@@ -66,26 +72,11 @@ const CourseFilter = () => {
           </div>
         </div>
         <div className="edmt-nav-tab style-white text-center">
-          <ul className="nav nav-tabs" id="myTab" role="tablist">
+          <div className="row">
             {programs.map((program) => (
-              <li key={program.programId} className="nav-item">
-                {program.nameProgram}
-              </li>
+              <Program key={program.programId} program={program} />
             ))}
-          </ul>
-        </div>
-        <div className="tab-content go-top" id="myTabContent">
-          {/* {programs.map((program) => (
-            <div
-              key={program.programId}
-              className="tab-pane fade show active"
-              id={`tab-content-${program.programId}`}
-              role="tabpanel"
-              aria-labelledby={`tab-${program.programId}`}
-            >
-             
-            </div>
-          ))} */}
+          </div>
         </div>
       </div>
     </div>

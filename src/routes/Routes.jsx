@@ -29,6 +29,8 @@ import RegistrationDetailConsultantPage from "../components/RegistrationFormCons
 import ConsultantProfilePage from "../components/consultantProfilePage.jsx";
 import ConsultantChangePasswordPage from "../components/consultantChangePassword.jsx";
 import StaffPage from "../components/staff-page.jsx";
+import StaffRoute from "./StaffRoute.jsx";
+import ConsultantRoute from "./ConsultantRoute.jsx";
 
 const Routers = () => {
   const token = useSelector((state) => state?.auth?.token);
@@ -156,37 +158,44 @@ const Routers = () => {
         <Route
           path="/consultant"
           element={
-            <PrivateRoute userRole={userRole}>
+            <ConsultantRoute userRole={userRole}>
               <ConsultantPage />
-            </PrivateRoute>
+            </ConsultantRoute>
           }
         />
         <Route
           path="/consultant-profile"
           element={
-            <PrivateRoute userRole={userRole}>
+            <ConsultantPage userRole={userRole}>
               <ConsultantProfilePage />
-            </PrivateRoute>
+            </ConsultantPage>
           }
         />
         <Route
           path="/consultant/registrationForm/:registrationFormId"
           element={
-            <PrivateRoute userRole={userRole}>
+            <ConsultantPage userRole={userRole}>
               <RegistrationDetailConsultantPage />
-            </PrivateRoute>
+            </ConsultantPage>
           }
         />
         <Route
           path="/consultant/change-password"
           element={
-            <PrivateRoute userRole={userRole}>
+            <ConsultantPage userRole={userRole}>
               <ConsultantChangePasswordPage />
-            </PrivateRoute>
+            </ConsultantPage>
           }
         />
         <Route path="*" element={<p>There is nothing here: 404!</p>} />
-        <Route path="/staff" element={<StaffPage/>}/>
+        <Route
+          path="/staff"
+          element={
+            <StaffRoute userRole={userRole}>
+              <StaffPage />
+            </StaffRoute>
+          }
+        />
       </Routes>
     </Router>
   );

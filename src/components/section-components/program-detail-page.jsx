@@ -6,8 +6,6 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import Select from "react-select";
 import Slider from "react-slick";
 
-
-
 import {
   createProgramApplication,
   getAllProgram,
@@ -192,17 +190,17 @@ function ProgramDetailPage() {
       console.error("Error downloading file:", error);
     }
   };
-  
+
   return (
     <>
       <div className="course-single-area pd-top-120 pd-bottom-90">
         <div className="container">
-        <Backdrop
-          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-          open={loading}
-        >
-          <CircularProgress color="inherit" />
-        </Backdrop>
+          <Backdrop
+            sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            open={loading}
+          >
+            <CircularProgress color="inherit" />
+          </Backdrop>
           <div className="row">
             <div className="col-lg-8">
               <div className="course-course-detaila-inner">
@@ -220,8 +218,9 @@ function ProgramDetailPage() {
                 </div>
                 <div className="thumb">
                   <img
-                    src={publicUrl + "assets/img/course/programs.jpg"}
+                    src={programDetail.img}
                     alt="img"
+                    style={{ width: "810px", height: "400px" }}
                   />
                 </div>
                 <div className="row">
@@ -324,7 +323,7 @@ function ProgramDetailPage() {
                     </li>
                     <li>
                       <i className="fa fa-language" />
-                      <span>Trình độ Tiếng Anh:</span> {programDetail.level}
+                      <span>Trình độ đào tạo:</span> {programDetail.level}
                     </li>
                     <li>
                       <i className="fa fa-calendar" />
@@ -337,9 +336,7 @@ function ProgramDetailPage() {
                     </li>
                   </ul>
                   <div className="price-wrap text-center">
-                    <h5>
-                      Tham gia ngay !!!
-                    </h5>
+                    <h5>Tham gia ngay !!!</h5>
 
                     <a
                       className="btn btn-base btn-radius"
@@ -459,7 +456,7 @@ function ProgramDetailPage() {
                             <div style={{ marginLeft: "10px", height: "50px" }}>
                               <button
                                 onClick={() =>
-                                  downloadFileFromStorage('DSC_7398.JPG')
+                                  downloadFileFromStorage("DSC_7398.JPG")
                                 }
                               >
                                 Download File
@@ -480,9 +477,9 @@ function ProgramDetailPage() {
                             className="btn btn-secondary"
                             onClick={handleCloseModal}
                           >
-                            Cancel
+                            Hủy
                           </button>
-                          <button className="btn btn-primary">Save</button>
+                          <button className="btn btn-primary">Lưu</button>
                         </div>
                       </div>
                     </div>
@@ -492,138 +489,154 @@ function ProgramDetailPage() {
             </div>
           </div>
           <div className="widget">
-  <h4 className="widget-title">Những Chương Trình Tương Tự</h4>
-  {programByType && programByType.length > 1 ? (
-    <Slider
-      dots={true}
-      infinite={true}
-      speed={500}
-      slidesToShow={4}
-      slidesToScroll={1}
-      autoplay={true}
-      autoplaySpeed={3000}
-      nextArrow={
-        <span
-          className="carousel-control-next-icon"
-          style={{
-            fontSize: customCarouselStyle.controlIconSize,
-            color: customCarouselStyle.controlIconColor,
-          }}
-        />
-      }
-      prevArrow={
-        <span
-          className="carousel-control-prev-icon"
-          style={{
-            fontSize: customCarouselStyle.controlIconSize,
-            color: customCarouselStyle.controlIconColor,
-          }}
-        />
-      }
-    >
-      {programByType
-        .filter((program) => program.programId.toString() !== programById)
-        .map((program, index) => (
-<div key={index} className="col-lg-12 col-md-6" >
-            <div className="single-course-inner">
-              <div className="thumb">
-                <img
-                  src={publicUrl + "assets/img/course/programs.jpg"}
-                  alt="img"
-                />
+            <h4 className="widget-title">Những Chương Trình Tương Tự</h4>
+            {programByType && programByType.length > 1 ? (
+              <Slider
+                dots={true}
+                infinite={true}
+                speed={500}
+                slidesToShow={4}
+                slidesToScroll={1}
+                autoplay={true}
+                autoplaySpeed={3000}
+                nextArrow={
+                  <span
+                    className="carousel-control-next-icon"
+                    style={{
+                      fontSize: customCarouselStyle.controlIconSize,
+                      color: customCarouselStyle.controlIconColor,
+                    }}
+                  />
+                }
+                prevArrow={
+                  <span
+                    className="carousel-control-prev-icon"
+                    style={{
+                      fontSize: customCarouselStyle.controlIconSize,
+                      color: customCarouselStyle.controlIconColor,
+                    }}
+                  />
+                }
+              >
+                {programByType
+                  .filter(
+                    (program) => program.programId.toString() !== programById
+                  )
+                  .map((program, index) => (
+                    <div key={index} className="col-lg-12 col-md-6">
+                      <div className="single-course-inner">
+                        <div className="thumb">
+                          <img src={program.img} alt="img" />
+                        </div>
+                        <div className="details">
+                          <div
+                            className="details-inner"
+                            style={{ height: "100px" }}
+                          >
+                            <h5>
+                              <Link
+                                onClick={handleScrollToTop}
+                                to={`/program-details/${program.programId}`}
+                                style={{ fontSize: "16px" }}
+                              >
+                                {program.nameProgram}
+                              </Link>
+                            </h5>
+                          </div>
+                          <div className="emt-course-meta">
+                            <div className="row">
+                              <div className="col-12">
+                                <div className="rating">
+                                  <span>Lộ trình: {program.duration}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+              </Slider>
+            ) : (
+              <div className="text-center p-4 ">
+                <h4>Không có chương trình tương tự</h4>
               </div>
-              <div className="details" >
-                <div className="details-inner" style={{ height: '100px' }}>
-                  <h5>
-                    <Link
-                      onClick={handleScrollToTop}
-                      to={`/program-details/${program.programId}`}
-                      style={{fontSize:'16px'}}
-                    >
-                      {program.nameProgram}
-                    </Link>
-                  </h5>
+            )}
+          </div>
+
+          <div className="mt-4">
+            <h4 className="widget-title display-5">
+              Những Trường Đại Học Có Mở Chương Trình Này
+            </h4>
+            <Slider
+              dots={true}
+              infinite={true}
+              speed={500}
+              slidesToShow={3} // Hiển thị 3 trường đại học trên mỗi slide
+              slidesToScroll={1}
+              autoplay={true}
+              autoplaySpeed={5000}
+              nextArrow={
+                <div
+                  className="slick-arrow slick-next"
+                  style={{ color: "black", width: "50px" }}
+                >
+                  Next
                 </div>
-                <div className="emt-course-meta">
-                  <div className="row">
-                    <div className="col-12">
-                      <div className="rating">
-                        <span>Lộ trình: {program.duration}</span>
+              }
+              prevArrow={
+                <div
+                  className="slick-arrow slick-prev"
+                  style={{ color: "black" }}
+                >
+                  Previous
+                </div>
+              }
+            >
+              {UniversityDetails.map((university, index) => (
+                <div key={index} className="col-lg-12 col-md-6">
+                  <div className="single-course-inner">
+                    <div className="thumb">
+                      <img
+                        src={publicUrl + "assets/img/course/programs.jpg"}
+                        alt="img"
+                      />
+                    </div>
+                    <div className="details">
+                      <div className="details-inner">
+                        <h5
+                          className="h6"
+                          style={{ height: "50px", marginBottom: "12px" }}
+                        >
+                          <Link to={`/program-details/${university.programId}`}>
+                            {university.nameProgram}
+                          </Link>
+                        </h5>
+                        <div className="specialization-icon mb-2">
+                          <i className="fa fa-university mr-1"></i>
+                          <span className="fw-bold">Trường Đại Học Ohana</span>
+                        </div>
+                        <div className="specialization-icon">
+                          <i className="fa fa-map-marker mr-2" />
+                          <span className="fw-bold">Tiểu Bang: Ohana</span>
+                        </div>
+                        <div className="emt-course-meta">
+                          <div className="price text-right mt-3">
+                            <Link
+                              to="/instructor-details"
+                              className="btn btn-primary"
+                            >
+                              Xem Thêm
+                            </Link>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
+              ))}
+            </Slider>
           </div>
-        ))}
-    </Slider>
-  ) : (
-    <div className="text-center p-4 ">
-      <h4>Không có chương trình tương tự</h4>
-    </div>
-  )}
-</div>
-
-
-<div className="mt-4">
-  <h4 className="widget-title display-5">
-    Những Trường Đại Học Có Mở Chương Trình Này
-  </h4>
-  <Slider
-    dots={true}
-    infinite={true}
-    speed={500}
-    slidesToShow={3} // Hiển thị 3 trường đại học trên mỗi slide
-    slidesToScroll={1}
-    autoplay={true}
-    autoplaySpeed={5000}
-    nextArrow={<div className="slick-arrow slick-next" style={{color: 'black', width:'50px'}}>Next</div>}
-    prevArrow={<div className="slick-arrow slick-prev" style={{color: 'black'}}>Previous</div>}
-  >
-    {UniversityDetails.map((university, index) => (
-      <div key={index} className="col-lg-12 col-md-6">
-        <div className="single-course-inner">
-          <div className="thumb">
-            <img
-              src={publicUrl + "assets/img/course/programs.jpg"}
-              alt="img"
-            />
-          </div>
-          <div className="details">
-            <div className="details-inner">
-              <h5 className="h6" style={{height:'50px',marginBottom:'12px'}}>
-                <Link to={`/program-details/${university.programId}`}>
-                  {university.nameProgram}
-                </Link>
-              </h5>
-              <div className="specialization-icon mb-2">
-                <i className="fa fa-university mr-1"></i>
-                <span className="fw-bold">Trường Đại Học Ohana</span>
-              </div>
-              <div className="specialization-icon">
-                <i className="fa fa-map-marker mr-2" />
-                <span className="fw-bold">Tiểu Bang: Ohana</span>
-              </div>
-              <div className="emt-course-meta">
-                <div className="price text-right mt-3">
-                  <Link
-                    to="/instructor-details"
-                    className="btn btn-primary"
-                  >
-                    Xem Thêm
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    ))}
-  </Slider>
-</div>
-
-
         </div>
       </div>
     </>

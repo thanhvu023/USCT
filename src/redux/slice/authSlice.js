@@ -20,6 +20,8 @@ export const login = createAsyncThunk(
         navigate("/admin");
       } else if (role === "ROLE_CONSULTANT") {
         navigate("/consultant");
+      } else if (role === "ROLE_STAFF") {
+        navigate("/staff");
       } else {
         navigate("/");
       }
