@@ -5,6 +5,8 @@ import { Row, Button, Modal, Alert } from "react-bootstrap";
 import { getAllUsers } from "../../../redux/slice/authSlice";
 import { useSelector, useDispatch } from "react-redux";
 import Swal from "sweetalert2";
+import unidecode from "unidecode";
+
 import "./customer.css";
 
 const theadData = [
@@ -65,7 +67,7 @@ const AllCustomer = () => {
       setFeeData(originalData);
     } else {
       const updatedData = originalData.filter((item) => {
-        const searchData = `${item.name} ${item.customerId} ${item.gender} ${item.dateOfBirth} ${item.mobile} ${item.email} ${item.address}`.toLowerCase();
+        const searchData = `${unidecode(item.fullName)} ${item.customerId} ${item.gender} ${item.dateOfBirth} ${item.mobile} ${item.email} ${unidecode(item.address)}`.toLowerCase();
         return searchData.includes(searchTerm);
       });
       setFeeData(updatedData);

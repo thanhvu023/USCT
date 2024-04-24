@@ -772,7 +772,7 @@ const ProgramApplicationPage = () => {
                                                 }
                                               </Card.Text>
                                               <Card.Text className="mb-3">
-                                                <span className="font-weight-bold">
+                                                <span className="font-weight-bold ">
                                                   Trạng thái hồ sơ:
                                                 </span>{" "}
                                                 {

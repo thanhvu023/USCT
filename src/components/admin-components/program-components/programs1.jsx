@@ -443,8 +443,8 @@ const AllProgramsPage = () => {
                       <strong>{program.createDate}</strong>
                     </li>
                     <li className="list-group-item px-0 d-flex justify-content-between">
-                      <span className="mb-0">Ngày sửa đổi :</span>
-                      <strong>{program.modifiedDate}</strong>
+                      <span className="mb-0">Trạng thái :</span>
+                      <strong>{program.status}</strong>
                     </li>
                   </ul>
                   <button

@@ -46,6 +46,7 @@
     "redux-thunk": "^3.1.0",
     "rsuite": "^5.56.0",
     "sweetalert2": "^11.10.7",
+    "unidecode": "^1.0.1",
     "universal-cookie": "^7.1.0",
     "wowjs": "^1.1.3"
   },

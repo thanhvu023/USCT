@@ -6,7 +6,8 @@ import {
   getProgramById,
   updateProgram,
   createProgram,
-  deleteProgram,
+  hideProgram
+
 } from "../../../redux/slice/programSlice";
 import { getAllMajor, getMajorById } from "../../../redux/slice/majorSlice";
 import { getAllSemester } from "../../../redux/slice/semesterSlice";
@@ -40,7 +41,8 @@ const AllPrograms = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState(null);
   const loading = useSelector((state) => state.program.loading);
- 
+  
+  const [currentPage, setCurrentPage] = useState(1);  
   const [showAllPrograms, setShowAllPrograms] = useState(true);
 
   const [editedProgram, setEditedProgram] = useState(
@@ -108,7 +110,7 @@ const AllPrograms = () => {
   };
 
   const handleDelete = (programId) => {
-    dispatch(deleteProgram(programId));
+    dispatch(hideProgram(programId));
   };
   const handleShowCreateModal = () => {
     setShowCreateModal(true);
@@ -147,12 +149,15 @@ const AllPrograms = () => {
   const handleShowDetailModal = (programId) => {
     setSelectedProgramId(programId);
     setShowModal(true);
+    setCurrentPage(1);
+    
   };
 
   const handleCloseDetailModal = () => {
     setShowModal(false);
     setSelectedProgramId(null);
     setSelectedProgram(null);
+    setCurrentPage(1);
   };
 
   const handleCloseEditModal = () => {
@@ -294,7 +299,16 @@ const AllPrograms = () => {
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentPrograms = showAllPrograms ? programs.slice(indexOfFirstItem, indexOfLastItem) : feeData.slice(indexOfFirstItem, indexOfLastItem);
   
-    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+    const paginate = (pageNumber) => {
+      setCurrentPage(pageNumber);
+      localStorage.setItem('currentPage', pageNumber);
+    };    
+    useEffect(() => {
+      const storedPage = localStorage.getItem('currentPage');
+      if (storedPage !== null) {
+        setCurrentPage(parseInt(storedPage));
+      }
+    }, [])
     return (
       <div className="row">
         {loading ? (
@@ -364,8 +378,8 @@ const AllPrograms = () => {
                         <strong>{program.createDate}</strong>
                       </li>
                       <li className="list-group-item px-0 d-flex justify-content-between">
-                        <span className="mb-0">Ngày sửa đổi :</span>
-                        <strong>{program.modifiedDate}</strong>
+                        <span className="mb-0">Trạng thái :</span>
+                        <strong>{program.status}</strong>
                       </li>
                     </ul>
                     <button
@@ -442,8 +456,8 @@ const AllPrograms = () => {
                         <strong>{program.createDate}</strong>
                       </li>
                       <li className="list-group-item px-0 d-flex justify-content-between">
-                        <span className="mb-0">Ngày sửa đổi :</span>
-                        <strong>{program.modifiedDate}</strong>
+                      <span className="mb-0">Trạng thái :</span>
+                        <strong>{program.status}</strong>
                       </li>
                     </ul>
                     <button
@@ -504,12 +518,12 @@ const AllPrograms = () => {
                 + Thêm mới
               </button>
               <CreateProgramModal
-                show={showCreateModal} // Truyền trạng thái của modal
-                onClose={handleCloseCreateModal} // Truyền hàm đóng modal
-                onSubmit={handleSubmitCreateProgram} // Truyền hàm xử lý khi gửi form tạo mới chương trình
-                formData={formData} // Truyền dữ liệu form vào modal
+                show={showCreateModal} 
+                onClose={handleCloseCreateModal} 
+                onSubmit={handleSubmitCreateProgram} 
+                formData={formData} 
                 setFormData={setFormData}
-                imgURL={imgURL} // Truyền hàm setFormData để cập nhật dữ liệu form
+                imgURL={imgURL} 
               />
             </div>
           </div>

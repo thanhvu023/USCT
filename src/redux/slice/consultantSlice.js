@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, createSelector } from "@reduxjs/toolkit";
 import instance from "../axiosCustom";
 
 export const getRegistrationByConsultantId = createAsyncThunk(
@@ -35,7 +35,18 @@ export const getAllConsultants = createAsyncThunk(
     }
   }
 );
-
+export const setFilteredConsultants = createAsyncThunk(
+  "consultant/setFilteredConsultants",
+  async (filteredConsultants, thunkAPI) => {
+    return filteredConsultants;
+  }
+);
+// Define the selector function
+export const selectFilteredConsultants = createSelector(
+  // Pass the input selectors as arguments
+  state => state.consultant.filteredConsultants, // Input selector 1: Extract filteredConsultants from state
+  filteredConsultants => filteredConsultants // Output selector: Return filteredConsultants as is
+);
 const initialState = {
   registrationByConsultantId: [],
   consultantById: {},
@@ -83,6 +94,17 @@ export const consultantSlice = createSlice({
         state.consultants = action.payload;
       })
       .addCase(getAllConsultants.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(setFilteredConsultants.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(setFilteredConsultants.fulfilled, (state, action) => {
+        state.loading = false;
+        state.filteredConsultants = action.payload; 
+      })
+      .addCase(setFilteredConsultants.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       });
