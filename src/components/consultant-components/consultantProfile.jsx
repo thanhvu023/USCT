@@ -6,39 +6,59 @@ import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
-import { updateUserById } from "../../redux/slice/authSlice";
+import Select from "react-select";
+import {
+  getConsultantById,
+  updateConsultantById,
+} from "../../redux/slice/consultantSlice";
 import { imageDb } from "../FirebaseImage/Config";
-import { getConsultantById } from "../../redux/slice/consultantSlice";
 const ConsultantProfile = () => {
   let publicUrl = process.env.PUBLIC_URL + "/";
 
   const token = useSelector((state) => state?.auth?.token);
   const userId = jwtDecode(token).UserId;
-  const userDetail =
-    useSelector((state) => state?.consultant?.consultantById) || {};
-  console.log(userDetail);
+
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getConsultantById(userId));
   }, [userId]);
-
+  const userDetail =
+    useSelector((state) => state?.consultant?.consultantById) || {};
   const [userName, setuserName] = useState(userDetail.userName || "");
-  const [phone, setPhone] = useState(userDetail.phone || "");
-  const [address, setAddress] = useState(userDetail.address || "");
-  const [email, setEmail] = useState(userDetail.email || "");
-  const [dateOfBirth, setDateOfBirth] = useState(userDetail.dateOfBirth || "");
-  const [gender, setGender] = useState(userDetail.gender || "");
+  const [introduction, setIntroduction] = useState(
+    userDetail.introduction || ""
+  );
+  const [education, setEducation] = useState(userDetail.education || "");
+  const [specialize, setSpecialize] = useState(userDetail.specialize || []);
   const [isChecked, setIsChecked] = useState(false); // State variable to track checkbox status
-
   const [errors, setErrors] = useState({});
   const [updateMessage, setUpdateMessage] = useState("");
   let [avatar, setImageSrc] = useState(userDetail.img);
-
+  const specializeOptions = [
+    {
+      value: "Công nghệ thông tin - Khoa học máy tính",
+      label: "Công nghệ thông tin - Khoa học máy tính",
+    },
+    { value: "Kiến trúc - xây dựng", label: "Kiến trúc - xây dựng" },
+    { value: "Kinh doanh và quản trị", label: "Kinh doanh và quản trị" },
+    { value: "Luật", label: "Luật" },
+    {
+      value: "Nghệ thuật sáng tạo - Thiết kế",
+      label: "Nghệ thuật sáng tạo - Thiết kế",
+    },
+    { value: "Chăm sóc sức khỏe y tế", label: "Chăm sóc sức khỏe y tế" },
+    { value: "Tài chính - Ngân hàng", label: "Tài chính - Ngân hàng" },
+    { value: "Kế toán kiểm toán", label: "Kế toán kiểm toán" },
+    { value: "Truyền thông - Media", label: "Truyền thông - Media" },
+  ];
   const handleUpload = async (e) => {
     const selectedFile = e.target.files && e.target.files[0]; // Check if files exist before accessing the first file
 
     if (selectedFile) {
-      const imgRef = ref(imageDb, `Image/customerAvatar/${selectedFile.name}`);
+      const imgRef = ref(
+        imageDb,
+        `Image/consultantAvatar/${selectedFile.name}`
+      );
       try {
         await uploadBytes(imgRef, selectedFile);
         const imageUrl = await getDownloadURL(imgRef);
@@ -56,17 +76,12 @@ const ConsultantProfile = () => {
     if (userName.trim() === "") {
       newErrors.userName = "Họ và tên không hợp lệ!";
     }
-
-    if (phone.trim() === "" || !/^\d+$/.test(phone)) {
-      newErrors.phone = "Số điện thoại không hợp lệ!";
+    if (introduction.trim() === "") {
+      newErrors.introduction = "Email không được để trống!";
     }
 
-    if (email.trim() === "") {
-      newErrors.email = "Email không được để trống!";
-    }
-
-    if (address.trim() === "") {
-      newErrors.address = "Địa chỉ không được để trống!";
+    if (specialize.length === 0) {
+      newErrors.specialize = "Chuyên môn không được để trống!";
     }
     return newErrors;
   };
@@ -79,19 +94,15 @@ const ConsultantProfile = () => {
         ...userDetail,
         userId,
         userName,
-        phone,
-        address,
-        email,
+        education,
+        introduction,
         img: avatar,
-        gender,
-        dateOfBirth,
+        specialize,
       },
     };
     const newErrors = validateForm();
     if (Object.keys(newErrors).length === 0) {
-      // Check if the checkbox is checked
       if (!isChecked) {
-        // Checkbox not checked, do not send the request
         Swal.fire({
           icon: "warning",
           title: "Vui lòng kiểm tra trước khi cập nhật!",
@@ -101,20 +112,17 @@ const ConsultantProfile = () => {
         return;
       }
 
-      // Checkbox is checked, proceed to submit form data
-      dispatch(updateUserById(updatedData));
+      dispatch(updateConsultantById(updatedData));
     } else {
-      // Errors found, set them in state
       setErrors(newErrors);
       return;
     }
 
     // Cập nhật thông tin và hiển thị thông báo thành công
     setuserName(updatedData.userData.userName);
-    setPhone(updatedData.userData.phone);
-    setAddress(updatedData.userData.address);
-    setDateOfBirth(updatedData.userData.dateOfBirth);
-    setGender(updatedData.userData.gender);
+    setSpecialize(updatedData.userData.specialize);
+    setEducation(updatedData.userData.education);
+    setIntroduction(updatedData.userData.introduction);
     setImageSrc(updatedData.userData.img);
 
     Swal.fire({
@@ -168,11 +176,11 @@ const ConsultantProfile = () => {
           <div className="col-xl-2">
             <Sidebar className="">
               <Menu>
-                <MenuItem component={<Link to={`/customer-profile`}></Link>}>
+                <MenuItem component={<Link to={`/consultant-profile`}></Link>}>
                   Hồ sơ của tôi
                 </MenuItem>
                 <MenuItem
-                  component={<Link to={`/customer/change-password`}></Link>}
+                  component={<Link to={`/consultant/change-password`}></Link>}
                 >
                   Đổi mật khẩu
                 </MenuItem>
@@ -216,40 +224,26 @@ const ConsultantProfile = () => {
                         </Nav>
                         <Tab.Content>
                           <Tab.Pane id="about-me" eventKey="About">
-                            {/* <div className="profile-about-me">
+                            <div className="profile-about-me">
                               <div className="pt-4 border-bottom-1 pb-3">
                                 <h4 className="text-primary">
                                   Tóm tắt bản thân
                                 </h4>
-                                <p className="mb-2">
-                                  A wonderful serenity has taken possession of
-                                  my entire soul, like these sweet mornings of
-                                  spring which I enjoy with my whole heart. I am
-                                  alone, and feel the charm of existence was
-                                  created for the bliss of souls like mine.I am
-                                  so happy, my dear friend, so absorbed in the
-                                  exquisite sense of mere tranquil existence,
-                                  that I neglect my talents.
-                                </p>
-                                <p>
-                                  A collection of textile samples lay spread out
-                                  on the table - Samsa was a travelling salesman
-                                  - and above it there hung a picture that he
-                                  had recently cut out of an illustrated
-                                  magazine and housed in a nice, gilded frame.
-                                </p>
+                                <p>{introduction}</p>
                               </div>
-                            </div> */}
+                            </div>
                             <div className="profile-personal-info">
                               <h4 className="text-primary mb-2 mt-4">
                                 Thông Tin Cá Nhân
                               </h4>
                               <div className="row mb-2">
                                 <div className="col-3">
-                                  <h5 className="f-w-200">Giới thiệu:</h5>
+                                  <h5 className="f-w-200">
+                                    Quá trình học tập:
+                                  </h5>
                                 </div>
                                 <div className="col-9 ">
-                                  <p>{userDetail.introduction}</p>
+                                  <p>{education}</p>
                                 </div>
                               </div>
                               <div className="row mb-2">
@@ -257,7 +251,7 @@ const ConsultantProfile = () => {
                                   <h5 className="f-w-500">Họ và Tên : </h5>
                                 </div>
                                 <div className="col-9 ">
-                                  <span>{userDetail.userName}</span>
+                                  <span>{userName}</span>
                                 </div>
                               </div>
                               {/* <div className="row mb-2">
@@ -275,33 +269,9 @@ const ConsultantProfile = () => {
                                   <h5 className="f-w-500">Chuyên ngành : </h5>
                                 </div>
                                 <div className="col-9  ">
-                                  <span>{userDetail.specialize}</span>
+                                  <span>{specialize}</span>
                                 </div>
                               </div>
-                              {/* <div className="row mb-2">
-                                <div className="col-3">
-                                  <h5 className="f-w-500">Ngày sinh :</h5>
-                                </div>
-                                <div className="col-9 ">
-                                  <span>{userDetail.dateOfBirth}</span>
-                                </div>
-                              </div>
-                              <div className="row mb-2">
-                                <div className="col-3">
-                                  <h5 className="f-w-500">Địa chỉ:</h5>
-                                </div>
-                                <div className="col-9 ">
-                                  <span>{userDetail.address}</span>
-                                </div>
-                              </div> */}
-                              {/* <div className="row mb-2">
-                                <div className="col-3">
-                                  <h5 className="f-w-500">Số điện thoại:</h5>
-                                </div>
-                                <div className="col-5 ">
-                                  <span>{userDetail.phone}</span>
-                                </div>
-                              </div> */}
                             </div>
                           </Tab.Pane>
                           <Tab.Pane id="profile-settings" eventKey="Setting">
@@ -333,14 +303,21 @@ const ConsultantProfile = () => {
                                     </div>
                                     <div className="form-group mb-3 col-md-6">
                                       <label className="form-label">
-                                        Email
+                                        Giới thiệu bản thân
                                       </label>
                                       <input
-                                        type="email"
-                                        placeholder="Email"
+                                        type="text"
+                                        placeholder="introduction"
                                         className="form-control"
-                                        value={email}
-                                        readOnly
+                                        value={introduction}
+                                        onChange={(e) => {
+                                          setErrors({
+                                            ...errors,
+                                            introduction: "",
+                                          });
+                                          setIntroduction(e.target.value);
+                                          setUpdateMessage("");
+                                        }}
                                       />
                                     </div>
                                   </div>
@@ -355,116 +332,53 @@ const ConsultantProfile = () => {
                                           placeholder="Password"
                                           className="form-control"
                                           value={userDetail.password}
-                                          readOnly // Make input readOnly based on isEditingPassword state
+                                          readOnly
                                         />
                                       </div>
                                     </div>
-                                    {/* <div className="form-group mb-3 col-md-6">
-                                      <label className="form-label">
-                                        Giới tính
-                                      </label>
-                                      <select
-                                        className="form-control"
-                                        onChange={(e) => {
-                                          setUpdateMessage("");
-                                          setErrors({ ...errors, phone: "" });
-                                          setGender(e.target.value);
-                                        }}
-                                        defaultValue={userDetail.gender}
-                                      >
-                                        <option value="male">Nam</option>
-                                        <option value="female">Nữ</option>
-                                        <option value="other">Khác</option>
-                                      </select>
-                                    </div> */}
-                                  </div>
-
-                                  {/* <div className="row">
                                     <div className="form-group mb-3 col-md-6">
                                       <label className="form-label">
-                                        Ngày sinh
-                                      </label>
-                                      <input
-                                        type="date"
-                                        className="form-control"
-                                        value={dateOfBirth}
-                                        onChange={(e) => {
-                                          setUpdateMessage("");
-                                          console.log(
-                                            "New date value:",
-                                            e.target.value
-                                          ); // Debugging: Log the new date value
-                                          setDateOfBirth(e.target.value); // Update dateOfBirth state variable
-                                          console.log(
-                                            "Updated dateOfBirth state:",
-                                            dateOfBirth
-                                          ); // Debugging: Log the updated dateOfBirth state
-                                          setErrors({
-                                            ...errors,
-                                            dateOfBirth: "",
-                                          }); // Reset any errors related to dateOfBirth
-                                        }}
-                                      />
-                                    </div>
-
-                                    <div className="form-group mb-3 col-md-6">
-                                      <label className="form-label">
-                                        Số điện thoại
-                                      </label>
-                                      <input
-                                        type="tel"
-                                        placeholder="Số điện thoại"
-                                        className="form-control"
-                                        value={phone}
-                                        onChange={(e) => {
-                                          setUpdateMessage("");
-                                          setErrors({ ...errors, phone: "" }); // Reset phone error when input changes
-                                          setPhone(e.target.value);
-                                        }}
-                                      />
-                                    </div>
-                                  </div> */}
-
-                                  {/* <div className="form-group mb-3">
-                                    <label className="form-label">
-                                      ID Quốc gia
-                                    </label>
-                                    <input
-                                      type="text"
-                                      placeholder="Địa chỉ"
-                                      className="form-control"
-                                    />
-                                  </div> */}
-                                  {/* <div className="row">
-                                    <div className="form-group mb-3 col-md-12">
-                                      <label className="form-label">
-                                        Địa chỉ
+                                        Education ?
                                       </label>
                                       <input
                                         type="text"
-                                        placeholder="Apartment, studio, or floor"
+                                        placeholder="education"
                                         className="form-control"
-                                        value={address}
+                                        value={education}
                                         onChange={(e) => {
-                                          setErrors({ ...errors, address: "" });
-                                          setAddress(e.target.value);
+                                          setErrors({
+                                            ...errors,
+                                            education: "",
+                                          });
+                                          setEducation(e.target.value);
                                           setUpdateMessage("");
                                         }}
                                       />
                                     </div>
-                                  </div> */}
-
-                                  {/* <div className="row">
-                                    <div className="form-group mb-3 col-md-12">
+                                    <div className="form-group mb-3 col-md-6">
                                       <label className="form-label">
-                                        Về bản thân
+                                        Chuyên môn
                                       </label>
-                                      <textarea
-                                        className="form-control"
-                                        rows="4"
-                                      ></textarea>
+                                      <Select
+                                        name="specialize"
+                                        isMulti
+                                        options={specializeOptions}
+                                        onChange={(selectedOptions) => {
+                                          setUpdateMessage("");
+                                          // Extract the values of selected options into an array
+                                          const selectedValues =
+                                            selectedOptions.map(
+                                              (option) => option.value
+                                            );
+                                          setSpecialize(selectedValues);
+                                        }}
+                                        value={specializeOptions.filter(
+                                          (option) =>
+                                            specialize.includes(option.value)
+                                        )}
+                                      />
                                     </div>
-                                  </div> */}
+                                  </div>
                                   <div className="form-group mb-3">
                                     <div className="form-check custom-checkbox">
                                       <input
@@ -473,7 +387,7 @@ const ConsultantProfile = () => {
                                         checked={isChecked}
                                         onChange={() =>
                                           setIsChecked(!isChecked)
-                                        } // Toggle checkbox state
+                                        }
                                       />
                                       <label className="form-check-label ml-2">
                                         Kiểm tra trước khi cập nhật

@@ -1,45 +1,55 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Link, useParams } from "react-router-dom"; // Import Link from react-router-dom
+import Select from "react-select";
+import { getUserById } from "../../redux/slice/authSlice";
 import {
   getRegistrationByRegistrationFormId,
+  resetRegistration,
   updateRegistrationById,
 } from "../../redux/slice/registrationSlice";
-import { getUserById } from "../../redux/slice/authSlice";
-import { useParams, Link } from "react-router-dom"; // Import Link from react-router-dom
-import Select from "react-select";
+const statusOptions = [
+  { value: 0, label: "Chưa tư vấn" },
+  { value: 1, label: "Đang tư vấn" },
+  { value: 2, label: "Đã tư vấn" },
+];
+
 const RegistrationFormDetail = () => {
   const { registrationFormId } = useParams();
   const dispatch = useDispatch();
   const registration = useSelector(
     (state) => state?.registration?.registrationById
   );
+  useEffect(() => {
+    if (registrationFormId) {
+      dispatch(getRegistrationByRegistrationFormId(registrationFormId));
+    }
+  }, [dispatch, registrationFormId]);
   const userId = useSelector(
     (state) => state?.registration?.registrationById?.customerId
-  );
-  const userDetail = useSelector((state) => state.auth.userById) || {};
-  const consultantId = useSelector(
-    (state) => state?.consultant?.consultantById?.consultantId
-  );
-  const [status, setStatus] = useState(registration.status);
-  const statusOptions = [
-    { value: 0, label: "Chưa tư vấn" },
-    { value: 1, label: "Đang tư vấn" },
-    { value: 2, label: "Đã tư vấn" },
-  ];
-  const matchValue = useMemo(
-    () => statusOptions.find((option) => option.value === status),
-    [status]
   );
   useEffect(() => {
     if (userId) {
       dispatch(getUserById(userId));
     }
   }, [userId]);
-  useEffect(() => {
-    if (registrationFormId) {
-      dispatch(getRegistrationByRegistrationFormId(registrationFormId));
-    }
-  }, [dispatch, registrationFormId]);
+  const userDetail = useSelector((state) => state?.auth?.userById) || {};
+  // nguyên nhân bug hello mng lai la My day
+  console.log(userId)
+  const consultantId = useSelector(
+    (state) => state?.consultant?.consultantById?.consultantId
+  );
+  const [status, setStatus] = useState(registration.status);
+ 
+  const matchValue = useMemo(
+    () => statusOptions.find((option) => option.value === status),
+    [status]
+  );
+  // const resetUserId =()=>{
+  //   dispatch(logoutUser())
+  // }
+ 
+
   useEffect(() => {
     setStatus(registration.status);
   }, [registration.status]);

@@ -47,11 +47,44 @@ export const selectFilteredConsultants = createSelector(
   state => state.consultant.filteredConsultants, // Input selector 1: Extract filteredConsultants from state
   filteredConsultants => filteredConsultants // Output selector: Return filteredConsultants as is
 );
+
+export const getConsultantBySpecializeId = createAsyncThunk(
+  "consultant/getConsultantBySpecializeId",
+  async (param, thunkAPI) => {
+    try {
+      const res = await instance.get(`/account/consultants?specialize=${param}
+      `);
+      console.log(param);
+      console.log(res.data);
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response);
+    }
+  }
+);
+
+export const updateConsultantById = createAsyncThunk(
+  "consultant/updateByConsultantId",
+  async (params, thunkAPI) => {
+    const { userId, userData } = params;
+    console.log(params);
+    try {
+      const res = await instance.put(`/account/consultant/${userId}`, {
+        ...userData,
+      });
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response);
+    }
+  }
+);
+
 const initialState = {
   registrationByConsultantId: [],
   consultantById: {},
   consultants: [],
 
+  consultantBySpecializeId: [],
 };
 
 export const consultantSlice = createSlice({
@@ -60,6 +93,7 @@ export const consultantSlice = createSlice({
   reducers: {
     logoutConsultant: (state) => {
       state.registrationByConsultantId = [];
+      state.consultantBySpecializeId = [];
     },
   },
   extraReducers: (builder) => {
@@ -107,9 +141,33 @@ export const consultantSlice = createSlice({
       .addCase(setFilteredConsultants.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+      })
+      .addCase(getConsultantBySpecializeId.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getConsultantBySpecializeId.fulfilled, (state, action) => {
+        state.loading = false;
+        state.consultantBySpecializeId = action.payload;
+      })
+      .addCase(getConsultantBySpecializeId.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(updateConsultantById.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updateConsultantById.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(updateConsultantById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
       });
   },
 });
 
-const { reducer: consultantReducer } = consultantSlice;
-export { consultantReducer as default };
+const {
+  reducer: consultantReducer,
+  actions: { logoutConsultant },
+} = consultantSlice;
+export { consultantReducer as default, logoutConsultant };

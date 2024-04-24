@@ -62,9 +62,9 @@ const Registration = () => {
   // const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedConsultantName, setSelectedConsultantName] = useState("");
 
-  const customers = useSelector((state) => state.auth.user);
+  const customers = useSelector((state) => state?.auth?.userById);
   const dispatch = useDispatch();
-  const token = useSelector((state) => state.auth.token);
+  const token = useSelector((state) => state?.auth?.token);
   const customerId = jwtDecode(token).UserId;
 
   const registrationProfileByCustomerId = useSelector(

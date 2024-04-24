@@ -7,9 +7,11 @@ import { Dropdown } from "react-bootstrap";
 import { logoutProgram } from "../../redux/slice/programSlice";
 import Swal from "sweetalert2"; // Import Swal
 import jwtDecode from "jwt-decode";
-import { getConsultantById } from "../../redux/slice/consultantSlice";
+import {
+  getConsultantById,
+  logoutConsultant,
+} from "../../redux/slice/consultantSlice";
 import { resetRegistration } from "../../redux/slice/registrationSlice";
-
 function Navbar2() {
   const token = useSelector((state) => state?.auth?.token);
   const userId = token ? jwtDecode(token).UserId : null;
@@ -19,7 +21,7 @@ function Navbar2() {
     }
   }, [userId]);
 
-  const userDetail = useSelector((state) => state?.auth?.userById);
+  const userDetail = useSelector((state) => state?.consultant?.consultantById);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleLogout = () => {
@@ -27,6 +29,7 @@ function Navbar2() {
     dispatch(logoutStudent());
     dispatch(logoutProgram());
     dispatch(resetRegistration());
+    dispatch(logoutConsultant());
     navigate("/");
   };
   let publicUrl = process.env.PUBLIC_URL + "/";
@@ -104,7 +107,7 @@ function Navbar2() {
             </button>
           </div>
           <div className="logo">
-            <Link to="/">
+            <Link to="/consultant">
               <img src={publicUrl + "assets/img/logo.png"} alt="img" />
             </Link>
           </div>
@@ -113,7 +116,7 @@ function Navbar2() {
             className="collapse navbar-collapse go-top"
             id="edumint_main_menu"
           >
-            <ul className="navbar-nav menu-open">
+            {/* <ul className="navbar-nav menu-open">
               <li className="menu-item current-menu-item">
                 <Link to="/">Trang chủ</Link>
               </li>
@@ -131,10 +134,8 @@ function Navbar2() {
                   Tư Vấn
                 </Link>
               </li>
-              {/* <li>
-                <Link to="/admin">Admin</Link>
-              </li> */}
-            </ul>
+              
+            </ul> */}
           </div>
           <div className="nav-right-part nav-right-part-desktop d-flex  align-items-center">
             {!isLoggedIn && (
