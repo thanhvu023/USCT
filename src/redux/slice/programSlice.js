@@ -79,6 +79,24 @@ export const getprogramByName = createAsyncThunk(
   }
 );
 
+export const getProgramByMajorId = createAsyncThunk(
+  "/program/getProgramByMajorId",
+  async (param, thunkAPI) => {
+    try {
+      const res = await instance.get(`/programs?majorId=${param}`, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/problem+json; charset=utf-8",
+          Accept: "application/json",
+        },
+      });
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response);
+    }
+  }
+);
+
 export const getProgramByProgramType = createAsyncThunk(
   "/program/getProgramByProgramType",
   async (param, thunkAPI) => {
@@ -207,6 +225,7 @@ const initialState = {
   programById: {},
   programsByUniId: [],
   programsByProgramType: [],
+  programsByMajor:[]
 };
 
 export const programSlice = createSlice({
@@ -218,6 +237,8 @@ export const programSlice = createSlice({
       state.programById = {};
       state.programsByUniId = [];
       state.programsByProgramType = [];
+  state.programsByMajor=[]
+
     },
   },
   extraReducers: (builder) => {
@@ -246,6 +267,17 @@ export const programSlice = createSlice({
         state.error = null;
       })
       .addCase(getProgramById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      }).addCase(getProgramByMajorId.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getProgramByMajorId.fulfilled, (state, action) => {
+        state.loading = false;
+        state.programsByMajor = action.payload;
+        state.error = null;
+      })
+      .addCase(getProgramByMajorId.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       })
@@ -312,7 +344,7 @@ export const programSlice = createSlice({
       .addCase(hideProgram.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-      });
+      })
   },
 });
 const {

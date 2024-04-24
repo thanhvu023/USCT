@@ -1,14 +1,13 @@
 import React from 'react';
+import Footer from './global-components/footer';
 import Navbar from './global-components/navbar';
-import Banner from './section-components/banner';
-import Intro from './section-components/intro';
 import About from './section-components/about';
+import Banner from './section-components/banner';
 import CourseFilter from './section-components/course-filter';
 import FunFact from './section-components/fun-fact';
 import HowToWork from './section-components/how-to-work';
+import Intro from './section-components/intro';
 import Team from './section-components/team';
-import Footer from './global-components/footer';
-import SliderComponent from './section-components/Slider';
 
 const HomePage = () => {
     return <div>

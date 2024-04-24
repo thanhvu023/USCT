@@ -28,6 +28,7 @@ import ConsultantPage from "../components/consultant-page.jsx";
 import RegistrationDetailConsultantPage from "../components/RegistrationFormConsultant.jsx";
 import ConsultantProfilePage from "../components/consultantProfilePage.jsx";
 import ConsultantChangePasswordPage from "../components/consultantChangePassword.jsx";
+import StaffPage from "../components/staff-page.jsx";
 
 const Routers = () => {
   const token = useSelector((state) => state?.auth?.token);
@@ -185,6 +186,7 @@ const Routers = () => {
           }
         />
         <Route path="*" element={<p>There is nothing here: 404!</p>} />
+        <Route path="/staff" element={<StaffPage/>}/>
       </Routes>
     </Router>
   );

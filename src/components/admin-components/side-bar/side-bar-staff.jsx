@@ -2,7 +2,7 @@ import React, { useReducer, useEffect, useState } from "react";
 import { Collapse } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { MenuList } from "./menu-staff";
-import './sidebar.css';
+import "./sidebar.css";
 
 const reducer = (previousState, updatedState) => ({
   ...previousState,
@@ -18,10 +18,6 @@ const SideBarStaff = ({ setMain }) => {
   const [state, setState] = useReducer(reducer, initialState);
   const [selectedFilter, setSelectedFilter] = useState(null);
 
-
-
- 
-  
   const handleFilterClick = (filterName) => {
     setSelectedFilter(filterName);
     setMain(filterName);
@@ -91,7 +87,6 @@ const SideBarStaff = ({ setMain }) => {
                         setState({ active: data.title });
                       }
                     }}
-                  
                   >
                     {data.iconStyle}
                     <span className="nav-text">{data.title}</span>
