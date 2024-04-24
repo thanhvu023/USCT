@@ -1,5 +1,5 @@
 import React from 'react';
-import Navbar from './global-components/navbar';
+import Navbar from './global-components/navbar-v2';
 import Footer from './global-components/footer';
 import Page_header from './global-components/page-header';
 import RegistrationFormDetail from './consultant-components/registrionFormDetail';

@@ -31,8 +31,8 @@ export const getConsultantBySpecializeId = createAsyncThunk(
     try {
       const res = await instance.get(`/account/consultants?specialize=${param}
       `);
-      console.log(param)
-      console.log(res.data)
+      console.log(param);
+      console.log(res.data);
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response);
@@ -119,5 +119,8 @@ export const consultantSlice = createSlice({
   },
 });
 
-const { reducer: consultantReducer } = consultantSlice;
-export { consultantReducer as default };
+const {
+  reducer: consultantReducer,
+  actions: { logoutConsultant },
+} = consultantSlice;
+export { consultantReducer as default, logoutConsultant };
