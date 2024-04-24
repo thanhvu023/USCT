@@ -3,14 +3,12 @@ import { useNavigate } from "react-router-dom"; // Import useNavigate từ react
 import AdminHome from "./admin-components/home";
 import SideBarAd from "./admin-components/side-bar/side-bar-admin";
 import NavHader from "./admin-components/NavHader";
-import Footer from "./global-components/footer";
+import AllConsultant from "./admin-components/consultant-components/consutant";
 import AllCustomer from "./admin-components/customer-components/all-customer";
 import Test1 from "./admin-components/customer-components/test1";
-import AllConsultant from "./admin-components/consultant-components/consutant";
-import AllProgramsPage from "./admin-components/program-components/programs1";
+import ProgramApplicationPage from "./admin-components/program-application-components/program-apllicationbyStudentprofileId";
 import AllPrograms from "./admin-components/program-components/programs";
 import Registration from "./admin-components/registration-components/registration";
-import ProgramApplicationPage from "./admin-components/program-application-components/program-apllicationbyStudentprofileId";
 
 
 const AdminPage = () => {

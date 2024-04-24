@@ -4134,6 +4134,8 @@ ul {
 .single-course-inner .thumb img {
   transform: scale(1);
   transition: 0.9s;
+  height: 200px;
+  width: 300px;
 }
 
 .single-course-inner .details .details-inner {

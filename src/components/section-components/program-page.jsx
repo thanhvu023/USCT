@@ -123,7 +123,7 @@ function ProgramsPage() {
                 <div key={index} className="col-md-6">
                   <div className="single-course-inner">
                     <div className="thumb">
-                      <img src={"assets/img/course/programs.jpg"} alt="img" />
+                      <img src={program.img} alt="img" />
                     </div>
                     <div className="details">
                       <div className="details-inner ">

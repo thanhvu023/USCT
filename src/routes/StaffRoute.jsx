@@ -3,7 +3,7 @@ import { Navigate, Routes } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 import { useSelector } from "react-redux";
 
-const ConsultantRoute = ({ children }) => {
+const StaffRoute = ({ children }) => {
   // if (props.userRole === "ROLE_CUSTOMER") {
   //   return <Navigate to="/" replace />;
   // }
@@ -11,7 +11,7 @@ const ConsultantRoute = ({ children }) => {
   const userRole = token ? jwtDecode(token).Role : null;
 
   console.log(userRole);
-  if (userRole === "ROLE_CONSULTANT") {
+  if (userRole === "ROLE_STAFF") {
     return children;
   } else if (!token) {
     // Redirect to sign-in if user is not authenticated
@@ -22,4 +22,4 @@ const ConsultantRoute = ({ children }) => {
   }
 };
 
-export default ConsultantRoute;
+export default StaffRoute;
