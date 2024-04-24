@@ -1,7 +1,7 @@
 import React, { useReducer, useEffect, useState } from "react";
 import { Collapse } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { MenuList } from "./Menu";
+import { MenuList } from "./menu-admin";
 import './sidebar.css';
 
 const reducer = (previousState, updatedState) => ({

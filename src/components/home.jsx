@@ -8,6 +8,7 @@ import FunFact from './section-components/fun-fact';
 import HowToWork from './section-components/how-to-work';
 import Intro from './section-components/intro';
 import Team from './section-components/team';
+import Footer from './global-components/footer';
 
 const HomePage = () => {
     return <div>

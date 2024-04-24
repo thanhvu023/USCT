@@ -1,6 +1,6 @@
 import React from 'react'
 import Navbar from './global-components/navbar'
-import ChangePassword from './section-components/ChangePassword'
+import ChangePassword from './section-components/change-password'
 import Footer from './global-components/footer'
 
 const ChangePasswordPage = () => {

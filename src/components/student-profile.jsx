@@ -1,7 +1,7 @@
 import React from 'react';
 import Navbar from './global-components/navbar';
 import Footer from './global-components/footer';
-import StudentProfilePage from './section-components/StudentProfile';
+import StudentProfilePage from './section-components/student-profile';
 import Page_header from './global-components/page-header';
 
 

@@ -2,7 +2,7 @@ import React from 'react';
 import Navbar from './global-components/navbar';
 import Footer from './global-components/footer';
 import Page_header from './global-components/page-header';
-import StudentProfileApplied from './section-components/StudentProfileAppliedList';
+import StudentProfileApplied from './section-components/student-profile-applied-list';
 
 
 const StudentProfileAppliedPage = () => {

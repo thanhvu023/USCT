@@ -20,7 +20,7 @@ const StaffPage = () => {
     "Chương trình": <AllPrograms />,
     "Hồ sơ đăng ký": <ProgramApplicationPage />,
     "Đơn tư vấn": <Registration />,
-    "Test1": <Test1 />,
+   
   };
 
   const getContentComponent = (main) => {
