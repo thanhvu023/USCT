@@ -3,7 +3,7 @@ import { Navigate, Routes } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 import { useSelector } from "react-redux";
 
-const AdminRoute = ({ children }) => {
+const StaffRoute = ({ children }) => {
   // if (props.userRole === "ROLE_CUSTOMER") {
   //   return <Navigate to="/" replace />;
   // }
@@ -22,4 +22,4 @@ const AdminRoute = ({ children }) => {
   }
 };
 
-export default AdminRoute;
+export default StaffRoute;

@@ -166,25 +166,25 @@ const Routers = () => {
         <Route
           path="/consultant-profile"
           element={
-            <ConsultantPage userRole={userRole}>
+            <ConsultantRoute userRole={userRole}>
               <ConsultantProfilePage />
-            </ConsultantPage>
+            </ConsultantRoute>
           }
         />
         <Route
           path="/consultant/registrationForm/:registrationFormId"
           element={
-            <ConsultantPage userRole={userRole}>
+            <ConsultantRoute userRole={userRole}>
               <RegistrationDetailConsultantPage />
-            </ConsultantPage>
+            </ConsultantRoute>
           }
         />
         <Route
           path="/consultant/change-password"
           element={
-            <ConsultantPage userRole={userRole}>
+            <ConsultantRoute userRole={userRole}>
               <ConsultantChangePasswordPage />
-            </ConsultantPage>
+            </ConsultantRoute>
           }
         />
         <Route path="*" element={<p>There is nothing here: 404!</p>} />
