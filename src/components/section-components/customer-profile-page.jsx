@@ -1,15 +1,15 @@
-import React, { Fragment, useEffect, useState } from "react";
-import { Tab, Nav, Button } from "react-bootstrap";
-import PageTitle from "./PageTitle";
-import { useDispatch, useSelector } from "react-redux";
-import { getUserById, updateUserById } from "../../redux/slice/authSlice";
-import jwtDecode from "jwt-decode";
-import { Link } from "react-router-dom";
-import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
-import Swal from "sweetalert2";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { imageDb } from "../FirebaseImage/Config";
 import { Backdrop, CircularProgress } from "@mui/material";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import jwtDecode from "jwt-decode";
+import React, { Fragment, useEffect, useState } from "react";
+import { Nav, Tab } from "react-bootstrap";
+import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
+import { getUserById, updateUserById } from "../../redux/slice/authSlice";
+import { imageDb } from "../FirebaseImage/Config";
+import PageTitle from "./PageTitle";
 const CustomerProfilePage = () => {
   let publicUrl = process.env.PUBLIC_URL + "/";
 
@@ -34,7 +34,6 @@ const CustomerProfilePage = () => {
   const [updateMessage, setUpdateMessage] = useState("");
   let [avatar, setImageSrc] = useState(userDetail.img);
   const [loading, setLoading] = useState(false);
-  console.log(loading);
   const handleUpload = async (e) => {
     const selectedFile = e.target.files && e.target.files[0]; // Check if files exist before accessing the first file
     if (selectedFile) {
@@ -105,7 +104,7 @@ const CustomerProfilePage = () => {
       }
 
       // Checkbox is checked, proceed to submit form data
-      dispatch(updateUserById(updatedData));
+        (updateUserById(updatedData));
     } else {
       // Errors found, set them in state
       setErrors(newErrors);
@@ -453,7 +452,7 @@ const CustomerProfilePage = () => {
                                       </label>
                                       <input
                                         type="text"
-                                        placeholder="Apartment, studio, or floor"
+                                        placeholder="Địa chỉ"
                                         className="form-control"
                                         value={address}
                                         onChange={(e) => {

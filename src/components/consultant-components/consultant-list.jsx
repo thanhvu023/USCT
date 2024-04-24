@@ -13,23 +13,23 @@ const ConsultantList = () => {
   const token = useSelector((state) => state?.auth?.token);
   const customerId = jwtDecode(token).UserId;
 
-
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getRegistrationByConsultantId(customerId));
   }, [customerId]);
-  const data = useSelector((state)=>state?.consultant?.registrationByConsultantId);
-  console.log(data)
+  const data = useSelector(
+    (state) => state?.consultant?.registrationByConsultantId
+  );
 
   const userData = useSelector((state) => state?.auth?.userById);
-//   console.log("userData:",userData)
-//   useEffect(() => {
-//     dispatch(getAllUsers());
-//   }, [dispatch]);
+  //   console.log("userData:",userData)
+  //   useEffect(() => {
+  //     dispatch(getAllUsers());
+  //   }, [dispatch]);
   const getFullName = (customerId) => {
     const user = userData.find((user) => user?.customerId === customerId);
     return user ? user.fullName : "Không biết";
-  };  
+  };
 
   // const studentProfileId = useSelector(
   //   (state) => state.student.studentProfileByCustomerId[0].studentProfileId
@@ -43,11 +43,9 @@ const ConsultantList = () => {
   const handleRowClick = (studentProfileId) => {
     navigate(`/consultant/registrationForm/${studentProfileId}`);
   };
-  
 
-  
   // console.log(getConsultantEmail(row.original.consultantId));
-  
+
   const tableInstance = useTable(
     {
       columns,
@@ -109,7 +107,7 @@ const ConsultantList = () => {
                       {...row.getRowProps()}
                       onClick={() =>
                         handleRowClick(
-                          row.original.registrationFormId,
+                          row.original.registrationFormId
                           // row.original.area,
                           // row.original.budget,
                           // row.original.createDate,

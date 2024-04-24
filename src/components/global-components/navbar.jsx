@@ -7,17 +7,25 @@ import { Dropdown } from "react-bootstrap";
 import { logoutProgram } from "../../redux/slice/programSlice";
 import Swal from "sweetalert2"; // Import Swal
 import jwtDecode from "jwt-decode";
+import { generateToken, messaging } from "../FirebaseImage/Config";
+import { onMessage } from "firebase/messaging";
 
 function Navbar() {
-  const token = useSelector((state) => state.auth?.token);
+  const token = useSelector((state) => state?.auth?.token);
   const userId = token ? jwtDecode(token).UserId : null;
   useEffect(() => {
     if (userId) {
       dispatch(getUserById(userId));
     }
   }, [userId]);
+  useEffect(() => {
+    generateToken();
+    onMessage(messaging, (payload) => {
+      console.log(payload.notification.body);
+    });
+  }, []);
 
-  const userDetail = useSelector((state) => state.auth.userById);
+  const userDetail = useSelector((state) => state?.auth?.userById);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleLogout = () => {

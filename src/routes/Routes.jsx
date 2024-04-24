@@ -27,6 +27,7 @@ import AdminRoute from "./AdminRoute.jsx";
 import ConsultantPage from "../components/consultant-page.jsx";
 import RegistrationDetailConsultantPage from "../components/registration-form-consultant.jsx";
 import ConsultantProfilePage from "../components/consultantProfilePage.jsx";
+import ConsultantChangePasswordPage from "../components/consultantChangePassword.jsx";
 
 const Routers = () => {
   const token = useSelector((state) => state?.auth?.token);
@@ -151,11 +152,37 @@ const Routers = () => {
             </PrivateRoute>
           }
         />
-        <Route path="/consultant" element={<ConsultantPage />} />
-        <Route path="/consultant-profile" element={<ConsultantProfilePage />} />
+        <Route
+          path="/consultant"
+          element={
+            <PrivateRoute userRole={userRole}>
+              <ConsultantPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/consultant-profile"
+          element={
+            <PrivateRoute userRole={userRole}>
+              <ConsultantProfilePage />
+            </PrivateRoute>
+          }
+        />
         <Route
           path="/consultant/registrationForm/:registrationFormId"
-          element={<RegistrationDetailConsultantPage />}
+          element={
+            <PrivateRoute userRole={userRole}>
+              <RegistrationDetailConsultantPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/consultant/change-password"
+          element={
+            <PrivateRoute userRole={userRole}>
+              <ConsultantChangePasswordPage />
+            </PrivateRoute>
+          }
         />
         <Route path="*" element={<p>There is nothing here: 404!</p>} />
       </Routes>

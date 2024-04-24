@@ -30,8 +30,6 @@ function UniversityDetailPage() {
   const programByUniId = useSelector(
     (state) => state?.program?.programsByUniId
   );
-  console.log(programByUniId);
-
   useEffect(() => {
     if (universityId) {
       dispatch(getUniversityById(universityId));

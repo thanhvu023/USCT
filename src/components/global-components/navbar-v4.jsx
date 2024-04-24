@@ -4,14 +4,14 @@ import { Link } from "react-router-dom";
 import { logoutUser } from "../../redux/slice/authSlice";
 import { Dropdown } from "react-bootstrap";
 function NavbarV4() {
-  const token = useSelector((state) => state.auth?.token);
+  const token = useSelector((state) => state?.auth?.token);
   const dispatch = useDispatch();
   
   const handleLogout = () => {
     dispatch(logoutUser());
   };
 
-  const isLoggedIn = useSelector((state) => state.auth?.token);
+  const isLoggedIn = useSelector((state) => state?.auth?.token);
   console.log(isLoggedIn)
   let publicUrl = process.env.PUBLIC_URL + "/";
   return (
