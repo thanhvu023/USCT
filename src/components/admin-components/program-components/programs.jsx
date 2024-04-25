@@ -382,11 +382,12 @@ const AllPrograms = () => {
                 </div>
 
                 <div className="">
-                    <Link
-                        className="mt-4 mb-1"
-                        style={{ fontSize: "24px", fontWeight: "700" }}
+                <Link
+                      className="mt-4 mb-1"
+                      onClick={() => handleShowDetailModal(program.programId)}
+                      style={{ fontSize: "24px", fontWeight: "700" }}
                     >
-                        {program.nameProgram}
+                      {program.nameProgram}
                     </Link>
                     {/* <img
                       src={program.img}
@@ -445,7 +446,8 @@ const AllPrograms = () => {
             <div
             className="col-lg-4 col-md-6 col-sm-6 col-12 mb-4"
             key={index}
-        
+            onClick={() => handleShowDetailModal(program.programId)}
+            style={{ cursor: 'pointer' }}
         >              <div className="card mx-4 mt-4"
         style={{
           boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)",
