@@ -29,6 +29,7 @@ import jwtDecode from "jwt-decode";
 import { getDownloadURL, ref } from "firebase/storage";
 import { imageDb } from "../FirebaseImage/Config";
 import { Backdrop, CircularProgress } from "@mui/material";
+import Swal from "sweetalert2";
 
 function ProgramDetailPage() {
   let publicUrl = process.env.PUBLIC_URL + "/";
@@ -172,6 +173,12 @@ function ProgramDetailPage() {
     if (formData.studentProfileId) {
       console.log(formData);
       dispatch(createProgramApplication(formData));
+      Swal.fire({
+        icon: "success",
+        title: "Nộp hồ sơ thành công!",
+        showConfirmButton: false,
+        timer: 1500,
+      });
     }
   };
   const handleScrollToTop = () => {
@@ -454,13 +461,13 @@ function ProgramDetailPage() {
 
                             {/* Button */}
                             <div style={{ marginLeft: "10px", height: "50px" }}>
-                              <button
+                              {/* <button
                                 onClick={() =>
                                   downloadFileFromStorage("DSC_7398.JPG")
                                 }
                               >
                                 Download File
-                              </button>
+                              </button> */}
                               <button
                                 className="btn btn-primary"
                                 onClick={() => handleCreateProfile()}

@@ -7,6 +7,7 @@ import { getUserById, updateUserById } from "../../redux/slice/authSlice";
 import jwtDecode from "jwt-decode";
 import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const ChangePassword = () => {
 
@@ -73,6 +74,12 @@ const ChangePassword = () => {
       // No errors, submit form data
 
       dispatch(updateUserById(updatedData));
+      Swal.fire({
+        icon: "success",
+        title: "Đổi mật khẩu thành công!",
+        showConfirmButton: false,
+        timer: 1500,
+      });
     } else {
       // Errors found, set them in state
       setErrors(newErrors);
