@@ -499,7 +499,7 @@ const Registration = () => {
                       alt="Customer Avatar"
                     />
                   </div>
-                  <div>
+                  <div className="ml-2">
                     <p style={{ fontWeight: "bold", color: "#007bff" }}>
                       Thông tin chi tiết:
                     </p>

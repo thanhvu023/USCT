@@ -25,7 +25,7 @@ const AdminPage = () => {
     "Chương trình": <AllPrograms />,
     "Hồ sơ đăng ký": <ProgramApplicationPage />,
     "Đơn tư vấn": <Registration />,
-    "Test1": <UniversityPage />,
+    "Trường Đại học": <UniversityPage />,
   };
 
   const getContentComponent = (main) => {
