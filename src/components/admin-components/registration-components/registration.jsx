@@ -1,14 +1,23 @@
 import jwtDecode from "jwt-decode";
 import React, { useEffect, useRef, useState } from "react";
-import { Alert, Badge, Button, Dropdown, Form, Modal, Row } from "react-bootstrap";
+import {
+  Alert,
+  Badge,
+  Button,
+  Dropdown,
+  Form,
+  Modal,
+  Row,
+} from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { getConsultants } from "../../../redux/slice/authSlice";
 import {
   getRegistration,
-  updateRegistrationById
+  updateRegistrationById,
 } from "../../../redux/slice/registrationSlice";
+import { getConsultantBySpecializeId } from "../../../redux/slice/consultantSlice";
 import { getAllUsers } from "../../../redux/slice/authSlice";
 
 // import './registration.css'
@@ -24,20 +33,20 @@ const getStatusLabel = (status) => {
   switch (status) {
     case 0:
       return (
-        <Badge bg=" badge-lg " className='badge-danger '>
-         CHƯA TƯ VẤN
+        <Badge bg=" badge-lg " className="badge-danger ">
+          CHƯA TƯ VẤN
         </Badge>
       );
     case 1:
       return (
-        <Badge bg="  " className='badge-warning '>
+        <Badge bg="  " className="badge-warning ">
           ĐANG TƯ VẤN
         </Badge>
       );
     case 2:
       return (
-        <Badge bg="" className='badge-success '>
-        ĐÃ TƯ VẤN  
+        <Badge bg="" className="badge-success ">
+          ĐÃ TƯ VẤN
         </Badge>
       );
     default:
@@ -56,12 +65,14 @@ const Registration = () => {
   const [showCheckSuccess, setShowCheckSuccess] = useState(false);
   const [showDeleteSuccess, setShowDeleteSuccess] = useState(false);
   const [selectedRegistration, setSelectedRegistration] = useState(null);
+  console.log("selectedRegistration", selectedRegistration);
   const [searchResults, setSearchResults] = useState([]);
   const [initialList, setInitialList] = useState([]);
   const [selectedConsultantId, setSelectedConsultantId] = useState("");
   // const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedConsultantName, setSelectedConsultantName] = useState("");
-
+  const majorC = selectedRegistration?.majorChoose;
+  // console.log("majorC",majorC)
   const customers = useSelector((state) => state?.auth?.userById);
   const dispatch = useDispatch();
   const token = useSelector((state) => state?.auth?.token);
@@ -99,6 +110,16 @@ const Registration = () => {
     return consultant ? consultant.userName : "Unknown";
   };
   const consultants = useSelector((state) => state.auth.consultants);
+
+
+  const consultantSpecializeId = useSelector(
+    (state) => state.consultant.consultantBySpecializeId
+  );
+  console.log("consultants", consultantSpecializeId);
+
+  useEffect(() => {
+    dispatch(getConsultantBySpecializeId(majorC));
+  }, [dispatch, majorC]);
 
   useEffect(() => {
     dispatch(getConsultants());
@@ -243,7 +264,7 @@ const Registration = () => {
         <p>Loading...</p>
       ) : (
         <>
-          <Row >
+          <Row>
             <div className="col-lg-12">
               <Alert
                 show={showDeleteSuccess}
@@ -253,7 +274,7 @@ const Registration = () => {
               >
                 Xóa thành công!
               </Alert>
-              <div className="card " >
+              <div className="card ">
                 <div className="card-header d-flex justify-content-between align-items-center">
                   <h4 className="card-title">
                     Danh sách đơn tư vấn của khách hàng
@@ -339,28 +360,28 @@ const Registration = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {(searchResults.length > 0 ? searchResults : initialList).map(
-                            (registration) => (
-                              <tr key={registration.id}  
+                          {(searchResults.length > 0
+                            ? searchResults
+                            : initialList
+                          ).map((registration) => (
+                            <tr
+                              key={registration.id}
                               className="table-row-border"
-                               onClick={() =>
-                                handleClickName(registration)
-                              }>
-                                <td>
-                                 
-                                    {registration.registrationFormId}
-                                </td>
-                                <td title={`Tên khách hàng: ${getFullName(registration.customerId)}`}>
-  {registration.majorChoose}
-</td>
+                              onClick={() => handleClickName(registration)}
+                            >
+                              <td>{registration.registrationFormId}</td>
+                              <td
+                                title={`Tên khách hàng: ${getFullName(
+                                  registration.customerId
+                                )}`}
+                              >
+                                {registration.majorChoose}
+                              </td>
 
-                                <td>{registration.programChoose}</td>
-                                <td>{getFullNameByConsultantId(registration.consultantId)}</td>
-                                <td>
-                                {getStatusLabel(registration.status)}
-
-                                </td>
-                                {/* <td style={{ display: "flex", alignItems: "center" }}>
+                              <td>{registration.programChoose}</td>
+                              <td>{getFullNameByConsultantId(registration.consultantId)}</td>
+                              <td>{getStatusLabel(registration.status)}</td>
+                              {/* <td style={{ display: "flex", alignItems: "center" }}>
                                  
                                   <button
                                     onClick={handleShowCheckModal}
@@ -547,9 +568,10 @@ const Registration = () => {
                           onChange={(e) =>
                             setSelectedConsultantId(e.target.value)
                           }
+                          
                         >
                           <option value="">Chọn Consultant</option>
-                          {consultants.map((consultant) => (
+                          {consultantSpecializeId.map((consultant) => (
                             <option
                               key={consultant.consultantId}
                               value={consultant.consultantId}
