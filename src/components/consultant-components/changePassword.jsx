@@ -10,12 +10,12 @@ import {
   updateConsultantById,
 } from "../../redux/slice/consultantSlice";
 import PageTitle from "../section-components/PageTitle";
+import Swal from "sweetalert2";
 const ChangePassword = () => {
   const token = useSelector((state) => state?.auth?.token);
   const userId = jwtDecode(token).UserId;
   const userDetail = useSelector((state) => state?.consultant?.consultantById);
   const [specialize, setSpecialize] = useState([userDetail.specialize])
-console.log(specialize)
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getConsultantById(userId));
@@ -65,6 +65,12 @@ console.log(specialize)
       // No errors, submit form data
 
       dispatch(updateConsultantById(updatedData));
+      Swal.fire({
+        icon: "success",
+        title: "Đổi mật  thành công!",
+        showConfirmButton: false,
+        timer: 1500,
+      });
     } else {
       // Errors found, set them in state
       setErrors(newErrors);
@@ -97,7 +103,7 @@ console.log(specialize)
                   <div className="profile-details d-flex">
                     <div className="profile-name px-3 pt-2">
                       <h4 className="text-primary mb-0">
-                        {userDetail.fullName}
+                        {userDetail.userName}
                       </h4>
                       <p>Khách hàng</p>
                     </div>

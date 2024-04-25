@@ -10,7 +10,6 @@ const AdminRoute = ({ children }) => {
   const token = useSelector((state) => state?.auth?.token);
   const userRole = token ? jwtDecode(token).Role : null;
 
-  console.log(userRole);
   if (userRole === "ROLE_ADMIN") {
     return children;
   } else if (!token) {

@@ -8,6 +8,7 @@ import {
   resetRegistration,
   updateRegistrationById,
 } from "../../redux/slice/registrationSlice";
+import Swal from "sweetalert2";
 const statusOptions = [
   { value: 0, label: "Chưa tư vấn" },
   { value: 1, label: "Đang tư vấn" },
@@ -35,7 +36,6 @@ const RegistrationFormDetail = () => {
   }, [userId]);
   const userDetail = useSelector((state) => state?.auth?.userById) || {};
   // nguyên nhân bug hello mng lai la My day
-  console.log(userId)
   const consultantId = useSelector(
     (state) => state?.consultant?.consultantById?.consultantId
   );
@@ -60,6 +60,12 @@ const RegistrationFormDetail = () => {
     dispatch(
       updateRegistrationById({ status, consultantId, registrationFormId })
     );
+    Swal.fire({
+      icon: "success",
+      title: "Cập nhật đơn tư vấn thành công!",
+      showConfirmButton: false,
+      timer: 1500,
+    });
   };
 
   return (
