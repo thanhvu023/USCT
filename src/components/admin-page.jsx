@@ -9,6 +9,7 @@ import Test1 from "./admin-components/customer-components/test1";
 import ProgramApplicationPage from "./admin-components/program-application-components/program-apllicationbyStudentprofileId";
 import AllPrograms from "./admin-components/program-components/programs";
 import Registration from "./admin-components/registration-components/registration";
+import UniversityPage from "./admin-components/uni-components/all-university";
 
 
 const AdminPage = () => {
@@ -24,7 +25,7 @@ const AdminPage = () => {
     "Chương trình": <AllPrograms />,
     "Hồ sơ đăng ký": <ProgramApplicationPage />,
     "Đơn tư vấn": <Registration />,
-    "Test1": <Test1 />,
+    "Test1": <UniversityPage />,
   };
 
   const getContentComponent = (main) => {

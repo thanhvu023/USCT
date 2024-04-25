@@ -11,206 +11,7 @@ import { Row, Dropdown, Modal, Button, Form, Col } from "react-bootstrap";
 import Swal from "sweetalert2";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-const CreateProgramModal = ({ show, onClose }) => {
-    const [formData, setFormData] = useState({
-      nameProgram: "",
-      status: "",
-      duration: "",
-      description: "",
-      tuition: 0,
-      level: "",
-      img: "",
-      responsibilities: "",
-      requirement: "",
-      universityId: 0,
-      majorId: 0,
-      semesterId: 0,
-      programTypeId: 0,
-    });
-  
-    const handleChange = (e) => {
-      const { name, value } = e.target;
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
-    };
-  
-    const handleCKEditorChange = (editorData, editor) => {
-      const name = editor.name;
-      setFormData({
-        ...formData,
-        [name]: editorData,
-      });
-    };
-  
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      // Gửi dữ liệu formData lên backend hoặc xử lý dữ liệu ở đây
-      console.log(formData);
-      // Đóng modal sau khi xử lý
-      onClose();
-    };
-  
-    return (
-      <Modal show={show} onHide={onClose} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Tạo mới chương trình</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form onSubmit={handleSubmit}>
-            <Row>
-              <Col md={6}>
-                <Form.Group controlId="formNameProgram">
-                  <Form.Label>Tên chương trình</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Nhập tên chương trình"
-                    name="nameProgram"
-                    value={formData.nameProgram}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Form.Group>
-                  <Form.Label>Trạng thái</Form.Label>
-                  <div>
-                    <Form.Check
-                      type="checkbox"
-                      label="Active"
-                      name="statusActive"
-                      defaultChecked={formData.statusActive}
-                      onChange={handleChange}
-                    />
-                    <Form.Check
-                      type="checkbox"
-                      label="Inactive"
-                      name="statusInactive"
-                      defaultChecked={formData.statusInactive}
-                      onChange={handleChange}
-                    />
-                  </div>
-                </Form.Group>
-  
-                <Form.Group controlId="formDuration">
-                  <Form.Label>Thời gian học</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Nhập thời gian học"
-                    name="duration"
-                    value={formData.duration}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formTuition">
-                  <Form.Label>Học phí</Form.Label>
-                  <Form.Control
-                    type="number"
-                    placeholder="Nhập học phí"
-                    name="tuition"
-                    value={formData.tuition}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formLevel">
-                  <Form.Label>Trình độ</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Nhập trình độ"
-                    name="level"
-                    value={formData.level}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formImg">
-                  <Form.Label>Link ảnh</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Nhập link ảnh"
-                    name="img"
-                    value={formData.img}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={6}>
-                <Form.Group controlId="formUniversity">
-                  <Form.Label>Trường đại học</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Nhập trường đại học"
-                    name="university"
-                    value={formData.university}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formMajor">
-                  <Form.Label>Chuyên ngành</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Nhập chuyên ngành"
-                    name="major"
-                    value={formData.major}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formSemester">
-                  <Form.Label>Học kỳ</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Nhập học kỳ"
-                    name="semester"
-                    value={formData.semester}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formProgramType">
-                  <Form.Label>Loại chuyên ngành</Form.Label>
-                  <Form.Control
-                    as="select"
-                    name="programType"
-                    value={formData.programType}
-                    onChange={handleChange}
-                  >
-                    <option value="">Chọn loại chuyên ngành</option>
-                    <option value="type1">Type 1</option>
-                    <option value="type2">Type 2</option>
-                    <option value="type3">Type 3</option>
-                  </Form.Control>
-                </Form.Group>
-                <Form.Group controlId="formResponsibilities">
-                  <Form.Label>Trách nhiệm</Form.Label>
-                  <CKEditor
-                    editor={ClassicEditor}
-                    name="responsibilities"
-                    data={formData.responsibilities}
-                    onChange={(event, editor) => {
-                      const data = editor.getData();
-                      handleCKEditorChange(data, editor);
-                    }}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formRequirement">
-                  <Form.Label>Yêu cầu</Form.Label>
-                  <CKEditor
-                    editor={ClassicEditor}
-                    name="requirement"
-                    data={formData.requirement}
-                    onChange={(event, editor) => {
-                      const data = editor.getData();
-                      handleCKEditorChange(data, editor);
-                    }}
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-            <Button variant="primary" type="submit">
-              Tạo mới
-            </Button>
-          </Form>
-        </Modal.Body>
-      </Modal>
-    );
-  };
+
 const AllProgramsPage = () => {
   const dispatch = useDispatch();
   const [feeData, setFeeData] = useState([]);
@@ -226,28 +27,23 @@ const AllProgramsPage = () => {
   const loading = useSelector((state) => state.program.loading);
   const [showAllPrograms, setShowAllPrograms] = useState(true);
 
-  // Gọi API để lấy danh sách tất cả các chương trình khi trang được tải
   useEffect(() => {
     dispatch(getAllProgram());
   }, [dispatch]);
 
-  // Hàm xử lý khi nhấp vào nút "Xem chi tiết"
   const handleShowDetailModal = (programId) => {
-    setSelectedProgramId(programId); // Lưu ID của chương trình được chọn
-    setShowModal(true); // Mở modal
+    setSelectedProgramId(programId); // Lưu ID
+    setShowModal(true);
   };
 
-  // Hàm đóng modal
   const handleCloseDetailModal = () => {
     setShowModal(false);
-    setSelectedProgramId(null); // Reset ID của chương trình được chọn
-    setSelectedProgram(null); // Reset thông tin của chương trình được chọn
+    setSelectedProgramId(null); // Reset ID
+    setSelectedProgram(null); 
   };
 
-  // Xử lý hiển thị thông tin của chương trình được chọn trong modal
   useEffect(() => {
     if (selectedProgramId) {
-      // Lấy thông tin chi tiết của chương trình từ danh sách đã có
       const program = programs.find((p) => p.programId === selectedProgramId);
       setSelectedProgram(program);
     }
@@ -292,14 +88,11 @@ const AllProgramsPage = () => {
   const dataSearch = (e) => {
     const searchValue = e.target.value.toLowerCase();
     if (searchValue === "") {
-      // Nếu không có giá trị tìm kiếm, hiển thị tất cả chương trình
       setFeeData([...programs]);
       setShowAllPrograms(true);
     } else {
-      // Nếu có giá trị tìm kiếm, lọc dữ liệu từ API
       const updatedData = programs.filter((item) => {
-        // Thay vì sử dụng các trường cứng như trong mẫu, bạn có thể sử dụng các trường từ API của bạn
-        // Hãy thay thế các trường sau với các trường tương ứng từ API của bạn
+ 
         let searchData =
           `${item.nameProgram} ${item.programTypeId} ${item.majorId} ${item.createDate}`.toLowerCase();
         return searchData.includes(searchValue);
@@ -310,8 +103,7 @@ const AllProgramsPage = () => {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Xử lý việc gửi dữ liệu lên server hoặc cập nhật trạng thái ở đây
-    // Sau khi xử lý xong, bạn có thể đóng modal bằng cách gọi handleCloseModal()
+
   };
   const renderPrograms = () => {
     return (
@@ -494,7 +286,6 @@ const AllProgramsPage = () => {
         </div>
       </Row>
 
-      {/* Modal hiển thị thông tin chi tiết của chương trình */}
       <Modal show={showModal} onHide={handleCloseDetailModal}>
         <Modal.Header closeButton>
           <Modal.Title>Chi tiết chương trình</Modal.Title>
@@ -504,7 +295,6 @@ const AllProgramsPage = () => {
             <>
               <p>Tên chương trình: {selectedProgram.nameProgram}</p>
               <p>Status: {selectedProgram.status}</p>
-              {/* Hiển thị các thông tin khác của chương trình */}
             </>
           )}
         </Modal.Body>
@@ -521,7 +311,6 @@ const AllProgramsPage = () => {
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleSubmit}>
-            {/* Form fields for editing program */}
           </Form>
         </Modal.Body>
       </Modal>
