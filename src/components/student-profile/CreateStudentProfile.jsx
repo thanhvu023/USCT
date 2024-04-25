@@ -194,12 +194,15 @@ const CreateStudentProfile = () => {
 
   const validateForm = () => {
     const newErrors = {};
-
-    // Add validation logic here for each form field
-    // Example:
-    // if (formData.fullName.trim() === "") {
-    //   newErrors.fullName = "Full Name is required";
-    // }
+    if (formData.fullName.trim() === "") {
+      newErrors.fullName = "Tên không hợp lệ!";
+    }
+    if (formData.email.trim() === "") {
+      newErrors.email = "Email không hợp lệ!";
+    }
+    if (formData.address.trim() === "") {
+      newErrors.address = "Địa chỉ không hợp lệ!";
+    }
 
     return newErrors;
   };
@@ -286,6 +289,11 @@ const CreateStudentProfile = () => {
                             value={formData.fullName}
                             onChange={handleInputChange}
                           />
+                          {errors.fullName && (
+                            <span className="error-message">
+                              {errors.fullName}
+                            </span>
+                          )}
                         </div>
                       </div>
                       {/* National ID */}
