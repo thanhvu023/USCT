@@ -206,7 +206,7 @@ const AllUniversitiesPage = () => {
             {selectedUniversity && (
              <>
              <h3 className="mb-3" style={{ fontSize: '20px', fontWeight: 'bold' }}>Tên trường đại học: {selectedUniversity.universityName}</h3>
-             <h5 className="mb-2" style={{ fontSize: '16px', fontWeight: 'bold' }}>Bang: {selectedUniversity.stateId}</h5>
+             <h5 className="mb-2"style={{ fontWeight: 'bold' }}>Bang: <span >{selectedUniversity.stateId}</span></h5>
              <h5 className="mb-2" style={{ fontSize: '16px', fontWeight: 'bold' }}>Chi phí nhập học: {selectedUniversity.tuition}</h5>
              <h5 className="mb-2" style={{ fontSize: '16px', fontWeight: 'bold' }}>Mô tả:</h5>
              <p>{selectedUniversity.description}</p>

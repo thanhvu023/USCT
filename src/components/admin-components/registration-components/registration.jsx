@@ -73,7 +73,9 @@ const Registration = () => {
   const [selectedConsultantName, setSelectedConsultantName] = useState("");
   const majorC = selectedRegistration?.majorChoose;
   // console.log("majorC",majorC)
-  const customers = useSelector((state) => state?.auth?.userById);
+  const customers = useSelector((state) => state.auth.user);
+  // console.log("Thông tin người dùng:", customers);
+  
   const dispatch = useDispatch();
   const token = useSelector((state) => state?.auth?.token);
   const customerId = jwtDecode(token).UserId;
