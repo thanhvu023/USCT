@@ -45,6 +45,7 @@ function ProgramDetailPage() {
   };
 
   const handleOpenModal = () => {
+    dispatch(resetStdeunt());
     setShowModal(true);
   };
 

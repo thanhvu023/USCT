@@ -128,7 +128,11 @@ const Routers = () => {
         <Route path="/reset-password" element={<ConfirmPasswordPage />} />
         <Route
           path="/customer/change-password"
-          element={<ChangePasswordPage />}
+          element={
+            <PrivateRoute userRole={userRole}>
+              <ChangePasswordPage />
+            </PrivateRoute>
+          }
         />
         <Route
           path="/create-student-profile"

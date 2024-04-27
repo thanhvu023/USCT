@@ -14,7 +14,11 @@ function Signin() {
   const loading = useSelector((state) => state?.auth?.loading);
   const errMsg = useSelector((state) => state?.auth?.error?.message);
   const isError = useSelector((state) => state?.auth?.error?.name);
-
+  useEffect(() => {
+    if (isError) {
+      dispatch(resetMessage());
+    }
+  }, [isError]);
   useEffect(() => {
     if (isError) {
       setError("Sai tài khoản hoặc mật khẩu!");
@@ -31,11 +35,8 @@ function Signin() {
       password: password,
     };
     dispatch(login({ loginData, navigate }));
-    if (isError) {
-      dispatch(resetMessage());
-      return;
-    }
     // Clear the error state
+    dispatch(resetMessage());
     setError("");
   };
   const handleEmailChange = (e) => {

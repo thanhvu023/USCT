@@ -29,7 +29,26 @@ function SignUp() {
     if (formData.fullName.trim() === "") {
       newErrors.fullName = "Họ và tên không được để trống!";
     }
-
+    if (formData.dateOfBirth.trim() === "") {
+      newErrors.dateOfBirth = "Ngày sinh không được để trống!";
+    } else {
+      // Calculate age based on date of birth
+      const currentDate = new Date();
+      const dob = new Date(formData.dateOfBirth);
+      let age = currentDate.getFullYear() - dob.getFullYear();
+      const monthDiff = currentDate.getMonth() - dob.getMonth();
+      if (monthDiff < 0 || (monthDiff === 0 && currentDate.getDate() < dob.getDate())) {
+        age--;
+        console.log(age)
+      }
+      // Check if age is less than 16
+      if (age < 16) {
+        newErrors.dateOfBirth = "Bạn phải đủ 16 tuổi để đăng ký!";
+      }
+      if (age < 0) {
+        newErrors.dateOfBirth = "Ngày sinh không hợp lệ!";
+      }
+    }
     if (/^[\p{L}\p{M}]+$/u.test(formData.fullName)) {
       newErrors.fullName = "Họ và tên không hợp lệ!";
     }
@@ -84,7 +103,6 @@ function SignUp() {
       setErrors(newErrors);
     }
   };
-
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     const newValue = type === "checkbox" ? (checked ? value : "") : value;
@@ -100,7 +118,7 @@ function SignUp() {
   return (
     <div className="signup-page-area pd-top-120 pd-bottom-120">
       <div className="container">
-      <Backdrop
+        <Backdrop
           sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={loading}
         >
@@ -135,8 +153,8 @@ function SignUp() {
                       onChange={handleInputChange}
                     />
                   </div>
-                  {errors.dob && (
-                    <p className="text-center text-danger mt-1">{errors.dob}</p>
+                  {errors.dateOfBirth && (
+                    <p className="text-center text-danger mt-1">{errors.dateOfBirth}</p>
                   )}
                 </div>
                 <div className="col-12">
@@ -214,7 +232,7 @@ function SignUp() {
                     />
                   </div>
                 </div>
-                <div className="col-6 mb-4">
+                <div className="col-12 mb-4">
                   <Form.Group controlId="gender">
                     <Form.Check
                       type="radio"
@@ -235,7 +253,11 @@ function SignUp() {
                       label="Nữ"
                     />
                   </Form.Group>
-                </div>
+                  {errors.gender && (
+                    <p className="text-center text-danger mt-1">
+                      {errors.gender}
+                    </p>
+                  )}                </div>
                 <div className="col-12 mb-4">
                   <button className="btn btn-base w-100">Tạo tài khoản</button>
                 </div>

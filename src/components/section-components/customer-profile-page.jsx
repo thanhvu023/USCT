@@ -9,7 +9,6 @@ import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { getUserById, updateUserById } from "../../redux/slice/authSlice";
 import { imageDb } from "../FirebaseImage/Config";
-import PageTitle from "./PageTitle";
 const CustomerProfilePage = () => {
   let publicUrl = process.env.PUBLIC_URL + "/";
 
@@ -42,8 +41,7 @@ const CustomerProfilePage = () => {
         setLoading(true);
         await uploadBytes(imgRef, selectedFile);
         const imageUrl = await getDownloadURL(imgRef);
-        setImageSrc(imageUrl);
-        console.log(loading);
+        setImageSrc(imageUrl);       
         setLoading(false);
       } catch (error) {
         console.error(`Error uploading ${selectedFile.name}:`, error);
@@ -70,6 +68,26 @@ const CustomerProfilePage = () => {
     if (address.trim() === "") {
       newErrors.address = "Địa chỉ không được để trống!";
     }
+    if (dateOfBirth.trim() === "") {
+      newErrors.dateOfBirth = "Ngày sinh không được để trống!";
+    } else {
+      // Calculate age based on date of birth
+      const currentDate = new Date();
+      const dob = new Date(userDetail.dateOfBirth);
+      let age = currentDate.getFullYear() - dob.getFullYear();
+      const monthDiff = currentDate.getMonth() - dob.getMonth();
+      if (monthDiff < 0 || (monthDiff === 0 && currentDate.getDate() < dob.getDate())) {
+        age--;
+        console.log(age)
+      }
+      // Check if age is less than 16
+      if (age < 16) {
+        newErrors.dateOfBirth = "Bạn phải đủ 16 tuổi để đăng ký!";
+      }
+      if (age < 0) {
+        newErrors.dateOfBirth = "Ngày sinh không hợp lệ!";
+      }
+    }
     return newErrors;
   };
 
@@ -89,6 +107,7 @@ const CustomerProfilePage = () => {
         dateOfBirth,
       },
     };
+
     const newErrors = validateForm();
     if (Object.keys(newErrors).length === 0) {
       // Check if the checkbox is checked
@@ -104,13 +123,13 @@ const CustomerProfilePage = () => {
       }
 
       // Checkbox is checked, proceed to submit form data
-        (updateUserById(updatedData));
+      dispatch(updateUserById(updatedData));
     } else {
       // Errors found, set them in state
       setErrors(newErrors);
       return;
     }
-
+    
     // Cập nhật thông tin và hiển thị thông báo thành công
     setFullName(updatedData.userData.fullName);
     setPhone(updatedData.userData.phone);
@@ -118,7 +137,7 @@ const CustomerProfilePage = () => {
     setDateOfBirth(updatedData.userData.dateOfBirth);
     setGender(updatedData.userData.gender);
     setImageSrc(updatedData.userData.img);
-
+    
     Swal.fire({
       icon: "success",
       title: "Cập nhật hồ sơ thành công!",
@@ -128,9 +147,8 @@ const CustomerProfilePage = () => {
   };
   return (
     <Fragment>
-      <PageTitle activeMenu="Profile" motherMenu="App" />
       <div className="bc-grey">
-      <Backdrop
+        <Backdrop
           sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={loadingPage}
         >
@@ -140,9 +158,6 @@ const CustomerProfilePage = () => {
           <div className="col-lg-12 mt-12">
             <div className="profile card card-body px-3 pt-3 pb-0 border rounded">
               <div className="profile-head">
-                <div className="photo-content ">
-                  <div className="cover-photo rounded"></div>
-                </div>
                 <div className="profile-info d-flex">
                   <div className="profile-photo ">
                     <img
@@ -525,8 +540,12 @@ const CustomerProfilePage = () => {
                                     <input
                                       type="file"
                                       onChange={(e) => handleUpload(e)}
-                                      style={{ flex: 1, minWidth: '0', width: 'auto' }} // Adjust width properties
-                                      />
+                                      style={{
+                                        flex: 1,
+                                        minWidth: "0",
+                                        width: "auto",
+                                      }} // Adjust width properties
+                                    />
                                   </div>
                                 </div>
                               </div>
