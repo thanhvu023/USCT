@@ -38,6 +38,17 @@ export const getUniversityTypeById = createAsyncThunk(
   }
 );
 
+export const getAllUniversityType = createAsyncThunk(
+  '/university/getAllUniversityType',
+  async (_, thunkAPI) => { // Tham số thứ hai không cần sử dụng, do đó sử dụng dấu gạch dưới (_)
+    try {
+      const res = await instance.get(`/university-types`);
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response);
+    }
+  }
+);
 export const createUniversity = createAsyncThunk(
   "/university/create",
   async (universityData, thunkAPI) => {
@@ -70,6 +81,7 @@ const initialState = {
   universities: [],
   universityById: {},
   universityType: {},
+  universityTypes: [],
 };
 
 export const universitySlice = createSlice({
@@ -99,6 +111,17 @@ export const universitySlice = createSlice({
         state.error = null;
       })
       .addCase(getUniversityById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(getAllUniversityType.pending, (state) => { 
+        state.loading = true;
+      })
+      .addCase(getAllUniversityType.fulfilled, (state, action) => { 
+        state.universityTypes = action.payload; 
+        state.error = null;
+      })
+      .addCase(getAllUniversityType.rejected, (state, action) => { 
         state.loading = false;
         state.error = action.error.message;
       })

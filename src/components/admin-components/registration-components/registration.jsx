@@ -20,7 +20,7 @@ import {
 import { getConsultantBySpecializeId } from "../../../redux/slice/consultantSlice";
 import { getAllUsers } from "../../../redux/slice/authSlice";
 
-// import './registration.css'
+import './registration.css'
 const theadData = [
   { heading: "ID đơn", sortingVale: "id" },
   { heading: "Chuyên ngành đã chọn", sortingVale: "majorChoose" },

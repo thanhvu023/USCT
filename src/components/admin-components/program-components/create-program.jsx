@@ -44,9 +44,9 @@ const CreateProgramModal = ({
 
   const handleUpload = async () => {
     if (!img) return;
-    const imageName = img.name; // get the name of the image without extension
-    let imgRef = ref(imageDb, "Image/Program/" + imageName); // use the image name as the file name
-    // Upload the image
+    const imageName = img.name; 
+    let imgRef = ref(imageDb, "Image/Program/" + imageName); 
+
     uploadBytes(imgRef, img).then(() => {
       getDownloadURL(imgRef).then((downloadURL) => {
         setSelectedFile(downloadURL);

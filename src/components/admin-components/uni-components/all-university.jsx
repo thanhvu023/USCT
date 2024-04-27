@@ -3,47 +3,14 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   getAllUniversity,
   createUniversity,
-  updateUniversity,
 } from "../../../redux/slice/universitySlice";
-import { Row, Dropdown, Modal, Button, Form, Col } from "react-bootstrap";
+import { getStateById } from "../../../redux/slice/stateSlice";
+import { Row, Dropdown, Modal, Button, Form } from "react-bootstrap";
 import Swal from "sweetalert2";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { imageDb } from "../../FirebaseImage/Config";
+import CreateUniversityModal from "./create-university";
 
-const CreateUniversityModal = ({ show, onClose }) => {
-  const [formData, setFormData] = useState({
-    universityName: "",
-    tuition: 0,
-    description: "",
-    img: "", 
-    slogan: "", 
-  });
-
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(formData);
-    onClose();
-  };
-
-  return (
-    <Modal show={show} onHide={onClose} centered>
-      <Modal.Header closeButton>
-        <Modal.Title>Tạo mới trường đại học</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <Form onSubmit={handleSubmit}>
-        </Form>
-      </Modal.Body>
-    </Modal>
-  );
-};
 
 const AllUniversitiesPage = () => {
     const dispatch = useDispatch();
@@ -53,13 +20,37 @@ const AllUniversitiesPage = () => {
     const [selectedUniversityId, setSelectedUniversityId] = useState(null);
     const [selectedUniversity, setSelectedUniversity] = useState(null); 
     const [showModal, setShowModal] = useState(false); 
+    const [imgURL, setImgURL] = useState(null);
+    const [formData, setFormData] = useState({
+      universityName: "",
+      tuition: "",
+      description: "",
+      img: "",
+      slogan: "",
+      universityTypeId: "",
+      staffId: "",
+      website: "",
+      email: ""
+    });
+
+
     const universities = useSelector((state) => state.university.universities);
     const loading = useSelector((state) => state.university.loading);
     const itemsPerPage = 6;
+    const stateDetail = useSelector((state) => state?.state?.stateById);
+    
+
+    console.log("stateName",stateDetail)
   const [currentPage, setCurrentPage] = useState(1);
     useEffect(() => {
       dispatch(getAllUniversity());
+
     }, [dispatch]);
+    useEffect(() => {
+      if (selectedUniversity) {
+        dispatch(getStateById(selectedUniversity.stateId));
+      }
+    }, [dispatch, selectedUniversity]);
     
     const handleShowEditModal = (university) => {
       setSelectedUniversityForEdit(university);
@@ -96,7 +87,45 @@ const AllUniversitiesPage = () => {
       setSelectedUniversityId(null);
       setShowModal(false); 
     };
+    const handleImageUpload = async (file) => {
+      // Kiểm tra xem có file được chọn không
+      if (file) {
+        // Tạo tham chiếu đến nơi lưu trữ ảnh trên Firebase Storage
+        const imgRef = ref(imageDb, `Image/Universities/${file.name}`);
+        try {
+          await uploadBytes(imgRef, file);
+          const imageUrl = await getDownloadURL(imgRef);
+          setImgURL(imageUrl);
+          setFormData({
+            ...formData,
+            img: imageUrl
+          });
+        } catch (error) {
+          // Xử lý lỗi nếu có
+          console.error(`Error uploading ${file.name}:`, error);
+        }
+      } else {
+        // Nếu không có file được chọn
+        console.error("No file selected.");
+      }
+    };
+    
+    const handleSubmitCreateUniversity = async () => {
+      if (formData.img) {
+        await handleImageUpload(formData.img);
+      }
+      dispatch(createUniversity(formData)).then(() => {
+        Swal.fire({
+          icon: "success",
+          title: "Tạo Trường  thành công!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
   
+        dispatch(getAllUniversity());
+      });
+   
+    };
     const renderUniversities = () => {
         const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -191,6 +220,10 @@ const AllUniversitiesPage = () => {
                 <CreateUniversityModal
                   show={showCreateModal}
                   onClose={handleToggleCreateModal}
+                  onSubmit={handleSubmitCreateUniversity}
+                  formData={formData}
+                  setFormData={setFormData}
+                  imgURL={imgURL}
                 />
               </div>
             </div>
@@ -198,7 +231,7 @@ const AllUniversitiesPage = () => {
             {renderUniversities()}
           </div>
         </Row>
-        <Modal show={showModal} onHide={handleCloseUniversityDetailModal} centered>
+        <Modal show={showModal} on  Hide={handleCloseUniversityDetailModal} centered>
           <Modal.Header closeButton>
             <Modal.Title>Chi tiết trường đại học</Modal.Title>
           </Modal.Header>
@@ -206,7 +239,7 @@ const AllUniversitiesPage = () => {
             {selectedUniversity && (
              <>
              <h3 className="mb-3" style={{ fontSize: '20px', fontWeight: 'bold' }}>Tên trường đại học: {selectedUniversity.universityName}</h3>
-             <h5 className="mb-2"style={{ fontWeight: 'bold' }}>Bang: <span >{selectedUniversity.stateId}</span></h5>
+             <h5 className="mb-2" style={{ fontSize: '16px' }}>Bang: <p>{stateDetail?.stateName}</p></h5>
              <h5 className="mb-2" style={{ fontSize: '16px', fontWeight: 'bold' }}>Chi phí nhập học: {selectedUniversity.tuition}</h5>
              <h5 className="mb-2" style={{ fontSize: '16px', fontWeight: 'bold' }}>Mô tả:</h5>
              <p>{selectedUniversity.description}</p>

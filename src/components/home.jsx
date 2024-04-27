@@ -18,7 +18,6 @@ const HomePage = () => {
         <HowToWork />
         <CourseFilter />
         <FunFact />
-        <HowToWork />
         <Team />
         
         <Footer />

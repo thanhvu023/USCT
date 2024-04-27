@@ -120,7 +120,7 @@ function ProgramsPage() {
           <div className="col-lg-8 order-lg-12 m-0">
             <div className="row go-top">
               {programs.map((program, index) => (
-                <div key={index} className="col-md-6">
+                <div key={index} className="col-md-6" style={{height:'381px'}}>
                   <div className="single-course-inner">
                     <div className="thumb">
                       <img src={program.img} alt="img" />

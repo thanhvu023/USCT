@@ -1,17 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllConsultants } from '../../redux/slice/consultantSlice';
 import { Col, Dropdown, Row, Nav, Tab } from 'react-bootstrap';
 import { Link, useNavigate } from "react-router-dom"; // Import Link và useNavigate từ react-router-dom
-
 
 import { ProgressCard } from './card-design';
 import IncomeExpense from './IncomeExpense';
 const tabelData = [
-	{no:'01', name : "Jack Ronan",  proff:"Airi Satou", date:"02 jan 2024", status:'Inactive', color:'danger', subject:'Commerce', fees:'120'},
-	{no:'02', name : "Jimmy Morris",  proff:"Angelica Ramos", date:"02 jan 2024", status:'Active', color:'primary', subject:'Mechanical', fees:'205'},
-	{no:'03', name : "Nashid Martines",  proff:"Ashton Cox", date:"04 jan 2024", status:'Inactive', color:'danger', subject:'Science', fees:'180'},
-	{no:'04', name : "Roman Aurora",  proff:"Cara Stevens", date:"05 jan 2024", status:'Active', color:'primary', subject:'Arts', fees:'200'},
-	{no:'05', name : "Samantha",  proff:"Bruno Nash", date:"06 jan 2024", status:'Active', color:'primary', subject:'Maths', fees:'210'},
-	
+    {no:'01', name : "Jack Ronan",  proff:"Airi Satou", date:"02 jan 2024", status:'Inactive', color:'danger', subject:'Commerce', fees:'120'},
+    {no:'02', name : "Jimmy Morris",  proff:"Angelica Ramos", date:"02 jan 2024", status:'Active', color:'primary', subject:'Mechanical', fees:'205'},
+    {no:'03', name : "Nashid Martines",  proff:"Ashton Cox", date:"04 jan 2024", status:'Inactive', color:'danger', subject:'Science', fees:'180'},
+    {no:'04', name : "Roman Aurora",  proff:"Cara Stevens", date:"05 jan 2024", status:'Active', color:'primary', subject:'Arts', fees:'200'},
+    {no:'05', name : "Samantha",  proff:"Bruno Nash", date:"06 jan 2024", status:'Active', color:'primary', subject:'Maths', fees:'210'},
+    
 ];
 const CarddBlog = [
     {title:"Khách hàng tư vấn", number:'3180', percent:'80%', color:"primary"},
@@ -20,13 +21,6 @@ const CarddBlog = [
     {title:"Lợi Nhuận", number:'21290$',  percent:'35%', color:"success"},
 ];
 
-const mediaBlog = [
-    { name:'Theodore Handle', image: "https://i.redd.it/lyhoip7h9qg11.jpg", subject:'B.Com', status:'Available'},
-    { name:'Bess Willis', image: "https://i.redd.it/lyhoip7h9qg11.jpg", subject:'M.Com', status:'Not Available'},
-    { name:'James Jones', image: "https://i.redd.it/lyhoip7h9qg11.jpg", subject:'M.Tach', status:'Available'},
-    { name:'Smith Watson', image: "https://i.redd.it/lyhoip7h9qg11.jpg", subject:'B.Tach', status:'Not Available'},
-    { name:'Morese Sharpe', image: "https://i.redd.it/lyhoip7h9qg11.jpg", subject:'B.A, M.A', status:'Available'},
-];
 
 const studentTable = [
     {id:1, isChecked:false,name:'Angelica Ramos', coach:'Ashton Cox', date:'12 Jan 2024', time:'10:15'},
@@ -46,7 +40,14 @@ const salaryTable = [
 ];
 
 const AdminHome = ({handleAllConsultantClick }) => {
+    const dispatch = useDispatch();
+    const consultants = useSelector(state => state.consultant.consultants.slice(0, 5));
+        console.log("consultants",consultants)
+    const loading = useSelector(state => state.consultant.loading);
 
+    useEffect(() => {
+        dispatch(getAllConsultants());
+    }, [dispatch]);
     return (
         <>
             <div className='container-fluid' style={{ backgroundColor: 'whitesmoke',paddingBottom:'50px' }}>
@@ -71,26 +72,25 @@ const AdminHome = ({handleAllConsultantClick }) => {
                             </div>
                         </div>
                     </Col>
-
                     <Col xl={4} lg={4} md={12}>
-                        <div className="card mt-4" >
+                        <div className="card mt-4">
                             <div className="card-header" style={{ backgroundColor: 'white' }}>
                                 <h4 className="card-title">Tư vấn viên</h4>
                             </div>
                             <div className="card-body dz-scroll" style={{ height: "450px" }}>
-                                {mediaBlog.map((item, ind) => (
-                                    <div className="media mb-3 align-items-center border-bottom pb-3" key={ind}>
-                                        <img className="me-3 rounded-circle" alt="" width="50" src={item.image} />
-                                        <div className="media-body">
-                                            <h5 className="mb-0 text-pale-sky">{item.name} <small className="text-muted">( {item.subject} )</small></h5>
-                                            <small className={`mb-0 text-${item.status === "Available" ? "primary" : "danger"}`}>{item.status}</small>
+                                {consultants.map((consultant, index) => (
+                                    <div className="media mb-3 align-items-center border-bottom pb-3" key={index}>
+                                        <img className="me-3 rounded-circle" alt="" width="50" height="50" src={consultant.img || "default-image-url.jpg"} />
+                                        <div className="media-body ml-3">
+                                            <h5 className="mb-0 text-pale-sky">{consultant.userName}</h5>
+                                            <small className={`mb-0 text-${consultant.email === "Available" ? "danger" : "primary"}`}>{consultant.email}</small>
                                         </div>
                                     </div>
                                 ))}
                             </div>
                             <div className="card-footer border-0 pt-2 bg-white">
                                 <div className="text-center">
-                                <button className="btn btn-primary" onClick={handleAllConsultantClick}>Xem tất cả</button>
+                                    <button className="btn btn-primary" onClick={handleAllConsultantClick}>Xem tất cả</button>
                                 </div>
                             </div>
                         </div>
@@ -145,3 +145,5 @@ const AdminHome = ({handleAllConsultantClick }) => {
 };
 
 export default AdminHome;
+
+
