@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Form } from 'react-bootstrap';
 import { getAllState } from '../../../redux/slice/stateSlice';
-import { getAllStaff } from '../../../redux/staffSlice';
+import { getAllStaff } from '../../../redux/slice/staffSlice';
 const AutoCompleteInput = ({ value, onChange }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const dispatch = useDispatch();

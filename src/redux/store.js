@@ -23,7 +23,7 @@ import programApplicationReducer from "./slice/programApplicationSlice";
 import consultantReducer from "./slice/consultantSlice";
 import applyStageReducer from "./slice/applyStageSlice";
 import programStageReducer from './slice/programStageSlice';
-import  staffReducer from './slice/stateSlice'
+import  staffReducer from './slice/staffSlice'
 const persistConfig = {
   key: "root",
   storage,

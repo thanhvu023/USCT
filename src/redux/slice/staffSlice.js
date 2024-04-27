@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import instance from "./axiosCustom";
+import instance from "../axiosCustom";
 
 
 export const getAllStaff = createAsyncThunk(
@@ -7,7 +7,7 @@ export const getAllStaff = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const response = await instance.get("/account/staffs");
-    
+        
       return response.data;
     } catch (error) {
         return thunkAPI.rejectWithValue(error.response);

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getAllUniversityType } from "../../../redux/slice/universitySlice";
 import { getAllState } from "../../../redux/slice/stateSlice";
-import { getAllStaff } from "../../../redux/staffSlice";
+import { getAllStaff } from "../../../redux/slice/staffSlice";
 import Swal from "sweetalert2";
 import { Row, Dropdown, Modal, Button, Form, Col, Card } from "react-bootstrap";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -110,7 +110,7 @@ const CreateUniversityModal = ({
                 </Col>
                 <Col md={6}>
                   <Form.Group className="mb-3">
-                    <Form.Label>Ảnh</Form.Label>
+                    <Form.Label style={{ fontWeight: 'bold', fontSize: '1.1em' }}>Ảnh</Form.Label>
                     <Form.Control
                       type="file"
                       onChange={(e) => setImg(e.target.files[0])}
@@ -118,7 +118,7 @@ const CreateUniversityModal = ({
                   </Form.Group>
 
                   <Form.Group className="mb-3">
-                    <Form.Label>Tên trường đại học</Form.Label>
+                    <Form.Label  style={{ fontWeight: 'bold', fontSize: '1.1em' }}>Tên trường đại học</Form.Label>
                     <Form.Control
                       type="text"
                       placeholder="Nhập tên trường đại học"
@@ -129,7 +129,7 @@ const CreateUniversityModal = ({
                   </Form.Group>
 
                   <Form.Group className="mb-3">
-                    <Form.Label>Loại trường đại học</Form.Label>
+                    <Form.Label  style={{ fontWeight: 'bold', fontSize: '1.1em' }}>Loại trường đại học</Form.Label>
                     <Form.Select
                       name="universityTypeId"
                       value={formData.universityTypeId}
@@ -150,7 +150,7 @@ const CreateUniversityModal = ({
                 </Col>
               </Row>
               <Form.Group className="mb-3">
-                <Form.Label>Tiễu bang</Form.Label>
+                <Form.Label  style={{ fontWeight: 'bold', fontSize: '1.1em' }}>Tiểu bang</Form.Label>
                 <AutoCompleteInput
                   value={formData.stateId}
                   onChange={(selectedState) =>
@@ -163,7 +163,7 @@ const CreateUniversityModal = ({
           <Col md={6}>
             <Form onSubmit={handleSubmit}>
               <Form.Group className="mb-3">
-                <Form.Label>TUITIOn</Form.Label>
+                <Form.Label  style={{ fontWeight: 'bold', fontSize: '1.1em' }}>Nhập học phí </Form.Label>
                 <Form.Control
                   type="number"
                   placeholder="Nhập Tiền "
@@ -173,17 +173,23 @@ const CreateUniversityModal = ({
                 />
               </Form.Group>
               <Form.Group className="mb-3">
-                <Form.Label>ID nhân viên</Form.Label>
-                <Form.Control
-                  type="number"
-                  placeholder="Nhập ID nhân viên"
-                  name="staffId"
-                  value={formData.staffId}
-                  onChange={handleChange}
-                />
-              </Form.Group>
+                    <Form.Label  style={{ fontWeight: 'bold', fontSize: '1.1em' }}> Nhân viên</Form.Label>
+                    <Form.Select
+                      name="staffId"
+                      value={formData.staffId}
+                      onChange={handleChange}
+                      className="form-control"
+                    >
+                      <option value="">Chọn email nhân viên</option>
+                      {staffs.map((staff) => (
+                        <option key={staff.staffId} value={staff.staffId}>
+                          {staff.email}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </Form.Group>
               <Form.Group className="mb-3">
-                <Form.Label>Trang web</Form.Label>
+                <Form.Label  style={{ fontWeight: 'bold', fontSize: '1.1em' }}>Website của trường</Form.Label>
                 <Form.Control
                   type="text"
                   placeholder="Nhập URL trang web"
@@ -193,7 +199,7 @@ const CreateUniversityModal = ({
                 />
               </Form.Group>
               <Form.Group className="mb-3">
-                <Form.Label>Email</Form.Label>
+                <Form.Label  style={{ fontWeight: 'bold', fontSize: '1.1em' }}>Email</Form.Label>
                 <Form.Control
                   type="email"
                   placeholder="Nhập email"
@@ -203,7 +209,7 @@ const CreateUniversityModal = ({
                 />
               </Form.Group>
               <Form.Group className="mb-3">
-                <Form.Label>Slogan</Form.Label>
+                <Form.Label  style={{ fontWeight: 'bold', fontSize: '1.1em' }}>Khẩu hiệu</Form.Label>
                 <Form.Control
                   type="text"
                   placeholder="Nhập slogan"
@@ -213,7 +219,7 @@ const CreateUniversityModal = ({
                 />
               </Form.Group>
               <Form.Group className="mb-3">
-                <Form.Label>Mô tả</Form.Label>
+                <Form.Label  style={{ fontWeight: 'bold', fontSize: '1.1em' }}>Mô tả</Form.Label>
                 <Form.Control
                   type="text"
                   placeholder="description"

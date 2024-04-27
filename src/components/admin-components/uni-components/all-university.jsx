@@ -39,7 +39,8 @@ const AllUniversitiesPage = () => {
     const loading = useSelector((state) => state.university.loading);
     const itemsPerPage = 6;
     const stateDetail = useSelector((state) => state?.state?.stateById);
-    
+    const [searchUniversityName, setSearchUniversityName] = useState("");
+
 
     console.log("stateName",stateDetail)
   const [currentPage, setCurrentPage] = useState(1);
@@ -102,11 +103,9 @@ const AllUniversitiesPage = () => {
             img: imageUrl
           });
         } catch (error) {
-          // Xử lý lỗi nếu có
           console.error(`Error uploading ${file.name}:`, error);
         }
       } else {
-        // Nếu không có file được chọn
         console.error("No file selected.");
       }
     };
@@ -127,10 +126,16 @@ const AllUniversitiesPage = () => {
       });
    
     };
+
+   
+  
     const renderUniversities = () => {
         const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentUniversities = universities.slice(indexOfFirstItem, indexOfLastItem);
+    const filteredUniversities = universities.filter((university) =>
+    university.universityName.toLowerCase().includes(searchUniversityName.toLowerCase())
+  );
+  const currentUniversities = filteredUniversities.slice(indexOfFirstItem, indexOfLastItem);
       return (
         <div className="row">
           {loading ? (
@@ -159,12 +164,6 @@ const AllUniversitiesPage = () => {
                               className="dropdown-item"
                             >
                               Chỉnh sửa
-                            </button>
-                            <button
-                              onClick={handleShowDeleteModal}
-                              className="dropdown-item text-danger"
-                            >
-                              Xóa
                             </button>
                           </div>
                         </Dropdown.Menu>
@@ -207,10 +206,13 @@ const AllUniversitiesPage = () => {
                 <label>
                   Tìm kiếm :{" "}
                   <input
-                    type="search"
-                    className="mr-4"
-                    placeholder=""
-                  />
+  type="search"
+  className="mr-4"
+  placeholder=""
+  value={searchUniversityName}
+  onChange={(e) => setSearchUniversityName(e.target.value)}
+/>
+
                 </label>
                 <button
                   onClick={handleToggleCreateModal}
@@ -239,17 +241,19 @@ const AllUniversitiesPage = () => {
           <Modal.Body>
             {selectedUniversity && (
              <>
-             <h3 className="mb-3" style={{ fontSize: '20px', fontWeight: 'bold' }}>Tên trường đại học: {selectedUniversity.universityName}</h3>
-             <h5 className="mb-2" style={{ fontSize: '16px' }}>Bang: <p>{stateDetail?.stateName}</p></h5>
+             <h3 className="mb-3" style={{ fontWeight: 'bold' }}> {selectedUniversity.universityName} - ({stateDetail?.stateName})</h3>
+           
              <h5 className="mb-2" style={{ fontSize: '16px', fontWeight: 'bold' }}>Chi phí nhập học: {selectedUniversity.tuition}</h5>
              <h5 className="mb-2" style={{ fontSize: '16px', fontWeight: 'bold' }}>Mô tả:</h5>
              <p>{selectedUniversity.description}</p>
              <h5 className="mb-2" style={{ fontSize: '16px', fontWeight: 'bold' }}>Slogan:</h5>
              <p>{selectedUniversity.slogan}</p>
              <h5 className="mb-2" style={{ fontSize: '16px', fontWeight: 'bold' }}>Trang web:</h5>
-             <p><a href={selectedUniversity.website}>{selectedUniversity.website}</a></p>
-             <h5 className="mb-2" style={{ fontSize: '16px', fontWeight: 'bold' }}>Email:</h5>
-             <p>{selectedUniversity.email}</p>
+              <p><a href={selectedUniversity.website}>{selectedUniversity.website}</a></p>
+              <h5 className="mb-2" style={{ fontSize: '16px', fontWeight: 'bold' }}>Email:</h5>
+              <p>{selectedUniversity.email}</p>
+              <h5 className="mb-2" style={{ fontSize: '16px', fontWeight: 'bold' }}>Nhân viên phụ trách:</h5>
+              <p>{selectedUniversity.staffId}</p>
            </>
                
             )}
