@@ -30,7 +30,8 @@ const AllUniversitiesPage = () => {
       universityTypeId: "",
       staffId: "",
       website: "",
-      email: ""
+      email: "",
+      stateId:""
     });
 
 
