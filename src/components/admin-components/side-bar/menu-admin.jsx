@@ -75,7 +75,7 @@ export const MenuList = [
 
   /// Test
   {
-    title: "Test1",
+    title: "Trường Đại học",
     classChange: "mm-collapse",
     iconStyle: (
       <i
@@ -83,6 +83,6 @@ export const MenuList = [
         la la-pencil-square"
       />
     ),
-    filterName: "test1",
+    filterName: "universities",
   },
 ];

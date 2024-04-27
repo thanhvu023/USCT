@@ -6,8 +6,7 @@ import {
   getProgramById,
   updateProgram,
   createProgram,
-  hideProgram
-
+  hideProgram,
 } from "../../../redux/slice/programSlice";
 import { getAllMajor, getMajorById } from "../../../redux/slice/majorSlice";
 import { getAllSemester } from "../../../redux/slice/semesterSlice";
@@ -20,7 +19,8 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { imageDb } from "../../FirebaseImage/Config";
 import CreateProgramModal from "./create-program";
-import './program.css'
+import "./program.css";
+import { Link } from "react-router-dom";
 
 const AllPrograms = () => {
   const dispatch = useDispatch();
@@ -41,8 +41,8 @@ const AllPrograms = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState(null);
   const loading = useSelector((state) => state.program.loading);
-  
-  const [currentPage, setCurrentPage] = useState(1);  
+
+  const [currentPage, setCurrentPage] = useState(1);
   const [showAllPrograms, setShowAllPrograms] = useState(true);
 
   const [editedProgram, setEditedProgram] = useState(
@@ -132,7 +132,7 @@ const AllPrograms = () => {
         showConfirmButton: false,
         timer: 1500,
       });
-      // Gọi lại API để lấy danh sách tất cả các chương trình
+
       dispatch(getAllProgram());
     });
     handleCloseCreateModal();
@@ -150,7 +150,6 @@ const AllPrograms = () => {
     setSelectedProgramId(programId);
     setShowModal(true);
     setCurrentPage(1);
-    
   };
 
   const handleCloseDetailModal = () => {
@@ -179,18 +178,32 @@ const AllPrograms = () => {
   // console.log("edit:",selectedProgramForEdit)
 
   // confirm delete
+  const handleStatusChange = () => {
+    if (selectedProgramForEdit && selectedProgramForEdit.status) {
+      const newStatus =
+        selectedProgramForEdit.status === "Active" ? "Inactive" : "Active";
+      setEditedProgram({
+        ...selectedProgramForEdit,
+        status: newStatus,
+      });
+    }
+  };
+
   const handleShowDeleteModal = () => {
     Swal.fire({
-      title: "Bạn có chắc muốn xóa không?",
-      text: "Once deleted, you will not be able to recover this imaginary file!",
+      title: "Bạn có chắc muốn chuyển trạng thái không?",
+      text: "Once changed, you will not be able to revert this!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#dd6b55",
-      cancelButtonColor: "#aaa",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
       confirmButtonText: "Đồng ý",
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire("Deleted!", "Your file has been deleted.", "success");
+        const newStatus =
+          selectedProgramForEdit.status === "Active" ? "Inactive" : "Active";
+        handleStatusChange(newStatus);
+        Swal.fire("Thành công!", "Trạng thái đã được thay đổi.", "success");
       }
     });
   };
@@ -274,7 +287,7 @@ const AllPrograms = () => {
           icon: "success",
           title: "Chỉnh sửa chương trình thành công!",
           showConfirmButton: false,
-          timer: 1500, 
+          timer: 1500,
         });
         setProgramUpdated(true);
         handleCloseEditModal();
@@ -291,113 +304,156 @@ const AllPrograms = () => {
     }
   }, [programUpdated, dispatch]);
 
+  const isProgramSelected = (programId) => {
+    return programId === selectedProgramId;
+  };
   const RenderPrograms = () => {
     const itemsPerPage = 6;
     const [currentPage, setCurrentPage] = useState(1);
-  
+
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentPrograms = showAllPrograms ? programs.slice(indexOfFirstItem, indexOfLastItem) : feeData.slice(indexOfFirstItem, indexOfLastItem);
-  
+    const currentPrograms = showAllPrograms
+      ? programs.slice(indexOfFirstItem, indexOfLastItem)
+      : feeData.slice(indexOfFirstItem, indexOfLastItem);
+
     const paginate = (pageNumber) => {
       setCurrentPage(pageNumber);
-      localStorage.setItem('currentPage', pageNumber);
-    };    
+      localStorage.setItem("currentPage", pageNumber);
+    };
+
     useEffect(() => {
-      const storedPage = localStorage.getItem('currentPage');
+      const storedPage = localStorage.getItem("currentPage");
       if (storedPage !== null) {
         setCurrentPage(parseInt(storedPage));
       }
-    }, [])
+    }, []);
+
     return (
       <div className="row">
         {loading ? (
           <div>Loading...</div>
         ) : showAllPrograms ? (
-          currentPrograms.map((program, index) => (
-            <div className="col-lg-4 col-md-6 col-sm-6 col-12 mb-4" key={index}>
-              <div className="card mx-4 mt-4">
-                <div className="card-body" >
-                  <div className="d-flex justify-content-end">
+     currentPrograms.map((program, index) => (
+    <div
+        className="col-lg-4 col-md-6 col-sm-6 col-12 mb-4"
+        key={index}
+       
+    >
+        <div className="card mx-4 mt-4"
+        style={{
+          boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)",
+          borderRadius: "10px",
+      }}>
+            <div className="card-body" style={{ height: "440px" }}>
+                <div className="d-flex justify-content-end">
                     <Dropdown>
-                      <Dropdown.Toggle
-                        as="button"
-                        className="btn  "
-                        type="button"
-                      >
-                        <span className="fs--1">...</span>
-                      </Dropdown.Toggle>
-                      <Dropdown.Menu
-                        align="end"
-                        className="dropdown-menu dropdown-menu-right border py-0"
-                      >
-                        <div className="py-2">
-                          <button
-                            onClick={() =>
-                              handleShowEditModal(program.programId)
-                            }
-                            className="dropdown-item"
-                          >
-                            Chỉnh sửa
-                          </button>
-                          <button
-                            onClick={handleShowDeleteModal}
-                            className="dropdown-item text-danger"
-                          >
-                            Xóa
-                          </button>
-                        </div>
-                      </Dropdown.Menu>
+                        <Dropdown.Toggle
+                            as="button"
+                            className="btn  "
+                            type="button"
+                        >
+                            <span className="fs--1">...</span>
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu
+                            align="end"
+                            className="dropdown-menu dropdown-menu-right border py-0"
+                        >
+                            <div className="py-2">
+                                <button
+                                    onClick={() =>
+                                        handleShowEditModal(program.programId)
+                                    }
+                                    className="dropdown-item"
+                                >
+                                    Chỉnh sửa
+                                </button>
+                                <button
+                                    onClick={() => handleStatusChange(program)}
+                                    className="dropdown-item"
+                                >
+                                    {program.status === 'Active'
+                                        ? 'Deactivate'
+                                        : 'Activate'}
+                                </button>
+                            </div>
+                        </Dropdown.Menu>
                     </Dropdown>
-                  </div>
+                </div>
 
-                  <div className="">
-                    <h3 className="mt-4 mb-1" style={{ fontSize: "24px" }}>
+                <div className="">
+                <Link
+                      className="mt-4 mb-1"
+                      onClick={() => handleShowDetailModal(program.programId)}
+                      style={{ fontSize: "24px", fontWeight: "700" }}
+                    >
                       {program.nameProgram}
-                    </h3>
+                    </Link>
                     {/* <img
-          src={"assets/img/course/programs.jpg"}
-          alt="img"
-          className="img-fluid"
-        /> */}
+                      src={program.img}
+                      style={{height:'220px',width:'350px'}}
+                      alt="img"
+                      className="img-fluid"
+                    /> */}
                     <p className="text-muted">
-                      {getTypeName(program.programTypeId)}
+                        {getTypeName(program.programTypeId)}
                     </p>
                     <ul className="list-group mb-3 list-group-flush">
-                      <li className="list-group-item px-0 d-flex justify-content-between">
-                        <span className="mb-0" style={{ fontWeight: "400" }}>
-                          Chuyên ngành:
-                        </span>
-                        <strong style={{ fontSize: "14px" }}>
-                          {getMajorName(program.majorId)}
-                        </strong>
-                      </li>
+                        <li className="list-group-item px-0 d-flex justify-content-between">
+                            <span
+                                className="mb-0"
+                                style={{ fontWeight: "400" }}
+                            >
+                                Chuyên ngành:
+                            </span>
+                            <strong style={{ fontSize: "14px" }}>
+                                {getMajorName(program.majorId)}
+                            </strong>
+                        </li>
 
-                      <li className="list-group-item px-0 d-flex justify-content-between">
-                        <span className="mb-0">Ngày tạo :</span>
-                        <strong>{program.createDate}</strong>
-                      </li>
-                      <li className="list-group-item px-0 d-flex justify-content-between">
-                        <span className="mb-0">Trạng thái :</span>
-                        <strong>{program.status}</strong>
-                      </li>
+                        <li className="list-group-item px-0 d-flex justify-content-between">
+                            <span className="mb-0">Ngày tạo :</span>
+                            <strong>{program.createDate}</strong>
+                        </li>
+                        <li className="list-group-item px-0 d-flex justify-content-between">
+                            <span className="mb-0">Trạng thái :</span>
+                            <strong
+                                style={{
+                                    color:
+                                        program.status === "Active"
+                                            ? "#28a745"
+                                            : "#dc3545",
+                                }}
+                            >
+                                {program.status}
+                            </strong>
+                        </li>
                     </ul>
-                    <button
+                    {/* <button
                       className="btn btn-primary btn-rounded mt-3 px-4"
                       onClick={() => handleShowDetailModal(program.programId)}
                     >
                       Xem thêm
-                    </button>
-                  </div>
+                    </button> */}
                 </div>
-              </div>
             </div>
-          ))
-          ) : (
-            currentPrograms.map((program, index) => (
-              <div className="col-lg-4 col-md-6 col-sm-6 col-12 mb-4" key={index}>
-              <div className="card mx-4 mt-4">
-                <div className="card-body">
+        </div>
+    </div>
+))
+
+        ) : (
+          currentPrograms.map((program, index) => (
+            <div
+            className="col-lg-4 col-md-6 col-sm-6 col-12 mb-4"
+            key={index}
+            onClick={() => handleShowDetailModal(program.programId)}
+            style={{ cursor: 'pointer' }}
+        >              <div className="card mx-4 mt-4"
+        style={{
+          boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)",
+          borderRadius: "10px",
+      }}>
+                <div className="card-body" style={{ height: "440px" }}>
                   <div className="d-flex justify-content-end">
                     <Dropdown>
                       <Dropdown.Toggle
@@ -432,12 +488,14 @@ const AllPrograms = () => {
                   </div>
 
                   <div className="text-center">
-                    <h3 className="mt-4 mb-1 "style={{ fontSize: "24px" }}>{program.nameProgram}</h3>
-                    {/* <img
-        src={"assets/img/course/programs.jpg"}
-        alt="img"
-        className="img-fluid"
-      /> */}
+                    <Link
+                      className="mt-4 mb-1"
+                      onClick={() => handleShowDetailModal(program.programId)}
+                      style={{ fontSize: "24px", fontWeight: "700" }}
+                    >
+                      {program.nameProgram}
+                    </Link>
+
                     <p className="text-muted">
                       {getTypeName(program.programTypeId)}
                     </p>
@@ -456,41 +514,64 @@ const AllPrograms = () => {
                         <strong>{program.createDate}</strong>
                       </li>
                       <li className="list-group-item px-0 d-flex justify-content-between">
-                      <span className="mb-0">Trạng thái :</span>
-                        <strong>{program.status}</strong>
-                      </li>
+    <span className="mb-0">Trạng thái :</span>
+    <strong style={{ color: program.status === 'Active' ? '#28a745' : '#dc3545' }}>
+        {program.status}
+    </strong>
+</li>
+
                     </ul>
-                    <button
+                    {/* <button
                       className="btn btn-primary btn-rounded mt-3 px-4"
                       onClick={() => handleShowDetailModal(program.programId)}
                     >
                       Xem thêm
-                    </button>
+                    </button> */}
                   </div>
                 </div>
               </div>
             </div>
           ))
         )}
-          <div className="col-12 mt-4">
-        <ul className="pagination justify-content-center">
-          {showAllPrograms
-            ? Array.from({ length: Math.ceil(programs.length / itemsPerPage) }).map((_, index) => (
-                <li key={index} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
-                  <button onClick={() => paginate(index + 1)} className="page-link">
-                    {index + 1}
-                  </button>
-                </li>
-              ))
-            : Array.from({ length: Math.ceil(feeData.length / itemsPerPage) }).map((_, index) => (
-                <li key={index} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
-                  <button onClick={() => paginate(index + 1)} className="page-link">
-                    {index + 1}
-                  </button>
-                </li>
-              ))}
-        </ul>
-      </div>
+        <div className="col-12 mt-4">
+          <ul className="pagination justify-content-center">
+            {showAllPrograms
+              ? Array.from({
+                  length: Math.ceil(programs.length / itemsPerPage),
+                }).map((_, index) => (
+                  <li
+                    key={index}
+                    className={`page-item ${
+                      currentPage === index + 1 ? "active" : ""
+                    }`}
+                  >
+                    <button
+                      onClick={() => paginate(index + 1)}
+                      className="page-link"
+                    >
+                      {index + 1}
+                    </button>
+                  </li>
+                ))
+              : Array.from({
+                  length: Math.ceil(feeData.length / itemsPerPage),
+                }).map((_, index) => (
+                  <li
+                    key={index}
+                    className={`page-item ${
+                      currentPage === index + 1 ? "active" : ""
+                    }`}
+                  >
+                    <button
+                      onClick={() => paginate(index + 1)}
+                      className="page-link"
+                    >
+                      {index + 1}
+                    </button>
+                  </li>
+                ))}
+          </ul>
+        </div>
       </div>
     );
   };
@@ -518,12 +599,12 @@ const AllPrograms = () => {
                 + Thêm mới
               </button>
               <CreateProgramModal
-                show={showCreateModal} 
-                onClose={handleCloseCreateModal} 
-                onSubmit={handleSubmitCreateProgram} 
-                formData={formData} 
+                show={showCreateModal}
+                onClose={handleCloseCreateModal}
+                onSubmit={handleSubmitCreateProgram}
+                formData={formData}
                 setFormData={setFormData}
-                imgURL={imgURL} 
+                imgURL={imgURL}
               />
             </div>
           </div>
@@ -539,58 +620,55 @@ const AllPrograms = () => {
           {selectedProgram && (
             <div className="row">
               <div className="col-md-5">
-              <div className="img-container">
-          <img
-            src={selectedProgram?.img}
-            alt="Uploaded Image"
-            style={{ maxWidth: "100%", height: "auto" }}
-          />
-        </div>
-        <div className="col-md-12">
-  <div className="row d-flex ">
-    <div className="col-md-6">
-      <p>
-        <strong>Học kỳ bắt đầu:</strong>{" "}
-        {getSemesterStartDate(selectedProgram.semesterId)}
-      </p>
-      <p>
-        <strong>Kết thúc học kỳ:</strong>{" "}
-        {getSemesterEndDate(selectedProgram.semesterId)}
-      </p>
-      <p>
-        <strong>Thời gian:</strong> {selectedProgram.duration}
-      </p>
-      <p>
-        <strong>Trình độ:</strong> {selectedProgram.level}
-      </p>
-    </div>
-    <div className="col-md-6">
-      <p>
-        <strong>Trường:</strong>{" "}
-        {getUniversityName(selectedProgram.universityName)}
-      </p>
-      <p>
-        <strong>Chuyên ngành:</strong>{" "}
-        {getMajorName(selectedProgram.majorId)}
-      </p>
-      <p>
-        <strong>Loại chương trình :</strong>{" "}
-        {getTypeName(selectedProgram.programTypeId)}
-      </p>
-      <p>
-        <strong>Trạng thái :</strong> {selectedProgram.status}
-      </p>
-    </div>
-  </div>
-</div>
-
-                 
+                <div className="img-container">
+                  <img
+                    src={selectedProgram?.img}
+                    alt="Uploaded Image"
+                    style={{ maxWidth: "100%", height: "auto" }}
+                  />
+                </div>
+                <div className="col-md-12">
+                  <div className="row d-flex ">
+                    <div className="col-md-6">
+                      <p>
+                        <strong>Học kỳ bắt đầu:</strong>{" "}
+                        {getSemesterStartDate(selectedProgram.semesterId)}
+                      </p>
+                      <p>
+                        <strong>Kết thúc học kỳ:</strong>{" "}
+                        {getSemesterEndDate(selectedProgram.semesterId)}
+                      </p>
+                      <p>
+                        <strong>Thời gian:</strong> {selectedProgram.duration}
+                      </p>
+                      <p>
+                        <strong>Trình độ:</strong> {selectedProgram.level}
+                      </p>
+                    </div>
+                    <div className="col-md-6">
+                      <p>
+                        <strong>Trường:</strong>{" "}
+                        {getUniversityName(selectedProgram.universityName)}
+                      </p>
+                      <p>
+                        <strong>Chuyên ngành:</strong>{" "}
+                        {getMajorName(selectedProgram.majorId)}
+                      </p>
+                      <p>
+                        <strong>Loại chương trình :</strong>{" "}
+                        {getTypeName(selectedProgram.programTypeId)}
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
               <div className="col-md-7">
                 <h4>{selectedProgram.nameProgram}</h4>
-                <div className="row">
-                </div>
+
                 <div>
+                  <p>
+                    <strong>Trạng thái :</strong> {selectedProgram.status}
+                  </p>
                   <p>
                     <strong>Mô tả:</strong> {selectedProgram.description}
                   </p>
@@ -600,11 +678,14 @@ const AllPrograms = () => {
                       <br />
                     </strong>
                     <span
-  dangerouslySetInnerHTML={{
-    __html: selectedProgram?.tuition?.replace(/\\r\\n/g, "<br/>• ") || "",
-  }}
-/>
-
+                      dangerouslySetInnerHTML={{
+                        __html:
+                          selectedProgram?.tuition?.replace(
+                            /\\r\\n/g,
+                            "<br/>• "
+                          ) || "",
+                      }}
+                    />
                   </p>
                   <p>
                     <strong>Yêu cầu:</strong>
@@ -630,7 +711,6 @@ const AllPrograms = () => {
                       }}
                     />
                   </p>
-                 
                 </div>
               </div>
             </div>

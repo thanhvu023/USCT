@@ -61,6 +61,7 @@ const ProgramApplicationPage = () => {
   const [studentProfile, setStudentProfile] = useState(null);
   const [programs, setPrograms] = useState({});
   const [studentProfiles, setStudentProfiles] = useState({});
+  console.log("studentProfiles",studentProfiles)
   const [showCheckModal, setShowCheckModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showCheckSuccess, setShowCheckSuccess] = useState(false);
@@ -141,8 +142,9 @@ const ProgramApplicationPage = () => {
 
   // sort and search data
   const [sortedApplications, setSortedApplications] = useState([]);
-  console.log("sortedApplications là", sortedApplications);
+
   const [searchTerm, setSearchTerm] = useState("");
+  // console.log("seatch là", searchTerm);
   const sortData = (sortBy) => {
     const sortedData = [...programApplications];
     sortedData.sort((a, b) => {
@@ -154,14 +156,17 @@ const ProgramApplicationPage = () => {
   };
 
   const searchData = (searchTerm) => {
+    console.log("Searching for:", searchTerm);
+    console.log("Current studentProfiles:", studentProfiles);
+  
     const filteredData = programApplications.filter((application) => {
       const studentName = studentProfiles[application.studentProfileId]?.fullName || "";
-      const applyStage = application.applyStage?.programStage?.stageName || "";
-      const programName = programs[application.programId]?.nameProgram || "";
-      console.log("search data la:",studentName)
-      const searchData = `${studentName} ${applyStage} ${programName}`.toLowerCase();
-      return searchData.includes(searchTerm.toLowerCase());
+      console.log(`Student Name: ${studentName}, Application ID: ${application.studentProfileId}`);
+  
+      return studentName.toLowerCase().includes(searchTerm.toLowerCase());
     });
+  
+    console.log("Filtered Data:", filteredData);
     setSortedApplications(filteredData);
   };
   
@@ -191,6 +196,7 @@ const ProgramApplicationPage = () => {
   useEffect(() => {
     searchData(searchTerm);
   }, [searchTerm]);
+  
 
   const handleCloseCheckModal = () => setShowCheckModal(false);
 
@@ -227,42 +233,6 @@ const ProgramApplicationPage = () => {
 
   const handleCloseModal = () => {
     setSelectedProfileId(null);
-  };
-  const renderApprovedApplications = () => {
-    // Filter the applications based on approval status
-    const approvedApplications = sortedApplications.filter(
-      (application) => application.approved
-    );
-
-    return (
-      <table
-        id="approvedApplicationsTable"
-        className="display dataTable no-footer w-100"
-      >
-        <thead>
-          <tr>
-            <th>Approved ProgramApplicationId</th>
-            <th>Approved Hồ sơ sinh viên</th>
-            <th>Approved Ngày tạo</th>
-            <th>Approved Chương trình ứng tuyển</th>
-            <th>Approved Trạng thái hồ sơ</th>
-          </tr>
-        </thead>
-        <tbody>
-          {approvedApplications.map((application) => (
-            <tr key={application.programApplicationId}>
-              <td>{application.programApplicationId}</td>
-              <td>{studentProfiles[application.studentProfileId]?.fullName}</td>
-              <td>
-                {studentProfiles[application.studentProfileId]?.createDate}
-              </td>
-              <td>{programs[application.programId]?.nameProgram}</td>
-              <td>{application.applyStage?.programStage?.stageName}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    );
   };
 
   useEffect(() => {
@@ -404,7 +374,7 @@ const ProgramApplicationPage = () => {
                           ))}
                         </thead>
                         <tbody>
-                          {sortedApplications.map((application) => (
+                        {(searchTerm.trim() === "" ? programApplications : sortedApplications).map((application) => (
                             <tr
                               key={application.studentProfileId}
                               className="table-row-border"

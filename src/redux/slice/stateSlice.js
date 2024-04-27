@@ -13,10 +13,23 @@ export const getStateById = createAsyncThunk(
     }
   }
 );
+export const getAllState = createAsyncThunk(
+  "state/getAllState",
+  async (_, thunkAPI) => {
+    try {
+      const res = await instance.get("/states");
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response);
+    }
+  }
+);
+
 const initialState = {
   msg: "",
   loading: false,
   stateById: {},
+  states: [],
 };
 
 export const stateSlice = createSlice({
@@ -34,6 +47,18 @@ export const stateSlice = createSlice({
         state.error = null;
       })
       .addCase(getStateById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(getAllState.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getAllState.fulfilled, (state, action) => {
+        state.loading = false;
+        state.states = action.payload;
+        state.error = null;
+      })
+      .addCase(getAllState.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       });

@@ -1,0 +1,27 @@
+.card {
+    float: left;
+    width: 30%;
+    margin: 1%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  
+  .card img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  
+  .card-content {
+    padding: 15px;
+  }
+  
+  .card-buttons {
+    text-align: center;
+  }
+  
+  .card-buttons button {
+    margin: 5px;
+  }
+  

@@ -1,24 +1,7 @@
-.status-label {
-    padding: 5px 10px;
-    border-radius: 3px;
-    border-width: 1px;
-    border-style: solid;
-  }
-  
-  .status-label.red {
-    border-color: darkred;
-    background-color: red;
-    color: white;
-  }
-  
-  .status-label.yellow {
-    border-color: darkgoldenrod;
-    background-color: yellow;
-    color: black;
-  }
-  
-  .status-label.blue {
-    border-color: darkblue;
-    background-color: blue;
-  }
-  
+.table-row-border {
+  border-bottom: 1px solid #dee2e6; /* This color is an example, adjust as needed */
+}
+.table-row-border:hover {
+  background-color: #f5f5f5; /* Light grey background on hover */
+  cursor: pointer; /* Changes the cursor to indicate the row is clickable */
+}

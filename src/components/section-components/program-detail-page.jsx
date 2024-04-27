@@ -606,7 +606,7 @@ function ProgramDetailPage() {
                   <div className="single-course-inner">
                     <div className="thumb">
                       <img
-                        src={publicUrl + "assets/img/course/programs.jpg"}
+                        src={university.img}
                         alt="img"
                       />
                     </div>
@@ -622,7 +622,7 @@ function ProgramDetailPage() {
                         </h5>
                         <div className="specialization-icon mb-2">
                           <i className="fa fa-university mr-1"></i>
-                          <span className="fw-bold">Trường Đại Học Ohana</span>
+                          <span className="fw-bold">{university.universityName}</span>
                         </div>
                         <div className="specialization-icon">
                           <i className="fa fa-map-marker mr-2" />
@@ -630,8 +630,7 @@ function ProgramDetailPage() {
                         </div>
                         <div className="emt-course-meta">
                           <div className="price text-right mt-3">
-                            <Link
-                              to="/instructor-details"
+                          <Link to={`/program-details/${university.programId}`}
                               className="btn btn-primary"
                             >
                               Xem Thêm
