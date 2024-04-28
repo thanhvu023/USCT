@@ -65,6 +65,8 @@ const ProgramApplicationPage = ({setMain }) => {
   const { programApplications, loading, error } = useSelector(
     (state) => state.programApplication
   );
+
+  console.log("chuong trnh",programApplications)
   const [selectedProfileId, setSelectedProfileId] = useState(false);
   const [studentProfile, setStudentProfile] = useState(null);
   const [isPaymentRequired, setIsPaymentRequired] = useState(false);

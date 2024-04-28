@@ -121,25 +121,12 @@ const RegistrationList = () => {
                       }
                     >
                       {row.cells.map((cell, cellIndex) => {
-                        return (
-                          <td key={cellIndex} {...cell.getCellProps()}>
-                            {cell.column.id === "status" ? (
-                              <span
-                                className={
-                                  row.original.status === 0
-                                    ? "status-red"
-                                    : "status-green"
-                                }
-                              >
-                                {row.original.status === 0
-                                  ? "Chưa duyệt"
-                                  : cell.render("Cell")}
-                              </span>
-                            ) : (
-                              cell.render("Cell")
-                            )}
-                          </td>
-                        );
+                      return (
+                        <td key={cellIndex} {...cell.getCellProps()}>
+                          {cell.render("Cell")}
+                        </td>
+                      );
+                      
                       })}
 
                       <td>

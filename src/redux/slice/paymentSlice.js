@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import instance from "../axiosCustom";
 
-// Thunk action để tạo thanh toán
 export const createPayment = createAsyncThunk(
     "payment/createPayment",
     async (paymentData, thunkAPI) => {
@@ -12,6 +11,7 @@ export const createPayment = createAsyncThunk(
             orderInfo: paymentData.orderInfo,
           },
         });
+        console.log("response22",response)
         return response.data;
       } catch (error) {
         return thunkAPI.rejectWithValue(error.response.data);
@@ -32,13 +32,12 @@ const paymentSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-    .addCase(createPayment.pending, (state) => {
+      .addCase(createPayment.pending, (state) => {
         state.loading = true;
-        state.error = null;
       })
       .addCase(createPayment.fulfilled, (state, action) => {
         state.loading = false;
-        state.responseBody = action.payload; 
+        state.responseBody = action.payload;
       })
       .addCase(createPayment.rejected, (state, action) => {
         state.loading = false;
@@ -46,6 +45,7 @@ const paymentSlice = createSlice({
       });
   },
 });
+
 
 const { reducer: paymentReducer } = paymentSlice;
 export { paymentReducer as default };

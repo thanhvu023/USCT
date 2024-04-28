@@ -5,7 +5,7 @@ import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import Select from "react-select";
 import Slider from "react-slick";
-
+import { Popover, OverlayTrigger } from 'react-bootstrap';
 import {
   createProgramApplication,
   getAllProgram,
@@ -31,9 +31,12 @@ import { imageDb } from "../FirebaseImage/Config";
 import { Backdrop, CircularProgress } from "@mui/material";
 import Swal from "sweetalert2";
 
+
+
 function ProgramDetailPage() {
   let publicUrl = process.env.PUBLIC_URL + "/";
   const [showModal, setShowModal] = useState(false);
+
   const dispatch = useDispatch();
   const { programById } = useParams();
   const token = useSelector((state) => state.auth.token);
@@ -69,10 +72,16 @@ function ProgramDetailPage() {
   const semesterId = useSelector(
     (state) => state?.program?.programById?.semesterId
   );
-  const universityIdDeatil = useSelector(
+  const semesterDetails = useSelector((state) => state.semester.semesterById);
+// console.log("semesterDetails",semesterDetails)
+  const universityIdDetail = useSelector(
     (state) => state?.university?.universityById
   );
+
   const majorId = useSelector((state) => state?.program?.programById?.majorId);
+
+  console.log("majorId",majorId)
+
   const programByType = useSelector(
     (state) => state?.program?.programsByProgramType
   );
@@ -127,7 +136,10 @@ function ProgramDetailPage() {
     if (semesterId) {
       dispatch(getSemesterById(semesterId));
     }
-  }, [dispatch, semesterId]);
+    if (programDetail.semesterId) {
+      dispatch(getSemesterById(programDetail.semesterId));
+    }
+  }, [dispatch, programDetail.semesterId, semesterId]);
 
   useEffect(() => {
     if (majorId) {
@@ -145,6 +157,66 @@ function ProgramDetailPage() {
     const type = programType.find((type) => type.programTypeId === typeId);
     return type ? type.typeName : "";
   };
+  const getDescriptionByProgramTypeId = (typeId) => {
+    if (!programType) return "";
+    const type = programType.find((type) => type.programTypeId === typeId);
+    return type ? type.description : "";
+  };
+  const getMajorDescriptionByMajorId = (majorId) => {
+    if (!majorDetail) return "";
+  
+    if (majorDetail.majorId === majorId) {
+      return majorDetail.description;
+    }
+  
+    return "";
+  };
+  
+
+
+
+  const majorDetailsPopover = (
+    <Popover id="program-type-popover">
+      <Popover.Header as="h4">  {majorDetail.majorName}</Popover.Header>
+      <Popover.Body>
+     {getMajorDescriptionByMajorId(majorDetail.majorId)}
+  
+  
+      </Popover.Body>
+    </Popover>
+  );
+  
+  
+const programTypePopover = (
+  <Popover id="program-type-popover">
+    <Popover.Header as="h4">  {getTypeName(programDetail.programTypeId)}
+?</Popover.Header>
+    <Popover.Body>
+    {getDescriptionByProgramTypeId(programDetail.programTypeId)}
+
+
+    </Popover.Body>
+  </Popover>
+);
+
+  
+const uniDetailsPopover = (
+  <Popover id="program-type-popover">
+    <Popover.Header as="h4">Thông tin {universityIdDetail?.universityName} </Popover.Header>
+    <Popover.Body>
+  <div style={{ overflow: 'auto' }}>
+    <img src={universityIdDetail?.img} alt="University Logo" style={{ width: '100px', float: 'left', marginRight: '10px', marginBottom: '10px' }}/>
+    <p>{universityIdDetail?.description}</p>
+    <div style={{ clear: 'both' }}>
+      <Link className="read-more-text" to={`/university-details/${universityIdDetail?.universityId}`}>
+        XEM THÊM <i className="fa fa-angle-right" />
+      </Link>
+    </div>
+  </div>
+</Popover.Body>
+
+  </Popover>
+);
 
   const [formData, setFormData] = useState({
     studentProfileId: undefined,
@@ -314,7 +386,17 @@ function ProgramDetailPage() {
                     <li>
                       <i className="fa fa-university" />
                       <span>Trường Đại học:</span>
-                      {universityIdDeatil?.universityName}
+                      <OverlayTrigger 
+                      trigger="click"
+                      placement="right"
+                      overlay={uniDetailsPopover}
+                      rootClose>
+                      <button className="p-0 border-0 bg-transparent" style={{ textDecoration: 'none', color: 'inherit', boxShadow: 'none' }} type="button">
+                      {universityIdDetail?.universityName}
+
+</button>
+
+    </OverlayTrigger>
                     </li>
                     <li>
                       <i className="fa fa-map-marker" />
@@ -322,7 +404,18 @@ function ProgramDetailPage() {
                     </li>
                     <li>
                       <i className="fa fa-laptop" />
-                      <span>Chuyên ngành chính:</span> {majorDetail.majorName}
+                      <span>Chuyên ngành chính:</span>
+                       <OverlayTrigger 
+                      trigger="click"
+                      placement="right"
+                      overlay={majorDetailsPopover}
+                      rootClose>
+                      <button className="p-0 border-0 bg-transparent" style={{ textDecoration: 'none', color: 'inherit', boxShadow: 'none' }} type="button">
+                      {majorDetail.majorName}
+
+</button>
+
+    </OverlayTrigger>
                     </li>
                     <li>
                       <i className="fa fa-clipboard" />
@@ -333,13 +426,34 @@ function ProgramDetailPage() {
                       <span>Trình độ đào tạo:</span> {programDetail.level}
                     </li>
                     <li>
-                      <i className="fa fa-calendar" />
-                      <span>Học kỳ:</span> Spring 2024
-                    </li>
+    <i className="fa fa-calendar"></i>
+    <span>
+        Học kỳ: 
+        <span style={{ marginLeft: '5px' }}>
+            {semesterDetails.startDate ? new Date(semesterDetails.startDate).toLocaleDateString() : 'Loading...'}
+        </span>
+        đến
+        <span style={{ marginLeft: '3px' }}>
+            {semesterDetails.endDate ? new Date(semesterDetails.endDate).toLocaleDateString() : 'Loading...'}
+        </span>
+    </span>
+</li>
+
+
                     <li>
                       <i className="fa fa-graduation-cap" />
                       <span>Loại chương trình:</span>
-                      {getTypeName(programDetail.programTypeId)}
+                      <OverlayTrigger 
+                    trigger="click"
+                    placement="right"
+                    overlay={programTypePopover}
+                    rootClose
+                      >
+                      <button className="p-0 border-0 bg-transparent" style={{ textDecoration: 'none', color: 'inherit', boxShadow: 'none' }} type="button">
+  {getTypeName(programDetail.programTypeId)}
+</button>
+
+    </OverlayTrigger>
                     </li>
                   </ul>
                   <div className="price-wrap text-center">
@@ -380,7 +494,7 @@ function ProgramDetailPage() {
                         <h4>
                           Bạn đang đăng ký vào chương trình [
                           {programDetail.nameProgram}] tại
-                          {universityIdDeatil?.universityName}
+                          {universityIdDetail?.universityName}
                         </h4>
                         <div className="form-group">
                           <label
