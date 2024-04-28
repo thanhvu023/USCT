@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getAllProgramApplication } from "../../../redux/slice/programApplicationSlice";
-import { getStudentProfileById } from "../../../redux/slice/studentSice";
+import { getStudentProfileById } from "../../../redux/slice/studentSlice";
 import { getProgramById } from "../../../redux/slice/programSlice";
+import { getProgramStageById } from "../../../redux/slice/programStageSlice";
 import {
   Modal,
   Button,
@@ -14,7 +15,7 @@ import {
   Card,
 } from "react-bootstrap";
 import { getAllUsers } from "../../../redux/slice/authSlice";
-
+import PaymentContext from "./context/payment-context";
 import { Link } from "react-router-dom";
 import { getAllProgramStages } from "../../../redux/slice/programStageSlice";
 import {
@@ -51,7 +52,14 @@ const style = {
     marginRight: "10px",
   },
 };
-const ProgramApplicationPage = () => {
+const ProgramApplicationPage = ({setMain }) => {
+
+  const { setSelectedApp } = useContext(PaymentContext);
+  
+  const handleCreateFee = (application) => {
+    setSelectedApp(application); 
+    setMain("Thanh toán");       
+  };
   const dispatch = useDispatch();
   const [sort, setSortata] = useState(10);
   const { programApplications, loading, error } = useSelector(
@@ -59,9 +67,11 @@ const ProgramApplicationPage = () => {
   );
   const [selectedProfileId, setSelectedProfileId] = useState(false);
   const [studentProfile, setStudentProfile] = useState(null);
+  const [isPaymentRequired, setIsPaymentRequired] = useState(false);
+
   const [programs, setPrograms] = useState({});
   const [studentProfiles, setStudentProfiles] = useState({});
-  console.log("studentProfiles",studentProfiles)
+  // console.log("isPaymentRequired",isPaymentRequired)
   const [showCheckModal, setShowCheckModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showCheckSuccess, setShowCheckSuccess] = useState(false);
@@ -225,6 +235,10 @@ const ProgramApplicationPage = () => {
       const response = await dispatch(getStudentProfileById(studentProfileId));
       if (response.payload) {
         setStudentProfile(response.payload);
+        const programStageResponse = await dispatch(getProgramStageById(response.payload.programStageId));
+        if (programStageResponse.payload) {
+          setIsPaymentRequired(programStageResponse.payload.isPayment);
+        }
       }
     } catch (error) {
       console.error("Error fetching student profile:", error);
@@ -742,37 +756,49 @@ const ProgramApplicationPage = () => {
                                                 }
                                               </Card.Text>
                                               <Card.Text className="mb-3">
+                                              <div className="d-flex justify-content-sm-around">                                           
                                                 <span className="font-weight-bold ">
                                                   Trạng thái hồ sơ:
+                                                  
                                                 </span>{" "}
                                                 {
                                                   selectedApplication.applyStage
                                                     .programStage.stageName
                                                 }
+                                                      <span className="font-weight-bold ">
+                                               Thanh toán:
+                                           
+                                                </span>{" "}
+                                                {selectedApplication.applyStage.programStage.isPayment ? "Có" : "Không"}
+
+                                             </div>
                                               </Card.Text>
-                                              <Form.Select
-                                                value={selectedProgramStageId}
-                                                onChange={
-                                                  handleProgramStageChange
-                                                }
-                                              >
-                                                <option value="">
-                                                  Chọn giai đoạn hồ sơ ứng tuyển
-                                                  chương trình
-                                                </option>
-                                                {getProgramStagesByProgramId(
-                                                  selectedApplication.applyStage
-                                                    .programStage.program
-                                                    .programId
-                                                ).map((stage) => (
-                                                  <option
-                                                    key={stage.programStageId}
-                                                    value={stage.programStageId}
-                                                  >
-                                                    {stage.stageName}
-                                                  </option>
-                                                ))}
-                                              </Form.Select>
+                                              <div className="d-flex  justify-content-sm-around">
+  <Form.Select
+    value={selectedProgramStageId}
+    onChange={handleProgramStageChange}
+    className="me-2"
+  >
+    <option value="">Chọn giai đoạn hồ sơ ứng tuyển chương trình</option>
+    {getProgramStagesByProgramId(
+      selectedApplication.applyStage.programStage.program.programId
+    ).map((stage) => (
+      <option key={stage.programStageId} value={stage.programStageId}>
+        {stage.stageName}
+      </option>
+    ))}
+  </Form.Select>
+  
+  {selectedApplication && selectedApplication.applyStage.programStage.isPayment &&
+    programApplications.map((application) => (
+      application.programApplicationId === selectedApplication.programApplicationId &&
+      <button key={application.programApplicationId} onClick={() => handleCreateFee(application)}>
+        Tạo Phí
+      </button>
+    ))
+  }
+
+</div>
                                             </Card.Body>
                                           </Card>
                                         </Col>

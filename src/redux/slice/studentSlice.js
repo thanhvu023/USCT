@@ -57,7 +57,7 @@ export const studentSlice = createSlice({
       state.studentProfileByCustomerId = [];
       state.profileById = {};
     },
-    resetStdeunt: (state) => {
+    resetStudent: (state) => {
       state.profileById = {};
     },
   },
@@ -103,6 +103,6 @@ export const studentSlice = createSlice({
 
 const {
   reducer: studentReducer,
-  actions: { logoutStudent, resetStdeunt },
+  actions: { logoutStudent, resetStudent },
 } = studentSlice;
-export { studentReducer as default, logoutStudent, resetStdeunt };
+export { studentReducer as default, logoutStudent, resetStudent };

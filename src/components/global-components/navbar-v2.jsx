@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { getUserById, logoutUser } from "../../redux/slice/authSlice";
-import { logoutStudent } from "../../redux/slice/studentSice";
+import { logoutStudent } from "../../redux/slice/studentSlice";
 import { Dropdown } from "react-bootstrap";
 import { logoutProgram } from "../../redux/slice/programSlice";
 import Swal from "sweetalert2"; // Import Swal

@@ -22,8 +22,8 @@ import { getMajorById } from "../../redux/slice/majorSlice";
 import {
   getStudentProfileByCustomerId,
   getStudentProfileById,
-  resetStdeunt,
-} from "../../redux/slice/studentSice";
+  resetStudent,
+} from "../../redux/slice/studentSlice";
 import { getProgramTypes } from "../../redux/slice/programSlice";
 import jwtDecode from "jwt-decode";
 import { getDownloadURL, ref } from "firebase/storage";
@@ -54,7 +54,7 @@ function ProgramDetailPage() {
       studentProfileId: "",
       programId: "",
     });
-    dispatch(resetStdeunt());
+    dispatch(resetStudent());
   };
 
   const programTypeId = useSelector(
@@ -154,7 +154,7 @@ function ProgramDetailPage() {
   useEffect(() => {
     if (profileStudentId) {
       dispatch(getStudentProfileById(profileStudentId));
-      dispatch(resetStdeunt());
+      dispatch(resetStudent());
     }
   }, [profileStudentId]);
   const studentProfileDetail = useSelector(

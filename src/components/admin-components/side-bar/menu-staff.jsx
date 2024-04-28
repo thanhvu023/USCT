@@ -73,4 +73,16 @@ export const MenuList = [
     ),
     filterName: "registrationForms",
   },
+
+  // {
+  //   title: "Thanh toán",
+  //   classChange: "mm-collapse",
+  //   iconStyle: (
+  //     <i
+  //       className="
+  //       la la-pencil-square"
+  //     />
+  //   ),
+  //   filterName: "payment",
+  // },
 ];
