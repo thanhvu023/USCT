@@ -791,14 +791,14 @@ const ProgramApplicationPage = ({setMain }) => {
     ))}
   </Form.Select>
   
-  {selectedApplication && selectedApplication.applyStage.programStage.isPayment &&
+  {/* {selectedApplication && selectedApplication.applyStage.programStage.isPayment &&
     programApplications.map((application) => (
       application.programApplicationId === selectedApplication.programApplicationId &&
       <button key={application.programApplicationId} onClick={() => handleCreateFee(application)}>
         Tạo Phí
       </button>
     ))
-  }
+  } */}
 
 </div>
                                             </Card.Body>
