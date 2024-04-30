@@ -37,14 +37,17 @@ function SignUp() {
       const dob = new Date(formData.dateOfBirth);
       let age = currentDate.getFullYear() - dob.getFullYear();
       const monthDiff = currentDate.getMonth() - dob.getMonth();
-      if (monthDiff < 0 || (monthDiff === 0 && currentDate.getDate() < dob.getDate())) {
+      if (
+        monthDiff < 0 ||
+        (monthDiff === 0 && currentDate.getDate() < dob.getDate())
+      ) {
         age--;
       }
       // Check if age is less than 16
       if (age < 16) {
         newErrors.dateOfBirth = "Bạn phải đủ 16 tuổi để đăng ký!";
       }
-      if (age < 0) {
+      if (age < 0 || age > 60) {
         newErrors.dateOfBirth = "Ngày sinh không hợp lệ!";
       }
     }
@@ -153,7 +156,9 @@ function SignUp() {
                     />
                   </div>
                   {errors.dateOfBirth && (
-                    <p className="text-center text-danger mt-1">{errors.dateOfBirth}</p>
+                    <p className="text-center text-danger mt-1">
+                      {errors.dateOfBirth}
+                    </p>
                   )}
                 </div>
                 <div className="col-12">
@@ -229,6 +234,11 @@ function SignUp() {
                       value={formData.address}
                       onChange={handleInputChange}
                     />
+                    {errors.address && (
+                    <p className="text-center text-danger mt-1">
+                      {errors.address}
+                    </p>
+                  )}
                   </div>
                 </div>
                 <div className="col-12 mb-4">
@@ -256,7 +266,8 @@ function SignUp() {
                     <p className="text-center text-danger mt-1">
                       {errors.gender}
                     </p>
-                  )}                </div>
+                  )}
+                </div>
                 <div className="col-12 mb-4">
                   <button className="btn btn-base w-100">Tạo tài khoản</button>
                 </div>

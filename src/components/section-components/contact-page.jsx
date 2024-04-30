@@ -100,6 +100,8 @@ const Registration = () => {
         [name]: null, // or whatever default value you want
       });
     }
+    setErrors({ ...errors, [name]: "" });
+
   };
 
   const handleChange = (e) => {
@@ -115,14 +117,45 @@ const Registration = () => {
   const validateForm = () => {
     const newErrors = {};
 
-    // Add validation logic here for each form field
-    // Example:
-    // if (formData.fullName.trim() === "") {
-    //   newErrors.fullName = "Full Name is required";
-    // }
+    if (formData.area.trim() === "") {
+      newErrors.area = "Khu vực không được để trống!";
+    }
+    if (formData.moreInformation.trim() === "") {
+      newErrors.moreInformation = "Thông tin thêm không được để trống!";
+    }
+    if (formData.studyAbroadReason.trim() === "") {
+      newErrors.studyAbroadReason =
+        "Lý do bạn muốn du học không được để trống!";
+    }
+    if (formData.destinationReason.trim() === "") {
+      newErrors.destinationReason =
+        "Lý do bạn chọn điểm đến không được để trống!";
+    }
+    if (formData.programChoose.trim() === "") {
+      newErrors.programChoose = "Chương trình không được để trống!";
+    }
+    if (formData.majorChoose.trim() === "") {
+      newErrors.majorChoose = "Ngành học không được để trống!";
+    }
+    if (formData.majorChooseReason.trim() === "") {
+      newErrors.majorChooseReason =
+        "Lý do bạn chọn chuyên ngành không được để trống!";
+    }
+    if (formData.universityChooseReason.trim() === "") {
+      newErrors.universityChooseReason =
+        "Tiêu chuẩn chọn trường không được để trống!";
+    }
+    if (formData.priorityOfStudyAbroad.trim() === "") {
+      newErrors.priorityOfStudyAbroad =
+        "Chọn ưu tiên khi đi du học không được để trống!";
+    }
+    if (formData.budget.trim() === "") {
+      newErrors.budget = "Ngân sách không được để trống!";
+    }
 
     return newErrors;
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -357,7 +390,7 @@ const Registration = () => {
   return (
     <div>
       <div className="counter-area pd-bottom-120">
-      <Backdrop
+        <Backdrop
           sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={loading}
         >
@@ -396,6 +429,11 @@ const Registration = () => {
                           placeholder="Ngành học"
                           name="majorChoose"
                         />
+                        {errors.majorChoose && (
+                          <p className="text-center text-danger mt-1">
+                            {errors.majorChoose}
+                          </p>
+                        )}
                       </div>
                       <div className="col-lg-6 mb-4">
                         <Select
@@ -409,6 +447,11 @@ const Registration = () => {
                           name="programChoose"
                           options={programChooseOptions}
                         />
+                        {errors.programChoose && (
+                          <p className="text-center text-danger mt-1">
+                            {errors.programChoose}
+                          </p>
+                        )}
                       </div>
                       <div className="col-lg-6 mb-4">
                         <Select
@@ -426,6 +469,11 @@ const Registration = () => {
                           placeholder="Tiêu chuẩn chọn trường"
                           name="universityChooseReason"
                         />
+                        {errors.universityChooseReason && (
+                          <p className="text-center text-danger mt-1">
+                            {errors.universityChooseReason}
+                          </p>
+                        )}
                       </div>
                       <div className="col-lg-6 mb-4">
                         <Select
@@ -439,6 +487,11 @@ const Registration = () => {
                           placeholder="Lý do chọn chuyên ngành"
                           name="majorChooseReason"
                         />
+                        {errors.majorChooseReason && (
+                          <p className="text-center text-danger mt-1">
+                            {errors.majorChooseReason}
+                          </p>
+                        )}
                       </div>
                       <div className="col-lg-6 mb-4">
                         <Select
@@ -452,6 +505,11 @@ const Registration = () => {
                           placeholder="Khu vực sinh sống"
                           name="area"
                         />
+                        {errors.area && (
+                          <p className="text-center text-danger mt-1">
+                            {errors.area}
+                          </p>
+                        )}
                       </div>
 
                       <div className="col-lg-6 mb-4">
@@ -471,6 +529,11 @@ const Registration = () => {
                           placeholder="Lý do bạn chọn điểm đến"
                           name="destinationReason"
                         />
+                        {errors.destinationReason && (
+                          <p className="text-center text-danger mt-1">
+                            {errors.destinationReason}
+                          </p>
+                        )}
                       </div>
                       <div className="col-12 mb-4">
                         <Select
@@ -484,6 +547,11 @@ const Registration = () => {
                           //studyAbroadReason
                           placeholder="Lý do bạn muốn du học"
                         />
+                        {errors.studyAbroadReason && (
+                          <p className="text-center text-danger mt-1">
+                            {errors.studyAbroadReason}
+                          </p>
+                        )}
                       </div>
                       <div className="col-lg-6">
                         <Select
@@ -497,6 +565,11 @@ const Registration = () => {
                           //priorityOfStudyAbroad
                           placeholder="Chọn ưu tiên khi đi du học"
                         />
+                        {errors.priorityOfStudyAbroad && (
+                          <p className="text-center text-danger mt-1">
+                            {errors.priorityOfStudyAbroad}
+                          </p>
+                        )}
                       </div>
                       <div className="col-lg-6 mb-2">
                         <Select
@@ -510,6 +583,11 @@ const Registration = () => {
                           //budget
                           placeholder="Ngân sách"
                         />
+                        {errors.budget && (
+                          <p className="text-center text-danger mt-1">
+                            {errors.budget}
+                          </p>
+                        )}
                       </div>
                       <div className="col-12">
                         <div className="single-input-inner style-bg-border">
@@ -519,6 +597,11 @@ const Registration = () => {
                             value={formData.moreInformation}
                             onChange={handleChange}
                           />
+                          {errors.moreInformation && (
+                            <p className="text-center text-danger mt-1">
+                              {errors.moreInformation}
+                            </p>
+                          )}
                         </div>
                       </div>
                       <div className="col-12 d-flex justify-content-end">

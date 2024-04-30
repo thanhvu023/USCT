@@ -41,13 +41,14 @@ function Navbar() {
   }, [userId]);
   useEffect(() => {
     generateToken();
-    onMessage(messaging, (payload) => {
-    });
+    onMessage(messaging, (payload) => {});
   }, []);
-  dispatch(getNotification(userId));
+  useEffect(() => {
+    dispatch(getNotification(userId));
+  }, [userId]);
 
   const userDetail = useSelector((state) => state?.auth?.userById);
-  
+
   const handleLogout = () => {
     dispatch(logoutUser());
     dispatch(logoutStudent());

@@ -44,6 +44,7 @@ const CreateStudentProfile = () => {
   //     fileString: [...prevState.fileString, ...fileNames],
   //   }));
   // };
+
   const handleUpload = async (e) => {
     const selectedFiles = e.target.files; // Get all selected files
     // Loop through each file and upload to Firebase Storage
@@ -60,6 +61,10 @@ const CreateStudentProfile = () => {
           fileString: [...prevState.fileString, imageUrl],
         }));
         setLoadingUpfile(false);
+        setErrors((prevState) => ({
+          ...prevState,
+          fileString: "",
+        }));
       } catch (error) {
         console.error(`Error uploading ${selectedFile.name}:`, error);
       }
@@ -81,6 +86,10 @@ const CreateStudentProfile = () => {
           img: imageUrl,
         }));
         setLoadingImg(false);
+        setErrors((prevState) => ({
+          ...prevState,
+          img: "",
+        }));
       } catch (error) {
         console.error(`Error uploading ${selectedFile.name}:`, error);
       }
@@ -198,18 +207,93 @@ const CreateStudentProfile = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    if (formData.fullName.trim() === "") {
-      newErrors.fullName = "Tên không hợp lệ!";
-    }
-    if (formData.email.trim() === "") {
-      newErrors.email = "Email không hợp lệ!";
-    }
-    if (formData.address.trim() === "") {
-      newErrors.address = "Địa chỉ không hợp lệ!";
-    }
 
+    const validateField = (fieldName, value, errorMessage) => {
+      if (!value.trim()) {
+        newErrors[fieldName] = errorMessage;
+      }
+    };
+
+    validateField(
+      "fullName",
+      formData.fullName,
+      "Họ và tên không được để trống!"
+    );
+    validateField(
+      "nationalId",
+      formData.nationalId,
+      "Căn cước công dân không được để trống!"
+    );
+    validateField(
+      "dateOfBirth",
+      formData.dateOfBirth,
+      "Ngày sinh không được để trống!"
+    );
+    validateField(
+      "placeOfBirth",
+      formData.placeOfBirth,
+      "Nơi sinh không được để trống!"
+    );
+    validateField(
+      "address",
+      formData.address,
+      "Địa chỉ lưu trú không được để trống!"
+    );
+    validateField(
+      "phone",
+      formData.phone,
+      "Số điện thoại không được để trống!"
+    );
+    validateField("email", formData.email, "Email không được để trống!");
+    validateField(
+      "studyProcess",
+      formData.studyProcess,
+      "Trình độ học vấn không được để trống!"
+    );
+    validateField(
+      "grade",
+      formData.grade,
+      "Chứng chỉ tiếng Anh không được để trống!"
+    );
+    validateField(
+      "englishLevel",
+      formData.englishLevel,
+      "Trình độ tiếng Anh không được để trống!"
+    );
+    validateField("img", formData.img, "Ảnh đại diện không được để trống!");
+
+    if (formData.dateOfBirth.trim() !== "") {
+      const currentDate = new Date();
+      const dob = new Date(formData.dateOfBirth);
+      let age = currentDate.getFullYear() - dob.getFullYear();
+      const monthDiff = currentDate.getMonth() - dob.getMonth();
+      if (
+        monthDiff < 0 ||
+        (monthDiff === 0 && currentDate.getDate() < dob.getDate())
+      ) {
+        age--;
+      }
+      if (age < 16) {
+        newErrors.dateOfBirth = "Bạn phải đủ 16 tuổi để đăng ký!";
+      }
+      if (age < 0 || age > 60) {
+        newErrors.dateOfBirth = "Ngày sinh không hợp lệ!";
+      }
+    }
+    if (formData.phone.trim() === "" || !/^\d+$/.test(formData.phone)) {
+      newErrors.phone = "Số điện thoại không hợp lệ!";
+    }
+  
+    if (formData.nationalId.trim() === "" || !/^\d+$/.test(formData.nationalId)) {
+      newErrors.nationalId = "Căn cước công dân không hợp lệ!";
+    }
+  
+    if (formData.fileString.length === 0) {
+      newErrors.fileString = "Thông tin hồ sơ ít nhất 1 file!";
+    }
     return newErrors;
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -217,7 +301,6 @@ const CreateStudentProfile = () => {
 
     if (Object.keys(newErrors).length === 0) {
       dispatch(createStudentProfile(formData));
-
       // Hiển thị thông báo khi hoàn tất khởi tạo thành công
       Swal.fire({
         icon: "success",
@@ -294,9 +377,9 @@ const CreateStudentProfile = () => {
                             onChange={handleInputChange}
                           />
                           {errors.fullName && (
-                            <span className="error-message">
+                            <p className="text-center text-danger mt-1">
                               {errors.fullName}
-                            </span>
+                            </p>
                           )}
                         </div>
                       </div>
@@ -310,6 +393,11 @@ const CreateStudentProfile = () => {
                             value={formData.nationalId}
                             onChange={handleInputChange}
                           />
+                          {errors.nationalId && (
+                            <p className="text-center text-danger mt-1">
+                              {errors.nationalId}
+                            </p>
+                          )}
                         </div>
                       </div>
                       {/* Date of Birth */}
@@ -321,6 +409,11 @@ const CreateStudentProfile = () => {
                             value={formData.dateOfBirth}
                             onChange={handleInputChange}
                           />
+                          {errors.dateOfBirth && (
+                            <p className="text-center text-danger mt-1">
+                              {errors.dateOfBirth}
+                            </p>
+                          )}
                         </div>
                       </div>
                       <div className="col-lg-6">
@@ -341,6 +434,11 @@ const CreateStudentProfile = () => {
                             }
                             options={placeOfBirthOptions}
                           />
+                           {errors.placeOfBirth && (
+                            <p className="text-center text-danger mt-1">
+                              {errors.placeOfBirth}
+                            </p>
+                          )}
                         </div>
                       </div>
                       {/* Address */}
@@ -353,6 +451,11 @@ const CreateStudentProfile = () => {
                             value={formData.address}
                             onChange={handleInputChange}
                           />
+                           {errors.address && (
+                            <p className="text-center text-danger mt-1">
+                              {errors.address}
+                            </p>
+                          )}
                         </div>
                       </div>
                       {/* Phone */}
@@ -365,6 +468,11 @@ const CreateStudentProfile = () => {
                             value={formData.phone}
                             onChange={handleInputChange}
                           />
+                           {errors.phone && (
+                            <p className="text-center text-danger mt-1">
+                              {errors.phone}
+                            </p>
+                          )}
                         </div>
                       </div>
                       {/* Email */}
@@ -377,6 +485,11 @@ const CreateStudentProfile = () => {
                             value={formData.email}
                             onChange={handleInputChange}
                           />
+                           {errors.email && (
+                            <p className="text-center text-danger mt-1">
+                              {errors.email}
+                            </p>
+                          )}
                         </div>
                       </div>
                       {/* Education Level */}
@@ -389,6 +502,11 @@ const CreateStudentProfile = () => {
                             value={formData.studyProcess}
                             onChange={handleInputChange}
                           />
+                           {errors.studyProcess && (
+                            <p className="text-center text-danger mt-1">
+                              {errors.studyProcess}
+                            </p>
+                          )}
                         </div>
                       </div>
                       <div className="col-lg-6 mb-3">
@@ -408,6 +526,11 @@ const CreateStudentProfile = () => {
                           }}
                           options={gradeOptions}
                         />
+                         {errors.grade && (
+                            <p className="text-center text-danger mt-1">
+                              {errors.grade}
+                            </p>
+                          )}
                       </div>
                       <div className="col-lg-6 mb-3">
                         <Select
@@ -426,6 +549,11 @@ const CreateStudentProfile = () => {
                           }}
                           options={englishLevelOptions}
                         />
+                         {errors.englishLevel && (
+                            <p className="text-center text-danger mt-1">
+                              {errors.englishLevel}
+                            </p>
+                          )}
                       </div>
                       {/* Gender */}
                       <div className="col-lg-6 mb-3">
@@ -444,6 +572,11 @@ const CreateStudentProfile = () => {
                           options={genderOptions}
                           placeholder="Chọn giới tính"
                         />
+                         {errors.gender && (
+                            <p className="text-center text-danger mt-1">
+                              {errors.gender}
+                            </p>
+                          )}
                       </div>
 
                       {/* File Upload */}
@@ -458,7 +591,6 @@ const CreateStudentProfile = () => {
                           {loadingUpFile && (
                             <i className="fa fa-refresh fa-spin mr-2" />
                           )}
-
                           <input
                             type="file"
                             multiple
@@ -468,6 +600,11 @@ const CreateStudentProfile = () => {
                               handleUpload(e);
                             }}
                           />
+                           {errors.fileString && (
+                            <p className="text-center text-danger mt-1">
+                              {errors.fileString}
+                            </p>
+                          )}
                         </div>
                       </div>
                       <div className="col-lg-6">
@@ -491,15 +628,20 @@ const CreateStudentProfile = () => {
                             title="Chọn hình đại diện hồ sơ"
                             className="hidden"
                           />
+                           {errors.img && (
+                            <p className="text-center text-danger mt-1">
+                              {errors.img}
+                            </p>
+                          )}
                         </div>
                       </div>
 
                       {/* Additional Information */}
-                      <div className="col-12">
+                      {/* <div className="col-12">
                         <div className="single-input-inner style-bg-border">
                           <textarea placeholder="Thông tin bổ sung" />
                         </div>
-                      </div>
+                      </div> */}
                       {/* Submit Button */}
                       <div className="col-12 d-flex justify-content-end">
                         <button type="submit" className="btn btn-base">
