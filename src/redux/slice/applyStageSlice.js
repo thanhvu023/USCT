@@ -1,43 +1,55 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import instance from "../axiosCustom";
 
+// Fetch all stages
 export const getAllStage = createAsyncThunk(
-  "/applyStage/getAllStage",
+  "applyStage/getAllStage",
   async (_, thunkAPI) => {
     try {
-      const res = await instance.get("/apply-stage");
-      return res.data;
+      const response = await instance.get("/apply-stage");
+      return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response);
+      return thunkAPI.rejectWithValue(error.response.data);
     }
   }
 );
 
-export const updateApplyStageById = createAsyncThunk(
-    "/applyStage/updateById",
-    async ({ applyStageId, programStageId }, thunkAPI) => {
-      try {
-        const res = await instance.put(`/apply-stage/${applyStageId}`, {
-          programStageId: programStageId
-        });
-        return res.data;
-      } catch (error) {
-        return thunkAPI.rejectWithValue(error.response.data);
-      }
+// Fetch a specific stage by ID
+export const getApplyStageById = createAsyncThunk(
+  "applyStage/getApplyStageById",
+  async (applyStageId, thunkAPI) => {
+    try {
+      const response = await instance.get(`/apply-stage/${applyStageId}`);
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
     }
-  );
+  }
+);
+
+// Update a specific stage
+export const updateApplyStage = createAsyncThunk(
+  "applyStage/updateApplyStage",
+  async ({ applyStageId, programStageId, programApplicationId, status }, thunkAPI) => {
+    try {
+      // Note: Make sure your API endpoint is correct. It was "apply-stag" in your function, which might be a typo.
+      const response = await instance.put(`/apply-stage/${applyStageId}`, { programStageId, programApplicationId, status });
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const initialState = {
   stages: [], 
   loading: false,
-  error: null,
+  error: null
 };
 
-
-export const applyStageSlice = createSlice({
+const applyStageSlice = createSlice({
   name: "applyStage",
   initialState,
-  reducers: {
-  },
   extraReducers: (builder) => {
     builder
       .addCase(getAllStage.pending, (state) => {
@@ -49,26 +61,45 @@ export const applyStageSlice = createSlice({
       })
       .addCase(getAllStage.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       })
-      .addCase(updateApplyStageById.pending, (state) => {
+      .addCase(getApplyStageById.pending, (state) => {
         state.loading = true;
       })
-      .addCase(updateApplyStageById.fulfilled, (state, action) => {
+      .addCase(getApplyStageById.fulfilled, (state, action) => {
         state.loading = false;
+        const index = state.stages.findIndex(stage => stage.applyStageId === action.payload.applyStageId);
+        if (index !== -1) {
+          state.stages[index] = action.payload;
+        } else {
+          // Adding a new stage if it does not exist might not be needed, but it's here if you have such a use case.
+          state.stages.push(action.payload);
+        }
       })
-      .addCase(updateApplyStageById.rejected, (state, action) => {
+      .addCase(getApplyStageById.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       })
-  },
+      .addCase(updateApplyStage.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updateApplyStage.fulfilled, (state, action) => {
+        state.loading = false;
+        // Update the stage in the state based on the returned data
+        const index = state.stages.findIndex(stage => stage.applyStageId === action.payload.applyStageId);
+        if (index !== -1) {
+          state.stages[index] = action.payload;
+        }
+      })
+      .addCase(updateApplyStage.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      });
+  }
 });
-// Thêm selector để lấy thông tin applyStage theo applyStageId
-export const selectApplyStageById = (applyStageId) => (state) => {
-  return state.applyStage.stages.find((stage) => stage.applyStageId === applyStageId);
-};
-const {
-  reducer: applyStageReducer,
-} = applyStageSlice;
 
-export { applyStageReducer as default };
+export const selectApplyStageById = (applyStageId) => (state) => {
+  return state.applyStage.stages.find(stage => stage.applyStageId === applyStageId);
+};
+
+export default applyStageSlice.reducer;

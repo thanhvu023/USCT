@@ -21,7 +21,6 @@ import { getAllProgramStages } from "../../../redux/slice/programStageSlice";
 import {
   getAllStage,
   selectApplyStageById,
-  updateApplyStageById,
 } from "../../../redux/slice/applyStageSlice";
 import ApplicationDetails from "./application-details";
 import Swal from "sweetalert2";
@@ -120,40 +119,40 @@ const ProgramApplicationPage = ({setMain }) => {
       stageName: stage?.stageName,
     }));
   };
-  const handleUpdateApplyStage = () => {
-    if (selectedApplication && selectedProgramStageId) {
-      dispatch(
-        updateApplyStageById({
-          applyStageId: selectedApplication.applyStage.applyStageId,
-          programStageId: selectedProgramStageId,
-        })
-      )
-        .then(() => {
-          Swal.fire({
-            icon: "success",
-            title: "Cập nhật trạng thái hồ sơ thành công!",
-            showConfirmButton: false,
-            timer: 2000,
-          }).then(() => {
-            setShowCheckSuccess(true);
-            setShowCheckModal(false);
-            dispatch(getAllProgramApplication()); 
-          });
-        })
-        .catch((error) => {
-          console.error("Error updating apply stage:", error);
-          Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "Đã xảy ra lỗi khi cập nhật trạng thái hồ sơ!",
-          });
-        });
-    } else {
-      alert(
-        "Vui lòng chọn cả Hồ sơ ứng tuyển và Giai đoạn chương trình để cập nhật."
-      );
-    }
-  };
+  // const handleUpdateApplyStage = () => {
+  //   if (selectedApplication && selectedProgramStageId) {
+  //     dispatch(
+  //       updateApplyStageById({
+  //         applyStageId: selectedApplication.applyStage.applyStageId,
+  //         programStageId: selectedProgramStageId,
+  //       })
+  //     )
+  //       .then(() => {
+  //         Swal.fire({
+  //           icon: "success",
+  //           title: "Cập nhật trạng thái hồ sơ thành công!",
+  //           showConfirmButton: false,
+  //           timer: 2000,
+  //         }).then(() => {
+  //           setShowCheckSuccess(true);
+  //           setShowCheckModal(false);
+  //           dispatch(getAllProgramApplication()); 
+  //         });
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error updating apply stage:", error);
+  //         Swal.fire({
+  //           icon: "error",
+  //           title: "Oops...",
+  //           text: "Đã xảy ra lỗi khi cập nhật trạng thái hồ sơ!",
+  //         });
+  //       });
+  //   } else {
+  //     alert(
+  //       "Vui lòng chọn cả Hồ sơ ứng tuyển và Giai đoạn chương trình để cập nhật."
+  //     );
+  //   }
+  // };
 
   // sort and search data
   const [sortedApplications, setSortedApplications] = useState([]);
@@ -808,7 +807,7 @@ const ProgramApplicationPage = ({setMain }) => {
                                   <Modal.Footer>
                                     <Button
                                       variant="primary"
-                                      onClick={handleUpdateApplyStage}
+                                  
                                     >
                                       Duyệt
                                     </Button>

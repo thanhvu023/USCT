@@ -8,7 +8,8 @@ import {
   Typography,
   Grid,
   Box,
-  
+  Tab, Tabs,
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField
 } from "@mui/material";
 import { Stepper, Step, StepLabel } from '@mui/material';
 import { Check as CheckIcon, Clear as ClearIcon, HourglassEmpty as HourglassEmptyIcon, RadioButtonUnchecked as RadioButtonUncheckedIcon } from '@mui/icons-material';
@@ -29,6 +30,13 @@ import { getProgramById } from "../../redux/slice/programSlice";
 
 const   ProgramApplicationDetails = () => {
   const { programApplicationId } = useParams();
+
+  const [tabIndex, setTabIndex] = useState(0);
+
+const handleTabChange = (event, newValue) => {
+  setTabIndex(newValue);
+};
+
   const dispatch = useDispatch();
   const details = useSelector(
     (state) => state.programApplication.programApplicationById
@@ -280,243 +288,191 @@ const getStageNameByProgramStageId = () =>{
 </Grid>
 
         </div>
-        <Typography
-          variant="h4"
-          component="h2"
-          style={{ fontWeight: "500", textAlign: "center" }}
-        >
-   {details.program?.nameProgram} 
-          
-        </Typography>
-
+        </Grid>
         
-      </Grid>
-      <Grid item xs={12} md={6}>
-    
-        {details.program?.img && (
-          <Box
+        <Box sx={{ width: '100%' }}>
+        <Tabs 
+  value={tabIndex} 
+  onChange={handleTabChange} 
+  aria-label="program application tabs"
+  centered  
+>
+  <Tab label="Thông tin Hồ sơ" />
+  <Tab label="Chọn khoản phí" />
+  <Tab label="Lịch sử thanh toán" />
+</Tabs>
+
+            <TabPanel value={tabIndex} index={0}>
+  <Typography variant="h3" component="h2" style={{ fontWeight: "700", textAlign: "center", marginBottom:'24px' }}>
+    {details.program?.nameProgram}
+  </Typography>
+
+  <Grid container spacing={2}>
+    <Grid item xs={12} md={6}>
+      {details.program?.img && (
+        <Box
           component="img"
-          src={programImageUrl}
+          src={details.program?.img}
           sx={{
-            width: '100%', // Take full width of the container
-            maxHeight: { xs: 'auto', md: '500px' }, // Adjust the max height as necessary
-            objectFit: 'contain', // This will ensure that the image is scaled properly
+            width: '100%',
+            maxHeight: { xs: 'auto', md: '500px' },
+            objectFit: 'contain',
             borderRadius: '4px',
           }}
           alt="Program Image"
         />
-        )}
+      )}
+        <div className="row mt-4">
+<div className="col-lg-12">
+          <h4 className="title ">Mô tả</h4>
+          <p>{details.program?.description}</p>
+        </div>
+        <div className="col-lg-12">
+          <h4 className="title ">Trách nhiệm</h4>
+          <ul>
+            {details.program?.responsibilities
+                .split("\\r\\n")
+                .map((responsibilities, index) => (
+                  <li key={index}>{responsibilities}</li>
+                ))}
+          </ul>
+        </div>
+        <div className="col-lg-12">
+          <h4 className="title ">Yêu cầu của chương trình</h4>
+          <p>{details.program?.requirement}</p>
+        </div>
+        <div className="col-lg-12">
+          <h4 className="title">Chi phí khám khảo</h4>
+          <ul>
+            {details.program?.tuition
+                .split("\\r\\n")
+                .map((item, index) => <li key={index}>{item}</li>)}
+          </ul>
+        </div>
+      </div>
+    </Grid>
 
+    <Grid item xs={12} md={6}>
+      <div className="td-sidebar">
+        <div className="widget widget_feature">
+          <h4 className="widget-title">Chi tiết Chương trình</h4>
+          <ul>
+            <li>
+              <i className="fa fa-university" />
+              <span>Trường Đại học:</span>
+              <span style={{ fontSize: "1rem" }}>
+                {details.program?.university?.universityName} - ({details.program?.university?.universityType.typeName})
+              </span>
+            </li>
+            <li>
+              <i className="fa fa-map-marker" />
+              <span>Tiểu Bang:</span> {details.program?.university?.state?.stateName}
+            </li>
+            <li>
+              <i className="fa fa-laptop" />
+              <span>Chuyên ngành chính:</span> {details.program?.major?.majorName}
+            </li>
+            <li>
+              <i className="fa fa-clipboard" />
+              <span>Lộ trình học:</span> {details.program?.duration}
+            </li>
+            <li>
+              <i className="fa fa-language" />
+              <span>Trình độ đào tạo:</span> {details.program?.level}
+            </li>
+            <li>
+              <i className="fa fa-calendar" />
+              <span>Học kỳ:</span> {details.program?.semester?.startDate ? new Date(details.program?.semester?.startDate).toLocaleDateString() : 'Loading...'} đến {details.program?.semester?.endDate ? new Date(details.program?.semester?.endDate).toLocaleDateString() : 'Loading...'}
+            </li>
+            <li>
+              <i className="fa fa-graduation-cap" />
+              <span>Loại chương trình:</span> {details.program?.programType?.typeName}
+            </li>
+            <li>
+              <i className="fa fa-forward" />
+              <span>Giai đoạn hồ sơ:</span> {activeStage ? activeStage.programStage.stageName : "Không có giai đoạn đang xử lý"}
+            </li>
+            {/* <li>
+              <Button variant="contained" color="primary" onClick={handleNavigateToProfile}>
+                XEM HỒ SƠ HỌC SINH ỨNG TUYỂN VÀO CHƯƠNG TRÌNH NÀY
+              </Button>
+            </li> */}
+          </ul>
+          <div className="price-wrap text-center">
+          <Button  color="primary" onClick={handleNavigateToProfile}>
+                XEM HỒ SƠ HỌC SINH ỨNG TUYỂN VÀO CHƯƠNG TRÌNH NÀY
+              </Button>
+          </div>
+        </div>
+      </div>
+    </Grid>
+  </Grid>
 
-   
-          <div className="row mt-4">
-          <div className="col-lg-12">
-                    <h4 className="title ">Mô tả</h4>
-                    <p>{details.program?.description}</p>
-                  </div>
-                  <div className="col-lg-12">
-                    <h4 className="title ">Trách nhiệm</h4>
-                    <ul>
-                      {details.program?.responsibilities
-                          .split("\\r\\n")
-                          .map((responsibilities, index) => (
-                            <li key={index}>{responsibilities}</li>
-                          ))}
-                    </ul>
-                  </div>
-                  <div className="col-lg-12">
-                    <h4 className="title ">Yêu cầu của chương trình</h4>
-                    <p>{details.program?.requirement}</p>
-                  </div>
-                  <div className="col-lg-12">
-                    <h4 className="title">Chi phí khám khảo</h4>
-                    <ul>
-                      {details.program?.tuition
-                          .split("\\r\\n")
-                          .map((item, index) => <li key={index}>{item}</li>)}
-                    </ul>
-                  </div>
-                </div>
-      </Grid>
-      <Grid item xs={12} md={6}>
-  
-            {/* <Box sx={{ display: "block" }}>
-              <Typography
-                variant="h5"
-                component="h3"
-                sx={{
-                  fontSize: "1.5rem",
-                  fontWeight: "500",
-                  display: "inline",
-                }}
-              >
-                Chi tiết chương trình
-              </Typography>
-            
-            </Box> */}
+</TabPanel>
+<TabPanel value={tabIndex} index={1}>
+  <Box sx={{ p: 3 }}>
+    <Typography variant="h6" gutterBottom>
+      Chi phí cần đóng
+    </Typography>
+    <Typography variant="subtitle1">
+      {details?.applyStage?.programStage?.isPayment ?
+        `Lựa chọn khoản phí cần đóng theo giai đoạn hồ sơ: ${details.applyStage?.programStage.stageName}` :
+        "Không cần đóng"}
+    </Typography>
+    <Box sx={{ mt: 2 }}>
+      <Form.Group as={Row} className="mb-3" controlId="formPlaintextFee">
+        <Form.Label column sm="4">
+          Chọn khoản phí:
+        </Form.Label>
+        <Col sm="8">
+          <Form.Control as="select" value={selectedFee?.programFeeId || ''} onChange={e => {
+              const feeId = e.target.value;
+              setSelectedFee(fees.find(f => f.programFeeId.toString() === feeId));
+            }}>
+            {fees.filter(fee => fee.programId === details?.applyStage?.programStage?.program?.programId).map(fee => (
+              <option key={fee.programFeeId} value={fee.programFeeId}>
+                {fee.amount} VND ({getFeeTypeNameById(fee.feeTypeId)})
+              </option>
+            ))}
+          </Form.Control>
+        </Col>
+      </Form.Group>
+      <InputGroup className="mb-3">
+        <InputGroup.Text>Note:</InputGroup.Text>
+        <FormControl as="textarea" rows={3} value={note} onChange={handleNoteChange} />
+      </InputGroup>
+      <Button variant="primary" onClick={handlePaymentSubmit}>Xác nhận</Button>
+    </Box>
+  </Box>
+</TabPanel>
 
-            <div className="col-lg-8">
-              <div className="td-sidebar">
-                <div className="widget widget_feature">
-                  <h4 className="widget-title">Chi tiết Chương trình</h4>
-                  <ul>
-                    <li>
-                      <i className="fa fa-university" />
-                      <span>Trường Đại học:</span>
-                      <span style={{ fontSize: "1rem" }}>
-    {
-      details?.program?.university
-        ?.universityName
-    }{" "}
-    - (
-    {
-      details.program?.university
-        ?.universityType.typeName
-    }
-    )
-  </span>
-                    </li>
-                    <li>
-                      <i className="fa fa-map-marker" />
-                      <span>Tiểu Bang:</span> {
-      details.program?.university?.state
-        ?.stateName
-    }
-                    </li>
-                    <li>
-                      <i className="fa fa-laptop" />
-                      <span>Chuyên ngành chính:</span>
-                      {
-      details.program?.major?.majorName
-     
-    }
-                    </li>
-                    <li>
-                      <i className="fa fa-clipboard" />
-                      <span>Lộ trình học:</span>   {details.program?.duration}
-                    </li>
-                    <li>
-                      <i className="fa fa-language" />
-                      <span>Trình độ đào tạo:</span> {details.program?.level}
-                    </li>
-                    <li>
-    <i className="fa fa-calendar"></i>
-    <span>
-        Học kỳ: 
-        <span style={{ marginLeft: '5px' }}>
-            {      details.program?.semester?.startDate ? new Date(  details.program?.semester?.startDate).toLocaleDateString() : 'Loading...'}
-        </span>
-        đến
-        <span style={{ marginLeft: '3px' }}>
-            {  details.program?.semester?.endDate ? new Date(  details.program?.semester?.endDate).toLocaleDateString() : 'Loading...'}
-        </span>
-    </span>
-</li>
-
-
-                    <li>
-                      <i className="fa fa-graduation-cap" />
-                      <span>Loại chương trình:</span>
-                      {
-      details.program?.programType?.typeName
-     
-    }
-                    </li>
-                    <li>
-  <i className="fa fa-forward"></i>
-  <span>Giai đoạn hồ sơ:</span>
-  {activeStage ? activeStage.programStage.stageName : "Không có giai đoạn đang xử lý"}
-</li>
-
-                    <li>
-                    <Button
-          variant="contained"
-          color="primary"
-          onClick={handleNavigateToProfile}
-        >
-       XEM HỒ SƠ HỌC SINH ỨNG TUYỂN VÀO CHƯƠNG TRÌNH NÀY
-        </Button>
-                    </li>
-                  </ul>
-                  <div className="price-wrap text-center">
-                    <a
-                      className="btn btn-primary"
-                      onClick={handleRowClick}
-                      style={{ fontSize:'24px'}}
-                    >
-                   {details?.applyStage?.programStage?.isPayment ?
-                      'Đóng phí' :
-                      "Không cần đóng"}
-                    </a>
-                  </div>
-                  <Modal show={isModalOpen} onHide={handleCloseModal} centered>
-     
-      
-
-     <Modal.Body>
-     <ListGroup.Item>
-          <Row>
-              <Col sm={4}><strong>Chi phí cần đóng:</strong></Col>
-              <Col sm={8}>
-                  {details?.applyStage?.programStage?.isPayment ?
-                      `Lựa chọn khoản phí cần đóng theo gia đoạn hồ so: ${details.applyStage?.programStage.stageName}` :
-                      "Không cần đóng"}
-              </Col>
-          </Row>
-      </ListGroup.Item>
-      <>
- <ListGroup.Item>
-                                        <Row>
-                                            <Col sm={4}><strong>Chọn khoản phí:</strong></Col>
-                                            <Col sm={8}>
-                                                <Form.Control as="select" value={selectedFee?.programFeeId || ''}
-                                                              onChange={e => {
-                                                                  const feeId = e.target.value;
-                                                                  setSelectedFee(fees.find(f => f.programFeeId.toString() === feeId));
-                                                              }}>
-                                                    {fees.filter(fee => fee.programId === details?.applyStage?.programStage?.program?.programId).map(fee => (
-                                                        <option key={fee.programFeeId} value={fee.programFeeId}>
-                                                            {fee.amount} VND ({getFeeTypeNameById(fee.feeTypeId)})
-                                                        </option>
-                                                    ))}
-                                                </Form.Control>
-                                            </Col>
-                                        </Row>
-                                    </ListGroup.Item>
-                                    <ListGroup.Item>
-                                        <InputGroup>
-                                            <InputGroup.Text>Note:</InputGroup.Text>
-                                            <FormControl as="textarea" rows={3} value={note} onChange={handleNoteChange}/>
-                                        </InputGroup>
-                                    </ListGroup.Item>
- </>
-
-     </Modal.Body>
-           <Modal.Footer>
-             <Button variant="secondary" onClick={handleCloseModal}>
-               Close
-             </Button>
-     
-             <Button variant="primary" onClick={handlePaymentSubmit}>Xác nhận</Button>
-
-           </Modal.Footer>
-         </Modal>
-                </div>
-               
-              </div>
-            </div>
-           
-
-      </Grid>
-
-      <Grid item xs={12}>
- 
-       
-      </Grid>
+            <TabPanel value={tabIndex} index={2}>
+                {/* Content for Lịch sử thanh toán */}
+                {/* Add your structured JSX layout here for tab 3 */}
+            </TabPanel>
+        </Box>
+    
 
     </Grid>
     
   );
 };
-
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+  return (
+      <div
+          role="tabpanel"
+          hidden={value !== index}
+          id={`simple-tabpanel-${index}`}
+          aria-labelledby={`simple-tab-${index}`}
+          {...other}
+      >
+          {value === index && (
+              <Box sx={{ p: 3 }}>
+                  {children}
+              </Box>
+          )}
+      </div>
+  );
+}
 export default ProgramApplicationDetails;
