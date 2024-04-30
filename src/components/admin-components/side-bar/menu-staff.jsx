@@ -37,14 +37,14 @@ export const MenuList = [
 
   //     // ],
   //   },
-  //Customer
-  // {
-  //     title: 'Khách hàng',
-  //     classsChange: 'mm-collapse',
-  //     iconStyle: <i className="la la-users" />,
-  //     filterName: 'customer',
+  //Uni
+  {
+      title: 'Trường đại học',
+      classsChange: 'mm-collapse',
+      iconStyle: <i className="la la-university" />,
+      filterName: 'uniStaff',
 
-  // },
+  },
 
   //Programs
   {

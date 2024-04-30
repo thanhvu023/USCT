@@ -8,6 +8,8 @@ import Registration from "./admin-components/registration-components/registratio
 import SideBarStaff from "./admin-components/side-bar/side-bar-staff";
 import PaymentForm from "./admin-components/program-application-components/payment";
 import { PaymentProvider } from "./admin-components/program-application-components/context/payment-context";
+import AllUniversitiesStaffPage from "./admin-components/uni-components/all-university-staff";
+
 const StaffPage = () => {
   const [main, setMain] = useState("admin");
   const [selectedApp, setSelectedApp] = useState(null);
@@ -25,8 +27,10 @@ const StaffPage = () => {
     switch (main) {
       case "Tư vấn viên":
         return <Test1 />;
-      case "Chương trình":
-        return <AllPrograms />;
+      case "Trường đại học":
+        return <AllUniversitiesStaffPage />;
+        case "Chương trình":
+          return <AllPrograms />;
       case "Hồ sơ đăng ký":
         return <ProgramApplicationPage setMain={setMain} setSelectedApp={handleSetSelectedApp} />;
       case "Thanh toán":
@@ -34,7 +38,7 @@ const StaffPage = () => {
       case "Đơn tư vấn":
         return <Registration />;
       default:
-        return <AdminHome handleAllConsultantClick={handleAllConsultantClick} />;
+        return <AdminHome handleAllConsultantClick={() => setMain("Tư vấn viên")} />;
     }
   };
 
@@ -44,7 +48,7 @@ const StaffPage = () => {
         <NavHader />
         <div id="content-wrapper" className="d-flex flex-row">
           <SideBarStaff setMain={setMain} />
-          <div className="content-wrapper" style={{ flex: '10', display: 'flex', flexDirection: 'column' }}>
+          <div className={`content-area ${main === "Thanh toán" ? 'w-100' : ''}`} style={{ flex: '1', display: 'flex', flexDirection: 'column' }}>
             {getContentComponent()}
           </div>
         </div>

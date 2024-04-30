@@ -219,7 +219,7 @@ const getStageNameByProgramStageId = () =>{
       case 2:
         return 'Đã hoàn thành';
       default:
-        return 'Unknown Status';
+        return 'Trạng thái đang bị lỗi';
     }
   };
   const getStepIcon = (status) => {
@@ -242,12 +242,16 @@ const getStageNameByProgramStageId = () =>{
     const stepStatus = details.applyStage[icon - 1]?.status; 
     return getStepIcon(stepStatus);
   };
+  const getPaymentStatusText = (isPayment) => {
+    return isPayment ? 'Cần đóng phí' : 'Không cần đóng phí';
+  };
   const displayApplicationStages = () => {
     const steps = Array.isArray(details.applyStage) ? details.applyStage.map((stage) => {
       const currentStage = programStages.find(ps => ps.programStageId === stage.programStageId);
       return {
         label: currentStage?.stageName || 'Unknown Stage',
         description: getStatusText(stage.status),
+        payment : getPaymentStatusText(stage.programStage.isPayment),
         date: stage.updateDate
       };
     }) : [];  
@@ -258,11 +262,11 @@ const getStageNameByProgramStageId = () =>{
           <Step key={index}>
             <StepLabel
               StepIconComponent={StepIconComponent}
-              optional={<Typography variant="caption">{step.date}</Typography>}>
+              optional={<Typography variant="caption">{step.payment}</Typography>}>
               {step.label}
               <br/>
               <Typography variant="caption" color="textSecondary">
-                {step.description}
+                {step.description} 
               </Typography>
             </StepLabel>
           </Step>
