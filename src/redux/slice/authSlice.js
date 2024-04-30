@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { setUserAuthToken } from "../authService";
 import instance from "../axiosCustom";
 import jwtDecode from "jwt-decode";
+import { getStudentProfileByCustomerId } from "./studentSice";
 export const login = createAsyncThunk(
   "customer/login",
   async (param, thunkAPI) => {
@@ -124,6 +125,62 @@ export const getConsultants = createAsyncThunk(
   }
 );
 
+export const createNotification = createAsyncThunk(
+  "customer/createNotification",
+  async (params, thunkAPI) => {
+    try {
+      console.log(params);
+      const res = await instance.post("/notification/", params, {
+        headers: {
+          // "Accept": "application/json, text/plain",
+          "Content-Type": "application/json",
+        },
+      });
+      console.log(res);
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const getNotification = createAsyncThunk(
+  "customer/getNotification",
+  async (params, thunkAPI) => {
+    try {
+      const res = await instance.get(`/notification/customer/${params}`);
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const getFile = createAsyncThunk(
+  "customer/getFile",
+  async (params, thunkAPI) => {
+    try {
+      // console.log("Fetching file with URL:", params);
+      const res = await instance.get(`/firebase/file?url=${params}`, {
+        responseType: "blob",
+      });
+      // console.log("Response from Firebase:", res);
+      const fileBlob = res.data;
+      const fileUrl = URL.createObjectURL(fileBlob);
+      // console.log("File URL:", fileUrl);
+      return fileUrl;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const setStudentFileUrl = (fileUrl) => ({
+  type: "auth/setStudentFileUrl",
+  payload: { fileUrl }, // Wrap the fileUrl in an object if needed
+});
+
+
 const initialState = {
   msg: "",
   user: [],
@@ -132,6 +189,9 @@ const initialState = {
   error: "",
   userById: {},
   consultants: [],
+  notification: {},
+  notificationByUserId: {},
+  studentFileUrl: [], // Store the URL of the file
 };
 
 export const authSlice = createSlice({
@@ -200,6 +260,18 @@ export const authSlice = createSlice({
         state.loading = false;
         state.error = null;
       })
+      .addCase(getFile.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getFile.fulfilled, (state, action) => {
+        state.loading = false;
+        state.studentFileUrl = action.payload;
+        state.error = action.error;
+      })
+      .addCase(getFile.rejected, (state) => {
+        state.loading = false;
+        state.error = null;
+      })
       .addCase(updateUserById.pending, (state) => {
         state.loading = true;
       })
@@ -233,6 +305,30 @@ export const authSlice = createSlice({
         state.error = null;
       })
       .addCase(getConsultants.rejected, (state) => {
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(createNotification.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(createNotification.fulfilled, (state, action) => {
+        state.loading = false;
+        state.notification = action.payload;
+        state.error = null;
+      })
+      .addCase(createNotification.rejected, (state) => {
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(getNotification.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getNotification.fulfilled, (state, action) => {
+        state.loading = false;
+        state.notificationByUserId = action.payload;
+        state.error = null;
+      })
+      .addCase(getNotification.rejected, (state) => {
         state.loading = false;
         state.error = null;
       });

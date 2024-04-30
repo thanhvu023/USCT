@@ -11,9 +11,9 @@ import Swal from "sweetalert2";
 
 const ChangePassword = () => {
 
-  const token = useSelector((state) => state.auth.token);
+  const token = useSelector((state) => state?.auth?.token);
   const userId = jwtDecode(token).UserId;
-  const userDetail = useSelector((state) => state.auth.userById);
+  const userDetail = useSelector((state) => state?.auth?.userById);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getUserById(userId));
@@ -25,6 +25,8 @@ const ChangePassword = () => {
 
   const [errors, setErrors] = useState({});
   const [updateMessage, setUpdateMessage] = useState("");
+  let publicUrl = process.env.PUBLIC_URL + "/";
+
   //   const handleUpload = async (selectedFile) => {
   //     const imgRef = ref(imageDb, `files/${selectedFile.name}`);
   //     try {
@@ -91,19 +93,20 @@ const ChangePassword = () => {
   };
   return (
     <Fragment>
-      <PageTitle activeMenu="Profile" motherMenu="App" />
       <div className="bc-grey">
         <div className="row mb-5 mr-0 ml-0 border-0">
           <div className="col-lg-12 mt-12">
             <div className="profile card card-body px-3 pt-3 pb-0 border rounded">
               <div className="profile-head">
-                <div className="photo-content ">
-                  <div className="cover-photo rounded"></div>
-                </div>
+               
                 <div className="profile-info d-flex">
                   <div className="profile-photo ">
-                    <img
-                      src={userDetail.img}
+                  <img
+                      src={
+                        userDetail.img
+                          ? userDetail.img
+                          : publicUrl + "assets/img/author/pic2.jpg"
+                      }
                       alt="img"
                       className="bg-info rounded-circle mb-4 "
                       style={{ width: "100px", height: "100px" }}

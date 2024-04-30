@@ -64,6 +64,7 @@ export const updateRegistrationById = createAsyncThunk(
   "registration/updateRegistrationById",
   async ({ registrationFormId, consultantId, status }, thunkAPI) => {
     try {
+      console.log(registrationFormId)
       const res = await instance.put(
         `/registration-forms/${registrationFormId}`,
         { consultantId, status }
