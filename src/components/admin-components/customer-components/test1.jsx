@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { getStudentProfileByCustomerId } from "../../../redux/slice/studentSice";
+import { getStudentProfileByCustomerId } from "../../../redux/slice/studentSlice";
 import { Dropdown } from "react-bootstrap";
 import { getProgramById } from '../../../redux/slice/programSlice';
 import { getProgramApplicationsByStudentProfileId } from "../../../redux/slice/programApplicationSlice";

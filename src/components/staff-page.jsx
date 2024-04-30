@@ -6,44 +6,50 @@ import ProgramApplicationPage from "./admin-components/program-application-compo
 import AllPrograms from "./admin-components/program-components/programs";
 import Registration from "./admin-components/registration-components/registration";
 import SideBarStaff from "./admin-components/side-bar/side-bar-staff";
-
-
+import PaymentForm from "./admin-components/program-application-components/payment";
+import { PaymentProvider } from "./admin-components/program-application-components/context/payment-context";
 const StaffPage = () => {
   const [main, setMain] = useState("admin");
+  const [selectedApp, setSelectedApp] = useState(null);
+
+  const handleSetSelectedApp = (app) => {
+    setSelectedApp(app);
+    setMain("Thanh toán");
+  };
 
   const handleAllConsultantClick = () => {
     setMain("Tư vấn viên");
   };
 
-  const componentMap = {
-
-    "Chương trình": <AllPrograms />,
-    "Hồ sơ đăng ký": <ProgramApplicationPage />,
-    "Đơn tư vấn": <Registration />,
-   
+  const getContentComponent = () => {
+    switch (main) {
+      case "Tư vấn viên":
+        return <Test1 />;
+      case "Chương trình":
+        return <AllPrograms />;
+      case "Hồ sơ đăng ký":
+        return <ProgramApplicationPage setMain={setMain} setSelectedApp={handleSetSelectedApp} />;
+      case "Thanh toán":
+        return <PaymentForm selectedApp={selectedApp} />;
+      case "Đơn tư vấn":
+        return <Registration />;
+      default:
+        return <AdminHome handleAllConsultantClick={handleAllConsultantClick} />;
+    }
   };
-
-  const getContentComponent = (main) => {
-    const selectedComponent = componentMap[main];
-    return selectedComponent || <AdminHome handleAllConsultantClick={handleAllConsultantClick} />;
-  };
-
-  const renderContent = () => (
-    <div className="content-wrapper" style={{ flex: '10', display: 'flex', flexDirection: 'column' }}> 
-      {getContentComponent(main)}
-    </div>
-  );
 
   return (
-    <div id="main-wrapper" >  
-      <div id="content-wrapper" className="d-flex flex-row"> 
-        <div className="sidebar-wrapper" style={{ flex: '2' }}> 
-          <NavHader/>
+    <PaymentProvider value={{ selectedApp, setSelectedApp }}>
+      <div id="main-wrapper">
+        <NavHader />
+        <div id="content-wrapper" className="d-flex flex-row">
           <SideBarStaff setMain={setMain} />
+          <div className="content-wrapper" style={{ flex: '10', display: 'flex', flexDirection: 'column' }}>
+            {getContentComponent()}
+          </div>
         </div>
-        {renderContent()}
       </div>
-    </div>
+    </PaymentProvider>
   );
 };
 

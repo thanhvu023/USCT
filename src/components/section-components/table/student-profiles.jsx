@@ -2,8 +2,8 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useFilters, usePagination, useTable } from "react-table";
-import { getStudentProfileByCustomerId } from "../../../redux/slice/studentSice";
-import { COLUMNS } from "./columns";
+import { getStudentProfileByCustomerId } from "../../../redux/slice/studentSlice";
+import { COLUMNS } from "./student-profile-columns";
 import "./student-profile.css";
 import jwtDecode from "jwt-decode";
 

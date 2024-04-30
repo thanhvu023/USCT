@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getAllProgramApplication } from "../../../redux/slice/programApplicationSlice";
-import { getStudentProfileById } from "../../../redux/slice/studentSice";
+import { getStudentProfileById } from "../../../redux/slice/studentSlice";
 import { getProgramById } from "../../../redux/slice/programSlice";
+import { getProgramStageById } from "../../../redux/slice/programStageSlice";
 import {
   Modal,
   Button,
@@ -14,14 +15,14 @@ import {
   Card,
 } from "react-bootstrap";
 import { getAllUsers } from "../../../redux/slice/authSlice";
-
+import PaymentContext from "./context/payment-context";
 import { Link } from "react-router-dom";
 import { getAllProgramStages } from "../../../redux/slice/programStageSlice";
 import {
   getAllStage,
   selectApplyStageById,
-  updateApplyStageById,
 } from "../../../redux/slice/applyStageSlice";
+import ApplicationDetails from "./application-details";
 import Swal from "sweetalert2";
 
 const theadData = [
@@ -51,17 +52,30 @@ const style = {
     marginRight: "10px",
   },
 };
-const ProgramApplicationPage = () => {
+const ProgramApplicationPage = ({setMain }) => {
+
+  const { setSelectedApp } = useContext(PaymentContext);
+  
+  const handleCreateFee = (application) => {
+    setSelectedApp(application); 
+    setMain("Thanh toán");       
+  };
+
+
   const dispatch = useDispatch();
   const [sort, setSortata] = useState(10);
   const { programApplications, loading, error } = useSelector(
     (state) => state.programApplication
   );
+
+  console.log("chuong trnh",programApplications)
   const [selectedProfileId, setSelectedProfileId] = useState(false);
   const [studentProfile, setStudentProfile] = useState(null);
+  const [isPaymentRequired, setIsPaymentRequired] = useState(false);
+
   const [programs, setPrograms] = useState({});
   const [studentProfiles, setStudentProfiles] = useState({});
-  console.log("studentProfiles",studentProfiles)
+  // console.log("isPaymentRequired",isPaymentRequired)
   const [showCheckModal, setShowCheckModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showCheckSuccess, setShowCheckSuccess] = useState(false);
@@ -102,43 +116,43 @@ const ProgramApplicationPage = () => {
     return stages.map((stage) => ({
       programStageId: stage.programStageId,
       programId: stage.programId,
-      stageName: stage.stageName,
+      stageName: stage?.stageName,
     }));
   };
-  const handleUpdateApplyStage = () => {
-    if (selectedApplication && selectedProgramStageId) {
-      dispatch(
-        updateApplyStageById({
-          applyStageId: selectedApplication.applyStage.applyStageId,
-          programStageId: selectedProgramStageId,
-        })
-      )
-        .then(() => {
-          Swal.fire({
-            icon: "success",
-            title: "Cập nhật trạng thái hồ sơ thành công!",
-            showConfirmButton: false,
-            timer: 2000,
-          }).then(() => {
-            setShowCheckSuccess(true);
-            setShowCheckModal(false);
-            dispatch(getAllProgramApplication()); 
-          });
-        })
-        .catch((error) => {
-          console.error("Error updating apply stage:", error);
-          Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "Đã xảy ra lỗi khi cập nhật trạng thái hồ sơ!",
-          });
-        });
-    } else {
-      alert(
-        "Vui lòng chọn cả Hồ sơ ứng tuyển và Giai đoạn chương trình để cập nhật."
-      );
-    }
-  };
+  // const handleUpdateApplyStage = () => {
+  //   if (selectedApplication && selectedProgramStageId) {
+  //     dispatch(
+  //       updateApplyStageById({
+  //         applyStageId: selectedApplication.applyStage.applyStageId,
+  //         programStageId: selectedProgramStageId,
+  //       })
+  //     )
+  //       .then(() => {
+  //         Swal.fire({
+  //           icon: "success",
+  //           title: "Cập nhật trạng thái hồ sơ thành công!",
+  //           showConfirmButton: false,
+  //           timer: 2000,
+  //         }).then(() => {
+  //           setShowCheckSuccess(true);
+  //           setShowCheckModal(false);
+  //           dispatch(getAllProgramApplication()); 
+  //         });
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error updating apply stage:", error);
+  //         Swal.fire({
+  //           icon: "error",
+  //           title: "Oops...",
+  //           text: "Đã xảy ra lỗi khi cập nhật trạng thái hồ sơ!",
+  //         });
+  //       });
+  //   } else {
+  //     alert(
+  //       "Vui lòng chọn cả Hồ sơ ứng tuyển và Giai đoạn chương trình để cập nhật."
+  //     );
+  //   }
+  // };
 
   // sort and search data
   const [sortedApplications, setSortedApplications] = useState([]);
@@ -225,6 +239,10 @@ const ProgramApplicationPage = () => {
       const response = await dispatch(getStudentProfileById(studentProfileId));
       if (response.payload) {
         setStudentProfile(response.payload);
+        const programStageResponse = await dispatch(getProgramStageById(response.payload.programStageId));
+        if (programStageResponse.payload) {
+          setIsPaymentRequired(programStageResponse.payload.isPayment);
+        }
       }
     } catch (error) {
       console.error("Error fetching student profile:", error);
@@ -403,11 +421,8 @@ const ProgramApplicationPage = () => {
                                 {programs[application.programId]?.nameProgram}
                               </td>
                               <td>
-                                {
-                                  application.applyStage?.programStage
-                                    ?.stageName
-                                }
-                              </td>
+  {application.applyStage?.programStage?.stageName || 'N/A'}
+</td>
                               <td
                                 style={{
                                   display: "flex",
@@ -415,9 +430,7 @@ const ProgramApplicationPage = () => {
                                 }}
                               >
                                 <button
-                                  onClick={() =>
-                                    handleShowDetailsModal(application)
-                                  }
+                                   onClick={() => handleCreateFee(application)}
                                   className="btn btn-xs sharp btn-primary me-1"
                                   style={{
                                     ...style.button,
@@ -625,7 +638,7 @@ const ProgramApplicationPage = () => {
                                     <Modal.Title style={{ fontSize: "32px" }}>
                                       {selectedApplication &&
                                         selectedApplication.applyStage
-                                          .programStage.program.nameProgram}
+                                          ?.programStage.program.nameProgram}
                                     </Modal.Title>
                                   </Modal.Header>
                                   <Modal.Body>
@@ -638,7 +651,7 @@ const ProgramApplicationPage = () => {
                                                 Trường đại học:{" "}
                                                 {
                                                   selectedApplication.applyStage
-                                                    .programStage.program
+                                                    ?.programStage.program
                                                     .university.universityName
                                                 }
                                               </Card.Title>
@@ -648,7 +661,7 @@ const ProgramApplicationPage = () => {
                                                 </span>{" "}
                                                 {
                                                   selectedApplication.applyStage
-                                                    .programStage.program
+                                                    ?.programStage.program
                                                     .university.state.stateName
                                                 }
                                               </Card.Text>
@@ -658,7 +671,7 @@ const ProgramApplicationPage = () => {
                                                 </span>{" "}
                                                 {
                                                   selectedApplication.applyStage
-                                                    .programStage.program
+                                                    ?.programStage.program
                                                     .university.slogan
                                                 }
                                               </Card.Text>
@@ -670,14 +683,14 @@ const ProgramApplicationPage = () => {
                                                 :{" "}
                                                 {
                                                   selectedApplication.applyStage
-                                                    .programStage.program
+                                                    ?.programStage.program
                                                     .university.website
                                                 }
                                               </Card.Text>
                                               <Image
                                                 src={
                                                   selectedApplication.applyStage
-                                                    .programStage.program
+                                                    ?.programStage.program
                                                     .university.img
                                                 }
                                                 alt="University Image"
@@ -698,7 +711,7 @@ const ProgramApplicationPage = () => {
                                                 </span>{" "}
                                                 {
                                                   selectedApplication.applyStage
-                                                    .programStage.program.major
+                                                    ?.programStage.program.major
                                                     .majorName
                                                 }
                                               </Card.Text>
@@ -708,7 +721,7 @@ const ProgramApplicationPage = () => {
                                                 </span>{" "}
                                                 {
                                                   selectedApplication.applyStage
-                                                    .programStage.program.status
+                                                    ?.programStage.program.status
                                                 }
                                               </Card.Text>
                                               <Card.Text className="mb-3">
@@ -717,7 +730,7 @@ const ProgramApplicationPage = () => {
                                                 </span>{" "}
                                                 {
                                                   selectedApplication.applyStage
-                                                    .programStage.program
+                                                    ?.programStage.program
                                                     .programType.typeName
                                                 }
                                               </Card.Text>
@@ -727,7 +740,7 @@ const ProgramApplicationPage = () => {
                                                 </span>{" "}
                                                 {
                                                   selectedApplication.applyStage
-                                                    .programStage.program
+                                                    ?.programStage.program
                                                     .description
                                                 }
                                               </Card.Text>
@@ -737,42 +750,54 @@ const ProgramApplicationPage = () => {
                                                 </span>{" "}
                                                 {
                                                   selectedApplication.applyStage
-                                                    .programStage.program
+                                                    ?.programStage.program
                                                     .duration
                                                 }
                                               </Card.Text>
                                               <Card.Text className="mb-3">
+                                              <div className="d-flex justify-content-sm-around">                                           
                                                 <span className="font-weight-bold ">
                                                   Trạng thái hồ sơ:
+                                                  
                                                 </span>{" "}
-                                                {
+                                                {/* {
                                                   selectedApplication.applyStage
-                                                    .programStage.stageName
-                                                }
+                                                    ?.programStage?.stageName || 'N/A'
+                                                } */}
+                                                      <span className="font-weight-bold ">
+                                               Thanh toán:
+                                           
+                                                </span>{" "}
+                                                {selectedApplication.applyStage?.programStage.isPayment ? "Có" : "Không"}
+
+                                             </div>
                                               </Card.Text>
-                                              <Form.Select
-                                                value={selectedProgramStageId}
-                                                onChange={
-                                                  handleProgramStageChange
-                                                }
-                                              >
-                                                <option value="">
-                                                  Chọn giai đoạn hồ sơ ứng tuyển
-                                                  chương trình
-                                                </option>
-                                                {getProgramStagesByProgramId(
-                                                  selectedApplication.applyStage
-                                                    .programStage.program
-                                                    .programId
-                                                ).map((stage) => (
-                                                  <option
-                                                    key={stage.programStageId}
-                                                    value={stage.programStageId}
-                                                  >
-                                                    {stage.stageName}
-                                                  </option>
-                                                ))}
-                                              </Form.Select>
+                                              <div className="d-flex  justify-content-sm-around">
+  <Form.Select
+    value={selectedProgramStageId}
+    onChange={handleProgramStageChange}
+    className="me-2"
+  >
+    <option value="">Chọn giai đoạn hồ sơ ứng tuyển chương trình</option>
+    {getProgramStagesByProgramId(
+      selectedApplication.applyStage?.programStage.program.programId
+    ).map((stage) => (
+      <option key={stage.programStageId} value={stage.programStageId}>
+        {/* {stage?.stageName || 'N/A'} */}
+      </option>
+    ))}
+  </Form.Select>
+  
+  {/* {selectedApplication && selectedApplication.applyStage.programStage.isPayment &&
+    programApplications.map((application) => (
+      application.programApplicationId === selectedApplication.programApplicationId &&
+      <button key={application.programApplicationId} onClick={() => handleCreateFee(application)}>
+        Tạo Phí
+      </button>
+    ))
+  } */}
+
+</div>
                                             </Card.Body>
                                           </Card>
                                         </Col>
@@ -782,7 +807,7 @@ const ProgramApplicationPage = () => {
                                   <Modal.Footer>
                                     <Button
                                       variant="primary"
-                                      onClick={handleUpdateApplyStage}
+                                  
                                     >
                                       Duyệt
                                     </Button>

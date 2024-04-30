@@ -5,7 +5,7 @@ import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getStudentProfileById } from "../../../redux/slice/studentSice";
+import { getStudentProfileById } from "../../../redux/slice/studentSlice";
 import { Backdrop, CircularProgress } from "@mui/material";
 import { getFile, setStudentFileUrl } from "../../../redux/slice/authSlice";
 

@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 
 import PropTypes from "prop-types";
 import StudentProfileAppliedList from "./table/student-profiles-applied";
+import StudentProfileAppliedStageList from "./table/student-proflied-applied-stage";
 const options = [
   { value: "basic_english", label: "Tiếng Anh cơ bản" },
   { value: "ielts", label: "IELTS" },
@@ -107,10 +108,31 @@ const StudentProfileApplied = () => {
                           </span>
                         </Nav.Link>
                       </Nav.Item>
+                      {/* <Nav.Item as="li" className="nav-item">
+                        <Nav.Link to="#about-me" eventKey="ApplyProfile">
+                          <span className="d-flex align-items-center">
+                            <i
+                              className="la la-book me-2"
+                              style={{ fontWeight: "bold" }}
+                            ></i>
+                            <strong style={{ fontSize: "1.2rem" }}>
+                             Tiến trình hồ sơ
+                            </strong>
+                          </span>
+                        </Nav.Link>
+                      </Nav.Item> */}
                     </Nav>
+                   
+                     
+                    
                     <Tab.Content>
                       <Tab.Pane id="about-me" eventKey="RegistrationList">
                         <StudentProfileAppliedList />
+                      </Tab.Pane>
+                    </Tab.Content>
+                    <Tab.Content>
+                      <Tab.Pane id="about-me" eventKey="ApplyProfile">
+                        <StudentProfileAppliedStageList />
                       </Tab.Pane>
                     </Tab.Content>
                   </Tab.Container>

@@ -18,6 +18,7 @@ const RegistrationDetail = () => {
   const token = useSelector((state) => state.auth.token);
   const userId = jwtDecode(token).UserId;
   const userDetail = useSelector((state) => state.auth.userById) || {};
+  // console.log("nnay la gui:",userDetail)
   useEffect(() => {
     dispatch(getUserById(userId));
   }, [userId]);

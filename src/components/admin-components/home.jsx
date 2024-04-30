@@ -1,6 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllConsultants } from '../../redux/slice/consultantSlice';
+import { getAllProgramApplication } from "../../redux/slice/programApplicationSlice";
+import { getStudentProfileById } from "../../redux/slice/studentSlice";
+import { getProgramById } from "../../redux/slice/programSlice";
+import { getAllStage } from '../../redux/slice/applyStageSlice';
+import { getAllProgramStages } from '../../redux/slice/programStageSlice';
+import { getAllUsers } from "../../redux/slice/authSlice";
+
 import { Col, Dropdown, Row, Nav, Tab } from 'react-bootstrap';
 import { Link, useNavigate } from "react-router-dom"; // Import Link và useNavigate từ react-router-dom
 
@@ -31,23 +38,95 @@ const studentTable = [
     {id:6, isChecked:false,name:'Bradley Greer', coach:'Brenden Wagner', date:'15 Jan 2024', time:'09:50'},
 ];
 
-const salaryTable = [
-    { image: "https://i.redd.it/lyhoip7h9qg11.jpg", name:"Angelica Ramos", color:'success', status:'Paid', date:'12 Jan 2024', amount:'100', transId:'42317'},
-    { image: "https://i.redd.it/lyhoip7h9qg11.jpg", name:"Cedric Kelly", color:'danger',status:'Unpaid', date:'07 Jan 2024', amount:'200', transId:'13369'},
-    { image: "https://i.redd.it/lyhoip7h9qg11.jpg", name:"Bradley Greer",color:'warning', status:'Pending', date:'08 Jan 2024', amount:'150', transId:'25413'},
-    { image: "https://i.redd.it/lyhoip7h9qg11.jpg", name:"Rhona Davidson",color:'danger', status:'Unpaid', date:'02 Jan 2024', amount:'250', transId:'74125'},
-    { image: "https://i.redd.it/lyhoip7h9qg11.jpg", name:"Caesar Vance", color:'success', status:'Paid', date:'10 Jan 2024', amount:'300', transId:'23654'},
-];
+
 
 const AdminHome = ({handleAllConsultantClick }) => {
+
+    
     const dispatch = useDispatch();
     const consultants = useSelector(state => state.consultant.consultants.slice(0, 5));
-        console.log("consultants",consultants)
-    const loading = useSelector(state => state.consultant.loading);
+    const [studentProfiles, setStudentProfiles] = useState({});
+    const [programs, setPrograms] = useState({});
 
+    const customers = useSelector((state) => state.auth.user);
+    const { programApplications, loading, error } = useSelector(
+        (state) => state.programApplication
+      );
+
+    const programStages = useSelector((state) => state.programStages.stages);
+    console.log("programApplications",programApplications)
     useEffect(() => {
         dispatch(getAllConsultants());
     }, [dispatch]);
+
+    useEffect(() => {
+        dispatch(getAllProgramApplication());
+        dispatch(getProgramById());
+      }, [dispatch]);
+    
+      useEffect(() => {
+        dispatch(getAllProgramStages());
+        dispatch(getAllStage());
+      }, [dispatch]);
+
+      useEffect(() => {
+        const fetchPrograms = async () => {
+          const programIds = programApplications.map(
+            (application) => application.programId
+          );
+          for (const programId of programIds) {
+            try {
+              const response = await dispatch(getProgramById(programId));
+              if (response.payload) {
+                const { nameProgram, createDate } = response.payload;
+                setPrograms((prevState) => ({
+                  ...prevState,
+                  [programId]: { nameProgram, createDate },
+                }));
+              }
+            } catch (error) {
+              console.error(`Error fetching program with ID ${programId}:`, error);
+            }
+          }
+        };
+    
+        if (programApplications.length > 0) {
+          fetchPrograms();
+        }
+      }, [dispatch, programApplications]);
+    
+      useEffect(() => {
+        const fetchStudentProfiles = async () => {
+          for (const application of programApplications) {
+            const studentProfileId = application.studentProfileId;
+            try {
+              const response = await dispatch(
+                getStudentProfileById(studentProfileId)
+              );
+              if (response.payload) {
+                const studentProfile = response.payload;
+                setStudentProfiles((prevState) => ({
+                  ...prevState,
+                  [studentProfileId]: studentProfile,
+                }));
+              }
+            } catch (error) {
+              console.error(
+                `Error fetching student profile with ID ${studentProfileId}:`,
+                error
+              );
+            }
+          }
+        };
+    
+        fetchStudentProfiles();
+      }, [dispatch, programApplications]);
+    
+      useEffect(() => {
+        dispatch(getAllUsers());
+      }, [dispatch]);
+
+      
     return (
         <>
             <div className='container-fluid' style={{ backgroundColor: 'whitesmoke',paddingBottom:'50px' }}>
@@ -108,30 +187,52 @@ const AdminHome = ({handleAllConsultantClick }) => {
             <table className="table verticle-middle text-nowrap table-responsive-md">
                 <thead>
                     <tr>
-                        <th scope="col">ID học sinh</th>
+                        <th scope="col">Mã hồ sơ</th>
                         <th scope="col">Họ và tên học sinh</th>
-                        <th scope="col">Tư vấn viên phụ trách</th>
                         <th scope="col">Ngày tạo</th>
                         <th scope="col">Chương trình</th>
-                        <th scope="col">Trạng thái</th>
-                     
+                        <th scope="col">Trạng thái hồ sơ</th>
                       
                     </tr>
                 </thead>
                 <tbody>
-                    {tabelData.map((item, index) => (
-                        <tr key={index}>
-                            <td>{item.no}</td>
-                            <td>{item.name}</td>
-                            <td>{item.proff}</td>
-                            <td>{item.date}</td>
-                            <td>{item.subject}</td>
-                            <td><span className={`badge badge-rounded badge-${item.color}`}>{item.status}</span></td>
-                           
-                           
-                        </tr>
-                    ))}
-                </tbody>
+                        {programApplications.slice(0,5).map((application) => (
+                            <tr
+                              key={application.studentProfileId}
+                              className="table-row-border"
+                            >
+                              <td>{application.programApplicationId}</td>
+                              <Link
+                               
+                              >
+                                <td>
+                                  {
+                                    studentProfiles[
+                                      application.studentProfileId
+                                    ]?.fullName
+                                  }
+                                </td>
+                              </Link>
+                              <td>
+                                {
+                                  studentProfiles[application.studentProfileId]
+                                    ?.createDate
+                                }
+                              </td>
+                             
+                             
+                              <td>
+                                {programs[application.programId]?.nameProgram}
+                              </td>
+                              <td>
+                                {
+                                  application.applyStage?.programStage
+                                    ?.stageName
+                                }
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
             </table>
         </div>
     </div>

@@ -2,7 +2,7 @@ import React from "react";
 import { Nav, Tab } from "react-bootstrap";
 import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
 import { Link } from "react-router-dom";
-import StudenProfileList from "./table/student-profiles";
+import StudentProfileList from "./table/student-profiles";
 
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
@@ -125,7 +125,7 @@ const StudentProfilePage = () => {
                     </Nav>
                     <Tab.Content>
                       <Tab.Pane id="about-mefdsaf" eventKey="StudentList">
-                        <StudenProfileList />
+                        <StudentProfileList />
                       </Tab.Pane>
                     </Tab.Content>
                   </Tab.Container>

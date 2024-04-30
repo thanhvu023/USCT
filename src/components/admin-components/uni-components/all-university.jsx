@@ -253,7 +253,7 @@ const AllUniversitiesPage = () => {
               <h5 className="mb-2" style={{ fontSize: '16px', fontWeight: 'bold' }}>Email:</h5>
               <p>{selectedUniversity.email}</p>
               <h5 className="mb-2" style={{ fontSize: '16px', fontWeight: 'bold' }}>Nhân viên phụ trách:</h5>
-              <p>{selectedUniversity.staffId}</p>
+              <p>{[selectedUniversity.staffId]}</p>
            </>
                
             )}

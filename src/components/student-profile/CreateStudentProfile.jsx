@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Select from "react-select";
-import { createStudentProfile } from "../../redux/slice/studentSice";
+import { createStudentProfile } from "../../redux/slice/studentSlice";
 import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
 import Swal from "sweetalert2";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";

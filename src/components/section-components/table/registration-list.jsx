@@ -105,41 +105,17 @@ const RegistrationList = () => {
                       onClick={() =>
                         handleRowClick(
                           row.original.registrationFormId,
-                          row.original.consultantId,
-                          row.original.customerId,
-                          row.original.area,
-                          row.original.budget,
-                          row.original.destinationReason,
-                          row.original.majorChoose,
-                          row.original.majorChooseReason,
-                          row.original.moreInformation,
-                          row.original.priorityOfStudyAbroad,
-                          row.original.programChoose,
-                          row.original.studyAbroadReason,
-                          row.original.universityChooseReason
+                          
                         )
                       }
                     >
                       {row.cells.map((cell, cellIndex) => {
-                        return (
-                          <td key={cellIndex} {...cell.getCellProps()}>
-                            {cell.column.id === "status" ? (
-                              <span
-                                className={
-                                  row.original.status === 0
-                                    ? "status-red"
-                                    : "status-green"
-                                }
-                              >
-                                {row.original.status === 0
-                                  ? "Chưa duyệt"
-                                  : cell.render("Cell")}
-                              </span>
-                            ) : (
-                              cell.render("Cell")
-                            )}
-                          </td>
-                        );
+                      return (
+                        <td key={cellIndex} {...cell.getCellProps()}>
+                          {cell.render("Cell")}
+                        </td>
+                      );
+                      
                       })}
 
                       <td>

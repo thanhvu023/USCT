@@ -17,13 +17,16 @@ import authReducer from "./slice/authSlice";
 import stateReducer from "./slice/stateSlice";
 import majorReducer from "./slice/majorSlice";
 import semesterReducer from "./slice/semesterSlice";
-import studentReducer from "./slice/studentSice";
+import studentReducer from "./slice/studentSlice";
 import registrationReducer from "./slice/registrationSlice";
 import programApplicationReducer from "./slice/programApplicationSlice";
 import consultantReducer from "./slice/consultantSlice";
 import applyStageReducer from "./slice/applyStageSlice";
 import programStageReducer from './slice/programStageSlice';
 import  staffReducer from './slice/staffSlice'
+import programFeeReducer from "./slice/programFeeSlice";
+import feeTypeReducer from "./slice/feeTypeSlice";
+import paymentReducer from "./slice/paymentSlice";
 const persistConfig = {
   key: "root",
   storage,
@@ -45,7 +48,10 @@ const rootReducer = combineReducers({
   consultant: consultantReducer,
   applyStage: applyStageReducer,
   programStages : programStageReducer,
-  staff : staffReducer
+  staff : staffReducer,
+  programFee : programFeeReducer,
+  feeType : feeTypeReducer,
+  payment : paymentReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
