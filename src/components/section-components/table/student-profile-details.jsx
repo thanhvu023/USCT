@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getStudentProfileById } from "../../../redux/slice/studentSice";
 import { Backdrop, CircularProgress } from "@mui/material";
+import { getFile, setStudentFileUrl } from "../../../redux/slice/authSlice";
 
 const StudentProfileDetails = () => {
   const { studentProfileId } = useParams();
@@ -15,21 +16,41 @@ const StudentProfileDetails = () => {
     dispatch(getStudentProfileById(studentProfileId));
   }, []);
   const studentDetail = useSelector((state) => state.student.profileById);
-  console.log(studentDetail);
   const [editMode, setEditMode] = useState(false);
   const handleEditClick = () => {
     setEditMode(true);
   };
-
   const handleCancelClick = () => {
     setEditMode(false);
   };
-
+  console.log(studentDetail);
   const handleSubmit = (e) => {
     e.preventDefault();
     // Add your submit logic here
   };
-
+  const handleDownloadFile = () => {
+    // Assuming studentDetail.fileUploads is an array of file objects
+    studentDetail.fileUploads.forEach((file) => {
+      dispatch(getFile(file.fileAttach))
+        .then((fileUrl) => {
+          // Create a temporary link element
+          const link = document.createElement("a");
+          link.href = fileUrl.payload;       
+          link.setAttribute("download", file.fileName); // Set the file name
+          // Trigger the download
+          document.body.appendChild(link);
+          link.click();
+          // Clean up
+          document.body.removeChild(link);
+        })
+        .catch((error) => {
+          // Handle error
+          console.error("Error downloading file:", error);
+        });
+    });
+  };
+  const fileUrl = useSelector((state) => state.auth.studentFileUrl);
+console.log(fileUrl)
   const options = [
     { value: "basic_english", label: "Tiếng Anh cơ bản" },
     { value: "ielts", label: "IELTS" },
@@ -89,7 +110,7 @@ const StudentProfileDetails = () => {
             </div>
 
             <div className="form-group mb-3 col-md-6">
-              <label className="form-label">ID Quốc gia</label>
+              <label className="form-label">Căn cước công dân</label>
               <input
                 type="text"
                 placeholder="ID Quốc gia "
@@ -113,7 +134,7 @@ const StudentProfileDetails = () => {
             </div>
           </div>
           <div className="form-group mb-3">
-            <label className="form-label">Qúa trình học tập</label>
+            <label className="form-label">Qúa trình học tập</label>
             <div className="card h-auto">
               <div className="card-body">
                 <form></form>
@@ -335,12 +356,20 @@ const StudentProfileDetails = () => {
               )}
               {!editMode && (
                 <div className="d-flex justify-content-between mt-4">
-                  <button
-                    className="btn btn-info me-3"
-                    onClick={handleEditClick}
-                  >
-                    Edit
-                  </button>
+                  <div>
+                    <button
+                      className="btn btn-info me-3"
+                      onClick={handleEditClick}
+                    >
+                      Sửa thông tin
+                    </button>                    
+                    <button
+                      onClick={handleDownloadFile}
+                      className="btn btn-secondary ml-3"
+                    >
+                      Tải file
+                    </button>
+                  </div>
                   {/* Thêm nút Cancel nếu cần */}
                   <div className="text-right mb-3 ">
                     <Link to="/students-profile" className="btn btn-secondary">

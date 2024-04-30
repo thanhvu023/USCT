@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom"; // Import Link from react-router-dom
 import Select from "react-select";
-import { getUserById } from "../../redux/slice/authSlice";
+import { createNotification, getUserById } from "../../redux/slice/authSlice";
 import {
   getRegistrationByRegistrationFormId,
   resetRegistration,
@@ -26,29 +26,28 @@ const RegistrationFormDetail = () => {
       dispatch(getRegistrationByRegistrationFormId(registrationFormId));
     }
   }, [dispatch, registrationFormId]);
-  const userId = useSelector(
+  const customerId = useSelector(
     (state) => state?.registration?.registrationById?.customerId
   );
   useEffect(() => {
-    if (userId) {
-      dispatch(getUserById(userId));
+    if (customerId) {
+      dispatch(getUserById(customerId));
     }
-  }, [userId]);
+  }, [customerId]);
   const userDetail = useSelector((state) => state?.auth?.userById) || {};
   // nguyên nhân bug hello mng lai la My day
   const consultantId = useSelector(
     (state) => state?.consultant?.consultantById?.consultantId
   );
   const [status, setStatus] = useState(registration.status);
- 
+
   const matchValue = useMemo(
     () => statusOptions.find((option) => option.value === status),
     [status]
   );
-  // const resetUserId =()=>{
+  // const resetcustomerId =()=>{
   //   dispatch(logoutUser())
   // }
- 
 
   useEffect(() => {
     setStatus(registration.status);
@@ -60,6 +59,7 @@ const RegistrationFormDetail = () => {
     dispatch(
       updateRegistrationById({ status, consultantId, registrationFormId })
     );
+    dispatch(createNotification({ registrationFormId, customerId, consultantId }));
     Swal.fire({
       icon: "success",
       title: "Cập nhật đơn tư vấn thành công!",
@@ -67,7 +67,6 @@ const RegistrationFormDetail = () => {
       timer: 1500,
     });
   };
-
   return (
     <div className="col-xl-8 mx-auto mt-5">
       <div className="card">

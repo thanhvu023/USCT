@@ -1,7 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { getUserById, logoutUser } from "../../redux/slice/authSlice";
+import {
+  getNotification,
+  getUserById,
+  logoutUser,
+} from "../../redux/slice/authSlice";
 import { logoutStudent } from "../../redux/slice/studentSice";
 import { Dropdown } from "react-bootstrap";
 import { logoutProgram } from "../../redux/slice/programSlice";
@@ -9,13 +13,31 @@ import Swal from "sweetalert2"; // Import Swal
 import jwtDecode from "jwt-decode";
 import { generateToken, messaging } from "../FirebaseImage/Config";
 import { onMessage } from "firebase/messaging";
+import { Badge, IconButton, Tooltip } from "@mui/material";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import Button from "@mui/material/Button";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import BasicMenu from "./basicMenu";
 
 function Navbar() {
+  const [open, setOpen] = useState(false);
+  const [anchorEl, setAnchorel] = useState(null);
+  const handleOpen = (e) => {
+    document.body.classList.add("notification-open");
+    setAnchorel(e.target);
+    setOpen(true);
+  };
+  const handleClose = (e) => {
+    document.body.classList.remove("notification-open");
+    setOpen(false);
+  };
   const token = useSelector((state) => state?.auth?.token);
   const userId = token ? jwtDecode(token).UserId : null;
   useEffect(() => {
     if (userId) {
       dispatch(getUserById(userId));
+      dispatch(getNotification(userId));
     }
   }, [userId]);
   useEffect(() => {
@@ -32,12 +54,16 @@ function Navbar() {
     dispatch(logoutUser());
     dispatch(logoutStudent());
     dispatch(logoutProgram());
+    // dispatch(resetNoti())
     navigate("/");
   };
+
   let publicUrl = process.env.PUBLIC_URL + "/";
 
   const isLoggedIn = useSelector((state) => state?.auth?.token);
-
+  const notification = useSelector(
+    (state) => state?.auth?.notificationByUserId
+  );
   // Hàm kiểm tra token và hiển thị cảnh báo nếu cần
   const checkTokenAndRedirect = (path) => {
     if (!isLoggedIn) {
@@ -158,6 +184,27 @@ function Navbar() {
             )}
             {token && (
               <div className="nav-right-part nav-right-part-desktop d-flex align-items-center">
+                <div>
+                  <Tooltip
+                    title={
+                      notification.length
+                        ? `You have ${notification.length}  notifications!`
+                        : "You dont have any notification!"
+                    }
+                  >
+                    <IconButton color="primary" onClick={handleOpen}>
+                      <Badge badgeContent={notification.length} color="primary">
+                        <NotificationsIcon />
+                      </Badge>
+                    </IconButton>
+                  </Tooltip>
+                  <BasicMenu
+                    open={open}
+                    anchorEl={anchorEl}
+                    handleClose={handleClose}
+                    menuItems={notification}
+                  />
+                </div>
                 <Dropdown className="nav-item header-profile">
                   <Dropdown.Toggle
                     to={"#"}

@@ -12,7 +12,6 @@ const ConsultantList = () => {
 
   const token = useSelector((state) => state?.auth?.token);
   const customerId = jwtDecode(token).UserId;
-
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getRegistrationByConsultantId(customerId));

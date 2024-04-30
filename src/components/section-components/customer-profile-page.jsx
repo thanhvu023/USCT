@@ -269,14 +269,14 @@ const CustomerProfilePage = () => {
                               <h4 className="text-primary mb-2 mt-4">
                                 Thông Tin Cá Nhân
                               </h4>
-                              <div className="row mb-2">
+                              {/* <div className="row mb-2">
                                 <div className="col-3">
                                   <h5 className="f-w-200">Mã KH:</h5>
                                 </div>
                                 <div className="col-9 ">
                                   <span>048321842</span>
                                 </div>
-                              </div>
+                              </div> */}
                               <div className="row mb-2">
                                 <div className="col-3">
                                   <h5 className="f-w-500">Họ và Tên : </h5>
