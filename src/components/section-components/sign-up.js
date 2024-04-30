@@ -39,7 +39,6 @@ function SignUp() {
       const monthDiff = currentDate.getMonth() - dob.getMonth();
       if (monthDiff < 0 || (monthDiff === 0 && currentDate.getDate() < dob.getDate())) {
         age--;
-        console.log(age)
       }
       // Check if age is less than 16
       if (age < 16) {

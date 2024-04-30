@@ -138,7 +138,6 @@ useEffect(() => {
 const handleNoteChange = (event) => {
     setNote(event.target.value);
 };
-  console.log("selectedFee",selectedFee)
   const [filteredFees, setFilteredFees] = useState([]);
 //   useEffect(() => {
 //     dispatch(getAllProgramFees());

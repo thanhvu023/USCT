@@ -15,6 +15,9 @@ const CreateStudentProfile = () => {
   const [page, setPage] = useState("basicInfo");
   const customerId = useSelector((state) => state.auth.userById.customerId);
   const loading = useSelector((state) => state?.student?.loading);
+  const [loadingUpFile, setLoadingUpfile] = useState(false);
+  const [loadingImg, setLoadingImg] = useState(false);
+
   const [formData, setFormData] = useState({
     fullName: "",
     nationalId: "",
@@ -48,14 +51,15 @@ const CreateStudentProfile = () => {
       const selectedFile = selectedFiles[i];
       const imgRef = ref(imageDb, `Image/ProfileStudent/${selectedFile.name}`);
       try {
+        setLoadingUpfile(true);
         await uploadBytes(imgRef, selectedFile);
         const imageUrl = await getDownloadURL(imgRef);
-        console.log(imageUrl);
         // Update the state properly to append the new file URL
         setFormData((prevState) => ({
           ...prevState,
           fileString: [...prevState.fileString, imageUrl],
         }));
+        setLoadingUpfile(false);
       } catch (error) {
         console.error(`Error uploading ${selectedFile.name}:`, error);
       }
@@ -68,14 +72,15 @@ const CreateStudentProfile = () => {
       const selectedFile = selectedFiles[i];
       const imgRef = ref(imageDb, `Image/ProfileStudent/${selectedFile.name}`);
       try {
+        setLoadingImg(true);
         await uploadBytes(imgRef, selectedFile);
         const imageUrl = await getDownloadURL(imgRef);
-        console.log(imageUrl);
         // Update the state properly to append the new file URL
         setFormData((prevState) => ({
           ...prevState,
           img: imageUrl,
         }));
+        setLoadingImg(false);
       } catch (error) {
         console.error(`Error uploading ${selectedFile.name}:`, error);
       }
@@ -84,7 +89,6 @@ const CreateStudentProfile = () => {
   const nextPageNumber = (pageNumber) => {
     setPage(pageNumber);
   };
-  console.log(formData);
   const handleNextStep = () => {
     switch (page) {
       case "basicInfo":
@@ -445,6 +449,16 @@ const CreateStudentProfile = () => {
                       {/* File Upload */}
                       <div className="col-lg-6">
                         <div className=" style-bg-border mb-4">
+                          <label
+                            htmlFor="imageInput"
+                            className="custom-file-upload mr-3"
+                          >
+                            Tải lên thông tin cá nhân
+                          </label>
+                          {loadingUpFile && (
+                            <i className="fa fa-refresh fa-spin mr-2" />
+                          )}
+
                           <input
                             type="file"
                             multiple
@@ -460,10 +474,13 @@ const CreateStudentProfile = () => {
                         <div className=" style-bg-border mb-4">
                           <label
                             htmlFor="imageInput"
-                            className="custom-file-upload"
+                            className="custom-file-upload mr-3"
                           >
                             Chọn ảnh đại diện
                           </label>
+                          {loadingImg && (
+                            <i className="fa fa-refresh fa-spin mr-2" />
+                          )}
                           <input
                             id="imageInput"
                             type="file"

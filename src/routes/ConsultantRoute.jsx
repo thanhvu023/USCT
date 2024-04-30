@@ -10,7 +10,6 @@ const ConsultantRoute = ({ children }) => {
   const token = useSelector((state) => state?.auth?.token);
   const userRole = token ? jwtDecode(token).Role : null;
 
-  console.log(userRole);
   if (userRole === "ROLE_CONSULTANT") {
     return children;
   } else if (!token) {

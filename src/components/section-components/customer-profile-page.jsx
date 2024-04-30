@@ -18,9 +18,10 @@ const CustomerProfilePage = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getUserById(userId));
-  }, [userId]);
-  const loadingPage = useSelector((state) => state?.auth?.loading);
+  }, [userId, dispatch]);
 
+  const loadingPage = useSelector((state) => state?.auth?.loading);
+  console.log(loadingPage);
   const [fullName, setFullName] = useState(userDetail.fullName || "");
   const [phone, setPhone] = useState(userDetail.phone || "");
   const [address, setAddress] = useState(userDetail.address || "");
@@ -41,7 +42,7 @@ const CustomerProfilePage = () => {
         setLoading(true);
         await uploadBytes(imgRef, selectedFile);
         const imageUrl = await getDownloadURL(imgRef);
-        setImageSrc(imageUrl);       
+        setImageSrc(imageUrl);
         setLoading(false);
       } catch (error) {
         console.error(`Error uploading ${selectedFile.name}:`, error);
@@ -76,9 +77,12 @@ const CustomerProfilePage = () => {
       const dob = new Date(userDetail.dateOfBirth);
       let age = currentDate.getFullYear() - dob.getFullYear();
       const monthDiff = currentDate.getMonth() - dob.getMonth();
-      if (monthDiff < 0 || (monthDiff === 0 && currentDate.getDate() < dob.getDate())) {
+      if (
+        monthDiff < 0 ||
+        (monthDiff === 0 && currentDate.getDate() < dob.getDate())
+      ) {
         age--;
-        console.log(age)
+        console.log(age);
       }
       // Check if age is less than 16
       if (age < 16) {
@@ -129,7 +133,7 @@ const CustomerProfilePage = () => {
       setErrors(newErrors);
       return;
     }
-    
+
     // Cập nhật thông tin và hiển thị thông báo thành công
     setFullName(updatedData.userData.fullName);
     setPhone(updatedData.userData.phone);
@@ -137,7 +141,7 @@ const CustomerProfilePage = () => {
     setDateOfBirth(updatedData.userData.dateOfBirth);
     setGender(updatedData.userData.gender);
     setImageSrc(updatedData.userData.img);
-    
+
     Swal.fire({
       icon: "success",
       title: "Cập nhật hồ sơ thành công!",
@@ -415,15 +419,7 @@ const CustomerProfilePage = () => {
                                         value={dateOfBirth}
                                         onChange={(e) => {
                                           setUpdateMessage("");
-                                          console.log(
-                                            "New date value:",
-                                            e.target.value
-                                          ); // Debugging: Log the new date value
                                           setDateOfBirth(e.target.value); // Update dateOfBirth state variable
-                                          console.log(
-                                            "Updated dateOfBirth state:",
-                                            dateOfBirth
-                                          ); // Debugging: Log the updated dateOfBirth state
                                           setErrors({
                                             ...errors,
                                             dateOfBirth: "",

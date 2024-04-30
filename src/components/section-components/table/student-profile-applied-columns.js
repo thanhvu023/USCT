@@ -34,7 +34,6 @@ const getStageStatus = (programApplicationId) =>{
 
 
   const stages = useSelector(state=>state.applyStage.stages)
-  console.log("first,",stages)
     // Dispatch an action to fetch all users
     useEffect(() => {
       dispatch(getAllStage());

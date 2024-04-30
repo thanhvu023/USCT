@@ -54,7 +54,6 @@ const AdminHome = ({handleAllConsultantClick }) => {
       );
 
     const programStages = useSelector((state) => state.programStages.stages);
-    console.log("programApplications",programApplications)
     useEffect(() => {
         dispatch(getAllConsultants());
     }, [dispatch]);
