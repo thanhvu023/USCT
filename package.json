@@ -8,6 +8,7 @@
     "@ckeditor/ckeditor5-react": "^6.2.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
+    "@mui/icons-material": "^5.15.15",
     "@mui/material": "^5.15.15",
     "@n8tb1t/use-scroll-position": "^2.0.3",
     "@reduxjs/toolkit": "^1.9.7",

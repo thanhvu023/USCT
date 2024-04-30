@@ -307,45 +307,11 @@ const uniDetailsPopover = (
                     <div className="course-details-content">
                       <h4 className="title">Mô tả chi tiết</h4>
                       <p>{programDetail.description}</p>
-                      <p>
+                      {/* <p>
                         Sau đây là những lợi ích lớn lao từ việc thực tập ở nước
                         ngoài:
-                      </p>
-                      <div className="row pt-4">
-                        {/* {programDetail.responsibilities} */}
-                        {/* <div className="col-sm-6">
-                          <ul className="single-list-wrap">
-                            <li className="single-list-inner style-check-box">
-                              <i className="fa fa-check" /> Làm đẹp thêm CV
-                              trong mắt nhà tuyển dụng tương lai
-                            </li>
-                            <li className="single-list-inner style-check-box">
-                              <i className="fa fa-check" /> Mở rộng mạng lưới
-                              bạn bè trên toàn thế giới
-                            </li>
-                            <li className="single-list-inner style-check-box">
-                              <i className="fa fa-check" /> Học thêm ngôn ngữ
-                              mới
-                            </li>
-                          </ul>
-                        </div> */}
-                        {/* <div className="col-sm-6 mt-3 mt-sm-0">
-                          <ul className="single-list-wrap">
-                            <li className="single-list-inner style-check-box">
-                              <i className="fa fa-check" /> Có kinh nghiệm làm
-                              việc trong môi trường chuyên nghiệp ở quốc gia
-                              khác, hiểu biết rộng về văn hóa, tác phong làm
-                              việc chuyên nghiệp, khả năng thích nghi cao, nâng
-                              cao nghiệp vụ
-                            </li>
-                            <li className="single-list-inner style-check-box">
-                              <i className="fa fa-check" /> Thực tập kết hợp với
-                              du lịch giá rẻ, khám phá thế giới diệu kỳ
-                            </li>
-                            
-                          </ul>
-                        </div> */}
-                      </div>
+                      </p> */}
+                    
                     </div>
                   </div>
                 </div>

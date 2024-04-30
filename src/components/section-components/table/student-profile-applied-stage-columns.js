@@ -29,37 +29,20 @@ const getProgramName = (programId) => {
     );
     return programName ? programName.nameProgram : "Không biết";
   };
-const getStageStatus = (programApplicationId) =>{
-  const dispatch = useDispatch();
-
-
-  const stages = useSelector(state=>state.applyStage.stages)
-  console.log("first,",stages)
-    // Dispatch an action to fetch all users
-    useEffect(() => {
-      dispatch(getAllStage());
-    }, [dispatch]);
-  
-    const status = stages.find(
-      (applyStage) => applyStage?.programApplicationId === programApplicationId
-    );
-    return status ? status.applyStage : "Không biết status";
-}
 
 export const COLUMNS = [
-  
   {
     Header: ' Mã hồ sơ ',
     Footer: ' Mã hồ sơ ',
     accessor: 'programApplicationId',
     Filter: ColumnFilter,
   },
-    {
-      Header: ' Hồ sơ đã ứng tuyển ',
-      Footer: 'Hồ sơ đã ứng tuyển ',
-      accessor: 'studentProfile.fullName',
-      Filter: ColumnFilter,
-    },
+    // {
+    //   Header: ' Hồ sơ đã ứng tuyển ',
+    //   Footer: 'Hồ sơ đã ứng tuyển ',
+    //   accessor: 'studentProfile.fullName',
+    //   Filter: ColumnFilter,
+    // },
     {
       Header: 'Tên chương trình',
       Footer: 'Tên chương trình',
@@ -68,31 +51,29 @@ export const COLUMNS = [
 
       Filter: ColumnFilter,
     },
-    {
-      Header: 'Ngày tạo',
-      Footer: 'Ngày tạo',
-      accessor: 'studentProfile.createDate', 
-    //   Cell: ({ value }) => {
-    //     return format(new Date(value), 'dd/MM/yyyy');
-    //   },
-      Filter: ColumnFilter,
-    },
+    // {
+    //   Header: 'Ngày tạo',
+    //   Footer: 'Ngày tạo',
+    //   accessor: 'studentProfile.createDate', 
+    // //   Cell: ({ value }) => {
+    // //     return format(new Date(value), 'dd/MM/yyyy');
+    // //   },
+    //   Filter: ColumnFilter,
+    // },
     {
       Header: 'Giai đoạn hồ sơ',
       Footer: 'Giai đoạn hồ sơ',
-      accessor: 'applyStageId',
-      Cell: ({ row }) => getStageStatus(row.original.programApplicationId),
+      accessor: 'applyStage.programStage.stageName',
+      Filter: ColumnFilter,
+    },
+    {
+      Header: 'Trạng thái',
+      Footer: 'Trạng thái',
+      accessor: 'applyStage.programStage.isPayment', 
+      Cell: ({ value }) => (value ? " Cần đóng phí" : "Không cần đóng"),
 
       Filter: ColumnFilter,
     },
-    // {
-    //   Header: 'Phí',
-    //   Footer: 'Phí',
-    //   accessor: 'applyStage.programStage.isPayment', 
-    //   Cell: ({ value }) => (value ? " Cần đóng phí" : "Không cần đóng"),
-
-    //   Filter: ColumnFilter,
-    // },
   ];
   
   

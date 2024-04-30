@@ -105,18 +105,7 @@ const RegistrationList = () => {
                       onClick={() =>
                         handleRowClick(
                           row.original.registrationFormId,
-                          row.original.consultantId,
-                          row.original.customerId,
-                          row.original.area,
-                          row.original.budget,
-                          row.original.destinationReason,
-                          row.original.majorChoose,
-                          row.original.majorChooseReason,
-                          row.original.moreInformation,
-                          row.original.priorityOfStudyAbroad,
-                          row.original.programChoose,
-                          row.original.studyAbroadReason,
-                          row.original.universityChooseReason
+                          
                         )
                       }
                     >

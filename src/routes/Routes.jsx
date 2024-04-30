@@ -31,6 +31,7 @@ import ConsultantChangePasswordPage from "../components/consultantChangePassword
 import StaffPage from "../components/staff-page.jsx";
 import StaffRoute from "./StaffRoute.jsx";
 import ConsultantRoute from "./ConsultantRoute.jsx";
+import ProgramApplicationDetailsPage from "../components/program-application-details-page.jsx";
 
 const Routers = () => {
   const token = useSelector((state) => state?.auth?.token);
@@ -120,6 +121,14 @@ const Routers = () => {
           element={
             <PrivateRoute userRole={userRole}>
               <RegistrationDetailPage />
+            </PrivateRoute>
+          }
+        />
+          <Route
+          path="/student-profile/program-application-detail/:programApplicationId"
+          element={
+            <PrivateRoute userRole={userRole}>
+              <ProgramApplicationDetailsPage />
             </PrivateRoute>
           }
         />

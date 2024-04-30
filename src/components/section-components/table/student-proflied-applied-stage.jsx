@@ -6,17 +6,17 @@ import { getProgramFeesByProgramId, getAllProgramFees } from '../../../redux/sli
 import { getAllFeeTypes } from '../../../redux/slice/feeTypeSlice';
 import { getProgramApplicationsByCustomerId } from "../../../redux/slice/programApplicationSlice";
 import { getProgramApplicationsByStudentProfileId } from "../../../redux/slice/programApplicationSlice";
-import { COLUMNS } from "./student-profile-applied-columns";
+import { COLUMNS } from "./student-profile-applied-stage-columns";
+import { getAllProgram } from "../../../redux/slice/programSlice";
 import { Modal, Button, ListGroup, Row, Col, Card, Form, InputGroup, FormControl } from 'react-bootstrap';
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 
-import { getAllStage } from "../../../redux/slice/applyStageSlice";
+
 import { createPayment } from '../../../redux/slice/paymentSlice';
 
-import "./student-profile.css";
 
-const StudentProfileAppliedList = () => {
+const StudentProfileAppliedStageList = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -34,18 +34,18 @@ const StudentProfileAppliedList = () => {
   const paymentResponse = useSelector(state => state.payment.responseBody);
 // console.log("redirectToVnpay",redirectToVnpay)
 
-
-// const stages = useSelector(state=>state.applyStage.stages)
   const fees = useSelector(state => state.programFee.fees);
   const feeTypes = useSelector(state => state.feeType.feeTypes);
   const programApplications = useSelector(state => state.programApplication.programApplicationsByCustomerId || []);
 // const programApplicationByStu = useSelector(state =>state.programApplication.programApplicationsByStudentProfileId || []);
-// console.log("stages",stages)
+console.log("programApplicationByStu",programApplications)
 
-  const handleRowClick = (programApplicationId) => {
-    navigate(`/student-profile/program-application-detail/${programApplicationId}`);
-  };
+  // const handleRowClick = (programApplicationId) => {
+  //   navigate(`/student-profile/program-application-detail/${programApplicationId}`);
+  // };
 
+
+ 
 const handleCloseModal = () => {
   setIsModalOpen(false);
 };
@@ -63,7 +63,6 @@ const handleCloseModal = () => {
         dispatch(getProgramApplicationsByCustomerId(customerId));
         dispatch(getAllFeeTypes());
         dispatch(getAllProgramFees());
-        dispatch(getAllStage());
     }
 }, [customerId, dispatch]);
 // useEffect(() => {
@@ -86,12 +85,12 @@ useEffect(() => {
   }, [dispatch]);
   
 
-  // const handleRowClick = (programApplication) => {
-  //   if (programApplication) {
-  //     setSelectedProgramApplication(programApplication);
-  //     setIsModalOpen(true);
-  //   }
-  // };
+  const handleRowClick = (programApplication) => {
+    if (programApplication) {
+      setSelectedProgramApplication(programApplication);
+      setIsModalOpen(true);
+    }
+  };
   const handlePaymentSubmit = () => {
     if (selectedFee && selectedProgramApplication) {
         const paymentData = {
@@ -204,7 +203,7 @@ useEffect(() => {
                 prepareRow(row);
                 return (
                   <tr key={row.id} {...row.getRowProps({
-                    onClick: () => handleRowClick(  row.original.programApplicationId,
+                    onClick: () => handleRowClick(  row.original
                                                    
                                                    
                     )
@@ -335,4 +334,4 @@ useEffect(() => {
   );
 };
 
-export default StudentProfileAppliedList;
+export default StudentProfileAppliedStageList;
