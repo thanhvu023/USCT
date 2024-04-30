@@ -1,48 +1,4 @@
 @charset "UTF-8";
-/*
-Theme Name: Edumint
-Theme URI: http://solverwp.com/html/edumint
-Author: Solverwp
-Author URI: http://solverwp.com/html/edumint
-Description: Edumint - LMS & Online Courses Html Template
-Version: 1.0.3
-*/
-/*--------------------------------------------------------------
->>> TABLE OF CONTENTS:
-----------------------------------------------------------------
-# Global
-    ## Global
-    ## Mixins
-    ## Theme
-    ## Variables
-    ## Common
-
-# Sections
-    ## Nav Bar
-    ## Banner
-    ## Brand Area
-    ## Footer
-    ## Widgets
-
-# Elements
-    ## accordion
-    ## filter
-    ## apartment
-    ## blog
-    ## city
-    ## feature
-    ## gallery
-    ## intro
-    ## main-search
-    ## pricing
-    ## service
-    ## team
-    ## user-list
-
---------------------------------------------------------------*/
-/*-----------------
-    # Typography
------------------*/
 
 @import url("https://fonts.googleapis.com/css?family=Rubik:300,400,400i,500,600,700i&display=swap");
 
@@ -5583,7 +5539,36 @@ margin: 10px;
     padding-right: 0.9375rem;
 }
  */ 
+ body.notification-open {
+  padding-right: 0 !important;
+  overflow: hidden !important;
+}
+.shopee-notification {
+  display: flex;
+  align-items: flex-start;
+  padding: 16px;
+}
 
+.shopee-notification-content {
+  flex: 1;
+}
+
+.shopee-notification-title {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.shopee-notification-body {
+  margin-bottom: 8px;
+  /* Set maximum width and allow wrapping */
+  max-width: 500px;
+  word-wrap: break-word;
+}
+
+.shopee-notification-date {
+  font-size: 12px;
+  color: #777;
+}
 
 @tailwind components;
 @tailwind utilities;

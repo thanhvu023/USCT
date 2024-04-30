@@ -7,7 +7,7 @@ import ForgotPassword from './section-components/forgot-password';
 const ForgotPasswordPage = () => {
     return <div>
         <Navbar />
-        <PageHeader headertitle="Forgot Password"  />
+        <PageHeader headertitle="Quên mật khẩu"  />
         <ForgotPassword />
         <Footer />
     </div>
