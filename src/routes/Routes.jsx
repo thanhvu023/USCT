@@ -135,7 +135,7 @@ const Routers = () => {
         />
         {/* 2 cai nay chua loading */}
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-        <Route path="/reset-password" element={<ConfirmPasswordPage />} />
+        <Route path="/reset-password/:token" element={<ConfirmPasswordPage />} />
         <Route
           path="/customer/change-password"
           element={

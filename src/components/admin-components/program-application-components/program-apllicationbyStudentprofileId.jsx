@@ -1,6 +1,9 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { getAllProgramApplication,getProgramApplicationById } from "../../../redux/slice/programApplicationSlice";
+import {
+  getAllProgramApplication,
+  getProgramApplicationById,
+} from "../../../redux/slice/programApplicationSlice";
 import { getStudentProfileById } from "../../../redux/slice/studentSlice";
 import { getProgramById } from "../../../redux/slice/programSlice";
 import { getProgramStageById } from "../../../redux/slice/programStageSlice";
@@ -13,7 +16,7 @@ import {
   Col,
   Image,
   Card,
-  Table
+  Table,
 } from "react-bootstrap";
 import { getAllUsers } from "../../../redux/slice/authSlice";
 import PaymentContext from "./context/payment-context";
@@ -28,7 +31,6 @@ import Swal from "sweetalert2";
 import { Typography } from "@mui/material";
 import { Backdrop, CircularProgress } from "@mui/material";
 import { VerticalAlignTop } from "@mui/icons-material";
-
 
 const theadData = [
   { heading: "PAId", sortingVale: "id" },
@@ -57,15 +59,13 @@ const style = {
     marginRight: "10px",
   },
 };
-const ProgramApplicationPage = ({setMain }) => {
-
+const ProgramApplicationPage = ({ setMain }) => {
   const { setSelectedApp } = useContext(PaymentContext);
-  
-  const handleCreateFee = (application) => {
-    setSelectedApp(application); 
-    setMain("Thanh toán");       
-  };
 
+  const handleCreateFee = (application) => {
+    setSelectedApp(application);
+    setMain("Thanh toán");
+  };
 
   const dispatch = useDispatch();
   const [sort, setSortData] = useState(10);
@@ -73,12 +73,13 @@ const ProgramApplicationPage = ({setMain }) => {
     (state) => state.programApplication
   );
 
-  console.log("chuong trnh",programApplications)
+  console.log("chuong trnh", programApplications);
   const [selectedProfileId, setSelectedProfileId] = useState(false);
   const [studentProfile, setStudentProfile] = useState(null);
   const [isPaymentRequired, setIsPaymentRequired] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState(null);
-  const [selectedApplicationProgram, setSelectedApplicationProgram] = useState(null);
+  const [selectedApplicationProgram, setSelectedApplicationProgram] =
+    useState(null);
   console.log("seldfasfsafa:", selectedApplicationProgram);
   const [programs, setPrograms] = useState({});
   const [studentProfiles, setStudentProfiles] = useState({});
@@ -89,13 +90,16 @@ const ProgramApplicationPage = ({setMain }) => {
 
   const customers = useSelector((state) => state.auth.user);
   const programStages = useSelector((state) => state.programStages.stages);
-  const activeStage = programApplications?.applyStage?.find(stage => stage.status === 1);
+  const activeStage = programApplications?.applyStage?.find(
+    (stage) => stage.status === 1
+  );
   const findActiveStageName = (application) => {
-    const activeStage = application.applyStage?.find(stage => stage.status === 1);
-    return activeStage ? activeStage.programStage.stageName : 'Hồ sơ đã hoàn tất';
+    const activeStage = application.applyStage?.find(
+      (stage) => stage.status === 1
+    );
+    return activeStage ? activeStage.programStage.stageName : "No active stage";
   };
-  
-  
+
   const getCustomerName = (customerId) => {
     if (!customers || !Array.isArray(customers)) {
       return "Không tìm thấy";
@@ -109,10 +113,9 @@ const ProgramApplicationPage = ({setMain }) => {
   };
   // update ApplyStage
 
-
   const handleShowDetailsModal = (application) => {
     setSelectedApplication(application);
-    setShowCheckModal(true); 
+    setShowCheckModal(true);
   };
 
   const [selectedProgramStageId, setSelectedProgramStageId] = useState(null);
@@ -132,7 +135,6 @@ const ProgramApplicationPage = ({setMain }) => {
     }));
   };
 
-
   // sort and search data
   const [sortedApplications, setSortedApplications] = useState([]);
 
@@ -151,18 +153,20 @@ const ProgramApplicationPage = ({setMain }) => {
   const searchData = (searchTerm) => {
     console.log("Searching for:", searchTerm);
     console.log("Current studentProfiles:", studentProfiles);
-  
+
     const filteredData = programApplications.filter((application) => {
-      const studentName = studentProfiles[application.studentProfileId]?.fullName || "";
-      console.log(`Student Name: ${studentName}, Application ID: ${application.studentProfileId}`);
-  
+      const studentName =
+        studentProfiles[application.studentProfileId]?.fullName || "";
+      console.log(
+        `Student Name: ${studentName}, Application ID: ${application.studentProfileId}`
+      );
+
       return studentName.toLowerCase().includes(searchTerm.toLowerCase());
     });
-  
+
     console.log("Filtered Data:", filteredData);
     setSortedApplications(filteredData);
   };
-  
 
   const handleSort = (sortingVale) => {
     sortData(sortingVale);
@@ -190,10 +194,8 @@ const ProgramApplicationPage = ({setMain }) => {
   useEffect(() => {
     searchData(searchTerm);
   }, [searchTerm]);
-  
 
   const handleCloseCheckModal = () => setShowCheckModal(false);
-
 
   const handleShowDeleteModal = () => {
     Swal.fire({
@@ -219,7 +221,9 @@ const ProgramApplicationPage = ({setMain }) => {
       const response = await dispatch(getStudentProfileById(studentProfileId));
       if (response.payload) {
         setStudentProfile(response.payload);
-        const programStageResponse = await dispatch(getProgramStageById(response.payload.programStageId));
+        const programStageResponse = await dispatch(
+          getProgramStageById(response.payload.programStageId)
+        );
         if (programStageResponse.payload) {
           setIsPaymentRequired(programStageResponse.payload.isPayment);
         }
@@ -302,91 +306,119 @@ const ProgramApplicationPage = ({setMain }) => {
   };
 
   return (
-<div style={{ maxHeight: "100vh" }}> 
-<Backdrop
-          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-          open={loading}
-        >
-          <CircularProgress color="inherit" />
-        </Backdrop>
-        <Row>
-          <div className="col-lg-12">
-            <Card className="mb-4">
-              <Card.Header as="h4">Danh sách hồ sơ đăng ký chương trình</Card.Header>
-              <Card.Body>
-                <Form>
-                  <Row className="mb-3">
-                    <Col sm={3}>
-                      <Form.Control type="search" placeholder="Search" />
-                    </Col>
-                    <Col sm={3}>
-                     <div className="d-flex">
-                     <Typography>hiển thị </Typography>
-                      <Form.Select value={sort} onChange={e => setSortData(e.target.value)}>
+    <div style={{ maxHeight: "100vh" }}>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      <Row>
+        <div className="col-lg-12">
+          <Card className="mb-4">
+            <Card.Header as="h4">
+              Danh sách hồ sơ đăng ký chương trình
+            </Card.Header>
+            <Card.Body>
+              <Form>
+                <Row className="mb-3">
+                  <Col sm={3}>
+                    <Form.Control type="search" placeholder="Search" />
+                  </Col>
+                  <Col sm={3}>
+                    <div className="d-flex">
+                      <Typography>hiển thị </Typography>
+                      <Form.Select
+                        value={sort}
+                        onChange={(e) => setSortData(e.target.value)}
+                      >
                         <option value="10">10</option>
                         <option value="20">20</option>
                         <option value="30">30</option>
                       </Form.Select>
                       <Typography> hàng</Typography>
-                     </div>
-                    </Col>
-                  </Row>
-                </Form>
-                <div className="table-responsive">
-                <Table striped bordered hover responsive>                   
-                 <thead>
-                      <tr>
-                        <th>PAId</th>
-                        <th>Hồ sơ sinh viên</th>
-                        <th>Ngày tạo</th>
-                        <th>Chương trình ứng tuyển</th>
-                        <th>Trạng thái hồ sơ</th>
-                        <th>Thao tác</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {programApplications.map((application) => (
-                        <tr key={application.studentProfileId}>
-                          <td>{application.programApplicationId}</td>
-                          <td onClick={() => handleOpenModal(application.studentProfileId)}>
-                            {application.studentProfile?.fullName}
-                          </td>
-                          <td>{application.studentProfile?.createDate}</td>
-                          <td>{application.program?.nameProgram}</td>
-                      
-      <td>{findActiveStageName(application)}</td>
-                   
-      <td style={{textAlign: "center", VerticalAlign: "middle"}}>
-  <Button variant="info"  onClick={() => handleCreateFee(application)}>
-    <i className="fa fa-info-circle" />
-  </Button>
-</td>
+                    </div>
+                  </Col>
+                </Row>
+              </Form>
+              <div className="table-responsive">
+                <Table striped bordered hover responsive>
+                  <thead>
+                    <tr>
+                      <th>PAId</th>
+                      <th>Hồ sơ sinh viên</th>
+                      <th>Ngày tạo</th>
+                      <th>Chương trình ứng tuyển</th>
+                      <th>Trạng thái hồ sơ</th>
+                      <th>Thao tác</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {programApplications.map((application) => (
+                      <tr key={application.studentProfileId}>
+                        <td>{application.programApplicationId}</td>
+                        <td
+                          onClick={() =>
+                            handleOpenModal(application.studentProfileId)
+                          }
+                        >
+                          {application.studentProfile?.fullName}
+                        </td>
+                        <td>{application.studentProfile?.createDate}</td>
+                        <td>{application.program?.nameProgram}</td>
 
-                        </tr>
-                      ))}
-                    </tbody>
-                  </Table>
-                </div>
-                <Modal show={selectedProfileId} onHide={handleCloseModal} centered>
-                  <Modal.Header closeButton>
-                    <Modal.Title>Hồ sơ học sinh</Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body>
-                    {studentProfile && (
-                      <div>
-                        <p><strong>Name:</strong> {studentProfile.fullName}</p>
-                        <p><strong>Email:</strong> {studentProfile.email}</p>
-                        <p><strong>Date of Birth:</strong> {studentProfile.dateOfBirth}</p>
-                        <p><strong>Gender:</strong> {studentProfile.gender}</p>
-                      </div>
-                    )}
-                  </Modal.Body>
-                </Modal>
-              </Card.Body>
-            </Card>
-          </div>
-        </Row>
- 
+                        <td>{findActiveStageName(application)}</td>
+
+                        <td
+                          style={{
+                            textAlign: "center",
+                            VerticalAlign: "middle",
+                          }}
+                        >
+                          <Button
+                            variant="info"
+                            onClick={() => handleCreateFee(application)}
+                          >
+                            <i className="fa fa-info-circle" />
+                          </Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </div>
+              <Modal
+                show={selectedProfileId}
+                onHide={handleCloseModal}
+                centered
+              >
+                <Modal.Header closeButton>
+                  <Modal.Title>Hồ sơ học sinh</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  {studentProfile && (
+                    <div>
+                      <p>
+                        <strong>Name:</strong> {studentProfile.fullName}
+                      </p>
+                      <p>
+                        <strong>Email:</strong> {studentProfile.email}
+                      </p>
+                      <p>
+                        <strong>Date of Birth:</strong>{" "}
+                        {studentProfile.dateOfBirth}
+                      </p>
+                      <p>
+                        <strong>Gender:</strong> {studentProfile.gender}
+                      </p>
+                    </div>
+                  )}
+                </Modal.Body>
+              </Modal>
+            </Card.Body>
+          </Card>
+        </div>
+      </Row>
     </div>
   );
 };

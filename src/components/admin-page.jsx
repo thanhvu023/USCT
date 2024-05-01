@@ -23,7 +23,7 @@ const AdminPage = () => {
     "Tư vấn viên": <AllConsultant setMain={setMain} />,
     "Khách hàng": <AllCustomer />,
     "Chương trình": <AllPrograms />,
-    "Hồ sơ đăng ký": <ProgramApplicationPage />,
+    "Hồ sơ đăng ký": <ProgramApplicationPage setMain={setMain}/>,
     "Đơn tư vấn": <Registration />,
     "Trường Đại học": <UniversityPage />,
   };

@@ -35,7 +35,7 @@ const StudentProfileDetails = () => {
         .then((fileUrl) => {
           // Create a temporary link element
           const link = document.createElement("a");
-          link.href = fileUrl.payload;       
+          link.href = fileUrl.payload;
           link.setAttribute("download", file.fileName); // Set the file name
           // Trigger the download
           document.body.appendChild(link);
@@ -50,7 +50,7 @@ const StudentProfileDetails = () => {
     });
   };
   const fileUrl = useSelector((state) => state.auth.studentFileUrl);
-console.log(fileUrl)
+  console.log(fileUrl);
   const options = [
     { value: "basic_english", label: "Tiếng Anh cơ bản" },
     { value: "ielts", label: "IELTS" },
@@ -362,7 +362,7 @@ console.log(fileUrl)
                       onClick={handleEditClick}
                     >
                       Sửa thông tin
-                    </button>                    
+                    </button>
                     <button
                       onClick={handleDownloadFile}
                       className="btn btn-secondary ml-3"

@@ -18,7 +18,7 @@ import {
   getProgramById,
   getProgramByProgramType,
   getProgramByUniId,
-  getProgramTypes
+  getProgramTypes,
 } from "../../redux/slice/programSlice";
 import { getSemesterById } from "../../redux/slice/semesterSlice";
 import { getStateById } from "../../redux/slice/stateSlice";
@@ -79,9 +79,10 @@ function ProgramDetailPage() {
   const programByType = useSelector(
     (state) => state?.program?.programsByProgramType
   );
-  const UniversityDetails = useSelector(
-    (state) => state?.program?.programsByUniId
-  );
+  // const UniversityDetails = useSelector(
+  //   (state) => state?.program?.programsByUniId
+  // );
+  // console.log(UniversityDetails)
   const loading = useSelector((state) => state?.program?.loading);
 
   const programDetail = useSelector((state) => state?.program?.programById);
@@ -250,7 +251,7 @@ function ProgramDetailPage() {
         showConfirmButton: false,
         timer: 1500,
       });
-    }else{
+    } else {
       Swal.fire({
         icon: "warning",
         title: "Chọn hồ sơ học sinh!",
@@ -685,7 +686,7 @@ function ProgramDetailPage() {
             )}
           </div>
 
-          <div className="mt-4">
+          {/* <div className="mt-4">
             <h4 className="widget-title display-5">
               Những Trường Đại Học Có Mở Chương Trình Này
             </h4>
@@ -756,7 +757,7 @@ function ProgramDetailPage() {
                 </div>
               ))}
             </Slider>
-          </div>
+          </div> */}
         </div>
       </div>
     </>
@@ -786,7 +787,7 @@ const modalBgStyle = {
   zIndex: "0",
   left: "0",
   top: "0",
-  width: "100%",  
+  width: "100%",
   height: "100%",
   backgroundColor: "rgba(0,0,0,0.4)",
 };

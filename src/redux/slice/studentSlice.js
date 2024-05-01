@@ -13,6 +13,18 @@ export const getStudentProfileByCustomerId = createAsyncThunk(
     }
   }
 );
+export const getAllStudentProfile = createAsyncThunk(
+  "student/getAllStudentProfile",
+  async (profileId, thunkAPI) => {
+    try {
+      const res = await instance.get('/profile/');
+      console.log(res)
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.res.data);
+    }
+  }
+);
 
 export const getStudentProfileById = createAsyncThunk(
   "student/getStudentProfileById",
@@ -46,6 +58,7 @@ const initialState = {
   error: "",
   studentProfileByCustomerId: [],
   profileById: {},
+  studentProfile:[]
 };
 
 export const studentSlice = createSlice({
@@ -83,6 +96,17 @@ export const studentSlice = createSlice({
         state.error = action.error;
       })
       .addCase(getStudentProfileById.rejected, (state) => {
+        state.loading = false;
+        state.error = null;
+      }) .addCase(getAllStudentProfile.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getAllStudentProfile.fulfilled, (state, action) => {
+        state.loading = false;
+        state.studentProfile = action.payload;
+        state.error = action.error;
+      })
+      .addCase(getAllStudentProfile.rejected, (state) => {
         state.loading = false;
         state.error = null;
       })

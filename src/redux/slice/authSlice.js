@@ -77,6 +77,7 @@ export const updateUserById = createAsyncThunk(
   async (params, thunkAPI) => {
     const { userId, userData } = params;
     try {
+      console.log(params)
       const res = await instance.put(`/account/customer/${userId}`, {
         ...userData,
       });

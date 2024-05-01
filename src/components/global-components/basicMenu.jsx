@@ -1,8 +1,15 @@
 import React from "react";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+
 const ITEM_HEIGHT = 48;
+
 const BasicMenu = ({ anchorEl, open, handleClose, menuItems }) => {
+  // Check if menuItems is an array
+  if (!Array.isArray(menuItems)) {
+    return null; // Return null if menuItems is not an array
+  }
+
   return (
     <div>
       <Menu
