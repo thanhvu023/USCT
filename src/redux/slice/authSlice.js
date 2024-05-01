@@ -77,7 +77,7 @@ export const updateUserById = createAsyncThunk(
   async (params, thunkAPI) => {
     const { userId, userData } = params;
     try {
-      console.log(params)
+      console.log(params);
       const res = await instance.put(`/account/customer/${userId}`, {
         ...userData,
       });
@@ -174,7 +174,6 @@ export const setStudentFileUrl = (fileUrl) => ({
   payload: { fileUrl }, // Wrap the fileUrl in an object if needed
 });
 
-
 const initialState = {
   msg: "",
   user: [],
@@ -203,6 +202,9 @@ export const authSlice = createSlice({
     },
     resetUserId: (state) => {
       state.userById = {};
+    },
+    resetError: (state) => {
+      state.error = "s";
     },
   },
   extraReducers: (builder) => {
@@ -331,7 +333,7 @@ export const authSlice = createSlice({
 
 const {
   reducer: authReducer,
-  actions: { logoutUser, resetMessage, resetUserId },
+  actions: { logoutUser, resetMessage, resetUserId ,resetError},
 } = authSlice;
 
-export { authReducer as default, logoutUser, resetMessage, resetUserId };
+export { authReducer as default, logoutUser, resetMessage,resetError, resetUserId };

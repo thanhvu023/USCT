@@ -187,9 +187,7 @@ function Navbar() {
                 <Link className="btn btn-base" to="/sign-up">
                   Đăng ký
                 </Link>
-                <a className="search-bar" href="#">
-                  <i className="fa fa-search" />
-                </a>
+               
               </>
             )}
             {token && (
@@ -262,9 +260,7 @@ function Navbar() {
                   </Dropdown.Menu>
                 </Dropdown>
 
-                <a className="search-bar" href="#">
-                  <i className="fa fa-search" />
-                </a>
+                
               </div>
             )}
           </div>

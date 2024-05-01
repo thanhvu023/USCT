@@ -17,13 +17,18 @@ import { Link } from "react-router-dom"; // Import Link và useNavigate từ rea
 import { ProgressCard } from "./card-design";
 import IncomeExpense from "./IncomeExpense";
 import { getRegistration } from "../../redux/slice/registrationSlice";
+import { getAllPayments } from "../../redux/slice/paymentSlice";
 
 const AdminHome = ({ handleAllConsultantClick }) => {
   const numberOfStudentProfile = useSelector(
     (state) => state?.student?.studentProfile.length
   );
+  const payments = useSelector((state)=>state.payment.allPayments)
+
   const numberOfRegistration = useSelector((state)=>state?.registration?.registrationForms.length)
   const numberOfProgram = useSelector((state)=>state?.programApplication?.programApplications.length)
+  const totalAmount = payments.reduce((total, payment) => total + payment.amount, 0);
+
   const tabelData = [
     {
       no: "01",
@@ -88,7 +93,7 @@ const AdminHome = ({ handleAllConsultantClick }) => {
       color: "primary",
     },
     { title: "Tổng số hồ sơ du học", number: numberOfProgram, color: "primary" },
-    { title: "Lợi Nhuận", number: "21290$", color: "primary" },
+    { title: "Lợi Nhuận", number:totalAmount, color: "primary" },
   ];
 
   const studentTable = [
@@ -155,7 +160,6 @@ const AdminHome = ({ handleAllConsultantClick }) => {
 
   const programStages = useSelector((state) => state.programStages.stages);
   // console.log("programApplications",programApplications)
-
   useEffect(() => {
     dispatch(getAllConsultants());
     dispatch(getAllStudentProfile());
@@ -164,6 +168,7 @@ const AdminHome = ({ handleAllConsultantClick }) => {
     dispatch(getAllProgramStages());
     dispatch(getAllStage());
     dispatch(getRegistration())
+    dispatch(getAllPayments())
   }, []);
 
   useEffect(() => {
