@@ -22,7 +22,7 @@ import { Modal, ListGroup,Button, Row, Col,  Form, InputGroup, FormControl } fro
 import { getAllFeeTypes } from '../../redux/slice/feeTypeSlice';
 import { getAllUniversity } from "../../redux/slice/universitySlice";
 import { getAllUniversityType } from "../../redux/slice/universitySlice";
-import { createPayment, updatePayment } from '../../redux/slice/paymentSlice';
+import { createPayment, createVnPayLink, updatePayment } from '../../redux/slice/paymentSlice';
 import { getProgramStageById, getProgramStagesByProgramId } from "../../redux/slice/programStageSlice";
 import { getAllStage } from "../../redux/slice/applyStageSlice";
 import { getAllProgramStages } from "../../redux/slice/programStageSlice";
@@ -40,47 +40,7 @@ const handleTabChange = (event, newValue) => {
 
   const dispatch = useDispatch();
 
-  const [file, setFile] = useState(null);
-  const [paymentId, setPaymentId] = useState(null); 
-  const [paymentSuccess, setPaymentSuccess] = useState(null); 
-// console.log("id doṇ̃",paymentId)
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-  };
-  const [imgURL, setImgURL] = useState(null);
-
-  console.log("ảnh",imgURL)
-  const handleImageUpload = async () => {
-    if (!paymentId) {
-        console.error("No payment ID available for updating.");
-        return;
-    }
-
-    if (file) {
-        const imgRef = ref(imageDb, `Image/Payment/${file.name}`);
-        try {
-            const uploadResult = await uploadBytes(imgRef, file);
-            const imageUrl = await getDownloadURL(imgRef);
-      
-            console.log("Image uploaded successfully. Image URL:", imageUrl);
-
-            // Dispatch the update payment action with the new image URL
-            dispatch(updatePayment({ id: paymentId, img: imageUrl }))
-                .then(response => {
-                    console.log("Payment updated successfully with new image:", response);
-                })
-                .catch(error => {
-                    console.error("Failed to update payment with new image:", error);
-                });
-        } catch (error) {
-            console.error(`Error uploading ${file.name}:`, error);
-        }
-    } else {
-        console.error("No file selected for upload.");
-    }
-};
-
-
+ 
   const details = useSelector(
     (state) => state.programApplication.programApplicationById
   );
@@ -92,6 +52,10 @@ const handleTabChange = (event, newValue) => {
       navigate(`/student-profile/${studentProfileId}`);
     }
   };
+  const [showDetailedFees, setShowDetailedFees] = useState(false);
+  const toggleFeesDetail = () => {
+    setShowDetailedFees(!showDetailedFees);
+};
 
   useEffect(() => {
     if (programApplicationId) {
@@ -128,10 +92,10 @@ const handleTabChange = (event, newValue) => {
   const [selectedProgramApplication, setSelectedProgramApplication] = useState(null);
   const programs = useSelector(state => state.program.programs);
   const universities = useSelector(state =>state.university.universities)
-  console.log("details?.programApplicationId,",details?.programApplicationId)
-console.log("selectedFee",selectedFee?.amount)
-console.log("note",note)
-console.log("method",method)
+//   console.log("details?.programApplicationId,",details?.programApplicationId)
+// console.log("selectedFee",selectedFee?.amount)
+// console.log("note",note)
+// console.log("method",method)
   const fees = useSelector(state => state?.programFee?.fees);
   const feeTypes = useSelector(state => state.feeType.feeTypes);
   const stages = useSelector(state=>state.applyStage.stages)
@@ -179,6 +143,51 @@ const getStageNameByProgramStageId = () =>{
     const feeType = feeTypes.find(type => type.feeTypeId === feeTypeId);
     return feeType ? feeType.typeName : 'Unknown';
   };
+
+
+ 
+
+
+  const [file, setFile] = useState(null);
+  const [img, setImg] = useState(null);
+
+  const [paymentId, setPaymentId] = useState(null); 
+  const [paymentSuccess, setPaymentSuccess] = useState(null); 
+console.log("ảnh aaaa",img)
+console.log("paymentId paymentId",paymentId)
+const handleFileChange = (e) => {
+  const file = e.target.files[0];
+  if (file) {
+      setFile(file);
+      const localImageUrl = URL.createObjectURL(file);
+      setImg(localImageUrl); 
+      console.log("Preview image URL set:", localImageUrl);
+  }
+};
+  const handleImageUpload = async () => {
+    if (!paymentId) {
+        console.error("No payment ID available for updating.");
+        return;
+    }
+
+    if (file) {
+        const imgRef = ref(imageDb, `Image/Payment/${file.name}`);
+        try {
+          await uploadBytes(imgRef, file);
+          const img = await getDownloadURL(imgRef);
+          console.log("Image URL:", img);
+          setImg(img);
+          dispatch(updatePayment({ id: paymentId, img: img }));
+        } catch (error) {
+          console.error("Error uploading image:", error);
+        }
+    } else {
+        console.error("No file selected for upload.");
+    }
+};
+
+
+
   const handlePaymentSubmit = () => {
     if (selectedFee && details?.programApplicationId) {
         const paymentData = {
@@ -205,6 +214,37 @@ const getStageNameByProgramStageId = () =>{
         console.error("Payment submission aborted: Missing fee selection or program application.");
         setPaymentSuccess(false);
     }
+};
+
+const handleCreateVnPayLink = async () => {
+  const totalAmount = fees.filter(fee => fee?.programId === details.program?.programId)
+                          .reduce((sum, current) => sum + current.amount, 0);
+
+  const paymentData = {
+    amount: totalAmount,
+    orderInfo: `Total payment for program application ID ${details.programApplicationId}`,
+    programApplicationId: details.programApplicationId
+  };
+
+  dispatch(createVnPayLink(paymentData))
+      .then(response => {
+          Swal.fire({
+              title: 'Hoàn tất',
+              text: 'Nhấn vào nút bên dưới để đến trang thanh toán VNPAY!',
+              icon: 'success',
+              showCancelButton: true,
+              confirmButtonText: 'Thanh toán ngay',
+              cancelButtonText: 'Hủy',
+          }).then(result => {
+              if (result.isConfirmed) {
+                  window.open(response.payload, '_blank');
+              }
+          });
+      })
+      .catch(error => {
+          console.error('Lỗi thông tin thanh toán:', error);
+          Swal.fire('Lỗi tạo đơn thanh toán', 'Thanh toán thất bại', 'Lỗi tạo đơn thanh toán');
+      });
 };
 
 
@@ -541,32 +581,40 @@ const getStageNameByProgramStageId = () =>{
           )}
 <>
 
-  <Typography variant="h6" gutterBottom>Hoặc</Typography>
-  <Typography variant="subtitle1">
-    Phí tổng cộng để hoàn thành hồ sơ:
-  </Typography>
-  <Form.Group as={Row} className="mb-3">
-    <Col sm={12}>
-      {fees.filter(fee => fee?.programId === details.program?.programId).map((fee, index, arr) => (
-        <React.Fragment key={fee.programFeeId}>
-          <span>
-            {fee.amount.toLocaleString()} VND ({getFeeTypeNameById(fee.feeTypeId)})
-          </span>
-          {index < arr.length - 1 ? ' + ' : ''}
-        </React.Fragment>
-      ))}
-    </Col>
-    <Col sm={12} className="mt-2">
-      <strong>-----------------------------------</strong>
-    </Col>
-    <Col sm={12}>
-      <strong>
-        {fees.filter(fee => fee?.programId === details.program?.programId)
-             .reduce((sum, current) => sum + current.amount, 0)
-             .toLocaleString()} VND (Tổng các loại phí)
-      </strong>
-    </Col>
-  </Form.Group>
+<Typography variant="h6" gutterBottom style={{cursor: 'pointer'}} onClick={toggleFeesDetail}>
+Hoặc</Typography>
+  {showDetailedFees && (
+                        <>
+                            <Typography variant="subtitle1">
+                                Phí tổng cộng để hoàn thành hồ sơ:
+                            </Typography>
+                            <Form.Group as={Row} className="mb-3">
+                                <Col sm={12}>
+                                    {fees.filter(fee => fee?.programId === details.program?.programId).map((fee, index, arr) => (
+                                        <React.Fragment key={fee.programFeeId}>
+                                            <span>
+                                                {fee.amount.toLocaleString()} VND ({getFeeTypeNameById(fee.feeTypeId)})
+                                            </span>
+                                            {index < arr.length - 1 ? ' + ' : ''}
+                                        </React.Fragment>
+                                    ))}
+                                </Col>
+                                <Col sm={12} className="mt-2">
+                                    <strong>-----------------------------------</strong>
+                                </Col>
+                                <Col sm={12}>
+                                    <strong>
+                                        {fees.filter(fee => fee?.programId === details.program?.programId)
+                                            .reduce((sum, current) => sum + current.amount, 0)
+                                            .toLocaleString()} VND (Tổng các loại phí)
+                                    </strong>
+                                </Col>
+                                <Button variant="warning" onClick={handleCreateVnPayLink} style={{ marginLeft: '10px' }}>
+                                    Thanh toán bằng VNPAY
+                                </Button>
+                            </Form.Group>
+                        </>
+                    )}
 </>
             </>
           ) : (

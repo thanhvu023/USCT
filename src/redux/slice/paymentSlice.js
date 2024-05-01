@@ -22,15 +22,20 @@ export const createPayment = createAsyncThunk(
 
 export const createVnPayLink = createAsyncThunk(
   "payment/createVnPayLink",
-  async (paymentData, thunkAPI) => {
+  async ({amount, orderInfo, programApplicationId}, thunkAPI) => {
     try {
-      // Adjust the API path as needed
-      const response = await instance.post(`/payment/vnpay`, paymentData, {
+      // Prepare the data for the request
+      const bodyData = {
+        programApplicationId: programApplicationId
+      };
+      
+      const response = await instance.post(`/payment/vnpay`, bodyData, {
         params: {
-          amount: paymentData.amount,
-          orderInfo: paymentData.orderInfo,
+          amount: amount,
+          orderInfo: orderInfo
         }
       });
+      
       console.log("VNPAY Link Response:", response.data);
       return response.data;
     } catch (error) {
@@ -42,18 +47,10 @@ export const createVnPayLink = createAsyncThunk(
 
 export const updatePayment = createAsyncThunk(
   "payment/updatePayment",
-  async ({ id, amount, method, img, note, programApplicationId, paymentDate, transactionNo, status }, thunkAPI) => {
+  async ({ id, img }, thunkAPI) => {
     try {
-      const response = await instance.put(`/payment/${id}`, {
-        amount,
-        method,
-        img,
-        note,
-        programApplicationId,
-        paymentDate,
-        transactionNo,
-        status
-      });
+      const response = await instance.put(`/payment/${id}`, { img });
+      console.log("Update Response:", response);
       return response.data;
     } catch (error) {
       console.error("API error on update:", error);
@@ -61,6 +58,8 @@ export const updatePayment = createAsyncThunk(
     }
   }
 );
+
+
 
 
 const initialState = {

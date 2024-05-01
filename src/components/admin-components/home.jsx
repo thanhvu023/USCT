@@ -24,7 +24,7 @@ const tabelData = [
 const CarddBlog = [
     {title:"Khách hàng tư vấn", number:'3180', percent:'80%', color:"primary"},
     {title:" Khách hàng mới", number:'360',  percent:'50%', color:"danger"},
-    {title:"Tổng số chương trình", number:'28',  percent:'76%', color:"red"},
+    {title:"Tổng số hồ sơ ", number:'28',  percent:'76%', color:"red"},
     {title:"Lợi Nhuận", number:'21290$',  percent:'35%', color:"success"},
 ];
 
@@ -54,6 +54,7 @@ const AdminHome = ({handleAllConsultantClick }) => {
       );
 
     const programStages = useSelector((state) => state.programStages.stages);
+    // console.log("programApplications",programApplications)
     useEffect(() => {
         dispatch(getAllConsultants());
     }, [dispatch]);
