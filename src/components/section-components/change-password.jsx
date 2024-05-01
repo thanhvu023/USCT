@@ -72,7 +72,7 @@ const ChangePassword = () => {
     const newErrors = validateForm();
     console.log(newErrors);
 
-    if (Object.keys(newErrors).length === 0) {
+    if (Object.keys(newErrors)?.length === 0) {
       // No errors, submit form data
 
       dispatch(updateUserById(updatedData));

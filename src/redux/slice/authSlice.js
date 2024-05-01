@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { setUserAuthToken } from "../authService";
 import instance from "../axiosCustom";
 import jwtDecode from "jwt-decode";
-import { getStudentProfileByCustomerId } from "./studentSice";
+import { getStudentProfileByCustomerId } from "./studentSlice";
 export const login = createAsyncThunk(
   "customer/login",
   async (param, thunkAPI) => {

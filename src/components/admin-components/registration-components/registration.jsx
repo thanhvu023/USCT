@@ -184,7 +184,7 @@ const Registration = () => {
   };
 
   const chageData = (frist, sec) => {
-    for (var i = 0; i < data.length; ++i) {
+    for (var i = 0; i < data?.length; ++i) {
       if (i >= frist && i < sec) {
         data[i].classList.remove("d-none");
       } else {
@@ -199,7 +199,7 @@ const Registration = () => {
 
   activePag.current === 0 && chageData(0, sort);
 
-  let paggination = Array(Math.ceil(data.length / sort))
+  let paggination = Array(Math.ceil(data?.length / sort))
     .fill()
     .map((_, i) => i + 1);
 
@@ -240,7 +240,7 @@ const Registration = () => {
     setSortConfig({ key, direction });
   }
   const sortedData = useMemo(() => {
-    let sortableItems = [...(searchResults.length ? searchResults : initialList)];
+    let sortableItems = [...(searchResults?.length ? searchResults : initialList)];
     if (sortConfig.key !== null) {
       sortableItems.sort((a, b) => {
         if (a[sortConfig.key] < b[sortConfig.key]) {
@@ -386,10 +386,10 @@ const Registration = () => {
                       <div className="d-sm-flex text-center justify-content-between align-items-center mt-3">
                         <div className="dataTables_info">
                           Showing {activePag.current * sort + 1} to{" "}
-                          {activePag.current + 1 < paggination.length
+                          {activePag.current + 1 < paggination?.length
                             ? (activePag.current + 1) * sort
-                            : data.length}{" "}
-                          of {data.length} entries
+                            : data?.length}{" "}
+                          of {data?.length} entries
                         </div>
                         <div
                           className="dataTables_paginate paging_simple_numbers"
@@ -422,16 +422,16 @@ const Registration = () => {
                           </span>
                           <button
                             className={`btn btn-outline-secondary paginate_button next ${
-                              activePag.current === paggination.length - 1
+                              activePag.current === paggination?.length - 1
                                 ? "disabled"
                                 : ""
                             }`}
                             onClick={() =>
-                              activePag.current + 1 < paggination.length &&
+                              activePag.current + 1 < paggination?.length &&
                               onClick(activePag.current + 1)
                             }
                             disabled={
-                              activePag.current === paggination.length - 1
+                              activePag.current === paggination?.length - 1
                             }
                           >
                             Next

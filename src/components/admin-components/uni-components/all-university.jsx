@@ -266,7 +266,7 @@ const AllUniversitiesPage = () => {
         </Modal>
         <div className="col-12 mt-4">
         <ul className="pagination justify-content-center">
-          {Array.from({ length: Math.ceil(universities.length / itemsPerPage) }).map((_, index) => (
+          {Array.from({ length: Math.ceil(universities?.length / itemsPerPage) }).map((_, index) => (
             <li key={index} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
               <button onClick={() => paginate(index + 1)} className="page-link">
                 {index + 1}

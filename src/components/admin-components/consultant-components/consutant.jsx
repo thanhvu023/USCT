@@ -31,7 +31,7 @@ const AllConsultant = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (consultants.length > 0) {
+    if (consultants?.length > 0) {
       setLoaded(true);
       setDisplayedConsultants(consultants);
     }
@@ -52,9 +52,9 @@ const AllConsultant = () => {
   };
   
 
-  const pagination = Array(Math.ceil(displayedConsultants.length / sortData)).fill().map((_, i) => i);
+  const pagination = Array(Math.ceil(displayedConsultants?.length / sortData)).fill().map((_, i) => i);
   const startEntry = activePage * sortData;
-  const endEntry = Math.min(startEntry + sortData, displayedConsultants.length);
+  const endEntry = Math.min(startEntry + sortData, displayedConsultants?.length);
 
   return (
     <>
@@ -101,7 +101,7 @@ const AllConsultant = () => {
                       ))}
                     </tbody>
                   </Table>
-                  {displayedConsultants.length > sortData && (
+                  {displayedConsultants?.length > sortData && (
                     <div className="pagination justify-content-center mt-4">
                       <button className={`btn ${activePage === 0 ? "disabled" : ""}`} onClick={() => setActivePage(activePage - 1)}>Previous</button>
                       {pagination.map(num => (
@@ -109,7 +109,7 @@ const AllConsultant = () => {
                           {num + 1}
                         </button>
                       ))}
-                      <button className={`btn ${activePage === pagination.length - 1 ? "disabled" : ""}`} onClick={() => setActivePage(activePage + 1)}>Next</button>
+                      <button className={`btn ${activePage === pagination?.length - 1 ? "disabled" : ""}`} onClick={() => setActivePage(activePage + 1)}>Next</button>
                     </div>
                   )}
                 </div>

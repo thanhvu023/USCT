@@ -537,7 +537,7 @@ const AllPrograms = () => {
           <ul className="pagination justify-content-center">
             {showAllPrograms
               ? Array.from({
-                  length: Math.ceil(programs.length / itemsPerPage),
+                  length: Math.ceil(programs?.length / itemsPerPage),
                 }).map((_, index) => (
                   <li
                     key={index}
@@ -554,7 +554,7 @@ const AllPrograms = () => {
                   </li>
                 ))
               : Array.from({
-                  length: Math.ceil(feeData.length / itemsPerPage),
+                  length: Math.ceil(feeData?.length / itemsPerPage),
                 }).map((_, index) => (
                   <li
                     key={index}

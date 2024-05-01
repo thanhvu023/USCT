@@ -48,7 +48,7 @@ function ProgramDetailPage() {
   };
 
   const handleOpenModal = () => {
-    dispatch(resetStdeunt());
+    dispatch(resetStudent());
     setShowModal(true);
   };
 
@@ -524,7 +524,7 @@ const uniDetailsPopover = (
                           >
                             {/* Select */}
                             <div style={{ flex: "1" }}>
-                              {profileStudent.length > 0 ? (
+                              {profileStudent?.length > 0 ? (
                                 <Select
                                   options={profileStudent.map((profile) => ({
                                     value: profile.studentProfileId,
@@ -578,7 +578,7 @@ const uniDetailsPopover = (
           </div>
           <div className="widget">
             <h4 className="widget-title">Những Chương Trình Tương Tự</h4>
-            {programByType && programByType.length > 1 ? (
+            {programByType && programByType?.length > 1 ? (
               <Slider
                 dots={true}
                 infinite={true}
@@ -753,7 +753,7 @@ const modalBgStyle = {
   zIndex: "0",
   left: "0",
   top: "0",
-  width: "100%",
+  width: "100%",  
   height: "100%",
   backgroundColor: "rgba(0,0,0,0.4)",
 };

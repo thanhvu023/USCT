@@ -30,7 +30,7 @@ const SideBarStaff = ({ setMain }) => {
 
   let path = window.location.pathname;
   path = path.split("/");
-  path = path[path.length - 1];
+  path = path[path?.length - 1];
 
   useEffect(() => {
     MenuList.forEach((data) => {

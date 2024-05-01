@@ -69,7 +69,7 @@ function SignUp() {
       newErrors.confirmPassword = "Xác nhận mật khẩu không được để trống!";
     }
 
-    if (formData.password.length < 6) {
+    if (formData.password?.length < 6) {
       newErrors.password = "Mật khẩu phải có ít nhất 6 ký tự!";
     } else if (
       !/[A-Z]/.test(formData.password) ||
@@ -96,7 +96,7 @@ function SignUp() {
     e.preventDefault();
 
     const newErrors = validateForm();
-    if (Object.keys(newErrors).length === 0) {
+    if (Object.keys(newErrors)?.length === 0) {
       dispatch(signup({ formData, navigate }));
       setShowSuccessAlert(true);
     } else {

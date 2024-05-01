@@ -80,7 +80,7 @@ const ConsultantProfile = () => {
       newErrors.introduction = "Email không được để trống!";
     }
 
-    if (specialize.length === 0) {
+    if (specialize?.length === 0) {
       newErrors.specialize = "Chuyên môn không được để trống!";
     }
     return newErrors;
@@ -101,7 +101,7 @@ const ConsultantProfile = () => {
       },
     };
     const newErrors = validateForm();
-    if (Object.keys(newErrors).length === 0) {
+    if (Object.keys(newErrors)?.length === 0) {
       if (!isChecked) {
         Swal.fire({
           icon: "warning",

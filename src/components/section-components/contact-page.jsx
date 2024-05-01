@@ -128,7 +128,7 @@ const Registration = () => {
 
     const newErrors = validateForm();
 
-    if (Object.keys(newErrors).length === 0) {
+    if (Object.keys(newErrors)?.length === 0) {
       dispatch(createRegistration(formData));
       await Swal.fire({
         icon: "success",

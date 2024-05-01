@@ -42,7 +42,7 @@ const AllCustomer = () => {
   }, [userData, searchTerm]);
 
   const displayedData = filteredData.slice(activePage * sort, (activePage + 1) * sort);
-  const paginationLength = Math.ceil(filteredData.length / sort);
+  const paginationLength = Math.ceil(filteredData?.length / sort);
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);

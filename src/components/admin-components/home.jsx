@@ -90,7 +90,7 @@ const AdminHome = ({handleAllConsultantClick }) => {
           }
         };
     
-        if (programApplications.length > 0) {
+        if (programApplications?.length > 0) {
           fetchPrograms();
         }
       }, [dispatch, programApplications]);
