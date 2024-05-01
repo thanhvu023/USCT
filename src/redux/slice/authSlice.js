@@ -2,7 +2,6 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { setUserAuthToken } from "../authService";
 import instance from "../axiosCustom";
 import jwtDecode from "jwt-decode";
-import { getStudentProfileByCustomerId } from "./studentSlice";
 export const login = createAsyncThunk(
   "customer/login",
   async (param, thunkAPI) => {
@@ -160,14 +159,11 @@ export const getFile = createAsyncThunk(
   "customer/getFile",
   async (params, thunkAPI) => {
     try {
-      // console.log("Fetching file with URL:", params);
       const res = await instance.get(`/firebase/file?url=${params}`, {
         responseType: "blob",
       });
-      // console.log("Response from Firebase:", res);
       const fileBlob = res.data;
       const fileUrl = URL.createObjectURL(fileBlob);
-      // console.log("File URL:", fileUrl);
       return fileUrl;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -321,15 +317,15 @@ export const authSlice = createSlice({
         state.error = null;
       })
       .addCase(getNotification.pending, (state) => {
-        state.loading = true;
+        // state.loading = true;
       })
       .addCase(getNotification.fulfilled, (state, action) => {
-        state.loading = false;
+        // state.loading = false;
         state.notificationByUserId = action.payload;
         state.error = null;
       })
       .addCase(getNotification.rejected, (state) => {
-        state.loading = false;
+        // state.loading = false;
         state.error = null;
       });
   },

@@ -38,13 +38,10 @@ const StudentProfileAppliedStageList = () => {
   const feeTypes = useSelector(state => state.feeType.feeTypes);
   const programApplications = useSelector(state => state.programApplication.programApplicationsByCustomerId || []);
 // const programApplicationByStu = useSelector(state =>state.programApplication.programApplicationsByStudentProfileId || []);
-console.log("programApplicationByStu",programApplications)
 
   // const handleRowClick = (programApplicationId) => {
   //   navigate(`/student-profile/program-application-detail/${programApplicationId}`);
   // };
-
-
  
 const handleCloseModal = () => {
   setIsModalOpen(false);
@@ -137,7 +134,6 @@ useEffect(() => {
 const handleNoteChange = (event) => {
     setNote(event.target.value);
 };
-  console.log("selectedFee",selectedFee)
   const [filteredFees, setFilteredFees] = useState([]);
 //   useEffect(() => {
 //     dispatch(getAllProgramFees());

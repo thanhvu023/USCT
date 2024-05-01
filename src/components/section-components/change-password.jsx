@@ -10,7 +10,6 @@ import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const ChangePassword = () => {
-
   const token = useSelector((state) => state?.auth?.token);
   const userId = jwtDecode(token).UserId;
   const userDetail = useSelector((state) => state?.auth?.userById);
@@ -42,19 +41,29 @@ const ChangePassword = () => {
   const validateForm = () => {
     const newErrors = {};
     if (oldPassword.trim() === "") {
-      newErrors.password = "Mật khẩu không hợp lệ!";
+      newErrors.oldPassword = "Vui lòng nhập mật khẩu cũ!";
     }
     if (newPassword.trim() === "") {
-      newErrors.password = "Mật khẩu không hợp lệ!";
+      newErrors.newPassword = "Vui lòng nhập mật khẩu mới!";
+    } else if (newPassword.length < 6) {
+      // Check if new password length is less than 6 characters
+      newErrors.newPassword = "Mật khẩu phải có ít nhất 6 ký tự!";
+    } else if (!/[A-Z]/.test(newPassword) || !/\d/.test(newPassword)) {
+      // Check if new password contains at least one uppercase letter and one digit
+      newErrors.newPassword = "Mật khẩu phải chứa ít nhất 1 chữ hoa và 1 số!";
     }
     if (confirmPassWord.trim() === "") {
-      newErrors.password = "Mật khẩu không hợp lệ!";
+      newErrors.confirmPassword = "Vui lòng nhập xác nhận mật khẩu!";
+    } else if (newPassword !== confirmPassWord) {
+      // Check if confirm password matches new password
+      newErrors.confirmPassword = "Xác nhận mật khẩu không trùng khớp!";
     }
-    if (oldPassword !== userDetail.password) {
-      newErrors.password = "Mật khẩu cũ không đúng!";
-    }
-    if (newPassword !== confirmPassWord) {
-      newErrors.confirmPassword = "Mật khẩu xác nhận không trùng khớp!";
+    if (oldPassword.trim() === "") {
+      newErrors.oldPassword = "Vui lòng nhập mật khẩu cũ!";
+    } else if (oldPassword !== userDetail.password) {
+      newErrors.oldPassword = "Mật khẩu cũ không đúng!";
+    } else if (oldPassword === newPassword) {
+      newErrors.newPassword = "Mật khẩu mới phải khác mật khẩu cũ!";
     }
 
     return newErrors;
@@ -70,7 +79,6 @@ const ChangePassword = () => {
       },
     };
     const newErrors = validateForm();
-    console.log(newErrors);
 
     if (Object.keys(newErrors)?.length === 0) {
       // No errors, submit form data
@@ -88,8 +96,8 @@ const ChangePassword = () => {
       return;
     }
 
-    setNewPassword(updatedData.userData.password);
-    setUpdateMessage("Cập nhật hồ sơ thành công!");
+    // setNewPassword(updatedData.userData.password);
+    // setUpdateMessage("Cập nhật hồ sơ thành công!");
   };
   return (
     <Fragment>
@@ -98,10 +106,9 @@ const ChangePassword = () => {
           <div className="col-lg-12 mt-12">
             <div className="profile card card-body px-3 pt-3 pb-0 border rounded">
               <div className="profile-head">
-               
                 <div className="profile-info d-flex">
                   <div className="profile-photo ">
-                  <img
+                    <img
                       src={
                         userDetail.img
                           ? userDetail.img
@@ -245,10 +252,18 @@ const ChangePassword = () => {
                                         className="form-control"
                                         value={oldPassword}
                                         onChange={(e) => {
-                                          setErrors({ ...errors, address: "" });
+                                          setErrors({
+                                            ...errors,
+                                            oldPassword: "",
+                                          });
                                           setOldPassword(e.target.value);
                                         }}
                                       />
+                                      {errors.oldPassword && (
+                                        <p className="text-center text-danger mt-1">
+                                          {errors.oldPassword}
+                                        </p>
+                                      )}
                                     </div>
                                     <div className="form-group mb-3 col-md-12">
                                       <label className="form-label">
@@ -260,10 +275,18 @@ const ChangePassword = () => {
                                         className="form-control"
                                         value={newPassword}
                                         onChange={(e) => {
-                                          setErrors({ ...errors, address: "" });
+                                          setErrors({
+                                            ...errors,
+                                            newPassword: "",
+                                          });
                                           setNewPassword(e.target.value);
                                         }}
                                       />
+                                      {errors.newPassword && (
+                                        <p className="text-center text-danger mt-1">
+                                          {errors.newPassword}
+                                        </p>
+                                      )}
                                     </div>
                                     <div className="form-group mb-3 col-md-12">
                                       <label className="form-label">
@@ -275,10 +298,18 @@ const ChangePassword = () => {
                                         className="form-control"
                                         value={confirmPassWord}
                                         onChange={(e) => {
-                                          setErrors({ ...errors, address: "" });
+                                          setErrors({
+                                            ...errors,
+                                            confirmPassword: "",
+                                          });
                                           setConfirmPassWord(e.target.value);
                                         }}
                                       />
+                                      {errors.confirmPassword && (
+                                        <p className="text-center text-danger mt-1">
+                                          {errors.confirmPassword}
+                                        </p>
+                                      )}
                                     </div>
                                   </div>
 
@@ -304,21 +335,6 @@ const ChangePassword = () => {
                                       ></textarea>
                                     </div>
                                   </div> */}
-                                  <div className="form-group mb-3">
-                                    <div className="form-check custom-checkbox">
-                                      <input
-                                        type="checkbox"
-                                        className="form-check-input"
-                                        id="gridCheck"
-                                      />
-                                      <label
-                                        className="form-check-label ml-2"
-                                        htmlFor="gridCheck"
-                                      >
-                                        Kiểm tra trước khi cập nhật
-                                      </label>
-                                    </div>
-                                  </div>
                                   <button
                                     className="btn btn-primary"
                                     type="submit"

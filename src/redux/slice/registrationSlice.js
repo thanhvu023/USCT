@@ -52,7 +52,6 @@ export const createRegistration = createAsyncThunk(
   "registration/createRegistration",
   async (param, thunkAPI) => {
     try {
-      console.log(param);
       const res = await instance.post(`/registration-forms`, param);
       return res.data;
     } catch (error) {
@@ -64,7 +63,6 @@ export const updateRegistrationById = createAsyncThunk(
   "registration/updateRegistrationById",
   async ({ registrationFormId, consultantId, status }, thunkAPI) => {
     try {
-      console.log(registrationFormId)
       const res = await instance.put(
         `/registration-forms/${registrationFormId}`,
         { consultantId, status }

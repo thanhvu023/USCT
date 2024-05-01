@@ -30,7 +30,6 @@ export const createStudentProfile = createAsyncThunk(
   "student/createStudentProfile",
   async (studentData, thunkAPI) => {
     try {
-      console.log(studentData);
       const res = await instance.post("/profile/", studentData, {
         headers: "Access-Control-Allow-Origin",
       });
