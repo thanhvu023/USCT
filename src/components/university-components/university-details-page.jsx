@@ -19,7 +19,6 @@ function UniversityDetailPage() {
 
   const uniId = useParams();
   const { universityId } = uniId;
-  const majorDetail = useSelector((state) => state.major.majorById);
   const uniDetail = useSelector((state) => state?.university?.universityById);
   const { stateId } = uniDetail;
   const universityTypeId = uniDetail.universityTypeId;
@@ -105,7 +104,7 @@ function UniversityDetailPage() {
               <div key={index} className="col-lg-12 col-md-6">
                 <div className="single-course-inner">
                   <div className="thumb">
-                    <img src={publicUrl + "assets/img/course/program.png"} alt="img" />
+                    <img src={program.img} alt="img" />
                   </div>
                   <div className="details">
                     <div className="details-inner">
@@ -115,11 +114,11 @@ function UniversityDetailPage() {
                         </Link>
                       </h6>
                     </div>
-                    <div className="emt-course-meta">
+                    {/* <div className="emt-course-meta">
                       <div className="price text-right">
                         Mã Chuyên Ngành: <span>{majorDetail.majorName}</span>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>
