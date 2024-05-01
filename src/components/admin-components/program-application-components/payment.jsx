@@ -4,7 +4,7 @@ import { Container, Row, Col, Form, Button, Card,FormControl } from 'react-boots
 import { Stepper, Step, StepLabel } from '@mui/material';
 import Swal from 'sweetalert2';
 
-import { Check as CheckIcon, Clear as ClearIcon, HourglassEmpty as HourglassEmptyIcon } from '@mui/icons-material';
+import { Check as CheckIcon,  RadioButtonUnchecked as RadioButtonUncheckedIcon, HourglassEmpty as HourglassEmptyIcon, CheckCircleOutline, HighlightOff } from '@mui/icons-material';
 import { getStudentProfileById, getAllProgram, getProgramById, getProgramStageById } from "../../../redux/slice/programSlice";
 import PaymentContext from './context/payment-context';
 import { getProgramFeesByProgramId, getAllProgramFees } from '../../../redux/slice/programFeeSlice';
@@ -14,6 +14,8 @@ import { getAllStage, updateApplyStage } from '../../../redux/slice/applyStageSl
 const Payment = () => {
     const dispatch = useDispatch();
     const { selectedApp: selectedApplication } = useContext(PaymentContext);
+    const { studentProfile, program } = selectedApplication;
+
     const applyStages = useSelector((state) => state.applyStage.applyStages || []);
     const activeStage = selectedApplication?.applyStage?.find(stage => stage.status === 1);
     
@@ -147,7 +149,12 @@ const Payment = () => {
             setNote('');
         }
     };
-
+    const handleDownloadFile = (fileAttach) => {
+        const link = document.createElement("a");
+        link.href = fileAttach;
+        link.download = "fileAttach";
+        link.click();
+      };
     const getTypeNameById = (feeTypeId) => {
         const feeType = feeTypes.find(type => type.feeTypeId === feeTypeId);
         return feeType ? feeType.typeName : '';
@@ -156,14 +163,16 @@ const Payment = () => {
     if (!selectedApplication) {
         return <div>Please select an application to make a payment.</div>;
     }
- 
+ const renderPaymentStatus = (isPayment) => {
+    return isPayment ? "Cần đóng khoản phí" : "Không có khoản phí cần đóng";
+};
     const displayApplicationStages = () => {
         return (
             <Stepper activeStep={findActiveStageIndex()} alternativeLabel>
                 {selectedApplication.applyStage.map((stage, index) => (
                     <Step key={stage.applyStageId}>
                         <StepLabel icon={<StepIcon status={stage.status}/>}>
-                            {stage.programStage.stageName}
+                        {stage.programStage.stageName} - {renderPaymentStatus(stage.programStage.isPayment)}
                         </StepLabel>
                     </Step>
                 ))}
@@ -177,22 +186,23 @@ const Payment = () => {
 
     const StepIcon = ({ status }) => {
         switch (status) {
-            case 0: return <ClearIcon color="error" />;
+            case 0: return <RadioButtonUncheckedIcon color="error" />;
             case 1: return <HourglassEmptyIcon color="action" />;
             case 2: return <CheckIcon color="primary"  />;
-            default: return <ClearIcon />;
+            default: return <RadioButtonUncheckedIcon />;
         }
     };
 
-    const { studentProfile, program } = selectedApplication;
 
     return (
-        <Container className="mt-5">
+        <Card > {/* Main card wrapper */}
+        <Card.Body>
+        <Container className="p-0">
 
 
-            <Row style={{marginTop:'24px'}}>
+        <Row className="gx-2">
                 <Col>
-                    <Card>
+                    <Card style={{height:'430px'}}>
                         <Card.Header style={{ textAlign: 'center' }}><h2>Thông tin hồ sơ</h2></Card.Header>
                         <Card.Body>
                             <Row>
@@ -203,6 +213,46 @@ const Payment = () => {
                             <p><strong>Khai sinh:</strong> {studentProfile.dateOfBirth}</p>
                             <p><strong>Địa chỉ thường trú:</strong> {studentProfile.address}</p>
                             <p><strong>Mã số căn cước công dân:</strong> {studentProfile.nationalId}</p>
+                            <p className="d-flex">
+                                            <span
+                                              style={{ fontWeight: "bold" }}
+                                            >
+                                              Bộ hồ sơ
+                                            </span>
+                                            {studentProfile &&
+                                            studentProfile.fileUploads &&
+                                            studentProfile.fileUploads.length >
+                                              0 ? (
+                                              studentProfile.fileUploads.map(
+                                                (file, index) => (
+                                                  <div
+                                                    key={index}
+                                                    className="m-2"
+                                                  >
+                                                    <Button
+                                                      className="me-2"
+                                                      variant="secondary btn-rounded"
+                                                      onClick={() =>
+                                                        handleDownloadFile(
+                                                          file.fileAttach
+                                                        )
+                                                      }
+                                                    >
+                                                      <span className="btn-icon-start text-warning mr-2">
+                                                        <i className="fa fa-download" />
+                                                      </span>
+                                                      PDF {index + 1}
+                                                    </Button>
+                                                  </div>
+                                                )
+                                              )
+                                            ) : (
+                                              <span className="ml-2">
+                                                Chưa bổ sung file PDF
+                                              </span>
+                                            )}
+                                          </p>
+
                                 </Col>
                                 <Col md={6}>
                                     
@@ -221,7 +271,7 @@ const Payment = () => {
                 </Col>
                 <Col>
                 
-                <Card>
+                <Card style={{height:'430px'}}>
             <Card.Header style={{ textAlign: 'center' }}><h2>Cập nhật tiến trình hồ sơ</h2></Card.Header>
             <Card.Body>
          <Col sm='12'>
@@ -234,13 +284,26 @@ const Payment = () => {
                         </div>
                     ))}
                 </div>
+               
                 <Form>
                     <Form.Group as={Row} className="mb-3">
                         <Form.Label column sm="3">Giai đoạn hồ sơ:</Form.Label>
                         <Form.Label column sm="6">{activeStage?.programStage?.stageName || 'No active stage'}</Form.Label>
-
+                       
                     </Form.Group>
                     <Button variant="primary" onClick={updateStages}>Cập nhật</Button>
+                </Form>
+                <Form>
+                    <Form.Group as={Row} className="mb-3">
+                       
+                    <Form.Label column sm="3">Phí giai đoạn:</Form.Label>
+                       <Form.Label>
+                      {renderPaymentStatus(activeStage?.programStage?.isPayment)}
+           
+          
+                       </Form.Label>
+                    </Form.Group>
+                  
                 </Form>
             </Card.Body>
         </Card>
@@ -249,7 +312,7 @@ const Payment = () => {
             </Row>
        
         
-                    <Card >
+                    <Card style={{marginTop:'24px'}}>
     <Card.Header style={{ textAlign: 'center' }}>
   <h2>Chương trình</h2>
 </Card.Header>
@@ -293,7 +356,7 @@ const Payment = () => {
                         
                         </Card.Body>
                     </Card>
-                    <Card>
+                    <Card style={{marginTop:'24px'}}>
                         <Card.Header style={{ textAlign: 'center' }}><h2>Tạo đơn thanh toán</h2></Card.Header>
                         <Card.Body>
                             <Form>
@@ -336,6 +399,8 @@ const Payment = () => {
                         </Card.Body>
                     </Card>
         </Container>
+        </Card.Body>
+        </Card>
     );
 };
 

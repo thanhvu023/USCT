@@ -1,5 +1,5 @@
 import jwtDecode from "jwt-decode";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState,useMemo } from "react";
 import {
   Alert,
   Badge,
@@ -8,6 +8,10 @@ import {
   Form,
   Modal,
   Row,
+  Table,
+  Card,
+  ListGroup,
+  Accordion
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -69,6 +73,8 @@ const Registration = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [initialList, setInitialList] = useState([]);
   const [selectedConsultantId, setSelectedConsultantId] = useState("");
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
+
   // const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedConsultantName, setSelectedConsultantName] = useState("");
   const majorC = selectedRegistration?.majorChoose;
@@ -226,7 +232,29 @@ const Registration = () => {
     setSelectedRegistration(registration);
     setShowCheckModal(true);
   };
-
+  const handleSort = (key) => {
+    let direction = 'ascending';
+    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+    setSortConfig({ key, direction });
+  }
+  const sortedData = useMemo(() => {
+    let sortableItems = [...(searchResults.length ? searchResults : initialList)];
+    if (sortConfig.key !== null) {
+      sortableItems.sort((a, b) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? -1 : 1;
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    return sortableItems;
+  }, [initialList, searchResults, sortConfig]);
+  
   const handleUpdateRegistration = () => {
     if (selectedConsultantId === "") {
       Swal.fire({
@@ -328,97 +356,33 @@ const Registration = () => {
                           </label>
                         </div>
                       </div>
-                      <table
-                        id="example4"
-                        className="display dataTable no-footer w-100"
-                      >
-                        <thead>
-                          <tr>
-                            {theadData.map((item, ind) => (
-                              <th key={ind}>
-                                {item.heading}
-                                <span>
-                                  {ind !== iconData.ind && (
-                                    <i
-                                      className="fa fa-sort ms-2 fs-12"
-                                      style={{ opacity: "0.3" }}
-                                    />
-                                  )}
-                                  {ind === iconData.ind &&
-                                    (iconData.complete ? (
-                                      <i
-                                        className="fa fa-arrow-down ms-2 fs-12"
-                                        style={{ opacity: "0.7" }}
-                                      />
-                                    ) : (
-                                      <i
-                                        className="fa fa-arrow-up ms-2 fs-12"
-                                        style={{ opacity: "0.7" }}
-                                      />
-                                    ))}
-                                </span>
-                              </th>
-                            ))}
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {(searchResults.length > 0
-                            ? searchResults
-                            : initialList
-                          ).map((registration) => (
-                            <tr
-                              key={registration.id}
-                              className="table-row-border"
-                              onClick={() => handleClickName(registration)}
-                            >
-                              <td>{registration.registrationFormId}</td>
-                              <td
-                                title={`Tên khách hàng: ${getFullName(
-                                  registration.customerId
-                                )}`}
-                              >
-                                {registration.majorChoose}
-                              </td>
+                      <Table striped bordered hover responsive>
+    <thead>
+  <tr>
+    {theadData.map((item, index) => (
+      <th key={index} onClick={() => handleSort(item.sortingValue)}>
+        {item.heading}
+        {sortConfig.key === item.sortingValue && (
+          <i className={`ms-2 fa fa-arrow-${sortConfig.direction === 'ascending' ? 'down' : 'up'}`} />
+        )}
+      </th>
+    ))}
+  </tr>
+</thead>
+  <tbody>
+  {sortedData.map((registration, index) => (
+    <tr key={index} onClick={() => handleClickName(registration)}>
+      <td>{registration.registrationFormId}</td>
+      <td>{registration.majorChoose}</td>
+      <td>{registration.programChoose}</td>
+      <td>{getFullNameByConsultantId(registration.consultantId)}</td>
+      <td>{getStatusLabel(registration.status)}</td>
+    </tr>
+  ))}
+</tbody>
 
-                              <td>{registration.programChoose}</td>
-                              <td>{getFullNameByConsultantId(registration.consultantId)}</td>
-                              <td>{getStatusLabel(registration.status)}</td>
-                              {/* <td style={{ display: "flex", alignItems: "center" }}>
-                                 
-                                  <button
-                                    onClick={handleShowCheckModal}
-                                    className="btn btn-xs sharp btn-primary me-1"
-                                    style={{
-                                      width: "30px",
-                                      height: "30px",
-                                      padding: "0 20px",
-                                      display: "flex",
-                                      justifyContent: "center",
-                                      alignItems: "center",
-                                      marginRight: "5px",
-                                    }}
-                                  >
-                                    <i className="fa fa-check" />
-                                  </button>
-                                  <button
-                                    onClick={handleShowDeleteModal}
-                                    className="btn btn-xs sharp btn-danger"
-                                    style={{
-                                      width: "30px",
-                                      height: "30px",
-                                      padding: "0 20px",
-                                      display: "flex",
-                                      justifyContent: "center",
-                                      alignItems: "center",
-                                    }}
-                                  >
-                                    <i className="fa fa-trash" />
-                                  </button>
-                                </td> */}
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
+</Table>
+
                       <div className="d-sm-flex text-center justify-content-between align-items-center mt-3">
                         <div className="dataTables_info">
                           Showing {activePag.current * sort + 1} to{" "}
@@ -499,73 +463,60 @@ const Registration = () => {
                       alt="Customer Avatar"
                     />
                   </div>
-                  <div className="ml-2">
-                    <p style={{ fontWeight: "bold", color: "#007bff" }}>
-                      Thông tin chi tiết:
-                    </p>
-                    <p>
-                      <span>
-                        Tên khách hàng:{" "}
-                        <span style={{ color: "#007bff" }}>
-                          {getFullName(selectedRegistration.customerId)}
-                        </span>
-                      </span>
-                    </p>
-                    <p>
-                      <span>
-                        Chuyên ngành đã chọn:{" "}
-                        <span style={{ color: "#007bff" }}>
-                          {selectedRegistration.majorChoose}
-                        </span>
-                      </span>
-                    </p>
-                    <p>
-                      Chương trình đã chọn:{" "}
-                      <span style={{ color: "#007bff" }}>
-                        {selectedRegistration.programChoose}
-                      </span>
-                    </p>
-                    <p>
-                      Tư vấn viên phụ trách:{" "}
-                      <span style={{ color: "#007bff" }}>
-                        {getFullNameByConsultantId(
-                          selectedRegistration.consultantId
-                        )}
-                      </span>
-                    </p>
+                  <Card  style={{ marginRight: "20px" }}>
+      <Card.Body>
+        <Card.Title>Thông tin cơ bản</Card.Title>
+        <ListGroup variant="flush">
+  <ListGroup.Item style={{ display: 'flex', alignItems: 'center' }}>
+    <span style={{ marginRight: '10px', minWidth: '150px' }}> Tên khách hàng:</span>
+    <strong style={{ color: '#007bff' }}>
+      {getFullName(selectedRegistration.customerId)}
+    </strong>
+  </ListGroup.Item>
 
-                    <p>
-                      Khu vực:{" "}
-                      <span style={{ color: "#007bff" }}>
-                        {selectedRegistration.area}
-                      </span>{" "}
-                    </p>
-                  </div>
-                  <div className="ml-4">
-                    <p style={{ fontWeight: "bold", color: "#007bff" }}>
-                      Lý do và ưu tiên:
-                    </p>
-                    <div>
-                      <p>
-                        Lý do du học:{" "}
-                        <span style={{ color: "#007bff" }}>
-                          {selectedRegistration.studyAbroadReason}
-                        </span>
-                      </p>
-                      <p>
-                        Lý do chọn điểm đến:{" "}
-                        <span style={{ color: "#007bff" }}>
-                          {selectedRegistration.destinationReason}
-                        </span>
-                      </p>
-                      <p>
-                        Thông tin thêm:{" "}
-                        <span style={{ color: "#007bff" }}>
-                          {selectedRegistration.moreInformation}
-                        </span>
-                      </p>
-                      <p>
-                        <Form.Select
+  <ListGroup.Item style={{ display: 'flex', alignItems: 'center' }}>
+    <span style={{ marginRight: '10px', minWidth: '150px' }}>Chuyên ngành đã chọn:</span>
+    <strong  style={{ color: '#007bff' }}>{selectedRegistration.majorChoose}</strong>
+  </ListGroup.Item>
+
+  <ListGroup.Item style={{ display: 'flex', alignItems: 'center' }}>
+    <span style={{ marginRight: '10px', minWidth: '150px' }}>Chương trình đã chọn:</span>
+    <strong  style={{ color: '#007bff' }}>{selectedRegistration.programChoose}</strong>
+  </ListGroup.Item>
+
+
+  <ListGroup.Item style={{ display: 'flex', alignItems: 'center' }}>
+    <span style={{ marginRight: '10px', minWidth: '150px' }}>   Thông tin thêm:</span>
+    <strong  style={{ color: '#007bff' }}>{selectedRegistration.moreInformation}</strong>
+  </ListGroup.Item>
+
+</ListGroup>
+
+      </Card.Body>
+    </Card>
+    <Card>
+      <Card.Body>
+        <Card.Title>Lý do và ư tiên</Card.Title>
+        <ListGroup variant="flush">
+  <ListGroup.Item style={{ display: 'flex', alignItems: 'center' }}>
+    <span style={{ marginRight: '10px', minWidth: '150px' }}> Lý do du học:</span>
+    <strong style={{ color: '#007bff' }}>
+      {getFullName(selectedRegistration.studyAbroadReason)}
+    </strong>
+  </ListGroup.Item>
+
+  <ListGroup.Item style={{ display: 'flex', alignItems: 'center' }}>
+    <span style={{ marginRight: '10px', minWidth: '150px' }}> Lý do chọn điểm đến:</span>
+    <strong  style={{ color: '#007bff' }}>{selectedRegistration.destinationReason}</strong>
+  </ListGroup.Item>
+
+  <ListGroup.Item style={{ display: 'flex', alignItems: 'center' }}>
+    <span style={{ marginRight: '10px', minWidth: '150px' }}>Tư vấn viên phụ trách:</span>
+    <strong  style={{ color: '#007bff' }}>{getFullNameByConsultantId(selectedRegistration.consultantId)}</strong>
+  </ListGroup.Item>
+
+  <ListGroup.Item style={{ display: 'flex', alignItems: 'center' }}>
+  <Form.Select
                           value={selectedConsultantId}
                           onChange={(e) =>
                             setSelectedConsultantId(e.target.value)
@@ -582,27 +533,12 @@ const Registration = () => {
                             </option>
                           ))}
                         </Form.Select>
-                      </p>
-                      {/* <p>
-          <Dropdown>
-            <Dropdown.Toggle variant="success" id="dropdown-basic">
-              Chọn Trạng thái
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              <Dropdown.Item onClick={() => setSelectedStatus(0)}>
-                Đã hủy
-              </Dropdown.Item>
-              <Dropdown.Item onClick={() => setSelectedStatus(1)}>
-                Chưa duyệt
-              </Dropdown.Item>
-              <Dropdown.Item onClick={() => setSelectedStatus(2)}>
-                Đã duyệt
-              </Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-        </p> */}
-                    </div>
-                  </div>
+  </ListGroup.Item>
+</ListGroup>
+
+      </Card.Body>
+    </Card>
+               
                 </div>
               )}
             </Modal.Body>

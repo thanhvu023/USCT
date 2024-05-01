@@ -77,11 +77,13 @@ export const COLUMNS = [
       Filter: ColumnFilter,
     },
     {
-      Header: 'Giai đoạn hồ sơ',
-      Footer: 'Giai đoạn hồ sơ',
+      Header: 'Tiến trình hồ sơ',
+      Footer: 'Tiến trình hồ sơ',
       accessor: 'applyStageId',
-      Cell: ({ row }) => getStageStatus(row.original.programApplicationId),
-
+      Cell: ({ row }) => {
+        const activeStage = row.original.applyStage.find(stage => stage.status === 1);
+        return activeStage ? activeStage.programStage.stageName : 'No active stage';
+      },
       Filter: ColumnFilter,
     },
     // {

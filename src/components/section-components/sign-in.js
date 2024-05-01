@@ -81,12 +81,12 @@ function Signin() {
                       placeholder="Mật khẩu"
                     />
                   </div>
-                  {/* {isError === "Error" && error && (
+                  {isError === "Error" && error && (
                     <div className="alert alert-danger mt-2" role="alert">
                       {error}
                     </div>
                        
-                  )} */}
+                  )}
                 </div>
                 {error && (
                   <div className="col-12">

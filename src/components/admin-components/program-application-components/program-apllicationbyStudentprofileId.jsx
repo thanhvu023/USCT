@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { getAllProgramApplication } from "../../../redux/slice/programApplicationSlice";
+import { getAllProgramApplication,getProgramApplicationById } from "../../../redux/slice/programApplicationSlice";
 import { getStudentProfileById } from "../../../redux/slice/studentSlice";
 import { getProgramById } from "../../../redux/slice/programSlice";
 import { getProgramStageById } from "../../../redux/slice/programStageSlice";
@@ -13,6 +13,7 @@ import {
   Col,
   Image,
   Card,
+  Table
 } from "react-bootstrap";
 import { getAllUsers } from "../../../redux/slice/authSlice";
 import PaymentContext from "./context/payment-context";
@@ -24,6 +25,10 @@ import {
 } from "../../../redux/slice/applyStageSlice";
 import ApplicationDetails from "./application-details";
 import Swal from "sweetalert2";
+import { Typography } from "@mui/material";
+import { Backdrop, CircularProgress } from "@mui/material";
+import { VerticalAlignTop } from "@mui/icons-material";
+
 
 const theadData = [
   { heading: "PAId", sortingVale: "id" },
@@ -63,7 +68,7 @@ const ProgramApplicationPage = ({setMain }) => {
 
 
   const dispatch = useDispatch();
-  const [sort, setSortata] = useState(10);
+  const [sort, setSortData] = useState(10);
   const { programApplications, loading, error } = useSelector(
     (state) => state.programApplication
   );
@@ -72,7 +77,9 @@ const ProgramApplicationPage = ({setMain }) => {
   const [selectedProfileId, setSelectedProfileId] = useState(false);
   const [studentProfile, setStudentProfile] = useState(null);
   const [isPaymentRequired, setIsPaymentRequired] = useState(false);
-
+  const [selectedApplication, setSelectedApplication] = useState(null);
+  const [selectedApplicationProgram, setSelectedApplicationProgram] = useState(null);
+  console.log("seldfasfsafa:", selectedApplicationProgram);
   const [programs, setPrograms] = useState({});
   const [studentProfiles, setStudentProfiles] = useState({});
   // console.log("isPaymentRequired",isPaymentRequired)
@@ -82,7 +89,13 @@ const ProgramApplicationPage = ({setMain }) => {
 
   const customers = useSelector((state) => state.auth.user);
   const programStages = useSelector((state) => state.programStages.stages);
-
+  const activeStage = programApplications?.applyStage?.find(stage => stage.status === 1);
+  const findActiveStageName = (application) => {
+    const activeStage = application.applyStage?.find(stage => stage.status === 1);
+    return activeStage ? activeStage.programStage.stageName : 'No active stage';
+  };
+  
+  
   const getCustomerName = (customerId) => {
     if (!customers || !Array.isArray(customers)) {
       return "Không tìm thấy";
@@ -95,8 +108,7 @@ const ProgramApplicationPage = ({setMain }) => {
     return customer ? customer.fullName : "Không tìm thấy ảnh";
   };
   // update ApplyStage
-  const [selectedApplication, setSelectedApplication] = useState(null);
-  console.log("seldfasfsafa:", selectedApplication);
+
 
   const handleShowDetailsModal = (application) => {
     setSelectedApplication(application);
@@ -119,40 +131,7 @@ const ProgramApplicationPage = ({setMain }) => {
       stageName: stage?.stageName,
     }));
   };
-  // const handleUpdateApplyStage = () => {
-  //   if (selectedApplication && selectedProgramStageId) {
-  //     dispatch(
-  //       updateApplyStageById({
-  //         applyStageId: selectedApplication.applyStage.applyStageId,
-  //         programStageId: selectedProgramStageId,
-  //       })
-  //     )
-  //       .then(() => {
-  //         Swal.fire({
-  //           icon: "success",
-  //           title: "Cập nhật trạng thái hồ sơ thành công!",
-  //           showConfirmButton: false,
-  //           timer: 2000,
-  //         }).then(() => {
-  //           setShowCheckSuccess(true);
-  //           setShowCheckModal(false);
-  //           dispatch(getAllProgramApplication()); 
-  //         });
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error updating apply stage:", error);
-  //         Swal.fire({
-  //           icon: "error",
-  //           title: "Oops...",
-  //           text: "Đã xảy ra lỗi khi cập nhật trạng thái hồ sơ!",
-  //         });
-  //       });
-  //   } else {
-  //     alert(
-  //       "Vui lòng chọn cả Hồ sơ ứng tuyển và Giai đoạn chương trình để cập nhật."
-  //     );
-  //   }
-  // };
+
 
   // sort and search data
   const [sortedApplications, setSortedApplications] = useState([]);
@@ -200,6 +179,7 @@ const ProgramApplicationPage = ({setMain }) => {
 
   useEffect(() => {
     dispatch(getAllProgramStages());
+    dispatch(getAllStage());
     dispatch(getAllStage());
   }, [dispatch]);
 
@@ -322,524 +302,91 @@ const ProgramApplicationPage = ({setMain }) => {
   };
 
   return (
-    <div>
-      {loading || !programApplications ? (
-        <p>Loading...</p>
-      ) : error ? (
-        <p>{error}</p>
-      ) : (
-        <>
-          <Row>
-            <div className="col-lg-12">
-              <div className="card">
-                <div className="card-header d-flex justify-content-between align-items-center">
-                  <h4 className="card-title">Danh sách hồ sơ</h4>
-                  <Link to="/add-staff" className="btn btn-primary">
-                    + Thêm mới
-                  </Link>
-                </div>
-                <div className="card-body">
-                  <div className="table-responsive">
-                    <div
-                      id="holidayList"
-                      className="dataTables_wrapper no-footer"
-                    >
-                      <div className="d-sm-flex justify-content-between align-items-center">
-                        <div className="dataTables_length">
-                          <label className="d-flex align-items-center">
-                            hiển thị
-                            <Dropdown className="search-drop">
-                              <Dropdown.Toggle
-                                as="div"
-                                className="search-drop-btn"
-                              >
-                                {sort}
-                              </Dropdown.Toggle>
-                              <Dropdown.Menu>
-                                <Dropdown.Item onClick={() => setSortata("10")}>
-                                  10
-                                </Dropdown.Item>
-                                <Dropdown.Item onClick={() => setSortata("20")}>
-                                  20
-                                </Dropdown.Item>
-                                <Dropdown.Item onClick={() => setSortata("30")}>
-                                  30
-                                </Dropdown.Item>
-                              </Dropdown.Menu>
-                            </Dropdown>
-                            hàng
-                          </label>
-                        </div>
-                        <div className="dataTables_filter">
-                          <label>
-                            Tìm kiếm :{" "}
-                            <input
-                              type="search"
-                              className=""
-                              placeholder=""
-                              onChange={(e) => setSearchTerm(e.target.value)}
-                                />
-                          </label>
-                        </div>
-                      </div>
-                      <table
-                        id="example4"
-                        className="display dataTable no-footer w-100"
-                      >
-                        <thead>
-                          {theadData.map((item, index) => (
-                            <th key={index}>{item.heading}</th>
-                          ))}
-                        </thead>
-                        <tbody>
-                        {(searchTerm.trim() === "" ? programApplications : sortedApplications).map((application) => (
-                            <tr
-                              key={application.studentProfileId}
-                              className="table-row-border"
-                            >
-                              <td>{application.programApplicationId}</td>
-                              <Link
-                                onClick={() =>
-                                  handleOpenModal(application.studentProfileId)
-                                }
-                              >
-                                <td>
-                                  {
-                                    studentProfiles[
-                                      application.studentProfileId
-                                    ]?.fullName
-                                  }
-                                </td>
-                              </Link>
-                              <td>
-                                {
-                                  studentProfiles[application.studentProfileId]
-                                    ?.createDate
-                                }
-                              </td>
-                              <td>
-                                {programs[application.programId]?.nameProgram}
-                              </td>
-                              <td>
-  {application.applyStage?.programStage?.stageName || 'N/A'}
+<div style={{ maxHeight: "100vh" }}> 
+<Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={loading}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+        <Row>
+          <div className="col-lg-12">
+            <Card className="mb-4">
+              <Card.Header as="h4">Danh sách hồ sơ đăng ký chương trình</Card.Header>
+              <Card.Body>
+                <Form>
+                  <Row className="mb-3">
+                    <Col sm={3}>
+                      <Form.Control type="search" placeholder="Search" />
+                    </Col>
+                    <Col sm={3}>
+                     <div className="d-flex">
+                     <Typography>hiển thị </Typography>
+                      <Form.Select value={sort} onChange={e => setSortData(e.target.value)}>
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                      </Form.Select>
+                      <Typography> hàng</Typography>
+                     </div>
+                    </Col>
+                  </Row>
+                </Form>
+                <div className="table-responsive">
+                <Table striped bordered hover responsive>                   
+                 <thead>
+                      <tr>
+                        <th>PAId</th>
+                        <th>Hồ sơ sinh viên</th>
+                        <th>Ngày tạo</th>
+                        <th>Chương trình ứng tuyển</th>
+                        <th>Trạng thái hồ sơ</th>
+                        <th>Thao tác</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {programApplications.map((application) => (
+                        <tr key={application.studentProfileId}>
+                          <td>{application.programApplicationId}</td>
+                          <td onClick={() => handleOpenModal(application.studentProfileId)}>
+                            {application.studentProfile?.fullName}
+                          </td>
+                          <td>{application.studentProfile?.createDate}</td>
+                          <td>{application.program?.nameProgram}</td>
+                      
+      <td>{findActiveStageName(application)}</td>
+                   
+      <td style={{textAlign: "center", VerticalAlign: "middle"}}>
+  <Button variant="info"  onClick={() => handleCreateFee(application)}>
+    <i className="fa fa-info-circle" />
+  </Button>
 </td>
-                              <td
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                }}
-                              >
-                                <button
-                                   onClick={() => handleCreateFee(application)}
-                                  className="btn btn-xs sharp btn-primary me-1"
-                                  style={{
-                                    ...style.button,
-                                    width: "30px",
-                                    height: "30px",
-                                    padding: "0 20px",
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    marginRight: "5px",
-                                  }}
-                                >
-                                  <i className="fa fa-info-circle" />{" "}
-                                  {/* Thay icon thành icon chi tiết thông tin */}
-                                </button>
-                                <button
-                                  onClick={handleShowDeleteModal}
-                                  className="btn btn-xs sharp btn-danger"
-                                  style={{
-                                    ...style.button,
-                                    width: "30px",
-                                    height: "30px",
-                                    padding: "0 20px",
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                  }}
-                                >
-                                  <i className="fa fa-trash" />
-                                </button>
-                                <Modal
-                                  show={selectedProfileId}
-                                  onHide={handleCloseModal}
-                                 
-                                  centered
-                                >
-                                  <Modal.Header closeButton>
-                                    <Modal.Title style={{ fontSize: "32px" }}>
-                                      Hồ sơ học sinh
-                                    </Modal.Title>
-                                  </Modal.Header>
-                                  <Modal.Body>
-                                    {studentProfile && (
-                                      <div
-                                        style={{
-                                          display: "grid",
-                                          gridTemplateColumns: "1fr 1fr",
-                                          gap: "10px",
-                                        }}
-                                      >
-                                        <div>
-                                          <p
-                                            style={{
-                                              fontWeight: "bold",
-                                              fontSize: "24px",
-                                            }}
-                                          >
-                                            Thông tin học sinh:
-                                          </p>
-                                          <p>
-                                            <span
-                                              style={{ fontWeight: "bold" }}
-                                            >
-                                              Họ và tên học sinh:
-                                            </span>{" "}
-                                            {studentProfile.fullName}
-                                          </p>
-                                          <p>
-                                            <span
-                                              style={{ fontWeight: "bold" }}
-                                            >
-                                              Email:
-                                            </span>{" "}
-                                            {studentProfile.email}
-                                          </p>
-                                          <p>
-                                            <span
-                                              style={{ fontWeight: "bold" }}
-                                            >
-                                              Ngày sinh:
-                                            </span>{" "}
-                                            {studentProfile.dateOfBirth}
-                                          </p>
-                                          <p>
-                                            <span
-                                              style={{ fontWeight: "bold" }}
-                                            >
-                                              Giới tính:
-                                            </span>{" "}
-                                            {studentProfile.gender}
-                                          </p>
-                                          <p className="d-flex">
-                                            <span
-                                              style={{ fontWeight: "bold" }}
-                                            >
-                                              Bộ hồ sơ
-                                            </span>
-                                            {studentProfile &&
-                                            studentProfile.fileUploads &&
-                                            studentProfile.fileUploads.length >
-                                              0 ? (
-                                              studentProfile.fileUploads.map(
-                                                (file, index) => (
-                                                  <div
-                                                    key={index}
-                                                    className="m-2"
-                                                  >
-                                                    <Button
-                                                      className="me-2"
-                                                      variant="secondary btn-rounded"
-                                                      onClick={() =>
-                                                        handleDownloadFile(
-                                                          file.fileAttach
-                                                        )
-                                                      }
-                                                    >
-                                                      <span className="btn-icon-start text-warning mr-2">
-                                                        <i className="fa fa-download" />
-                                                      </span>
-                                                      PDF {index + 1}
-                                                    </Button>
-                                                  </div>
-                                                )
-                                              )
-                                            ) : (
-                                              <span className="ml-2">
-                                                Chưa bổ sung file PDF
-                                              </span>
-                                            )}
-                                          </p>
-                                        </div>
-                                        <div>
-                                          <p
-                                            style={{
-                                              fontWeight: "bold",
-                                              fontSize: "24px",
-                                            }}
-                                          >
-                                            Thông tin liên hệ:
-                                          </p>
-                                          <p>
-                                            <span
-                                              style={{ fontWeight: "bold" }}
-                                            >
-                                              Họ và tên khách hàng:
-                                            </span>
-                                            {getCustomerName(
-                                              studentProfile.customerId
-                                            )}
-                                          </p>
-                                          <p>
-                                            <span
-                                              style={{ fontWeight: "bold" }}
-                                            >
-                                              Điện thoại:
-                                            </span>{" "}
-                                            {studentProfile.phone}
-                                          </p>
-                                          <p>
-                                            <span
-                                              style={{ fontWeight: "bold" }}
-                                            >
-                                              Địa chỉ:
-                                            </span>{" "}
-                                            {studentProfile.address}
-                                          </p>
-                                          <p>
-                                            <span
-                                              style={{ fontWeight: "bold" }}
-                                            >
-                                              Ngày tạo:
-                                            </span>{" "}
-                                            {studentProfile.createDate}
-                                          </p>
-                                          <p>
-                                            <span
-                                              style={{ fontWeight: "bold" }}
-                                            >
-                                              Nơi sinh:
-                                            </span>{" "}
-                                            {studentProfile.placeOfBirth}
-                                          </p>
-                                          <p>
-                                            <span
-                                              style={{ fontWeight: "bold" }}
-                                            >
-                                              Số CMND:
-                                            </span>{" "}
-                                            {studentProfile.nationalId}
-                                          </p>
-                                        </div>
-                                      </div>
-                                    )}
-                                  </Modal.Body>
 
-                                  <Modal.Footer></Modal.Footer>
-                                </Modal>
-                                ;
-                                <Modal
-                                  show={showCheckModal}
-                                  onHide={handleCloseCheckModal}
-                                  centered
-                                >
-                                  <Modal.Header closeButton>
-                                    <Modal.Title style={{ fontSize: "32px" }}>
-                                      {selectedApplication &&
-                                        selectedApplication.applyStage
-                                          ?.programStage.program.nameProgram}
-                                    </Modal.Title>
-                                  </Modal.Header>
-                                  <Modal.Body>
-                                    {selectedApplication && (
-                                      <Row>
-                                        <Col xs={12} md={6}>
-                                          <Card>
-                                            <Card.Body>
-                                              <Card.Title className="text-primary mb-3">
-                                                Trường đại học:{" "}
-                                                {
-                                                  selectedApplication.applyStage
-                                                    ?.programStage.program
-                                                    .university.universityName
-                                                }
-                                              </Card.Title>
-                                              <Card.Text className="mb-3">
-                                                <span className="font-weight-bold">
-                                                  Bang:
-                                                </span>{" "}
-                                                {
-                                                  selectedApplication.applyStage
-                                                    ?.programStage.program
-                                                    .university.state.stateName
-                                                }
-                                              </Card.Text>
-                                              <Card.Text className="mb-3">
-                                                <span className="font-weight-bold">
-                                                  Tầm nhìn và giá trị:{" "}
-                                                </span>{" "}
-                                                {
-                                                  selectedApplication.applyStage
-                                                    ?.programStage.program
-                                                    .university.slogan
-                                                }
-                                              </Card.Text>
-                                              <Card.Text className="mb-3">
-                                                <span className="font-weight-bold">
-                                                  {" "}
-                                                  Trang web
-                                                </span>{" "}
-                                                :{" "}
-                                                {
-                                                  selectedApplication.applyStage
-                                                    ?.programStage.program
-                                                    .university.website
-                                                }
-                                              </Card.Text>
-                                              <Image
-                                                src={
-                                                  selectedApplication.applyStage
-                                                    ?.programStage.program
-                                                    .university.img
-                                                }
-                                                alt="University Image"
-                                                fluid
-                                              />
-                                            </Card.Body>
-                                          </Card>
-                                        </Col>
-                                        <Col xs={12} md={6}>
-                                          <Card>
-                                            <Card.Body>
-                                              <Card.Title className="text-success mb-3">
-                                                Chương trình
-                                              </Card.Title>
-                                              <Card.Text className="mb-3">
-                                                <span className="font-weight-bold">
-                                                  Chuyên ngành:
-                                                </span>{" "}
-                                                {
-                                                  selectedApplication.applyStage
-                                                    ?.programStage.program.major
-                                                    .majorName
-                                                }
-                                              </Card.Text>
-                                              <Card.Text className="mb-3">
-                                                <span className="font-weight-bold">
-                                                  Trạng thái:
-                                                </span>{" "}
-                                                {
-                                                  selectedApplication.applyStage
-                                                    ?.programStage.program.status
-                                                }
-                                              </Card.Text>
-                                              <Card.Text className="mb-3">
-                                                <span className="font-weight-bold">
-                                                  Loại chương trình:
-                                                </span>{" "}
-                                                {
-                                                  selectedApplication.applyStage
-                                                    ?.programStage.program
-                                                    .programType.typeName
-                                                }
-                                              </Card.Text>
-                                              <Card.Text className="mb-3">
-                                                <span className="font-weight-bold">
-                                                  Mô tả:
-                                                </span>{" "}
-                                                {
-                                                  selectedApplication.applyStage
-                                                    ?.programStage.program
-                                                    .description
-                                                }
-                                              </Card.Text>
-                                              <Card.Text className="mb-3">
-                                                <span className="font-weight-bold">
-                                                  Thời gian:
-                                                </span>{" "}
-                                                {
-                                                  selectedApplication.applyStage
-                                                    ?.programStage.program
-                                                    .duration
-                                                }
-                                              </Card.Text>
-                                              <Card.Text className="mb-3">
-                                              <div className="d-flex justify-content-sm-around">                                           
-                                                <span className="font-weight-bold ">
-                                                  Trạng thái hồ sơ:
-                                                  
-                                                </span>{" "}
-                                                {/* {
-                                                  selectedApplication.applyStage
-                                                    ?.programStage?.stageName || 'N/A'
-                                                } */}
-                                                      <span className="font-weight-bold ">
-                                               Thanh toán:
-                                           
-                                                </span>{" "}
-                                                {selectedApplication.applyStage?.programStage.isPayment ? "Có" : "Không"}
-
-                                             </div>
-                                              </Card.Text>
-                                              <div className="d-flex  justify-content-sm-around">
-  <Form.Select
-    value={selectedProgramStageId}
-    onChange={handleProgramStageChange}
-    className="me-2"
-  >
-    <option value="">Chọn giai đoạn hồ sơ ứng tuyển chương trình</option>
-    {getProgramStagesByProgramId(
-      selectedApplication.applyStage?.programStage.program.programId
-    ).map((stage) => (
-      <option key={stage.programStageId} value={stage.programStageId}>
-        {/* {stage?.stageName || 'N/A'} */}
-      </option>
-    ))}
-  </Form.Select>
-  
-  {/* {selectedApplication && selectedApplication.applyStage.programStage.isPayment &&
-    programApplications.map((application) => (
-      application.programApplicationId === selectedApplication.programApplicationId &&
-      <button key={application.programApplicationId} onClick={() => handleCreateFee(application)}>
-        Tạo Phí
-      </button>
-    ))
-  } */}
-
-</div>
-                                            </Card.Body>
-                                          </Card>
-                                        </Col>
-                                      </Row>
-                                    )}
-                                  </Modal.Body>
-                                  <Modal.Footer>
-                                    <Button
-                                      variant="primary"
-                                  
-                                    >
-                                      Duyệt
-                                    </Button>
-                                  </Modal.Footer>
-                                </Modal>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
                 </div>
-              </div>
-            </div>
-          </Row>
-          {/* <Row>
-            <div className="col-lg-12">
-              <div className="card">
-                <div className="card-header d-flex justify-content-between align-items-center">
-                  <h4 className="card-title">Danh sách hồ sơ đã duyệt</h4>
-                </div>
-                <div className="card-body">
-                  <div className="table-responsive">
-                    {renderApprovedApplications()}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Row> */}
-        </>
-      )}
+                <Modal show={selectedProfileId} onHide={handleCloseModal} centered>
+                  <Modal.Header closeButton>
+                    <Modal.Title>Hồ sơ học sinh</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    {studentProfile && (
+                      <div>
+                        <p><strong>Name:</strong> {studentProfile.fullName}</p>
+                        <p><strong>Email:</strong> {studentProfile.email}</p>
+                        <p><strong>Date of Birth:</strong> {studentProfile.dateOfBirth}</p>
+                        <p><strong>Gender:</strong> {studentProfile.gender}</p>
+                      </div>
+                    )}
+                  </Modal.Body>
+                </Modal>
+              </Card.Body>
+            </Card>
+          </div>
+        </Row>
+ 
     </div>
   );
 };
