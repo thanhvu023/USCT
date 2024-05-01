@@ -5,14 +5,38 @@ export const getAllUniversity = createAsyncThunk(
   "/university/getAll",
   async (param, thunkAPI) => {
     try {
-      const res = await instance.get("/universities");
+      const universityName = param;
+      if (universityName) {
+        const res = await instance.get(`universities?name=${universityName}`);
+        return res.data;
+      } else {
+        const res = await instance.get("/universities");
+        return res.data;
+      }
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response);
+    }
+  }
+);
+export const getUniByName = createAsyncThunk(
+  "/program/getUniByName",
+  async (param, thunkAPI) => {
+    try {
+      console.log(param);
+      const res = await instance.get(`/universities?name=${param}`, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/problem+json; charset=utf-8",
+          Accept: "application/json",
+        },
+      });
+      console.log(res);
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response);
     }
   }
 );
-
 export const getUniversityById = createAsyncThunk(
   "/university/getById",
   async (param, thunkAPI) => {
@@ -27,11 +51,11 @@ export const getUniversityById = createAsyncThunk(
 );
 
 export const getUniversityTypeById = createAsyncThunk(
-  '/university/getUniversityType',
-  async(param, thunkAPI) => {
+  "/university/getUniversityType",
+  async (param, thunkAPI) => {
     try {
-      const res = await instance.get(`/university-types/${param}`)
-      return res.data
+      const res = await instance.get(`/university-types/${param}`);
+      return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response);
     }
@@ -39,8 +63,9 @@ export const getUniversityTypeById = createAsyncThunk(
 );
 
 export const getAllUniversityType = createAsyncThunk(
-  '/university/getAllUniversityType',
-  async (_, thunkAPI) => { // Tham số thứ hai không cần sử dụng, do đó sử dụng dấu gạch dưới (_)
+  "/university/getAllUniversityType",
+  async (_, thunkAPI) => {
+    // Tham số thứ hai không cần sử dụng, do đó sử dụng dấu gạch dưới (_)
     try {
       const res = await instance.get(`/university-types`);
       return res.data;
@@ -114,14 +139,14 @@ export const universitySlice = createSlice({
         state.loading = false;
         state.error = action.error.message;
       })
-      .addCase(getAllUniversityType.pending, (state) => { 
+      .addCase(getAllUniversityType.pending, (state) => {
         state.loading = true;
       })
-      .addCase(getAllUniversityType.fulfilled, (state, action) => { 
-        state.universityTypes = action.payload; 
+      .addCase(getAllUniversityType.fulfilled, (state, action) => {
+        state.universityTypes = action.payload;
         state.error = null;
       })
-      .addCase(getAllUniversityType.rejected, (state, action) => { 
+      .addCase(getAllUniversityType.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       })

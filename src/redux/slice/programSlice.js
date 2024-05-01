@@ -123,7 +123,9 @@ export const createProgramApplication = createAsyncThunk(
   "/program/createProgramApplication",
   async (param, thunkAPI) => {
     try {
+      console.log(param)
       const res = await instance.post("/program-applications", param);
+      console.log(res)
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response);
