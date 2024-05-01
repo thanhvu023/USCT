@@ -60,7 +60,6 @@ export const signup = createAsyncThunk(
     try {
       const signupData = param.formData;
       const navigate = param.navigate;
-      console.log(param);
       const res = await instance.post("account/signup", signupData);
 
       navigate("/sign-in");
@@ -128,14 +127,12 @@ export const createNotification = createAsyncThunk(
   "customer/createNotification",
   async (params, thunkAPI) => {
     try {
-      console.log(params);
       const res = await instance.post("/notification/", params, {
         headers: {
           // "Accept": "application/json, text/plain",
           "Content-Type": "application/json",
         },
       });
-      console.log(res);
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);

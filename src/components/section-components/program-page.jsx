@@ -119,41 +119,39 @@ function ProgramsPage() {
         <div className="row">
           <div className="col-lg-8 order-lg-12 m-0">
             <div className="row go-top">
-              {programs.map((program, index) => (
-                <div key={index} className="col-md-6" style={{height:'381px'}}>
-                  <div className="single-course-inner">
-                    <div className="thumb">
-                      <img src={program.img} alt="img" />
-                    </div>
-                    <div className="details">
-                      <div className="details-inner ">
-                        {/* <div className="emt-user">
-                            <span className="align-self-center">abc</span>
-                          </div> */}
-                        <h6>
-                          <Link to={`/program-details/${program.programId}`}>
-                            {program.nameProgram}
-                          </Link>
-                        </h6>
+              {programs
+                .filter((program) => program.status === "Active") // Filter programs with active status
+                .map((program, index) => (
+                  <div
+                    key={index}
+                    className="col-md-6"
+                    style={{ height: "381px" }}
+                  >
+                    <div className="single-course-inner">
+                      <div className="thumb">
+                        <img src={program.img} alt="img" />
                       </div>
-                      <div className="emt-course-meta">
-                        <div className="row">
-                          <div className="col-6">
-                            <div className="rating">
-                              <span>Lộ trình: {program.duration}</span>
+                      <div className="details">
+                        <div className="details-inner">
+                          <h6>
+                            <Link to={`/program-details/${program.programId}`}>
+                              {program.nameProgram}
+                            </Link>
+                          </h6>
+                        </div>
+                        <div className="emt-course-meta">
+                          <div className="row">
+                            <div className="col-6">
+                              <div className="rating">
+                                <span>Lộ trình: {program.duration}</span>
+                              </div>
                             </div>
                           </div>
-                          {/* <div className="col-6">
-                              <div className="price text-right">
-                                Học phí: <span>{program.tuition}$</span>
-                              </div>
-                            </div> */}
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
             {/* <nav className="td-page-navigation">
               <ul className="pagination">
