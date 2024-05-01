@@ -11,12 +11,14 @@ const PaymentResponsePage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
+  const [paymentInfo, setPaymentInfo] = useState({}); // Trạng thái mới để lưu thông tin thanh toán
 
   useEffect(() => {
     if (location.search) {
       handleVnPayResponse(location.search)
         .then(response => {
           console.log('Payment processing successful:', response);
+          setPaymentInfo(response);
           setLoading(false);
           setSuccess(true);
         })
@@ -64,18 +66,38 @@ const PaymentResponsePage = () => {
     <Card sx={{ maxWidth: 345, m: "auto", mt: 5 }}>
       <CardContent>
         {success && (
-          <Lottie options={defaultOptions} height={200} width={200} />
+          <>
+            <Lottie options={defaultOptions} height={200} width={200} />
+            <Typography variant="h5" gutterBottom component="div" color="primary" textAlign="center">
+              Thanh toán được xử lý thành công!
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              Số tiền: {paymentInfo.amount} VND
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              Phương thức: {paymentInfo.method}
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              Ghi chú: {paymentInfo.note || 'Không có ghi chú'}
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              Ngày thanh toán: {paymentInfo.paymentDate}
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              Mã giao dịch: {paymentInfo.transactionNo}
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              Trạng thái: {paymentInfo.status === 1 ? 'Thành công' : 'Không thành công'}
+            </Typography>
+          </>
         )}
-        <Typography variant="h5" gutterBottom component="div" color="primary" textAlign="center">
-        Thanh toán được xử lý thành công!       
-         </Typography>
         <Button variant="contained" color="primary" onClick={() => navigate(`/`)}>
-      Trở về trang chi tiết chương trình đã ứng tuyển !
-
+          Trở về trang chi tiết chương trình đã ứng tuyển !
         </Button>
       </CardContent>
     </Card>
   );
+  
 };
 
 export default PaymentResponsePage;
