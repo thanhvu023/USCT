@@ -334,100 +334,98 @@ const AllPrograms = () => {
         {loading ? (
           <div>Loading...</div>
         ) : showAllPrograms ? (
-     currentPrograms.map((program, index) => (
-    <div
-        className="col-lg-4 col-md-6 col-sm-6 col-12 mb-4"
-        key={index}
-       
-    >
-        <div className="card mx-4 mt-4"
-        style={{
-          boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)",
-          borderRadius: "10px",
-      }}>
-            <div className="card-body" style={{ height: "440px" }}>
-                <div className="d-flex justify-content-end">
+          currentPrograms.map((program, index) => (
+            <div className="col-lg-4 col-md-6 col-sm-6 col-12 mb-4" key={index}>
+              <div
+                className="card mx-4 mt-4"
+                style={{
+                  boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)",
+                  borderRadius: "10px",
+                }}
+              >
+                <div className="card-body" style={{ height: "440px" }}>
+                  <div className="d-flex justify-content-end">
                     <Dropdown>
-                        <Dropdown.Toggle
-                            as="button"
-                            className="btn  "
-                            type="button"
-                        >
-                            <span className="fs--1">...</span>
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu
-                            align="end"
-                            className="dropdown-menu dropdown-menu-right border py-0"
-                        >
-                            <div className="py-2">
-                                <button
-                                    onClick={() =>
-                                        handleShowEditModal(program.programId)
-                                    }
-                                    className="dropdown-item"
-                                >
-                                    Chỉnh sửa
-                                </button>
-                                <button
-                                    onClick={() => handleStatusChange(program)}
-                                    className="dropdown-item"
-                                >
-                                    {program.status === 'Active'
-                                        ? 'Deactivate'
-                                        : 'Activate'}
-                                </button>
-                            </div>
-                        </Dropdown.Menu>
+                      <Dropdown.Toggle
+                        as="button"
+                        className="btn  "
+                        type="button"
+                      >
+                        <span className="fs--1">...</span>
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu
+                        align="end"
+                        className="dropdown-menu dropdown-menu-right border py-0"
+                      >
+                        <div className="py-2">
+                          <button
+                            onClick={() =>
+                              handleShowEditModal(program.programId)
+                            }
+                            className="dropdown-item"
+                          >
+                            Chỉnh sửa
+                          </button>
+                          <button
+                            onClick={() => handleStatusChange(program)}
+                            className="dropdown-item"
+                          >
+                            {program.status === "Active"
+                              ? "Deactivate"
+                              : "Activate"}
+                          </button>
+                        </div>
+                      </Dropdown.Menu>
                     </Dropdown>
-                </div>
+                  </div>
 
-                <div className="">
-                <Link
+                  <div className="">
+                    {/* <div>
+                      <img
+                        src={program.img}
+                        style={{ height: "200px", width: "250px" }}
+                        alt="img"
+                        className="img-fluid"
+                      />
+                    </div> */}
+                    <Link
                       className="mt-4 mb-1"
                       onClick={() => handleShowDetailModal(program.programId)}
                       style={{ fontSize: "24px", fontWeight: "700" }}
                     >
                       {program.nameProgram}
                     </Link>
-                    {/* <img
-                      src={program.img}
-                      style={{height:'220px',width:'350px'}}
-                      alt="img"
-                      className="img-fluid"
-                    /> */}
+
                     <p className="text-muted">
-                        {getTypeName(program.programTypeId)}
+                      {getTypeName(program.programTypeId)}
                     </p>
                     <ul className="list-group mb-3 list-group-flush">
-                        <li className="list-group-item px-0 d-flex justify-content-between">
-                            <span
-                                className="mb-0"
-                                style={{ fontWeight: "400" }}
-                            >
-                                Chuyên ngành:
-                            </span>
-                            <strong style={{ fontSize: "14px" }}>
-                                {getMajorName(program.majorId)}
-                            </strong>
-                        </li>
+                      <li className="list-group-item px-0 d-flex justify-content-between">
+                        <span className="mb-0" style={{ fontWeight: "400" }}>
+                          Chuyên ngành:
+                        </span>
+                        <strong style={{ fontSize: "14px" }}>
+                          {getMajorName(program.majorId)}
+                        </strong>
+                      </li>
 
-                        <li className="list-group-item px-0 d-flex justify-content-between">
-                            <span className="mb-0">Ngày tạo :</span>
-                            <strong>{program.createDate}</strong>
-                        </li>
-                        <li className="list-group-item px-0 d-flex justify-content-between">
-                            <span className="mb-0">Trạng thái :</span>
-                            <strong
-                                style={{
-                                    color:
-                                        program.status === "Active"
-                                            ? "#28a745"
-                                            : "#dc3545",
-                                }}
-                            >
-                                {program.status}
-                            </strong>
-                        </li>
+                      <li className="list-group-item px-0 d-flex justify-content-between">
+                        <span className="mb-0">Ngày tạo :</span>
+                        <strong>{program.createDate}</strong>
+                      </li>
+                      <li className="list-group-item px-0 d-flex justify-content-between">
+                        <span className="mb-0">Trạng thái :</span>
+                        <strong
+                          style={{
+                            color:
+                              program.status === "Active"
+                                ? "#28a745"
+                                : "#dc3545",
+                          }}
+                        >
+                          {program.status}
+                        </strong>
+                      </li>
                     </ul>
                     {/* <button
                       className="btn btn-primary btn-rounded mt-3 px-4"
@@ -435,24 +433,27 @@ const AllPrograms = () => {
                     >
                       Xem thêm
                     </button> */}
+                  </div>
                 </div>
+              </div>
             </div>
-        </div>
-    </div>
-))
-
+          ))
         ) : (
           currentPrograms.map((program, index) => (
             <div
-            className="col-lg-4 col-md-6 col-sm-6 col-12 mb-4"
-            key={index}
-            onClick={() => handleShowDetailModal(program.programId)}
-            style={{ cursor: 'pointer' }}
-        >              <div className="card mx-4 mt-4"
-        style={{
-          boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)",
-          borderRadius: "10px",
-      }}>
+              className="col-lg-4 col-md-6 col-sm-6 col-12 mb-4"
+              key={index}
+              onClick={() => handleShowDetailModal(program.programId)}
+              style={{ cursor: "pointer" }}
+            >
+              {" "}
+              <div
+                className="card mx-4 mt-4"
+                style={{
+                  boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)",
+                  borderRadius: "10px",
+                }}
+              >
                 <div className="card-body" style={{ height: "440px" }}>
                   <div className="d-flex justify-content-end">
                     <Dropdown>
@@ -514,12 +515,18 @@ const AllPrograms = () => {
                         <strong>{program.createDate}</strong>
                       </li>
                       <li className="list-group-item px-0 d-flex justify-content-between">
-    <span className="mb-0">Trạng thái :</span>
-    <strong style={{ color: program.status === 'Active' ? '#28a745' : '#dc3545' }}>
-        {program.status}
-    </strong>
-</li>
-
+                        <span className="mb-0">Trạng thái :</span>
+                        <strong
+                          style={{
+                            color:
+                              program.status === "Active"
+                                ? "#28a745"
+                                : "#dc3545",
+                          }}
+                        >
+                          {program.status}
+                        </strong>
+                      </li>
                     </ul>
                     {/* <button
                       className="btn btn-primary btn-rounded mt-3 px-4"

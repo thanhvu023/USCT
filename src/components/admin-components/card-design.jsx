@@ -12,10 +12,10 @@ const ProgressCard = (props) => {
         <div className="card-body">
             <h4 className="card-title">{props.title}</h4>
             <h3 className="fw-bold">{props.number}</h3>
-            <div className="progress mb-2">
+            {/* <div className="progress mb-2">
                 <div className={`progress-bar progress-animated`} style={style}></div>
-            </div>
-            <small>{props.percent} Increase in 20 Days</small>
+            </div> */}
+            {/* <small>{props.percent} Increase in 20 Days</small> */}
         </div>  
     )
 }
