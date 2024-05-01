@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { signup } from "../../redux/slice/authSlice";
+import { resetError, signup } from "../../redux/slice/authSlice";
 import { Backdrop, CircularProgress } from "@mui/material";
 
 function SignUp() {
@@ -23,6 +23,7 @@ function SignUp() {
   const [errors, setErrors] = useState({});
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const loading = useSelector((state) => state?.auth?.loading);
+  dispatch(resetError());
   const validateForm = () => {
     const newErrors = {};
 
@@ -235,10 +236,10 @@ function SignUp() {
                       onChange={handleInputChange}
                     />
                     {errors.address && (
-                    <p className="text-center text-danger mt-1">
-                      {errors.address}
-                    </p>
-                  )}
+                      <p className="text-center text-danger mt-1">
+                        {errors.address}
+                      </p>
+                    )}
                   </div>
                 </div>
                 <div className="col-12 mb-4">
@@ -279,11 +280,11 @@ function SignUp() {
                 </div>
               </div>
             </form>
-            {showSuccessAlert && (
-              <div className="alert alert-success" role="alert">
-                Tạo tài khoản thành công!
+            {/* {signUpError && (
+              <div className="alert alert-warn" role="alert">
+                Đã có tài khoản tạo bằng gmail này!
               </div>
-            )}
+            )} */}
           </div>
         </div>
       </div>

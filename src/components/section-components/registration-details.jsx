@@ -14,6 +14,7 @@ const RegistrationDetail = () => {
   const registration = useSelector(
     (state) => state.registration.registrationById
   );
+  console.log(registration)
   const loading = useSelector((state)=>state?.registration?.loading)
   const token = useSelector((state) => state.auth.token);
   const userId = jwtDecode(token).UserId;
@@ -56,15 +57,15 @@ const RegistrationDetail = () => {
                           <div className="text-center p-3 overlay-box">
                             <div className="profile-photo">
                               <img
-                                src={publicUrl + "assets/img/author/pic2.jpg"}
+                                src={userDetail.img}
                                 alt="img"
                                 className="bg-info rounded-circle mb-4"
                                 style={{ width: "100px", height: "100px" }}
                               />
                             </div>
-                            <h3 className="mt-3 mb-1 text-black">
+                            {/* <h3 className="mt-3 mb-1 text-black">
                               {registration.fullName}
-                            </h3>
+                            </h3> */}
                             <p className="text-black mb-0">
                               {userDetail.fullName}
                             </p>

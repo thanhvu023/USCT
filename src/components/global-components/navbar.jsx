@@ -20,7 +20,7 @@ import { logoutStudent } from "../../redux/slice/studentSlice";
 function Navbar() {
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorel] = useState(null);
-  const [checkNotification, setCheckNotification] = useState([]);
+  // const [checkNotification, setCheckNotification] = useState([]);
 
   const handleOpen = (e) => {
     document.body.classList.add("notification-open");
@@ -149,10 +149,20 @@ function Navbar() {
                 <Link to="/">Trang chủ</Link>
               </li>
               <li className="menu-item">
-                <Link to="/program">Các Chương trình</Link>
+                <Link
+                  to="/program"
+                  onClick={() => checkTokenAndRedirect("/program")}
+                >
+                  Các Chương trình
+                </Link>
               </li>
               <li className="menu-item">
-                <Link to="/university">Trường học</Link>
+                <Link
+                  to="/university"
+                  onClick={() => checkTokenAndRedirect("/university")}
+                >
+                  Trường học
+                </Link>
               </li>
               <li>
                 <Link
@@ -177,9 +187,7 @@ function Navbar() {
                 <Link className="btn btn-base" to="/sign-up">
                   Đăng ký
                 </Link>
-                <a className="search-bar" href="#">
-                  <i className="fa fa-search" />
-                </a>
+               
               </>
             )}
             {token && (
@@ -193,20 +201,22 @@ function Navbar() {
                     }
                   >
                     <IconButton color="primary" onClick={handleOpen}>
-                      <Badge badgeContent={notification?.length} color="primary">
+                      <Badge
+                        badgeContent={notification?.length}
+                        color="primary"
+                      >
                         <NotificationsIcon />
                       </Badge>
                     </IconButton>
                   </Tooltip>
-                  {checkNotification && checkNotification.length > 0 && (
-  <BasicMenu
-    open={open}
-    anchorEl={anchorEl}
-    handleClose={handleClose}
-    menuItems={notification}
-  />
-)}
-
+                  {/* {checkNotification && checkNotification.length > 0 && ( */}
+                  <BasicMenu
+                    open={open}
+                    anchorEl={anchorEl}
+                    handleClose={handleClose}
+                    menuItems={notification}
+                  />
+                  {/* )} */}
                 </div>
                 <Dropdown className="nav-item header-profile">
                   <Dropdown.Toggle
@@ -250,9 +260,7 @@ function Navbar() {
                   </Dropdown.Menu>
                 </Dropdown>
 
-                <a className="search-bar" href="#">
-                  <i className="fa fa-search" />
-                </a>
+                
               </div>
             )}
           </div>

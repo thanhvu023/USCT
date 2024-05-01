@@ -8,7 +8,7 @@ const ConfirmPasswordPage = () => {
   return (
     <div>
       <Navbar />
-      <PageHeader headertitle="Reset Password" />
+      <PageHeader headertitle="Đổi mật khẩu" />
       <ConfirmPassword/>
       <Footer />
     </div>

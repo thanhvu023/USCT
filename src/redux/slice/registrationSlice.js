@@ -163,5 +163,8 @@ export const registrationSlice = createSlice({
   },
 });
 
-const { reducer: registrationReducer,actions:{resetRegistration} } = registrationSlice;
-export { registrationReducer as default ,resetRegistration};
+const {
+  reducer: registrationReducer,
+  actions: { resetRegistration },
+} = registrationSlice;
+export { registrationReducer as default, resetRegistration };

@@ -54,13 +54,13 @@ function UniversityDetailPage() {
     speed: 500,
     slidesToShow: 3,
     slidesToScroll: 1,
-    autoplay : true,
-    autoplaySpeed : 3000
+    autoplay: true,
+    autoplaySpeed: 3000,
   };
   return (
     <div className="main-blog-area pd-top-120 pd-bottom-90">
       <div className="container">
-      <Backdrop
+        <Backdrop
           sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={loading}
         >
@@ -99,31 +99,30 @@ function UniversityDetailPage() {
         </div>
         <div className="course-area pd-top-90">
           <h4 className="mb-4">Những chương trình liên quan đến trường</h4>
-          <Slider {...settings}>
-            {programByUniId.map((program, index) => (
-              <div key={index} className="col-lg-12 col-md-6">
-                <div className="single-course-inner">
-                  <div className="thumb">
-                    <img src={program.img} alt="img" />
-                  </div>
-                  <div className="details">
-                    <div className="details-inner">
-                      <h6 className="go-top">
-                        <Link to={`/program-details/${program.programId}`}>
-                          {program.nameProgram}
-                        </Link>
-                      </h6>
+          {programByUniId.length > 0 ? (
+            <Slider {...settings}>
+              {programByUniId.map((program, index) => (
+                <div key={index} className="col-lg-12 col-md-6">
+                  <div className="single-course-inner">
+                    <div className="thumb">
+                      <img src={program.img} alt="img" />
                     </div>
-                    {/* <div className="emt-course-meta">
-                      <div className="price text-right">
-                        Mã Chuyên Ngành: <span>{majorDetail.majorName}</span>
+                    <div className="details">
+                      <div className="details-inner">
+                        <h6 className="go-top">
+                          <Link to={`/program-details/${program.programId}`}>
+                            {program.nameProgram}
+                          </Link>
+                        </h6>
                       </div>
-                    </div> */}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </Slider>
+              ))}
+            </Slider>
+          ) : (
+            <p>Hiện không có chương trình liên quan đến trường.</p>
+          )}
         </div>
       </div>
     </div>

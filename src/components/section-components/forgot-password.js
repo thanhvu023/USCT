@@ -3,6 +3,7 @@ import { Alert } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { login, sendEmailForgotPassword } from "../../redux/slice/authSlice";
+import Swal from "sweetalert2";
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -13,23 +14,34 @@ function ForgotPassword() {
   const loading = useSelector((state) => state.auth.loading);
   const errMsg = useSelector((state) => state.auth.error?.message);
   const isError = useSelector((state) => state.auth.error?.name);
-
+  const validateEmail = (email) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (email.trim() === "" ) {
-      setError("Bạn cần phải điền đầy đủ thông tin!");
+    if (email.trim() === "") {
+      setError("Nhập gmail bạn đã đăng ký!");
       return;
     }
-   
-    dispatch(sendEmailForgotPassword(email))
+    if (!validateEmail(email)) {
+      setError("Vui lòng nhập đúng định dạng email!");
+      return;
+    }
+
+    dispatch(sendEmailForgotPassword(email));
+    Swal.fire({
+      icon: "success",
+      title: "Đã gửi link vào gmail của bạn!",
+      showConfirmButton: false,
+      timer: 1500,
+    });
   };
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
     setError("");
   };
-
-
 
   useEffect(() => {
     if (isError === "Error" && errMsg) {
@@ -57,6 +69,9 @@ function ForgotPassword() {
                       onChange={handleEmailChange}
                       placeholder="Email"
                     />
+                    {error && (
+                      <p className="text-center text-danger mt-1">{error}</p>
+                    )}
                   </div>
                 </div>
 
