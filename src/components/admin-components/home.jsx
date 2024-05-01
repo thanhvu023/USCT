@@ -23,11 +23,18 @@ const AdminHome = ({ handleAllConsultantClick }) => {
   const numberOfStudentProfile = useSelector(
     (state) => state?.student?.studentProfile.length
   );
-  const payments = useSelector((state)=>state.payment.allPayments)
+  const payments = useSelector((state) => state.payment.allPayments);
 
-  const numberOfRegistration = useSelector((state)=>state?.registration?.registrationForms.length)
-  const numberOfProgram = useSelector((state)=>state?.programApplication?.programApplications.length)
-  const totalAmount = payments.reduce((total, payment) => total + payment.amount, 0);
+  const numberOfRegistration = useSelector(
+    (state) => state?.registration?.registrationForms.length
+  );
+  const numberOfProgram = useSelector(
+    (state) => state?.programApplication?.programApplications.length
+  );
+  const totalAmount = payments.reduce(
+    (total, payment) => total + payment.amount,
+    0
+  );
 
   const tabelData = [
     {
@@ -92,8 +99,12 @@ const AdminHome = ({ handleAllConsultantClick }) => {
       number: numberOfRegistration,
       color: "primary",
     },
-    { title: "Tổng số hồ sơ du học", number: numberOfProgram, color: "primary" },
-    { title: "Lợi Nhuận", number:totalAmount, color: "primary" },
+    {
+      title: "Tổng số hồ sơ du học",
+      number: numberOfProgram,
+      color: "primary",
+    },
+    { title: "Lợi Nhuận", number: totalAmount, color: "primary" },
   ];
 
   const studentTable = [
@@ -167,8 +178,8 @@ const AdminHome = ({ handleAllConsultantClick }) => {
     dispatch(getProgramById());
     dispatch(getAllProgramStages());
     dispatch(getAllStage());
-    dispatch(getRegistration())
-    dispatch(getAllPayments())
+    dispatch(getRegistration());
+    dispatch(getAllPayments());
   }, []);
 
   useEffect(() => {
