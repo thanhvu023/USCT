@@ -6,7 +6,7 @@ import {
   getUserById,
   logoutUser,
 } from "../../redux/slice/authSlice";
-import { logoutStudent } from "../../redux/slice/studentSice";
+
 import { Dropdown } from "react-bootstrap";
 import { logoutProgram } from "../../redux/slice/programSlice";
 import Swal from "sweetalert2"; // Import Swal
@@ -15,10 +15,8 @@ import { generateToken, messaging } from "../FirebaseImage/Config";
 import { onMessage } from "firebase/messaging";
 import { Badge, IconButton, Tooltip } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import Button from "@mui/material/Button";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
 import BasicMenu from "./basicMenu";
+import { logoutStudent } from "../../redux/slice/studentSlice";
 
 function Navbar() {
   const [open, setOpen] = useState(false);
@@ -28,6 +26,8 @@ function Navbar() {
     setAnchorel(e.target);
     setOpen(true);
   };
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleClose = (e) => {
     document.body.classList.remove("notification-open");
     setOpen(false);
@@ -37,19 +37,18 @@ function Navbar() {
   useEffect(() => {
     if (userId) {
       dispatch(getUserById(userId));
-      dispatch(getNotification(userId));
     }
   }, [userId]);
   useEffect(() => {
     generateToken();
-    onMessage(messaging, (payload) => {
-      console.log(payload.notification.body);
-    });
+    onMessage(messaging, (payload) => {});
   }, []);
+  useEffect(() => {
+    dispatch(getNotification(userId));
+  }, [userId]);
 
   const userDetail = useSelector((state) => state?.auth?.userById);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+
   const handleLogout = () => {
     dispatch(logoutUser());
     dispatch(logoutStudent());

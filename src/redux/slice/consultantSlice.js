@@ -54,8 +54,7 @@ export const getConsultantBySpecializeId = createAsyncThunk(
     try {
       const res = await instance.get(`/account/consultants?specialize=${param}
       `);
-      console.log(param);
-      console.log(res.data);
+    
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response);
@@ -67,7 +66,6 @@ export const updateConsultantById = createAsyncThunk(
   "consultant/updateByConsultantId",
   async (params, thunkAPI) => {
     const { userId, userData } = params;
-    console.log(params);
     try {
       const res = await instance.put(`/account/consultant/${userId}`, {
         ...userData,

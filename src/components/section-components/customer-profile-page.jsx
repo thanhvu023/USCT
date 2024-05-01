@@ -12,15 +12,15 @@ import { imageDb } from "../FirebaseImage/Config";
 const CustomerProfilePage = () => {
   let publicUrl = process.env.PUBLIC_URL + "/";
 
-  const token = useSelector((state) => state.auth.token);
+  const token = useSelector((state) => state?.auth?.token);
   const userId = jwtDecode(token).UserId;
-  const userDetail = useSelector((state) => state.auth.userById) || {};
+  const userDetail = useSelector((state) => state?.auth?.userById) || {};
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getUserById(userId));
-  }, [userId]);
-  const loadingPage = useSelector((state) => state?.auth?.loading);
+  }, [userId, dispatch]);
 
+  const loadingPage = useSelector((state) => state?.auth?.loading);
   const [fullName, setFullName] = useState(userDetail.fullName || "");
   const [phone, setPhone] = useState(userDetail.phone || "");
   const [address, setAddress] = useState(userDetail.address || "");
@@ -41,7 +41,7 @@ const CustomerProfilePage = () => {
         setLoading(true);
         await uploadBytes(imgRef, selectedFile);
         const imageUrl = await getDownloadURL(imgRef);
-        setImageSrc(imageUrl);       
+        setImageSrc(imageUrl);
         setLoading(false);
       } catch (error) {
         console.error(`Error uploading ${selectedFile.name}:`, error);
@@ -61,10 +61,6 @@ const CustomerProfilePage = () => {
       newErrors.phone = "Số điện thoại không hợp lệ!";
     }
 
-    if (email.trim() === "") {
-      newErrors.email = "Email không được để trống!";
-    }
-
     if (address.trim() === "") {
       newErrors.address = "Địa chỉ không được để trống!";
     }
@@ -73,18 +69,21 @@ const CustomerProfilePage = () => {
     } else {
       // Calculate age based on date of birth
       const currentDate = new Date();
-      const dob = new Date(userDetail.dateOfBirth);
+      const dob = new Date(dateOfBirth);
       let age = currentDate.getFullYear() - dob.getFullYear();
       const monthDiff = currentDate.getMonth() - dob.getMonth();
-      if (monthDiff < 0 || (monthDiff === 0 && currentDate.getDate() < dob.getDate())) {
+      if (
+        monthDiff < 0 ||
+        (monthDiff === 0 && currentDate.getDate() < dob.getDate())
+      ) {
         age--;
-        console.log(age)
+        console.log(age);
       }
       // Check if age is less than 16
       if (age < 16) {
         newErrors.dateOfBirth = "Bạn phải đủ 16 tuổi để đăng ký!";
       }
-      if (age < 0) {
+      if (age < 0 || age > 60) {
         newErrors.dateOfBirth = "Ngày sinh không hợp lệ!";
       }
     }
@@ -129,7 +128,7 @@ const CustomerProfilePage = () => {
       setErrors(newErrors);
       return;
     }
-    
+
     // Cập nhật thông tin và hiển thị thông báo thành công
     setFullName(updatedData.userData.fullName);
     setPhone(updatedData.userData.phone);
@@ -137,7 +136,7 @@ const CustomerProfilePage = () => {
     setDateOfBirth(updatedData.userData.dateOfBirth);
     setGender(updatedData.userData.gender);
     setImageSrc(updatedData.userData.img);
-    
+
     Swal.fire({
       icon: "success",
       title: "Cập nhật hồ sơ thành công!",
@@ -285,16 +284,16 @@ const CustomerProfilePage = () => {
                                   <span>{userDetail.fullName}</span>
                                 </div>
                               </div>
-                              <div className="row mb-2">
+                              {/* <div className="row mb-2">
                                 <div className="col-3">
                                   <h5 className="f-w-500">
                                     Căn cước công dân :
                                   </h5>
                                 </div>
                                 <div className="col-9 ">
-                                  <span>4890327148921</span>
+                                  <span>12312312312</span>
                                 </div>
-                              </div>
+                              </div> */}
                               <div className="row mb-2">
                                 <div className="col-3">
                                   <h5 className="f-w-500">Giới tính : </h5>
@@ -355,6 +354,11 @@ const CustomerProfilePage = () => {
                                           setUpdateMessage("");
                                         }}
                                       />
+                                      {errors.fullName && (
+                                        <p className="text-center text-danger mt-1">
+                                          {errors.fullName}
+                                        </p>
+                                      )}
                                     </div>
                                     <div className="form-group mb-3 col-md-6">
                                       <label className="form-label">
@@ -401,6 +405,11 @@ const CustomerProfilePage = () => {
                                         <option value="female">Nữ</option>
                                         <option value="other">Khác</option>
                                       </select>
+                                      {errors.gender && (
+                                        <p className="text-center text-danger mt-1">
+                                          {errors.gender}
+                                        </p>
+                                      )}
                                     </div>
                                   </div>
 
@@ -415,21 +424,18 @@ const CustomerProfilePage = () => {
                                         value={dateOfBirth}
                                         onChange={(e) => {
                                           setUpdateMessage("");
-                                          console.log(
-                                            "New date value:",
-                                            e.target.value
-                                          ); // Debugging: Log the new date value
                                           setDateOfBirth(e.target.value); // Update dateOfBirth state variable
-                                          console.log(
-                                            "Updated dateOfBirth state:",
-                                            dateOfBirth
-                                          ); // Debugging: Log the updated dateOfBirth state
                                           setErrors({
                                             ...errors,
                                             dateOfBirth: "",
                                           }); // Reset any errors related to dateOfBirth
                                         }}
                                       />
+                                      {errors.dateOfBirth && (
+                                        <p className="text-center text-danger mt-1">
+                                          {errors.dateOfBirth}
+                                        </p>
+                                      )}
                                     </div>
 
                                     <div className="form-group mb-3 col-md-6">
@@ -447,6 +453,11 @@ const CustomerProfilePage = () => {
                                           setPhone(e.target.value);
                                         }}
                                       />
+                                      {errors.phone && (
+                                        <p className="text-center text-danger mt-1">
+                                          {errors.phone}
+                                        </p>
+                                      )}
                                     </div>
                                   </div>
 
@@ -476,6 +487,11 @@ const CustomerProfilePage = () => {
                                           setUpdateMessage("");
                                         }}
                                       />
+                                      {errors.address && (
+                                        <p className="text-center text-danger mt-1">
+                                          {errors.address}
+                                        </p>
+                                      )}
                                     </div>
                                   </div>
 

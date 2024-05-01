@@ -1,40 +1,36 @@
+import { Backdrop, CircularProgress } from "@mui/material";
+import { getDownloadURL, ref } from "firebase/storage";
+import jwtDecode from "jwt-decode";
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { OverlayTrigger, Popover } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Select from "react-select";
 import Slider from "react-slick";
-import { Popover, OverlayTrigger } from 'react-bootstrap';
+import Swal from "sweetalert2";
+import {
+  createNotification,
+  getNotification,
+} from "../../redux/slice/authSlice";
+import { getMajorById } from "../../redux/slice/majorSlice";
 import {
   createProgramApplication,
-  getAllProgram,
   getProgramById,
   getProgramByProgramType,
   getProgramByUniId,
-  // getProgramByUniId,
+  getProgramTypes
 } from "../../redux/slice/programSlice";
-import { useParams } from "react-router-dom";
-import { getUniversityById } from "../../redux/slice/universitySlice";
-import { getStateById } from "../../redux/slice/stateSlice";
 import { getSemesterById } from "../../redux/slice/semesterSlice";
-import { getMajorById } from "../../redux/slice/majorSlice";
+import { getStateById } from "../../redux/slice/stateSlice";
 import {
   getStudentProfileByCustomerId,
   getStudentProfileById,
   resetStudent,
 } from "../../redux/slice/studentSlice";
-import { getProgramTypes } from "../../redux/slice/programSlice";
-import jwtDecode from "jwt-decode";
-import { getDownloadURL, ref } from "firebase/storage";
+import { getUniversityById } from "../../redux/slice/universitySlice";
 import { imageDb } from "../FirebaseImage/Config";
-import { Backdrop, CircularProgress } from "@mui/material";
-import Swal from "sweetalert2";
-
-
 
 function ProgramDetailPage() {
-  let publicUrl = process.env.PUBLIC_URL + "/";
   const [showModal, setShowModal] = useState(false);
 
   const dispatch = useDispatch();
@@ -48,7 +44,7 @@ function ProgramDetailPage() {
   };
 
   const handleOpenModal = () => {
-    dispatch(resetStdeunt());
+    dispatch(resetStudent());
     setShowModal(true);
   };
 
@@ -74,14 +70,11 @@ function ProgramDetailPage() {
     (state) => state?.program?.programById?.semesterId
   );
   const semesterDetails = useSelector((state) => state.semester.semesterById);
-// console.log("semesterDetails",semesterDetails)
   const universityIdDetail = useSelector(
     (state) => state?.university?.universityById
   );
 
   const majorId = useSelector((state) => state?.program?.programById?.majorId);
-
-  console.log("majorId",majorId)
 
   const programByType = useSelector(
     (state) => state?.program?.programsByProgramType
@@ -96,7 +89,6 @@ function ProgramDetailPage() {
   const majorDetail = useSelector((state) => state?.major?.majorById);
   const programType = useSelector((state) => state?.program?.programTypes);
 
-  // console.log("programs:",programs)
   const profileStudent = useSelector(
     (state) => state?.student?.studentProfileByCustomerId
   );
@@ -165,59 +157,64 @@ function ProgramDetailPage() {
   };
   const getMajorDescriptionByMajorId = (majorId) => {
     if (!majorDetail) return "";
-  
+
     if (majorDetail.majorId === majorId) {
       return majorDetail.description;
     }
-  
+
     return "";
   };
-  
-
-
 
   const majorDetailsPopover = (
     <Popover id="program-type-popover">
-      <Popover.Header as="h4">  {majorDetail.majorName}</Popover.Header>
+      <Popover.Header as="h4"> {majorDetail.majorName}</Popover.Header>
       <Popover.Body>
-     {getMajorDescriptionByMajorId(majorDetail.majorId)}
-  
-  
+        {getMajorDescriptionByMajorId(majorDetail.majorId)}
       </Popover.Body>
     </Popover>
   );
-  
-  
-const programTypePopover = (
-  <Popover id="program-type-popover">
-    <Popover.Header as="h4">  {getTypeName(programDetail.programTypeId)}
-?</Popover.Header>
-    <Popover.Body>
-    {getDescriptionByProgramTypeId(programDetail.programTypeId)}
 
+  const programTypePopover = (
+    <Popover id="program-type-popover">
+      <Popover.Header as="h4">
+        {getTypeName(programDetail.programTypeId)}?
+      </Popover.Header>
+      <Popover.Body>
+        {getDescriptionByProgramTypeId(programDetail.programTypeId)}
+      </Popover.Body>
+    </Popover>
+  );
 
-    </Popover.Body>
-  </Popover>
-);
-
-  
-const uniDetailsPopover = (
-  <Popover id="program-type-popover">
-    <Popover.Header as="h4">Thông tin {universityIdDetail?.universityName} </Popover.Header>
-    <Popover.Body>
-  <div style={{ overflow: 'auto' }}>
-    <img src={universityIdDetail?.img} alt="University Logo" style={{ width: '100px', float: 'left', marginRight: '10px', marginBottom: '10px' }}/>
-    <p>{universityIdDetail?.description}</p>
-    <div style={{ clear: 'both' }}>
-      <Link className="read-more-text" to={`/university-details/${universityIdDetail?.universityId}`}>
-        XEM THÊM <i className="fa fa-angle-right" />
-      </Link>
-    </div>
-  </div>
-</Popover.Body>
-
-  </Popover>
-);
+  const uniDetailsPopover = (
+    <Popover id="program-type-popover">
+      <Popover.Header as="h4">
+        Thông tin {universityIdDetail?.universityName}
+      </Popover.Header>
+      <Popover.Body>
+        <div style={{ overflow: "auto" }}>
+          <img
+            src={universityIdDetail?.img}
+            alt="University Logo"
+            style={{
+              width: "100px",
+              float: "left",
+              marginRight: "10px",
+              marginBottom: "10px",
+            }}
+          />
+          <p>{universityIdDetail?.description}</p>
+          <div style={{ clear: "both" }}>
+            <Link
+              className="read-more-text"
+              to={`/university-details/${universityIdDetail?.universityId}`}
+            >
+              XEM THÊM <i className="fa fa-angle-right" />
+            </Link>
+          </div>
+        </div>
+      </Popover.Body>
+    </Popover>
+  );
 
   const [formData, setFormData] = useState({
     studentProfileId: undefined,
@@ -244,11 +241,19 @@ const uniDetailsPopover = (
   const handleSubmitProgramApplication = (e) => {
     e.preventDefault();
     if (formData.studentProfileId) {
-      console.log(formData);
       dispatch(createProgramApplication(formData));
+      const programId = programById;
+      dispatch(createNotification({ programId, customerId }));
       Swal.fire({
         icon: "success",
         title: "Nộp hồ sơ thành công!",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }else{
+      Swal.fire({
+        icon: "warning",
+        title: "Chọn hồ sơ học sinh!",
         showConfirmButton: false,
         timer: 1500,
       });
@@ -260,6 +265,7 @@ const uniDetailsPopover = (
       behavior: "smooth",
     });
   };
+  dispatch(getNotification(customerId));
 
   const downloadFileFromStorage = async (fileName) => {
     try {
@@ -312,7 +318,6 @@ const uniDetailsPopover = (
                         Sau đây là những lợi ích lớn lao từ việc thực tập ở nước
                         ngoài:
                       </p> */}
-                    
                     </div>
                   </div>
                 </div>
@@ -353,17 +358,24 @@ const uniDetailsPopover = (
                     <li>
                       <i className="fa fa-university" />
                       <span>Trường Đại học:</span>
-                      <OverlayTrigger 
-                      trigger="click"
-                      placement="right"
-                      overlay={uniDetailsPopover}
-                      rootClose>
-                      <button className="p-0 border-0 bg-transparent" style={{ textDecoration: 'none', color: 'inherit', boxShadow: 'none' }} type="button">
-                      {universityIdDetail?.universityName}
-
-</button>
-
-    </OverlayTrigger>
+                      <OverlayTrigger
+                        trigger="click"
+                        placement="right"
+                        overlay={uniDetailsPopover}
+                        rootClose
+                      >
+                        <button
+                          className="p-0 border-0 bg-transparent"
+                          style={{
+                            textDecoration: "none",
+                            color: "inherit",
+                            boxShadow: "none",
+                          }}
+                          type="button"
+                        >
+                          {universityIdDetail?.universityName}
+                        </button>
+                      </OverlayTrigger>
                     </li>
                     <li>
                       <i className="fa fa-map-marker" />
@@ -372,17 +384,24 @@ const uniDetailsPopover = (
                     <li>
                       <i className="fa fa-laptop" />
                       <span>Chuyên ngành chính:</span>
-                       <OverlayTrigger 
-                      trigger="click"
-                      placement="right"
-                      overlay={majorDetailsPopover}
-                      rootClose>
-                      <button className="p-0 border-0 bg-transparent" style={{ textDecoration: 'none', color: 'inherit', boxShadow: 'none' }} type="button">
-                      {majorDetail.majorName}
-
-</button>
-
-    </OverlayTrigger>
+                      <OverlayTrigger
+                        trigger="click"
+                        placement="right"
+                        overlay={majorDetailsPopover}
+                        rootClose
+                      >
+                        <button
+                          className="p-0 border-0 bg-transparent"
+                          style={{
+                            textDecoration: "none",
+                            color: "inherit",
+                            boxShadow: "none",
+                          }}
+                          type="button"
+                        >
+                          {majorDetail.majorName}
+                        </button>
+                      </OverlayTrigger>
                     </li>
                     <li>
                       <i className="fa fa-clipboard" />
@@ -393,34 +412,48 @@ const uniDetailsPopover = (
                       <span>Trình độ đào tạo:</span> {programDetail.level}
                     </li>
                     <li>
-    <i className="fa fa-calendar"></i>
-    <span>
-        Học kỳ: 
-        <span style={{ marginLeft: '5px' }}>
-            {semesterDetails.startDate ? new Date(semesterDetails.startDate).toLocaleDateString() : 'Loading...'}
-        </span>
-        đến
-        <span style={{ marginLeft: '3px' }}>
-            {semesterDetails.endDate ? new Date(semesterDetails.endDate).toLocaleDateString() : 'Loading...'}
-        </span>
-    </span>
-</li>
-
+                      <i className="fa fa-calendar"></i>
+                      <span>
+                        Học kỳ:
+                        <span style={{ marginLeft: "5px" }}>
+                          {semesterDetails.startDate
+                            ? new Date(
+                                semesterDetails.startDate
+                              ).toLocaleDateString()
+                            : "Loading..."}
+                        </span>
+                        đến
+                        <span style={{ marginLeft: "3px" }}>
+                          {semesterDetails.endDate
+                            ? new Date(
+                                semesterDetails.endDate
+                              ).toLocaleDateString()
+                            : "Loading..."}
+                        </span>
+                      </span>
+                    </li>
 
                     <li>
                       <i className="fa fa-graduation-cap" />
                       <span>Loại chương trình:</span>
-                      <OverlayTrigger 
-                    trigger="click"
-                    placement="right"
-                    overlay={programTypePopover}
-                    rootClose
+                      <OverlayTrigger
+                        trigger="click"
+                        placement="right"
+                        overlay={programTypePopover}
+                        rootClose
                       >
-                      <button className="p-0 border-0 bg-transparent" style={{ textDecoration: 'none', color: 'inherit', boxShadow: 'none' }} type="button">
-  {getTypeName(programDetail.programTypeId)}
-</button>
-
-    </OverlayTrigger>
+                        <button
+                          className="p-0 border-0 bg-transparent"
+                          style={{
+                            textDecoration: "none",
+                            color: "inherit",
+                            boxShadow: "none",
+                          }}
+                          type="button"
+                        >
+                          {getTypeName(programDetail.programTypeId)}
+                        </button>
+                      </OverlayTrigger>
                     </li>
                   </ul>
                   <div className="price-wrap text-center">
@@ -685,10 +718,7 @@ const uniDetailsPopover = (
                 <div key={index} className="col-lg-12 col-md-6">
                   <div className="single-course-inner">
                     <div className="thumb">
-                      <img
-                        src={university.img}
-                        alt="img"
-                      />
+                      <img src={university.img} alt="img" />
                     </div>
                     <div className="details">
                       <div className="details-inner">
@@ -702,7 +732,9 @@ const uniDetailsPopover = (
                         </h5>
                         <div className="specialization-icon mb-2">
                           <i className="fa fa-university mr-1"></i>
-                          <span className="fw-bold">{university.universityName}</span>
+                          <span className="fw-bold">
+                            {university.universityName}
+                          </span>
                         </div>
                         <div className="specialization-icon">
                           <i className="fa fa-map-marker mr-2" />
@@ -710,7 +742,8 @@ const uniDetailsPopover = (
                         </div>
                         <div className="emt-course-meta">
                           <div className="price text-right mt-3">
-                          <Link to={`/program-details/${university.programId}`}
+                            <Link
+                              to={`/program-details/${university.programId}`}
                               className="btn btn-primary"
                             >
                               Xem Thêm

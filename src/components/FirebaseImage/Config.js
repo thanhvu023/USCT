@@ -20,12 +20,10 @@ export const generateToken = async () => {
   try {
     const permission = await Notification.requestPermission();
     if (permission === "granted") {
-      console.log(permission);
       const token = await getToken(messaging, {
         vapidKey:
         "BMlqyj5Nejw6sc5cEkgMvk1F5ZZr7AxAfkRv_PYNpUQNFZvYa5ts18UN2UVStnb-sTSNbqIJr75IrJ7FWtzciag",
       });
-      console.log(token);
     }
   } catch (error) {
     console.error("Error getting token:", error);
