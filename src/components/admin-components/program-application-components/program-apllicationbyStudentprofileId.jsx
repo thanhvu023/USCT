@@ -92,7 +92,7 @@ const ProgramApplicationPage = ({setMain }) => {
   const activeStage = programApplications?.applyStage?.find(stage => stage.status === 1);
   const findActiveStageName = (application) => {
     const activeStage = application.applyStage?.find(stage => stage.status === 1);
-    return activeStage ? activeStage.programStage.stageName : 'No active stage';
+    return activeStage ? activeStage.programStage.stageName : 'Hồ sơ đã hoàn tất';
   };
   
   

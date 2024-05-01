@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Container, Row, Col, Form, Button, Card,FormControl } from 'react-bootstrap';
-import { Stepper, Step, StepLabel } from '@mui/material';
+import { Stepper, Step, StepLabel,Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import Swal from 'sweetalert2';
 import { Box, Tab, Tabs, Typography, CardContent, Grid, Paper } from '@mui/material';
+import { getPaymentByProgramApplicationId } from "../../../redux/slice/paymentSlice";
 
 import { Check as CheckIcon,  RadioButtonUnchecked as RadioButtonUncheckedIcon, HourglassEmpty as HourglassEmptyIcon, CheckCircleOutline, HighlightOff } from '@mui/icons-material';
 import { getStudentProfileById, getAllProgram, getProgramById, getProgramStageById } from "../../../redux/slice/programSlice";
@@ -21,7 +22,8 @@ const Payment = () => {
     const applyStages = useSelector((state) => state.applyStage.applyStages || []);
     const activeStage = selectedApplication?.applyStage?.find(stage => stage?.status === 1);
     const [tabIndex, setTabIndex] = useState(0);
-
+    const payments = useSelector((state) => state.payment .paymentsByApplicationId);
+console.log("vì sao",selectedApplication)
     const handleTabChange = (event, newValue) => {
         setTabIndex(newValue);
     };
@@ -44,9 +46,16 @@ const Payment = () => {
         );
     }
     console.log("hiện tại:",activeStage)
+
     useEffect(() => {
         dispatch(getAllStage());
     }, [dispatch]);
+    useEffect(() => {
+        if (selectedApplication && selectedApplication.programApplicationId) {
+            dispatch(getPaymentByProgramApplicationId(selectedApplication.programApplicationId));
+        }
+    }, [dispatch, selectedApplication]);
+    
     const updateStages = () => {
         if (!selectedApplication || !selectedApplication.applyStage) {
             Swal.fire({
@@ -230,6 +239,18 @@ const Payment = () => {
     };
 
 
+      const getPaymentStatusLabel = (status) => {
+        switch (status) {
+          case 0:
+            return " Chờ xác nhận thanh toán";
+          case 1:
+            return "Thành công";
+          case 2:
+            return "Thất bại";
+          default:
+            return "Không xác định";
+        }
+      };
     return (
         <Container>
                     
@@ -288,8 +309,9 @@ const Payment = () => {
 <Box sx={{ width: '100%', bgcolor: 'background.paper', marginTop: 4 }}>
             <Tabs value={tabIndex} onChange={handleTabChange} centered>
                 <Tab label="Chương trình" />
+                <Tab label="Lich sử thanh toán" />
                 <Tab label="Cập nhật tiếng trình hồ sơ" />
-                <Tab label="Tạo đơn thanh toán" />
+            
             </Tabs>
       
             <TabPanel value={tabIndex} index={0}>
@@ -341,10 +363,9 @@ const Payment = () => {
                   </Card.Body>
               </Card>
             </TabPanel>
-            <TabPanel value={tabIndex} index={1}>
-                {/* Tab 2: Student Profile Details */}
+            <TabPanel value={tabIndex} index={2}>
+             
                 
-    {/* Cập nhật tiến trình hồ sơ - Full width */}
 
 
 <Row className="gx-2">
@@ -372,7 +393,7 @@ const Payment = () => {
                             <Form.Label><strong >Giai đoạn hồ sơ:</strong></Form.Label>
                         </Col>
                         <Col sm={9}>
-                            <Form.Label> <strong  style={{ color: '#007bff' }}>{activeStage?.programStage?.stageName || 'No active stage'}</strong></Form.Label>
+                            <Form.Label> <strong  style={{ color: '#007bff' }}>{activeStage?.programStage?.stageName || 'Hồ sơ đã hoàn tiến trình'}</strong></Form.Label>
                         </Col>
                         <Col sm={3}>
                             <Form.Label><strong>Phí giai đoạn:</strong></Form.Label>
@@ -402,51 +423,39 @@ const Payment = () => {
 </Row>
 
             </TabPanel>
-            <TabPanel value={tabIndex} index={2}>
-                {/* Tab 3: Create Payment Order */}
-                <Card  className="mb-4 shadow" style={{marginTop:'24px',   boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)",
-          borderRadius: "10px",}}>
-                  <Card.Header    style={{ textAlign: 'center' }}><h2>Tạo đơn thanh toán</h2></Card.Header>
-                  <Card.Body>
-                      <Form>
-                      <Form.Group as={Row} className="mb-3">
-                              <Form.Label column sm="3">Giai đoạn hồ sơ:</Form.Label>
-                              <Col sm="6">
-                              {activeStage?.programStage.stageName}                                    
-                              </Col>
-                          </Form.Group>
-                          <Form.Group as={Row} className="mb-3">
-                              <Form.Label column sm="3"> Phí thủ tục:</Form.Label>
-                              <Col sm="9">
-                                  {/* <Form.Select value={selectedFee ? selectedFee.programFeeId : ''} onChange={handleFeeSelection}>
-                                      <option value="">Lựa chọn phí theo giai đoạn hồ sơ</option>
-                                      {filteredFees.map(fee => (
-                                          <option key={fee.programFeeId} value={fee.programFeeId}>
-                                              {getTypeNameById(fee.feeTypeId)}
-                                          </option>
-                                      ))}
-                                  </Form.Select> */}
-                                  Phí nộp hồ sơ - 20000 VND
-                              </Col>
-                          </Form.Group>
-                          {selectedFee && (
-                              <Form.Group as={Row} className="mb-3">
-                                  <Form.Label column sm="3">Số tiền phí:</Form.Label>
-                                  <Col sm="9">
-                                      <FormControl plaintext readOnly defaultValue={selectedFee.amount + ' VND'} />
-                                  </Col>
-                              </Form.Group>
-                          )}
-                          <Form.Group as={Row} className="mb-3">
-                              <Form.Label column sm="3">Ghi chú:</Form.Label>
-                              <Col sm="9">
-                                  <FormControl type="text" value={note} onChange={handleNoteChange} />
-                              </Col>
-                          </Form.Group>
-                          <Button variant="primary" onClick={handlePaymentSubmit}>Gửi thanh toán</Button>
-                      </Form>
-                  </Card.Body>
-              </Card>
+            <TabPanel value={tabIndex} index={1}>
+            <Typography variant="h6" gutterBottom>
+        Lịch sử thanh toán
+    </Typography>
+    <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 600 }} style={{ maxWidth: 1400, margin: 'auto' }} aria-label="payment history table">
+            <TableHead>
+                <TableRow>
+                    <TableCell>Payment ID</TableCell>
+                    <TableCell align="right">Số tiền</TableCell>
+                    <TableCell align="right">Phương thức</TableCell>
+                    <TableCell align="right">Ghi chú</TableCell>
+                    <TableCell align="right">Ngày thanh toán</TableCell>
+                    <TableCell align="right">Trạng thái</TableCell>
+                </TableRow>
+            </TableHead>
+            <TableBody>
+                {payments?.map((payment) => (
+                    <TableRow key={payment.paymentId}>
+                        <TableCell component="th" scope="row">
+                            {payment.paymentId}
+                        </TableCell>
+                        <TableCell align="right">{payment.amount.toLocaleString()}</TableCell>
+                        <TableCell align="right">{payment.method}</TableCell>
+                        <TableCell align="right">{payment.note}</TableCell>
+                        <TableCell align="right">{new Date(payment.paymentDate).toLocaleDateString()}</TableCell>
+                        <TableCell align="right">{getPaymentStatusLabel(payment.status)}</TableCell>
+                    </TableRow>
+                ))}
+            </TableBody>
+        </Table>
+    </TableContainer>
+              
             </TabPanel>
         </Box>
 </div>

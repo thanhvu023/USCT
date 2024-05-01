@@ -2,6 +2,7 @@ import React, { useContext,useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getProgramApplicationById } from "../../redux/slice/programApplicationSlice";
+import { getPaymentByProgramApplicationId } from "../../redux/slice/paymentSlice";
 import {
   Card,
   CardContent,
@@ -44,7 +45,9 @@ const handleTabChange = (event, newValue) => {
   const details = useSelector(
     (state) => state.programApplication.programApplicationById
   );
-  console.log("detals",details)
+  const payments = useSelector((state) => state.payment .paymentsByApplicationId);
+
+  console.log("payments",payments)
 
   const handleNavigateToProfile = () => {
     const studentProfileId = details?.studentProfileId;
@@ -60,6 +63,8 @@ const handleTabChange = (event, newValue) => {
   useEffect(() => {
     if (programApplicationId) {
       dispatch(getProgramApplicationById(programApplicationId));
+      dispatch(getPaymentByProgramApplicationId(programApplicationId));
+
       dispatch(getAllStage());
       dispatch(getAllProgramStages());
       dispatch(getAllProgramFees());
@@ -93,9 +98,9 @@ const handleTabChange = (event, newValue) => {
   const programs = useSelector(state => state.program.programs);
   const universities = useSelector(state =>state.university.universities)
 //   console.log("details?.programApplicationId,",details?.programApplicationId)
-// console.log("selectedFee",selectedFee?.amount)
-// console.log("note",note)
-// console.log("method",method)
+console.log("selectedFee",selectedFee?.amount)
+console.log("note",note)
+console.log("method",method)
   const fees = useSelector(state => state?.programFee?.fees);
   const feeTypes = useSelector(state => state.feeType.feeTypes);
   const stages = useSelector(state=>state.applyStage.stages)
@@ -349,6 +354,18 @@ const handleCreateVnPayLink = async () => {
         ))}
       </Stepper>
     );
+  };
+  const getPaymentStatusLabel = (status) => {
+    switch (status) {
+      case 0:
+        return "Chưa thanh toán";
+      case 1:
+        return "Thành công";
+      case 2:
+        return "Thất bại";
+      default:
+        return "Đang đợi xác nhận";
+    }
   };
   
 
@@ -642,40 +659,45 @@ Hoặc có thể đóng toàn bộ phí cho tiến trình (cập nhật tự đ�
 
 
 
+<TabPanel value={tabIndex} index={2 }> 
+       
 <TabPanel value={tabIndex} index={2}>
-  <Typography variant="h6" gutterBottom>Lịch sử thanh toán</Typography>
-  <TableContainer component={Paper}>
-  <Table sx={{ minWidth: 650 }} aria-label="simple table">
-    <TableHead>
-      <TableRow>
-        <TableCell>Payment ID</TableCell>
-        <TableCell align="right">Số tiền</TableCell>
-        <TableCell align="right">Phương thức</TableCell>
-        <TableCell align="right">Ghi chú</TableCell>
-        <TableCell align="right">Ngày thanh toán</TableCell>
-        <TableCell align="right">Trạng thái</TableCell>
-      </TableRow>
-    </TableHead>
-    {/* <TableBody>
-      {paymentHistory.map((payment) => (
-        <TableRow key={payment.paymentId}>
-          <TableCell component="th" scope="row">{payment.paymentId}</TableCell>
-          <TableCell align="right">{payment.amount.toLocaleString()} VND</TableCell>
-          <TableCell align="right">{payment.method}</TableCell>
-          <TableCell align="right">{payment.note}</TableCell>
-          <TableCell align="right">{new Date(payment.paymentDate).toLocaleDateString()}</TableCell>
-          <TableCell align="right">
-            {payment.status === 0 && <><RadioButtonUncheckedIcon color="error" /> Chưa thanh toán</>}
-            {payment.status === 1 && <><CheckIcon color="primary" /> Thanh toán thành công</>}
-            {payment.status === 2 && <><ClearIcon color="action" /> Hủy bỏ</>}
-          </TableCell>
-        </TableRow>
-      ))}
-    </TableBody> */}
-  </Table>
-</TableContainer>
-
+  <Typography variant="h6" gutterBottom>
+    Lịch sử thanh toán
+  </Typography>
+  <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+    <TableContainer component={Paper} sx={{ maxWidth: 1600, width: '100%', overflowX: 'auto' }}>
+      <Table sx={{ minWidth: 650 }} aria-label="payment history table">
+        <TableHead>
+          <TableRow>
+            <TableCell>Payment ID</TableCell>
+            <TableCell align="right">Số tiền</TableCell>
+            <TableCell align="right">Phương thức</TableCell>
+            <TableCell align="right">Ghi chú</TableCell>
+            <TableCell align="right">Ngày thanh toán</TableCell>
+            <TableCell align="right">Trạng thái</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {payments?.map((payment) => (
+            <TableRow key={payment.id}>
+              <TableCell component="th" scope="row">
+                {payment.paymentId}
+              </TableCell>
+              <TableCell align="right">{payment.amount.toLocaleString()}</TableCell>
+              <TableCell align="right">{payment.method}</TableCell>
+              <TableCell align="right">{payment.note || 'Không có'}</TableCell>
+              <TableCell align="right">{new Date(payment.paymentDate).toLocaleDateString()}</TableCell>
+              <TableCell align="right">{getPaymentStatusLabel(payment.status)}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  </Box>
 </TabPanel>
+
+        </TabPanel>
 
         </Box>
     

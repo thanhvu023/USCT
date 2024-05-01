@@ -63,7 +63,7 @@ const PaymentResponsePage = () => {
   }
 
   return (
-    <Card sx={{ maxWidth: 345, m: "auto", mt: 5 }}>
+<Card sx={{ maxWidth: 600, m: "auto", mt: 5, p: 2 }}>
       <CardContent>
         {success && (
           <>
@@ -71,29 +71,31 @@ const PaymentResponsePage = () => {
             <Typography variant="h5" gutterBottom component="div" color="primary" textAlign="center">
               Thanh toán được xử lý thành công!
             </Typography>
-            <Typography variant="body1" gutterBottom>
-              Số tiền: {paymentInfo.amount} VND
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              Phương thức: {paymentInfo.method}
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              Ghi chú: {paymentInfo.note || 'Không có ghi chú'}
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              Ngày thanh toán: {paymentInfo.paymentDate}
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              Mã giao dịch: {paymentInfo.transactionNo}
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              Trạng thái: {paymentInfo.status === 1 ? 'Thành công' : 'Không thành công'}
-            </Typography>
+            <Typography variant="body1" gutterBottom component="div" style={{ marginTop: 2, fontWeight: 'bold' }}>
+  <strong style={{ color: '#007bff' }}>Số tiền:</strong> {paymentInfo.amount} VND
+</Typography>
+<Typography variant="body1" gutterBottom component="div" style={{ fontWeight: 'bold' }}>
+  <strong style={{ color: '#007bff' }}>Phương thức:</strong> {paymentInfo.method}
+</Typography>
+<Typography variant="body1" gutterBottom component="div" style={{ fontWeight: 'bold' }}>
+  <strong style={{ color: '#007bff' }}>Ghi chú:</strong> {paymentInfo.note || 'Không có ghi chú'}
+</Typography>
+<Typography variant="body1" gutterBottom component="div" style={{ fontWeight: 'bold' }}>
+  <strong style={{ color: '#007bff' }}>Ngày thanh toán:</strong> {paymentInfo.paymentDate}
+</Typography>
+<Typography variant="body1" gutterBottom component="div" style={{ fontWeight: 'bold' }}>
+  <strong style={{ color: '#007bff' }}>Mã giao dịch:</strong> {paymentInfo.transactionNo}
+</Typography>
+<Typography variant="body1" gutterBottom component="div" style={{ fontWeight: 'bold' }}>
+  <strong style={{ color: '#007bff' }}>Trạng thái:</strong> {paymentInfo.status === 1 ? 'Thành công' : 'Không thành công'}
+</Typography>
+
           </>
         )}
-        <Button variant="contained" color="primary" onClick={() => navigate(`/`)}>
-          Trở về trang chi tiết chương trình đã ứng tuyển !
-        </Button>
+       <Button variant="contained" color="primary" onClick={() => navigate(`/`)} fullWidth>
+  Trở về trang chi tiết chương trình đã ứng tuyển !
+</Button>
+
       </CardContent>
     </Card>
   );
