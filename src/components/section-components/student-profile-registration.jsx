@@ -79,7 +79,7 @@ const StudentProfileRegistration = () => {
             Danh sách đơn tư vấn
           </MenuItem>
           <MenuItem component={<Link to={`/students-profile/appliedList`}></Link>}>
-            Danh sách hồ sơ đã duyêt
+            Danh sách hồ sơ đã nộp đơn
           </MenuItem>
           <MenuItem component={<Link to={`/create-student-profile`}></Link>}>
             Khởi tạo hồ sơ học sinh

@@ -65,22 +65,20 @@ const StudentProfilePage = () => {
   //   }
   // }, [customerId]);
 
-
-
   const handleSubmit = (e) => {
     e.preventDefault();
     // Add your submit logic here
   };
-  const loading = useSelector((state)=>state?.student?.loading)
+  const loading = useSelector((state) => state?.student?.loading);
 
   return (
     <div className="row mb-5 mt-5">
-       <Backdrop
-          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-          open={loading}
-        >
-          <CircularProgress color="inherit" />
-        </Backdrop>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <Sidebar className="ml-4">
         <Menu className="mt-5">
           <MenuItem component={<Link to={`/students-profile`}></Link>}>
@@ -94,7 +92,7 @@ const StudentProfilePage = () => {
           <MenuItem
             component={<Link to={`/students-profile/appliedList`}></Link>}
           >
-            Danh sách hồ sơ đã duyêt
+            Danh sách hồ sơ đã nộp đơn
           </MenuItem>
           <MenuItem component={<Link to={`/create-student-profile`}></Link>}>
             Khởi tạo hồ sơ học sinh

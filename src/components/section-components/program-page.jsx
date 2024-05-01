@@ -16,9 +16,11 @@ function ProgramsPage() {
   // const [minPrice, setMinPrice] = useState(100000);
   // const [maxPrice, setMaxPrice] = useState(2000000);
   const [currentValue, setCurrentValue] = useState(100000);
+  const [currentPage, setCurrentPage] = useState(1);
   const handleSliderChange = (event) => {
     setCurrentValue(event.target.value);
   };
+
   const formatCurrency = (value) => {
     return `${value / 1000}k$`; // Định dạng giá trị sang đơn vị $k
   };
@@ -107,6 +109,14 @@ function ProgramsPage() {
   useEffect(() => {
     dispatch(getAllProgram(programName)); // Dispatch action with program name
   }, [dispatch, programName]);
+  const [programsPerPage] = useState(8); // Number of programs to display per page
+  const indexOfLastProgram = currentPage * programsPerPage;
+  const indexOfFirstProgram = indexOfLastProgram - programsPerPage;
+  const currentPrograms = programs.slice(
+    indexOfFirstProgram,
+    indexOfLastProgram
+  );
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
   return (
     <div className="blog-area pd-top-60 pd-bottom-60">
       <div className="container">
@@ -119,7 +129,7 @@ function ProgramsPage() {
         <div className="row">
           <div className="col-lg-8 order-lg-12 m-0">
             <div className="row go-top">
-              {programs
+              {currentPrograms
                 .filter((program) => program.status === "Active") // Filter programs with active status
                 .map((program, index) => (
                   <div
@@ -153,6 +163,22 @@ function ProgramsPage() {
                   </div>
                 ))}
             </div>
+            <nav className="td-page-navigation">
+              <ul className="pagination">
+                {Array(Math.ceil(programs.length / programsPerPage))
+                  .fill()
+                  .map((_, index) => (
+                    <li key={index} className="page-item">
+                      <button
+                        onClick={() => paginate(index + 1)}
+                        className="page-link"
+                      >
+                        {index + 1}
+                      </button>
+                    </li>
+                  ))}
+              </ul>
+            </nav>
             {/* <nav className="td-page-navigation">
               <ul className="pagination">
                 <li className="pagination-arrow">

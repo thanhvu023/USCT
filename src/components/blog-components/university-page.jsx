@@ -7,6 +7,9 @@ import { Backdrop, CircularProgress } from "@mui/material";
 function UniversityPage() {
   const dispatch = useDispatch();
   const [universityName, setUniversityName] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [universitiesPerPage] = useState(6); // Number of universities to display per page
+
   const universities = useSelector((state) => state.university.universities);
   useEffect(() => {
     dispatch(getAllUniversity(universityName));
@@ -14,6 +17,12 @@ function UniversityPage() {
   const handleInputChangeName = (event) => {
     setUniversityName(event.target.value); // Update the program name state with the input value
   };
+  const indexOfLastUniversity = currentPage * universitiesPerPage;
+  const indexOfFirstUniversity = indexOfLastUniversity - universitiesPerPage;
+  const currentUniversities = universities.slice(indexOfFirstUniversity, indexOfLastUniversity);
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const loading = useSelector((state) => state?.university?.loading);
   return (
@@ -83,7 +92,7 @@ function UniversityPage() {
           </div>
           <div className="col-lg-12 ">
             <div className="row go-top">
-              {universities.map((university, index) => (
+              {currentUniversities.map((university, index) => (
                 <div
                   key={index}
                   className="single-blog-inner style-border col-lg-5 m-4"
@@ -129,7 +138,19 @@ function UniversityPage() {
                 </div>
               ))}
             </div>
-
+            <nav className="td-page-navigation">
+              <ul className="pagination">
+                {Array(Math.ceil(universities.length / universitiesPerPage))
+                  .fill()
+                  .map((_, index) => (
+                    <li key={index} className="page-item">
+                      <button onClick={() => paginate(index + 1)} className="page-link">
+                        {index + 1}
+                      </button>
+                    </li>
+                  ))}
+              </ul>
+            </nav>
             {/* <nav className="td-page-navigation">
               <ul className="pagination">
                 <li className="pagination-arrow">
