@@ -16,20 +16,15 @@ const handleVnPayResponse = async (searchParams) => {
         vnp_TxnRef: params.get('vnp_TxnRef'),
         vnp_SecureHash: params.get('vnp_SecureHash')
     };
-    console.log(" vnpOrderInfo là ",postData.vnpOrderInfo);
+
+    console.log("vnp_OrderInfo là", postData.vnp_OrderInfo);
     for (let key in postData) {
-        if (postData[key] === null) {
+        if (postData[key] === null || postData[key] === undefined) {
             console.error(`Missing parameter: ${key}`);
             throw new Error(`Missing required payment parameter: ${key}`);
         }
     }
- if (!postData.vnpOrderInfo) {
-    console.error("Missing parameter: vnpOrderInfo");
-    throw new Error("Missing required payment parameter: vnpOrderInfo");
-}else{
-    console.log(" vnpOrderInfo là ",postData.vnpOrderInfo);
 
-}
     try {
         const response = await instance.post('/payment/vnpay-ipn-manual', postData);
         console.log('VNPAY IPN Response:', response.data);
