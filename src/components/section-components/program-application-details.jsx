@@ -164,6 +164,7 @@ const handleFileChange = (e) => {
       console.log("Preview image URL set:", localImageUrl);
   }
 };
+
   const handleImageUpload = async () => {
     if (!paymentId) {
         console.error("No payment ID available for updating.");
@@ -533,17 +534,16 @@ const handleCreateVnPayLink = async () => {
     <Grid item xs={12} md={6}>
       <Card raised>
         <CardContent>
-          <Typography variant="h6" gutterBottom>Lựa chọn trả phí</Typography>
+          <Typography variant="h6" gutterBottom> Khoản phí cần đóng cho giai đoạn: <strong style={{ color: '#007bff' }}>{activeStage ? activeStage.programStage.stageName : 'N/A'}</strong>
+</Typography>
           {activeStage && activeStage?.programStage?.isPayment ? (
             
               <>
               
-              <Typography variant="subtitle1">
-  Lựa chọn khoản phí cần đóng cho giai đoạn: {activeStage ? activeStage.programStage.stageName : 'N/A'}
-</Typography>
+   
 <Form.Group as={Row} className="mb-3" controlId="formPlaintextFee">
-  <Form.Label column sm="4">Chọn khoản phí:</Form.Label>
-  <Col sm="8">
+  <Form.Label column sm="4">Lựa chọn khoản phí: </Form.Label>
+  <Col sm="6">
     <Form.Control
       as="select"
       value={selectedFee?.programFeeId || ''}
@@ -582,7 +582,7 @@ const handleCreateVnPayLink = async () => {
 <>
 
 <Typography variant="h6" gutterBottom style={{cursor: 'pointer'}} onClick={toggleFeesDetail}>
-Hoặc</Typography>
+Hoặc có thể đóng toàn bộ phí cho tiến trình (cập nhật tự động)</Typography>
   {showDetailedFees && (
                         <>
                             <Typography variant="subtitle1">
@@ -603,13 +603,13 @@ Hoặc</Typography>
                                     <strong>-----------------------------------</strong>
                                 </Col>
                                 <Col sm={12}>
-                                    <strong>
+                                    <Typography variant="h6">
                                         {fees.filter(fee => fee?.programId === details.program?.programId)
                                             .reduce((sum, current) => sum + current.amount, 0)
                                             .toLocaleString()} VND (Tổng các loại phí)
-                                    </strong>
+                                    </Typography>
                                 </Col>
-                                <Button variant="warning" onClick={handleCreateVnPayLink} style={{ marginLeft: '10px' }}>
+                                <Button  variant="warning" onClick={handleCreateVnPayLink} style={{ marginLeft: '10px', marginTop:'38px' }}>
                                     Thanh toán bằng VNPAY
                                 </Button>
                             </Form.Group>
@@ -619,7 +619,7 @@ Hoặc</Typography>
             </>
           ) : (
           <>
-                      <Typography variant="subtitle1">Không có khoản phí cần đóng cho giai đoạn: {activeStage ? activeStage.programStage.stageName : 'N/A'}</Typography>
+                      <Typography variant="subtitle1">Không có khoản phí cần đóng </Typography>
 
        
             
@@ -642,10 +642,36 @@ Hoặc</Typography>
 
 
 
-            <TabPanel value={tabIndex} index={2}>
-                {/* Content for Lịch sử thanh toán */}
-                {/* Add your structured JSX layout here for tab 3 */}
-            </TabPanel>
+<TabPanel value={tabIndex} index={2}>
+  <Typography variant="h6" gutterBottom>Lịch sử thanh toán</Typography>
+  <TableContainer component={Paper}>
+    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+      <TableHead>
+        <TableRow>
+          <TableCell>Payment ID</TableCell>
+          <TableCell align="right">Số tiền</TableCell>
+          <TableCell align="right">Phương thức</TableCell>
+          <TableCell align="right">Ghi chú</TableCell>
+          <TableCell align="right">Ngày thanh toán</TableCell>
+          <TableCell align="right">Trạng thái</TableCell>
+        </TableRow>
+      </TableHead>
+      {/* <TableBody>
+        {paymentHistory.map((payment) => (
+          <TableRow key={payment.paymentId}>
+            <TableCell component="th" scope="row">{payment.paymentId}</TableCell>
+            <TableCell align="right">{payment.amount.toLocaleString()} VND</TableCell>
+            <TableCell align="right">{payment.method}</TableCell>
+            <TableCell align="right">{payment.note}</TableCell>
+            <TableCell align="right">{new Date(payment.paymentDate).toLocaleDateString()}</TableCell>
+            <TableCell align="right">{payment.status === 1 ? 'Đã thanh toán' : 'Chưa thanh toán'}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody> */}
+    </Table>
+  </TableContainer>
+</TabPanel>
+
         </Box>
     
 

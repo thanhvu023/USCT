@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import handleVnPayResponse from '../redux/slice/handleVnPayResponse';
 import { CircularProgress, Typography, Button, Box, Card, CardContent } from '@mui/material';
 import Lottie from 'react-lottie';
-import successAnimation from '../components/admin-components/customer-components/contants/animations/paymentsuccess.json';  // Đảm bảo rằng bạn đã import file json animation
+import successAnimation from '../components/admin-components/customer-components/contants/animations/paymentsuccess.json';
+import handleVnPayResponse from '../redux/slice/handleVnPayResponse';
 
 const PaymentResponsePage = () => {
   const location = useLocation();
@@ -11,9 +11,22 @@ const PaymentResponsePage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
+  const [paymentDetails, setPaymentDetails] = useState({});
 
   useEffect(() => {
     if (location.search) {
+      const searchParams = new URLSearchParams(location.search);
+      const details = {
+        amount: searchParams.get('amount'),
+        method: searchParams.get('method'),
+        note: searchParams.get('note'),
+        paymentDate: searchParams.get('paymentDate'),
+        paymentId: searchParams.get('paymentId'),
+        programApplicationId: searchParams.get('programApplicationId'),
+        status: searchParams.get('status'),
+        transactionNo: searchParams.get('transactionNo')
+      };
+      setPaymentDetails(details);
       handleVnPayResponse(location.search)
         .then(response => {
           console.log('Payment processing successful:', response);
@@ -42,7 +55,8 @@ const PaymentResponsePage = () => {
       <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" minHeight="100vh">
         <CircularProgress />
         <Typography variant="h6" marginTop={2}>
-        Đang xử lý khoản thanh toán của bạn, vui lòng đợi...        </Typography>
+          Đang xử lý khoản thanh toán của bạn, vui lòng đợi...
+        </Typography>
       </Box>
     );
   }
@@ -67,11 +81,16 @@ const PaymentResponsePage = () => {
           <Lottie options={defaultOptions} height={200} width={200} />
         )}
         <Typography variant="h5" gutterBottom component="div" color="primary" textAlign="center">
-        Thanh toán được xử lý thành công!       
-         </Typography>
-        <Button variant="contained" color="primary" onClick={() => navigate(`/program-application-detail/${location.search.get('programApplicationId')}`)}>
-      Trở về trang chi tiết chương trình đã ứng tuyển !
-
+          Thanh toán được xử lý thành công!
+        </Typography>
+        <Typography gutterBottom color="textSecondary">
+          Số tiền: {paymentDetails.amount} - Phương thức: {paymentDetails.method}
+        </Typography>
+        <Typography color="textSecondary">
+          Ngày thanh toán: {paymentDetails.paymentDate} - Mã giao dịch: {paymentDetails.transactionNo}
+        </Typography>
+        <Button variant="contained" color="primary" onClick={() => navigate(`/usct-deloy7h15pm.vercel.app`)}>
+          Trở về trang chi tiết chương trình đã ứng tuyển !
         </Button>
       </CardContent>
     </Card>
