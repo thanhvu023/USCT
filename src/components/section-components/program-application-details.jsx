@@ -645,31 +645,36 @@ Hoặc có thể đóng toàn bộ phí cho tiến trình (cập nhật tự đ�
 <TabPanel value={tabIndex} index={2}>
   <Typography variant="h6" gutterBottom>Lịch sử thanh toán</Typography>
   <TableContainer component={Paper}>
-    <Table sx={{ minWidth: 650 }} aria-label="simple table">
-      <TableHead>
-        <TableRow>
-          <TableCell>Payment ID</TableCell>
-          <TableCell align="right">Số tiền</TableCell>
-          <TableCell align="right">Phương thức</TableCell>
-          <TableCell align="right">Ghi chú</TableCell>
-          <TableCell align="right">Ngày thanh toán</TableCell>
-          <TableCell align="right">Trạng thái</TableCell>
+  <Table sx={{ minWidth: 650 }} aria-label="simple table">
+    <TableHead>
+      <TableRow>
+        <TableCell>Payment ID</TableCell>
+        <TableCell align="right">Số tiền</TableCell>
+        <TableCell align="right">Phương thức</TableCell>
+        <TableCell align="right">Ghi chú</TableCell>
+        <TableCell align="right">Ngày thanh toán</TableCell>
+        <TableCell align="right">Trạng thái</TableCell>
+      </TableRow>
+    </TableHead>
+    {/* <TableBody>
+      {paymentHistory.map((payment) => (
+        <TableRow key={payment.paymentId}>
+          <TableCell component="th" scope="row">{payment.paymentId}</TableCell>
+          <TableCell align="right">{payment.amount.toLocaleString()} VND</TableCell>
+          <TableCell align="right">{payment.method}</TableCell>
+          <TableCell align="right">{payment.note}</TableCell>
+          <TableCell align="right">{new Date(payment.paymentDate).toLocaleDateString()}</TableCell>
+          <TableCell align="right">
+            {payment.status === 0 && <><RadioButtonUncheckedIcon color="error" /> Chưa thanh toán</>}
+            {payment.status === 1 && <><CheckIcon color="primary" /> Thanh toán thành công</>}
+            {payment.status === 2 && <><ClearIcon color="action" /> Hủy bỏ</>}
+          </TableCell>
         </TableRow>
-      </TableHead>
-      {/* <TableBody>
-        {paymentHistory.map((payment) => (
-          <TableRow key={payment.paymentId}>
-            <TableCell component="th" scope="row">{payment.paymentId}</TableCell>
-            <TableCell align="right">{payment.amount.toLocaleString()} VND</TableCell>
-            <TableCell align="right">{payment.method}</TableCell>
-            <TableCell align="right">{payment.note}</TableCell>
-            <TableCell align="right">{new Date(payment.paymentDate).toLocaleDateString()}</TableCell>
-            <TableCell align="right">{payment.status === 1 ? 'Đã thanh toán' : 'Chưa thanh toán'}</TableCell>
-          </TableRow>
-        ))}
-      </TableBody> */}
-    </Table>
-  </TableContainer>
+      ))}
+    </TableBody> */}
+  </Table>
+</TableContainer>
+
 </TabPanel>
 
         </Box>

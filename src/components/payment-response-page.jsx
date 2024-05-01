@@ -89,8 +89,8 @@ const PaymentResponsePage = () => {
         <Typography color="textSecondary">
           Ngày thanh toán: {paymentDetails.paymentDate} - Mã giao dịch: {paymentDetails.transactionNo}
         </Typography>
-        <Button variant="contained" color="primary" onClick={() => navigate(`/usct-deloy7h15pm.vercel.app`)}>
-          Trở về trang chi tiết chương trình đã ứng tuyển !
+        <Button variant="contained" color="primary" onClick={() => navigate('/')}>
+          Trở về trang chủ
         </Button>
       </CardContent>
     </Card>
