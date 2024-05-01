@@ -32,6 +32,7 @@ import StaffPage from "../components/staff-page.jsx";
 import StaffRoute from "./StaffRoute.jsx";
 import ConsultantRoute from "./ConsultantRoute.jsx";
 import ProgramApplicationDetailsPage from "../components/program-application-details-page.jsx";
+import PaymentResponsePage from "../components/payment-response-page.jsx";
 
 const Routers = () => {
   const token = useSelector((state) => state?.auth?.token);
@@ -143,6 +144,8 @@ const Routers = () => {
             </PrivateRoute>
           }
         />
+          <Route path="/payment-response" element={<PaymentResponsePage />} />
+
         <Route
           path="/create-student-profile"
           element={
