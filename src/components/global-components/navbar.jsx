@@ -6,7 +6,6 @@ import {
   getUserById,
   logoutUser,
 } from "../../redux/slice/authSlice";
-
 import { Dropdown } from "react-bootstrap";
 import { logoutProgram } from "../../redux/slice/programSlice";
 import Swal from "sweetalert2"; // Import Swal
@@ -21,6 +20,8 @@ import { logoutStudent } from "../../redux/slice/studentSlice";
 function Navbar() {
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorel] = useState(null);
+  const [checkNotification, setCheckNotification] = useState([]);
+
   const handleOpen = (e) => {
     document.body.classList.add("notification-open");
     setAnchorel(e.target);
@@ -186,23 +187,26 @@ function Navbar() {
                 <div>
                   <Tooltip
                     title={
-                      notification.length
-                        ? `You have ${notification.length}  notifications!`
+                      notification?.length
+                        ? `You have ${notification?.length}  notifications!`
                         : "You dont have any notification!"
                     }
                   >
                     <IconButton color="primary" onClick={handleOpen}>
-                      <Badge badgeContent={notification.length} color="primary">
+                      <Badge badgeContent={notification?.length} color="primary">
                         <NotificationsIcon />
                       </Badge>
                     </IconButton>
                   </Tooltip>
-                  <BasicMenu
-                    open={open}
-                    anchorEl={anchorEl}
-                    handleClose={handleClose}
-                    menuItems={notification}
-                  />
+                  {checkNotification && checkNotification.length > 0 && (
+  <BasicMenu
+    open={open}
+    anchorEl={anchorEl}
+    handleClose={handleClose}
+    menuItems={notification}
+  />
+)}
+
                 </div>
                 <Dropdown className="nav-item header-profile">
                   <Dropdown.Toggle

@@ -32,7 +32,6 @@ export const updateApplyStage = createAsyncThunk(
   "applyStage/updateApplyStage",
   async ({ applyStageId, programStageId, programApplicationId, status }, thunkAPI) => {
     try {
-      // Note: Make sure your API endpoint is correct. It was "apply-stag" in your function, which might be a typo.
       const response = await instance.put(`/apply-stage/${applyStageId}`, { programStageId, programApplicationId, status });
       return response.data;
     } catch (error) {

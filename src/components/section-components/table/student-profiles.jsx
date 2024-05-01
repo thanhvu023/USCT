@@ -120,7 +120,7 @@ const StudentProfileList = () => {
               <span>
                 Page
                 <strong>
-                  {pageIndex + 1} of {pageOptions.length}
+                  {pageIndex + 1} of {pageOptions?.length}
                 </strong>
               </span>
             </div>

@@ -144,7 +144,7 @@ const ConsultantList = () => {
               <span>
                 Số trang
                 <strong className="ml-2">
-                  {pageIndex + 1} of {pageOptions.length}
+                  {pageIndex + 1} of {pageOptions?.length}
                 </strong>
               </span>
             </div>

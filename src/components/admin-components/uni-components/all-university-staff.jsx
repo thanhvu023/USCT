@@ -10,10 +10,12 @@ import Swal from "sweetalert2";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { imageDb } from "../../FirebaseImage/Config";
 import CreateUniversityModal from "./create-university";
+import jwtDecode from "jwt-decode";
 
 
-const AllUniversitiesPage = () => {
+const AllUniversitiesStaffPage = () => {
     const dispatch = useDispatch();
+
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
     const [selectedUniversityForEdit, setSelectedUniversityForEdit] = useState(null);
@@ -34,15 +36,18 @@ const AllUniversitiesPage = () => {
       stateId:""
     });
 
-
-    const universities = useSelector((state) => state.university.universities);
+        const allStaff = useSelector((state) => state.userById);
+        const token = useSelector((state) => state?.auth?.token);
+        const staffId = jwtDecode(token).UserId;
+        const universities = useSelector((state) => state.university.universities.filter(uni => uni.staffId === staffId));
+        // const universities = useSelector((state) => state.university.universities);
     const loading = useSelector((state) => state.university.loading);
     const itemsPerPage = 6;
     const stateDetail = useSelector((state) => state?.state?.stateById);
     const [searchUniversityName, setSearchUniversityName] = useState("");
 
 
-    console.log("stateName",stateDetail)
+    console.log("universities",universities)
   const [currentPage, setCurrentPage] = useState(1);
     useEffect(() => {
       dispatch(getAllUniversity());
@@ -201,7 +206,7 @@ const AllUniversitiesPage = () => {
         <Row>
           <div className="col-lg-12">
             <div className="card-header d-flex justify-content-between align-items-center">
-              <h4 className="card-title">Danh sách trường đại học</h4>
+            <h4 className="card-title">{`Danh sách trường đại học - Staff ID: ${staffId}`}</h4>
               <div className="dataTables_filter">
                 <label>
                   Tìm kiếm :{" "}
@@ -279,4 +284,4 @@ const AllUniversitiesPage = () => {
     );
   };
   
-  export default AllUniversitiesPage;
+  export default AllUniversitiesStaffPage;

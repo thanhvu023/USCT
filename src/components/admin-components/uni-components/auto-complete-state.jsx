@@ -20,7 +20,7 @@ const AutoCompleteInput = ({ value, onChange }) => {
 
 
 
-  const filteredStates = states && states.length > 0 ? 
+  const filteredStates = states && states?.length > 0 ? 
   states.filter((state) =>
     state.stateName && state.stateName.toLowerCase().includes(searchTerm.toLowerCase())
   ) : [];

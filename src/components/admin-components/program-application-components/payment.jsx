@@ -3,20 +3,46 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Container, Row, Col, Form, Button, Card,FormControl } from 'react-bootstrap';
 import { Stepper, Step, StepLabel } from '@mui/material';
 import Swal from 'sweetalert2';
+import { Box, Tab, Tabs, Typography, CardContent, Grid, Paper } from '@mui/material';
 
-import { Check as CheckIcon, Clear as ClearIcon, HourglassEmpty as HourglassEmptyIcon } from '@mui/icons-material';
+import { Check as CheckIcon,  RadioButtonUnchecked as RadioButtonUncheckedIcon, HourglassEmpty as HourglassEmptyIcon, CheckCircleOutline, HighlightOff } from '@mui/icons-material';
 import { getStudentProfileById, getAllProgram, getProgramById, getProgramStageById } from "../../../redux/slice/programSlice";
 import PaymentContext from './context/payment-context';
 import { getProgramFeesByProgramId, getAllProgramFees } from '../../../redux/slice/programFeeSlice';
 import { getAllFeeTypes } from '../../../redux/slice/feeTypeSlice';
 import { createPayment } from '../../../redux/slice/paymentSlice';
 import { getAllStage, updateApplyStage } from '../../../redux/slice/applyStageSlice';
+
 const Payment = () => {
     const dispatch = useDispatch();
     const { selectedApp: selectedApplication } = useContext(PaymentContext);
+    const { studentProfile, program } = selectedApplication;
+
     const applyStages = useSelector((state) => state.applyStage.applyStages || []);
     const activeStage = selectedApplication?.applyStage?.find(stage => stage.status === 1);
-    
+    const [tabIndex, setTabIndex] = useState(0);
+
+    const handleTabChange = (event, newValue) => {
+        setTabIndex(newValue);
+    };
+    function TabPanel(props) {
+        const { children, value, index, ...other } = props;
+        return (
+            <div
+                role="tabpanel"
+                hidden={value !== index}
+                id={`tabpanel-${index}`}
+                aria-labelledby={`tab-${index}`}
+                {...other}
+            >
+                {value === index && (
+                    <Box sx={{ p: 3 }}>
+                        {children}
+                    </Box>
+                )}
+            </div>
+        );
+    }
     console.log("hiện tại:",activeStage)
     useEffect(() => {
         dispatch(getAllStage());
@@ -147,7 +173,12 @@ const Payment = () => {
             setNote('');
         }
     };
-
+    const handleDownloadFile = (fileAttach) => {
+        const link = document.createElement("a");
+        link.href = fileAttach;
+        link.download = "fileAttach";
+        link.click();
+      };
     const getTypeNameById = (feeTypeId) => {
         const feeType = feeTypes.find(type => type.feeTypeId === feeTypeId);
         return feeType ? feeType.typeName : '';
@@ -156,14 +187,16 @@ const Payment = () => {
     if (!selectedApplication) {
         return <div>Please select an application to make a payment.</div>;
     }
- 
+ const renderPaymentStatus = (isPayment) => {
+    return isPayment ? "Cần đóng khoản phí" : "Không có khoản phí cần đóng";
+};
     const displayApplicationStages = () => {
         return (
             <Stepper activeStep={findActiveStageIndex()} alternativeLabel>
                 {selectedApplication.applyStage.map((stage, index) => (
                     <Step key={stage.applyStageId}>
                         <StepLabel icon={<StepIcon status={stage.status}/>}>
-                            {stage.programStage.stageName}
+                        {stage.programStage.stageName} - {renderPaymentStatus(stage.programStage.isPayment)}
                         </StepLabel>
                     </Step>
                 ))}
@@ -177,56 +210,141 @@ const Payment = () => {
 
     const StepIcon = ({ status }) => {
         switch (status) {
-            case 0: return <ClearIcon color="error" />;
+            case 0: return <RadioButtonUncheckedIcon color="error" />;
             case 1: return <HourglassEmptyIcon color="action" />;
             case 2: return <CheckIcon color="primary"  />;
-            default: return <ClearIcon />;
+            default: return <RadioButtonUncheckedIcon />;
         }
     };
 
-    const { studentProfile, program } = selectedApplication;
 
     return (
-        <Container className="mt-5">
-
-
-            <Row style={{marginTop:'24px'}}>
-                <Col>
-                    <Card>
-                        <Card.Header style={{ textAlign: 'center' }}><h2>Thông tin hồ sơ</h2></Card.Header>
-                        <Card.Body>
-                            <Row>
-                                <Col md={6}>
-                                <p><strong>Mã hồ sơ:</strong> {studentProfile.studentProfileId}</p>
-                                <p><strong>Ngày tạo hồ sơ:</strong> {studentProfile.createDate}</p>
-
-                            <p><strong>Khai sinh:</strong> {studentProfile.dateOfBirth}</p>
-                            <p><strong>Địa chỉ thường trú:</strong> {studentProfile.address}</p>
-                            <p><strong>Mã số căn cước công dân:</strong> {studentProfile.nationalId}</p>
-                                </Col>
-                                <Col md={6}>
-                                    
-                                <p><strong>Họ và tên:</strong> {studentProfile.fullName}</p>
-                                <p><strong>Giới tính:</strong> {studentProfile.gender}</p>
-                                <p><strong>Số điện thoại:</strong> {studentProfile.phone}</p>
-                                <p><strong>Email:</strong> {studentProfile.email}</p>
-
-                            <p><strong>Học vấn :</strong> {studentProfile.grade}</p>
-                                </Col>
-                            </Row>
-                           
-                        </Card.Body>
-                    </Card>
+        <Container>
                     
-                </Col>
-                <Col>
-                
-                <Card>
-            <Card.Header style={{ textAlign: 'center' }}><h2>Cập nhật tiến trình hồ sơ</h2></Card.Header>
+                    <div className="card-header"> 
+                    {/* <h2 className="card-title text-center">CHI TIẾT HỒ SƠ ĐĂNG KÝ CHƯƠNG TRÌNH</h2> */}
+<div>
+    
+  <Box sx={{ mx: 'auto', width: '100%', maxWidth: '1460px' }}> 
+      <Row className="justify-content-center mt-4">            
+       <Col md={12}>
+       <Card className="mb-4 shadow"   style={{
+          boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)",
+          borderRadius: "10px",
+      }}>
+            <Card.Header style={{ textAlign: 'center' }}><h2>Thông tin hồ sơ</h2></Card.Header>
             <Card.Body>
-         <Col sm='12'>
-        {displayApplicationStages()} 
-         </Col>
+                <Row>
+                    <Col md={6}>
+                        <p><strong>Mã hồ sơ:</strong> {studentProfile.studentProfileId}</p>
+                        <p><strong>Ngày tạo hồ sơ:</strong> {studentProfile.createDate}</p>
+                        <p><strong>Khai sinh:</strong> {studentProfile.dateOfBirth}</p>
+                        <p><strong>Địa chỉ thường trú:</strong> {studentProfile.address}</p>
+                        <p><strong>Mã số căn cước công dân:</strong> {studentProfile.nationalId}</p>
+                        <p className="d-flex">
+                            <span style={{ fontWeight: "bold" }}>Bộ hồ sơ</span>
+                            {studentProfile && studentProfile.fileUploads && studentProfile.fileUploads?.length > 0 ? (
+                                studentProfile.fileUploads.map((file, index) => (
+                                    <div key={index} className="m-2">
+                                        <Button className="me-2" variant="secondary btn-rounded" onClick={() => handleDownloadFile(file.fileAttach)}>
+                                            <span className="btn-icon-start text-warning mr-2">
+                                                <i className="fa fa-download" />
+                                            </span>
+                                            PDF {index + 1}
+                                        </Button>
+                                    </div>
+                                ))
+                            ) : (
+                                <span className="ml-2">Chưa bổ sung file PDF</span>
+                            )}
+                        </p>
+                    </Col>
+                    <Col md={6}>
+                        <p><strong>Họ và tên:</strong> {studentProfile.fullName}</p>
+                        <p><strong>Giới tính:</strong> {studentProfile.gender}</p>
+                        <p><strong>Số điện thoại:</strong> {studentProfile.phone}</p>
+                        <p><strong>Email:</strong> {studentProfile.email}</p>
+                        <p><strong>Học vấn :</strong> {studentProfile.grade}</p>
+                    </Col>
+                </Row>
+            </Card.Body>
+        </Card>
+    </Col>
+            </Row>
+</Box>
+            
+<Box sx={{ width: '100%', bgcolor: 'background.paper', marginTop: 4 }}>
+            <Tabs value={tabIndex} onChange={handleTabChange} centered>
+                <Tab label="Chương trình" />
+                <Tab label="Cập nhật tiếng trình hồ sơ" />
+                <Tab label="Tạo đơn thanh toán" />
+            </Tabs>
+      
+            <TabPanel value={tabIndex} index={0}>
+                {/* Tab 1: Program Details */}
+      
+      <Card  className="mb-4 shadow" style={{marginTop:'24px',  boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)",
+          borderRadius: "10px",}} >
+      <Card.Header className=" " style={{ textAlign: 'center' }}>
+      <h2>Chương trình</h2>
+      </Card.Header>
+                  <Card.Body>
+                      <Row>
+                      <Col md={6}>
+      <img
+      src={program.img}
+      alt="Program"
+      style={{ width: '100%', marginBottom: '20px'}}
+      />
+      <p><strong>Trách nhiệm:</strong>   {program?.responsibilities
+                    .split("\\r\\n")
+                    .map((responsibilities, index) => (
+                      <li key={index}>{responsibilities}</li>
+                    ))}</p>
+      </Col>
+                          <Col md={6}>
+                          <p><strong>Tên Chương trình:</strong> {program.nameProgram}</p>
+                          <p><strong>Chuyên ngành:</strong> {program.major.majorName}</p>
+                          <p><strong>Loại chương trình:</strong> {program.programType.typeName}</p>
+      
+                          <p><strong>Thời gian:</strong> {program.duration}</p>
+                      <p><strong>Mô tả chương trình:</strong> {program.description}</p>
+                      <p><strong>Trường đại học:</strong> {program.university.universityName} ({program.university.universityType.typeName})</p>
+                      <p><strong>Thuộc bang:</strong> {program.university.state.stateName}</p>
+                      
+                     <p><strong>Yêu cầu của chương trình:</strong>   {program?.requirement
+                    .split("\\r\\n")
+                    .map((requirement, index) => (
+                      <li key={index}>{requirement}</li>
+                    ))}</p>
+                    <p style={{marginTop:'64px'}}><strong>Chi phí tham khảo:</strong>   {program?.tuition
+                    .split("\\r\\n")
+                    .map((tuition, index) => (
+                      <li key={index}>{tuition}</li>
+                    ))}</p>
+                          </Col>
+                       
+                      </Row>
+                  
+                  </Card.Body>
+              </Card>
+            </TabPanel>
+            <TabPanel value={tabIndex} index={1}>
+                {/* Tab 2: Student Profile Details */}
+                
+    {/* Cập nhật tiến trình hồ sơ - Full width */}
+
+
+<Row className="gx-2">
+    <Col md={12}>
+        <Card className="mb-4 shadow"  style={{
+          boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)",
+          borderRadius: "10px",
+      }}>
+            <Card.Header  style={{ textAlign: 'center' }}><h2>Cập nhật tiến trình hồ sơ</h2></Card.Header>
+            <Card.Body>
+                <div className='mb-6'>
+                {displayApplicationStages()}
                 <div style={{ marginBottom: '24px' }}>
                     {applyStages?.map(stage => (
                         <div key={stage.id}>
@@ -234,109 +352,88 @@ const Payment = () => {
                         </div>
                     ))}
                 </div>
-                <Form>
-                    <Form.Group as={Row} className="mb-3">
-                        <Form.Label column sm="3">Giai đoạn hồ sơ:</Form.Label>
-                        <Form.Label column sm="6">{activeStage?.programStage?.stageName || 'No active stage'}</Form.Label>
-
-                    </Form.Group>
-                    <Button variant="primary" onClick={updateStages}>Cập nhật</Button>
+                </div>
+               
+                <Form >
+                    <Row className="mb-3">
+                        <Col sm={3}>
+                            <Form.Label><strong >Giai đoạn hồ sơ:</strong></Form.Label>
+                        </Col>
+                        <Col sm={9}>
+                            <Form.Label> <strong  style={{ color: '#007bff' }}>{activeStage?.programStage?.stageName || 'No active stage'}</strong></Form.Label>
+                        </Col>
+                        <Col sm={3}>
+                            <Form.Label><strong>Phí giai đoạn:</strong></Form.Label>
+                        </Col>
+                        <Col sm={9}>
+                            <Form.Label> <strong  style={{ color: '#007bff' }}>{renderPaymentStatus(activeStage?.programStage?.isPayment)}</strong></Form.Label>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col sm={{ span: 3, offset: 9 }}> 
+                            <Button variant="primary" onClick={updateStages}>Cập nhật</Button>
+                        </Col>
+                    </Row>
                 </Form>
             </Card.Body>
         </Card>
-                </Col>
-                
-            </Row>
-       
-        
-                    <Card >
-    <Card.Header style={{ textAlign: 'center' }}>
-  <h2>Chương trình</h2>
-</Card.Header>
-                        <Card.Body>
-                            <Row>
-                            <Col md={6}>
-        <img
-          src={program.img}
-          alt="Program"
-          style={{ width: '100%', marginBottom: '20px'}}
-        />
-        <p><strong>Trách nhiệm:</strong>   {program?.responsibilities
-                          .split("\\r\\n")
-                          .map((responsibilities, index) => (
-                            <li key={index}>{responsibilities}</li>
-                          ))}</p>
-      </Col>
-                                <Col md={6}>
-                                <p><strong>Tên Chương trình:</strong> {program.nameProgram}</p>
-                                <p><strong>Chuyên ngành:</strong> {program.major.majorName}</p>
-                                <p><strong>Loại chương trình:</strong> {program.programType.typeName}</p>
+    </Col>
+</Row>
 
-                                <p><strong>Thời gian:</strong> {program.duration}</p>
-                            <p><strong>Mô tả chương trình:</strong> {program.description}</p>
-                            <p><strong>Trường đại học:</strong> {program.university.universityName} ({program.university.universityType.typeName})</p>
-                            <p><strong>Thuộc bang:</strong> {program.university.state.stateName}</p>
-                            
-                           <p><strong>Yêu cầu của chương trình:</strong>   {program?.requirement
-                          .split("\\r\\n")
-                          .map((requirement, index) => (
-                            <li key={index}>{requirement}</li>
-                          ))}</p>
-                          <p style={{marginTop:'24px'}}><strong>Chi phí tham khảo:</strong>   {program?.tuition
-                          .split("\\r\\n")
-                          .map((tuition, index) => (
-                            <li key={index}>{tuition}</li>
-                          ))}</p>
-                                </Col>
-                             
-                            </Row>
-                        
-                        </Card.Body>
-                    </Card>
-                    <Card>
-                        <Card.Header style={{ textAlign: 'center' }}><h2>Tạo đơn thanh toán</h2></Card.Header>
-                        <Card.Body>
-                            <Form>
-                            <Form.Group as={Row} className="mb-3">
-                                    <Form.Label column sm="3">Giai đoạn hồ sơ:</Form.Label>
-                                    <Col sm="6">
-                                    {activeStage?.programStage.stageName}                                    
-                                    </Col>
-                                </Form.Group>
-                                <Form.Group as={Row} className="mb-3">
-                                    <Form.Label column sm="3"> Phí thủ tục:</Form.Label>
-                                    <Col sm="9">
-                                        {/* <Form.Select value={selectedFee ? selectedFee.programFeeId : ''} onChange={handleFeeSelection}>
-                                            <option value="">Lựa chọn phí theo giai đoạn hồ sơ</option>
-                                            {filteredFees.map(fee => (
-                                                <option key={fee.programFeeId} value={fee.programFeeId}>
-                                                    {getTypeNameById(fee.feeTypeId)}
-                                                </option>
-                                            ))}
-                                        </Form.Select> */}
-                                        Phí nộp hồ sơ - 20000 VND
-                                    </Col>
-                                </Form.Group>
-                                {selectedFee && (
-                                    <Form.Group as={Row} className="mb-3">
-                                        <Form.Label column sm="3">Số tiền phí:</Form.Label>
-                                        <Col sm="9">
-                                            <FormControl plaintext readOnly defaultValue={selectedFee.amount + ' VND'} />
-                                        </Col>
-                                    </Form.Group>
-                                )}
-                                <Form.Group as={Row} className="mb-3">
-                                    <Form.Label column sm="3">Ghi chú:</Form.Label>
-                                    <Col sm="9">
-                                        <FormControl type="text" value={note} onChange={handleNoteChange} />
-                                    </Col>
-                                </Form.Group>
-                                <Button variant="primary" onClick={handlePaymentSubmit}>Gửi thanh toán</Button>
-                            </Form>
-                        </Card.Body>
-                    </Card>
+            </TabPanel>
+            <TabPanel value={tabIndex} index={2}>
+                {/* Tab 3: Create Payment Order */}
+                <Card  className="mb-4 shadow" style={{marginTop:'24px',   boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)",
+          borderRadius: "10px",}}>
+                  <Card.Header    style={{ textAlign: 'center' }}><h2>Tạo đơn thanh toán</h2></Card.Header>
+                  <Card.Body>
+                      <Form>
+                      <Form.Group as={Row} className="mb-3">
+                              <Form.Label column sm="3">Giai đoạn hồ sơ:</Form.Label>
+                              <Col sm="6">
+                              {activeStage?.programStage.stageName}                                    
+                              </Col>
+                          </Form.Group>
+                          <Form.Group as={Row} className="mb-3">
+                              <Form.Label column sm="3"> Phí thủ tục:</Form.Label>
+                              <Col sm="9">
+                                  {/* <Form.Select value={selectedFee ? selectedFee.programFeeId : ''} onChange={handleFeeSelection}>
+                                      <option value="">Lựa chọn phí theo giai đoạn hồ sơ</option>
+                                      {filteredFees.map(fee => (
+                                          <option key={fee.programFeeId} value={fee.programFeeId}>
+                                              {getTypeNameById(fee.feeTypeId)}
+                                          </option>
+                                      ))}
+                                  </Form.Select> */}
+                                  Phí nộp hồ sơ - 20000 VND
+                              </Col>
+                          </Form.Group>
+                          {selectedFee && (
+                              <Form.Group as={Row} className="mb-3">
+                                  <Form.Label column sm="3">Số tiền phí:</Form.Label>
+                                  <Col sm="9">
+                                      <FormControl plaintext readOnly defaultValue={selectedFee.amount + ' VND'} />
+                                  </Col>
+                              </Form.Group>
+                          )}
+                          <Form.Group as={Row} className="mb-3">
+                              <Form.Label column sm="3">Ghi chú:</Form.Label>
+                              <Col sm="9">
+                                  <FormControl type="text" value={note} onChange={handleNoteChange} />
+                              </Col>
+                          </Form.Group>
+                          <Button variant="primary" onClick={handlePaymentSubmit}>Gửi thanh toán</Button>
+                      </Form>
+                  </Card.Body>
+              </Card>
+            </TabPanel>
+        </Box>
+</div>
+</div>
+
         </Container>
-    );
+      
+      );
 };
 
 export default Payment;

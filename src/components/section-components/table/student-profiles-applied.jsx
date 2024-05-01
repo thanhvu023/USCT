@@ -76,7 +76,7 @@ const handleCloseModal = () => {
 useEffect(() => {
   if (selectedProgramApplication) {
       const filteredFees = fees.filter(fee => fee.programId === selectedProgramApplication.programId);
-      setSelectedFee(filteredFees.length > 0 ? filteredFees[0] : null);
+      setSelectedFee(filteredFees?.length > 0 ? filteredFees[0] : null);
   }
 }, [fees, selectedProgramApplication]);
 
@@ -154,7 +154,7 @@ const getFeeTypeNameById = (feeTypeId) => {
 useEffect(() => {
   if (selectedProgramApplication) {
       const filteredFees = fees.filter(fee => fee.programId === selectedProgramApplication.programId);
-      setSelectedFee(filteredFees.length > 0 ? filteredFees[0] : null); 
+      setSelectedFee(filteredFees?.length > 0 ? filteredFees[0] : null); 
   }
 }, [fees, selectedProgramApplication]);
 

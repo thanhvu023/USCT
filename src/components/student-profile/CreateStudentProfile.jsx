@@ -48,7 +48,7 @@ const CreateStudentProfile = () => {
   const handleUpload = async (e) => {
     const selectedFiles = e.target.files; // Get all selected files
     // Loop through each file and upload to Firebase Storage
-    for (let i = 0; i < selectedFiles.length; i++) {
+    for (let i = 0; i < selectedFiles?.length; i++) {
       const selectedFile = selectedFiles[i];
       const imgRef = ref(imageDb, `Image/ProfileStudent/${selectedFile.name}`);
       try {
@@ -73,7 +73,7 @@ const CreateStudentProfile = () => {
   const handleImageUpload = async (e) => {
     const selectedFiles = e.target.files; // Get all selected files
     // Loop through each file and upload to Firebase Storage
-    for (let i = 0; i < selectedFiles.length; i++) {
+    for (let i = 0; i < selectedFiles?.length; i++) {
       const selectedFile = selectedFiles[i];
       const imgRef = ref(imageDb, `Image/ProfileStudent/${selectedFile.name}`);
       try {
@@ -299,7 +299,7 @@ const CreateStudentProfile = () => {
 
     const newErrors = validateForm();
 
-    if (Object.keys(newErrors).length === 0) {
+    if (Object.keys(newErrors)?.length === 0) {
       dispatch(createStudentProfile(formData));
       // Hiển thị thông báo khi hoàn tất khởi tạo thành công
       Swal.fire({

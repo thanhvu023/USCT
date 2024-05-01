@@ -23,7 +23,7 @@ const getConsultantEmail = (consultantId) => {
   const consultants = useSelector((state) => state?.auth?.consultants);
 
   // Check if consultants is undefined or empty
-  if (!consultants || consultants.length === 0) {
+  if (!consultants || consultants?.length === 0) {
     return "Loading..."; // or any other appropriate message
   }
 
