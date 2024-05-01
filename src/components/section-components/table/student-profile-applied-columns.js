@@ -82,7 +82,7 @@ export const COLUMNS = [
       accessor: 'applyStageId',
       Cell: ({ row }) => {
         const activeStage = row.original.applyStage.find(stage => stage.status === 1);
-        return activeStage ? activeStage.programStage.stageName : 'No active stage';
+        return activeStage ? activeStage.programStage.stageName : 'Hồ sơ đã hoàn tất ';
       },
       Filter: ColumnFilter,
     },

@@ -1,6 +1,33 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import instance from "../axiosCustom";
 
+
+
+export const getAllPayments = createAsyncThunk(
+  "payment/getAllPayments",
+  async (_, thunkAPI) => {
+    try {
+      const response = await instance.get('/payment');
+      return response.data;
+    } catch (error) {
+      console.error("API error:", error);
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+export const getPaymentByProgramApplicationId = createAsyncThunk(
+  "payment/getPaymentsByProgramApplicationId",
+  async (programApplicationId, thunkAPI) => {
+    try {
+      const response = await instance.get(`/payment/program-application/${programApplicationId}`);
+      return response.data;
+    } catch (error) {
+      console.error("API error:", error);
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
 export const createPayment = createAsyncThunk(
   "payment/createPayment",
   async (paymentData, thunkAPI) => {
@@ -9,7 +36,8 @@ export const createPayment = createAsyncThunk(
         params: {
           amount: paymentData.amount,
           orderInfo: paymentData.orderInfo,
-          img: paymentData.img
+          img: paymentData.img,
+          
         },
       });
       return response.data;
@@ -75,6 +103,29 @@ const paymentSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+    .addCase(getAllPayments.pending, (state) => {
+      state.loading = true;
+    })
+    .addCase(getAllPayments.fulfilled, (state, action) => {
+      state.loading = false;
+      state.allPayments = action.payload; // Lưu các thanh toán vào state
+    })
+    .addCase(getAllPayments.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+    })
+    .addCase(getPaymentByProgramApplicationId.pending, (state) => {
+      state.loading = true;
+    })
+    .addCase(getPaymentByProgramApplicationId.fulfilled, (state, action) => {
+      state.loading = false;
+      state.paymentsByApplicationId = action.payload; // Lưu các thanh toán theo id vào state
+    })
+    .addCase(getPaymentByProgramApplicationId.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+    })
+    
       .addCase(createPayment.pending, (state) => {
         state.loading = true;
       })
