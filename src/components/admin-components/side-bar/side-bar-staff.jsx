@@ -24,8 +24,8 @@ const SideBarStaff = ({ setMain }) => {
   };
 
   const handleDashboardClick = () => {
-    setSelectedFilter("admin");
-    setMain("admin");
+    setSelectedFilter("programApplication");
+    setMain("programApplication");
   };
 
   let path = window.location.pathname;
@@ -78,7 +78,7 @@ const SideBarStaff = ({ setMain }) => {
                       selectedFilter === data.title ? "selected" : ""
                     }`}
                     onClick={
-                      data.filterName === "Thống kê"
+                      data.filterName === "programApplication"
                         ? handleDashboardClick
                         : () => handleFilterClick(data.title)
                     }

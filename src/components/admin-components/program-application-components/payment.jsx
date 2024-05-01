@@ -22,6 +22,7 @@ const Payment = () => {
     const applyStages = useSelector((state) => state.applyStage.applyStages || []);
     const activeStage = selectedApplication?.applyStage?.find(stage => stage?.status === 1);
     const [tabIndex, setTabIndex] = useState(0);
+
     const payments = useSelector((state) => state.payment .paymentsByApplicationId);
 console.log("vì sao",selectedApplication)
     const handleTabChange = (event, newValue) => {
@@ -60,14 +61,13 @@ console.log("vì sao",selectedApplication)
         if (!selectedApplication || !selectedApplication.applyStage) {
             Swal.fire({
                 icon: 'error',
-                title: 'Oops...',
+                title: 'Lỗi...',
                 text: 'Không có thông tin ứng dụng hoặc giai đoạn nào được chọn!',
             });
             return;
         }
     
         const currentStages = selectedApplication.applyStage;
-   
         const activeIndex = currentStages.findIndex(stage => stage.status === 1);
     
         if (activeIndex === -1) {
@@ -80,7 +80,7 @@ console.log("vì sao",selectedApplication)
         }
     
         const currentStage = currentStages[activeIndex];
-       
+    
         if (currentStage) {
             dispatch(updateApplyStage({
                 applyStageId: currentStage.applyStageId,
@@ -88,18 +88,9 @@ console.log("vì sao",selectedApplication)
                 programApplicationId: currentStage.programApplicationId,
                 status: 2 
             })).then(() => {
-                
-                // Swal.fire({
-                //     icon: 'success',
-                //     title: 'Cập nhật thành công!',
-                //     text: 'Tiến trình hồ sơ đã được cập nhật .',
-                //     showConfirmButton: false,
-                //     timer: 1500
-                // });
-    
                 dispatch(getAllStage()); 
-    
                 const nextStage = currentStages[activeIndex + 1];
+    
                 if (nextStage) {
                     dispatch(updateApplyStage({
                         applyStageId: nextStage.applyStageId,
@@ -107,22 +98,29 @@ console.log("vì sao",selectedApplication)
                         programApplicationId: nextStage.programApplicationId,
                         status: 1 
                     }));
-                    const message = `Tiến trình hồ sơ đã được cập nhật từ ${currentStage?.programStage.stageName} đến ${nextStage.programStage.stageName}`;
                     Swal.fire({
                         icon: 'success',
                         title: 'Cập nhật thành công!',
-                        text: message,
+                        text: `Tiến trình hồ sơ đã được cập nhật từ ${currentStage.programStage.stageName} đến ${nextStage.programStage.stageName}`,
                         showConfirmButton: false,
                         timer: 1500
                     });
                 } else {
-                    console.log("Đây là giai đoạn cuối cùng hoặc không có thông tin giai đoạn tiếp theo.");
+                    // Nếu không có giai đoạn tiếp theo, hiển thị thông báo hồ sơ hoàn tất
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Hoàn tất!',
+                        text: 'Tiến trình hồ sơ đã hoàn tất.',
+                        showConfirmButton: true,
+                        confirmButtonText: 'OK'
+                    });
                 }
             }).catch(error => {
                 Swal.fire({
                     icon: 'error',
                     title: 'Lỗi cập nhật!',
-                    text: 'Không thể cập nhật giai đoạn này.',
+                    text: 'Không thể c update the current stage',
+                    confirmButtonText: 'OK'
                 });
                 console.error("Failed to update the current stage:", error);
             });
@@ -130,6 +128,7 @@ console.log("vì sao",selectedApplication)
             console.log("Không có giai đoạn hiện tại hợp lệ để cập nhật.");
         }
     };
+    
     
     
     
@@ -205,7 +204,7 @@ console.log("vì sao",selectedApplication)
                 {selectedApplication.applyStage.map((stage, index) => (
                     <Step key={stage.applyStageId}>
                         <StepLabel icon={<StepIcon status={stage.status}/>}>
-                        {stage.programStage.stageName} - {renderPaymentStatus(stage.programStage.isPayment)}
+                        {stage.programStage.stageName} 
                         </StepLabel>
                     </Step>
                 ))}
@@ -251,6 +250,20 @@ console.log("vì sao",selectedApplication)
             return "Không xác định";
         }
       };
+      const itemsPerPage = 9;
+      const [page, setPage] = useState(0);
+      const pageCount = Math.ceil(payments?.length / itemsPerPage);
+
+      const currentPayments = payments?.slice(page * itemsPerPage, (page + 1) * itemsPerPage);
+      
+      const nextPage = () => {
+          setPage((prevPage) => (prevPage + 1 < pageCount ? prevPage + 1 : prevPage));
+      };
+      
+      const prevPage = () => {
+          setPage((prevPage) => (prevPage > 0 ? prevPage - 1 : prevPage));
+      };
+
     return (
         <Container>
                     
@@ -390,7 +403,7 @@ console.log("vì sao",selectedApplication)
                 <Form >
                     <Row className="mb-3">
                         <Col sm={3}>
-                            <Form.Label><strong >Giai đoạn hồ sơ:</strong></Form.Label>
+                            <Form.Label><strong >Hồ sơ đang ở tiến trình:</strong></Form.Label>
                         </Col>
                         <Col sm={9}>
                             <Form.Label> <strong  style={{ color: '#007bff' }}>{activeStage?.programStage?.stageName || 'Hồ sơ đã hoàn tiến trình'}</strong></Form.Label>
@@ -424,39 +437,57 @@ console.log("vì sao",selectedApplication)
 
             </TabPanel>
             <TabPanel value={tabIndex} index={1}>
-            <Typography variant="h6" gutterBottom>
-        Lịch sử thanh toán
-    </Typography>
-    <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 600 }} style={{ maxWidth: 1400, margin: 'auto' }} aria-label="payment history table">
-            <TableHead>
-                <TableRow>
-                    <TableCell>Payment ID</TableCell>
-                    <TableCell align="right">Số tiền</TableCell>
-                    <TableCell align="right">Phương thức</TableCell>
-                    <TableCell align="right">Ghi chú</TableCell>
-                    <TableCell align="right">Ngày thanh toán</TableCell>
-                    <TableCell align="right">Trạng thái</TableCell>
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                {payments?.map((payment) => (
-                    <TableRow key={payment.paymentId}>
-                        <TableCell component="th" scope="row">
-                            {payment.paymentId}
-                        </TableCell>
-                        <TableCell align="right">{payment.amount.toLocaleString()}</TableCell>
-                        <TableCell align="right">{payment.method}</TableCell>
-                        <TableCell align="right">{payment.note}</TableCell>
-                        <TableCell align="right">{new Date(payment.paymentDate).toLocaleDateString()}</TableCell>
-                        <TableCell align="right">{getPaymentStatusLabel(payment.status)}</TableCell>
-                    </TableRow>
-                ))}
-            </TableBody>
-        </Table>
-    </TableContainer>
-              
-            </TabPanel>
+  <Typography variant="h6" gutterBottom>
+    Lịch sử thanh toán
+  </Typography>
+  <TableContainer component={Paper}>
+    <Table sx={{ minWidth: 600 }} style={{ maxWidth: 1400, margin: 'auto' }} aria-label="payment history table">
+      <TableHead>
+        <TableRow>
+          <TableCell>Payment ID</TableCell>
+          <TableCell align="right">Số tiền</TableCell>
+          <TableCell align="right">Phương thức</TableCell>
+          <TableCell align="right">Ghi chú</TableCell>
+          <TableCell align="right">Ngày thanh toán</TableCell>
+          <TableCell align="right">Trạng thái</TableCell>
+          <TableCell align="right">Hình ảnh</TableCell> {/* Thêm cột mới này */}
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {currentPayments?.map((payment) => (
+          <TableRow key={payment.paymentId}>
+            <TableCell component="th" scope="row">
+              {payment.paymentId}
+            </TableCell>
+            <TableCell align="right">{payment.amount.toLocaleString()}</TableCell>
+            <TableCell align="right">{payment.method}</TableCell>
+            <TableCell align="right">{payment.note}</TableCell>
+            <TableCell align="right">{new Date(payment.paymentDate).toLocaleDateString()}</TableCell>
+            <TableCell align="right">{getPaymentStatusLabel(payment.status)}</TableCell>
+            <TableCell align="right">
+  {payment.img ? (
+    <Button
+      variant="contained"
+      color="primary"
+      onClick={() => window.open(payment.img, '_blank')}
+      style={{ textTransform: 'none' }}
+    >
+      Xem Ảnh
+    </Button>
+  ) : 'Không có ảnh'}
+</TableCell>
+
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  </TableContainer>
+  <Box sx={{ display: 'flex', justifyContent: 'space-between ', margin: '20px' }}>
+    <Button variant="primary" onClick={prevPage} disabled={page === 0}>Previous</Button>
+    <Button variant="primary" onClick={nextPage} disabled={page + 1 === pageCount}>Next</Button>
+  </Box>
+</TabPanel>
+
         </Box>
 </div>
 </div>

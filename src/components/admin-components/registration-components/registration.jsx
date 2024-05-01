@@ -117,6 +117,10 @@ const Registration = () => {
     const consultant = consultants.find((c) => c.consultantId === consultantId);
     return consultant ? consultant.userName : "Unknown";
   };
+  const getSpecializeByConsultantId = (consultantId) => {
+    const consultant = consultants.find((c) => c.consultantId === consultantId);
+    return consultant ? consultant.specialize : "Unknown";
+  };
   const consultants = useSelector((state) => state.auth.consultants);
 
 
@@ -496,12 +500,12 @@ const Registration = () => {
     </Card>
     <Card>
       <Card.Body>
-        <Card.Title>Lý do và ư tiên</Card.Title>
+        <Card.Title>Lý do và ưu tiên</Card.Title>
         <ListGroup variant="flush">
   <ListGroup.Item style={{ display: 'flex', alignItems: 'center' }}>
     <span style={{ marginRight: '10px', minWidth: '150px' }}> Lý do du học:</span>
     <strong style={{ color: '#007bff' }}>
-      {getFullName(selectedRegistration.studyAbroadReason)}
+    {selectedRegistration?.studyAbroadReason}
     </strong>
   </ListGroup.Item>
 
@@ -514,8 +518,9 @@ const Registration = () => {
     <span style={{ marginRight: '10px', minWidth: '150px' }}>Tư vấn viên phụ trách:</span>
     <strong  style={{ color: '#007bff' }}>{getFullNameByConsultantId(selectedRegistration.consultantId)}</strong>
   </ListGroup.Item>
-
   <ListGroup.Item style={{ display: 'flex', alignItems: 'center' }}>
+  <span style={{ marginRight: '10px', minWidth: '150px' }}>Lựa chọn Tư vấn viên </span>
+
   <Form.Select
                           value={selectedConsultantId}
                           onChange={(e) =>
@@ -534,6 +539,11 @@ const Registration = () => {
                           ))}
                         </Form.Select>
   </ListGroup.Item>
+  <ListGroup.Item style={{ display: 'flex', alignItems: 'center' }}>
+    <span style={{ marginRight: '10px', minWidth: '150px' }}>Chuyên môn:</span>
+    <strong  style={{ color: '#007bff' }}>{getSpecializeByConsultantId(selectedRegistration.consultantId)}</strong>
+  </ListGroup.Item>
+ 
 </ListGroup>
 
       </Card.Body>

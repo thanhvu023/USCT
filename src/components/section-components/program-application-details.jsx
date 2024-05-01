@@ -2,7 +2,7 @@ import React, { useContext,useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getProgramApplicationById } from "../../redux/slice/programApplicationSlice";
-import { getPaymentByProgramApplicationId } from "../../redux/slice/paymentSlice";
+import { getAllPayments, getPaymentById, getPaymentByProgramApplicationId, updatePayment } from "../../redux/slice/paymentSlice";
 import {
   Card,
   CardContent,
@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import { Stepper, Step, StepLabel } from '@mui/material';
 import { Check as CheckIcon, Clear as ClearIcon, HourglassEmpty as HourglassEmptyIcon, RadioButtonUnchecked as RadioButtonUncheckedIcon } from '@mui/icons-material';
-
+import { Backdrop, CircularProgress } from "@mui/material";
 import {  getAllProgramFees } from '../../redux/slice/programFeeSlice';
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { imageDb } from "../FirebaseImage/Config";
@@ -23,7 +23,7 @@ import { Modal, ListGroup,Button, Row, Col,  Form, InputGroup, FormControl } fro
 import { getAllFeeTypes } from '../../redux/slice/feeTypeSlice';
 import { getAllUniversity } from "../../redux/slice/universitySlice";
 import { getAllUniversityType } from "../../redux/slice/universitySlice";
-import { createPayment, createVnPayLink, updatePayment } from '../../redux/slice/paymentSlice';
+import { createPayment, createVnPayLink } from '../../redux/slice/paymentSlice';
 import { getProgramStageById, getProgramStagesByProgramId } from "../../redux/slice/programStageSlice";
 import { getAllStage } from "../../redux/slice/applyStageSlice";
 import { getAllProgramStages } from "../../redux/slice/programStageSlice";
@@ -93,14 +93,16 @@ const handleTabChange = (event, newValue) => {
   const [note, setNote] = useState('');
   const [selectedFee, setSelectedFee] = useState(null);
   const [method, setMethod] = useState('order');
+  const [loading, setLoading] = useState(false);
 
   const [selectedProgramApplication, setSelectedProgramApplication] = useState(null);
   const programs = useSelector(state => state.program.programs);
   const universities = useSelector(state =>state.university.universities)
-//   console.log("details?.programApplicationId,",details?.programApplicationId)
+  console.log("details?.programApplicationId,",details?.programApplicationId)
 console.log("selectedFee",selectedFee?.amount)
 console.log("note",note)
 console.log("method",method)
+
   const fees = useSelector(state => state?.programFee?.fees);
   const feeTypes = useSelector(state => state.feeType.feeTypes);
   const stages = useSelector(state=>state.applyStage.stages)
@@ -157,9 +159,9 @@ const getStageNameByProgramStageId = () =>{
   const [img, setImg] = useState(null);
 
   const [paymentId, setPaymentId] = useState(null); 
-  const [paymentSuccess, setPaymentSuccess] = useState(null); 
+
 console.log("ảnh aaaa",img)
-console.log("paymentId paymentId",paymentId)
+console.log(" paymentId",paymentId)
 const handleFileChange = (e) => {
   const file = e.target.files[0];
   if (file) {
@@ -170,57 +172,90 @@ const handleFileChange = (e) => {
   }
 };
 
-  const handleImageUpload = async () => {
-    if (!paymentId) {
-        console.error("No payment ID available for updating.");
-        return;
-    }
-
-    if (file) {
-        const imgRef = ref(imageDb, `Image/Payment/${file.name}`);
-        try {
-          await uploadBytes(imgRef, file);
-          const img = await getDownloadURL(imgRef);
-          console.log("Image URL:", img);
-          setImg(img);
-          dispatch(updatePayment({ id: paymentId, img: img }));
-        } catch (error) {
-          console.error("Error uploading image:", error);
-        }
-    } else {
-        console.error("No file selected for upload.");
-    }
-};
+const [paymentSuccess, setPaymentSuccess] = useState(false);
 
 
+const handlePaymentSubmit = () => {
+  if (selectedFee && details?.programApplicationId && selectedFee.amount && note) {
+    const paymentData = {
+      programApplicationId: details.programApplicationId,
+      method: "Thanh toán qua phương thức khác",
+      amount: selectedFee.amount,
+      note: note,
+      paymentDate: new Date().toISOString(),
+      transactionNo: 0,
+    };
 
-  const handlePaymentSubmit = () => {
-    if (selectedFee && details?.programApplicationId) {
-        const paymentData = {
-            programApplicationId: details.programApplicationId,
-            method: "order",
-            amount: selectedFee.amount,
-            note: note,
-            paymentDate: new Date().toISOString(),
-            transactionNo: 0,
-            img: ""
-        };
-
-        dispatch(createPayment(paymentData))
-            .then(response => {
-                console.log("Payment submission response:", response);
-                setPaymentSuccess(true);
-                setPaymentId(response.payload.paymentId);  // Set success to true on successful payment
-            })
-            .catch(error => {
-                console.error("Payment submission error:", error);
-                setPaymentSuccess(false);  // Ensure it remains false on failure
-            });
-    } else {
-        console.error("Payment submission aborted: Missing fee selection or program application.");
+    dispatch(createPayment(paymentData))
+      .then(response => {
+        setPaymentSuccess(true);
+        setPaymentId(response.payload.paymentId);
+        Swal.fire({
+          title: 'Thanh toán xác nhận!',
+          text: 'Thanh toán đã được xác nhận thành công.',
+          icon: 'success',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'OK',
+          timer: 1500
+        }).then((result) => {
+          if (result.isConfirmed) {
+            setIsUploadingEnabled(true); // Cho phép hiển thị nút tải ảnh lên
+          }
+        });
+      })
+      .catch(error => {
+        console.error("Payment submission error:", error);
         setPaymentSuccess(false);
-    }
+        Swal.fire('Lỗi!', 'Thanh toán không thành công.', 'error');
+      });
+  } else {
+    console.error("Payment submission aborted: Missing fee selection or program application.");
+    setPaymentSuccess(false);
+  }
 };
+
+
+const handleImageUpload = async () => {
+  if (!paymentId) {
+    Swal.fire('Error!', 'No payment ID available for updating.', 'error');
+    return;
+  }
+
+  if (file) {
+    const imgRef = ref(imageDb, `Image/Payment/${file.name}`);
+    try {
+      await uploadBytes(imgRef, file);
+      const imgURL = await getDownloadURL(imgRef);
+      
+      const currentPaymentDetails = await dispatch(getPaymentById(paymentId)).unwrap();
+
+      const updatedPaymentData = {
+        ...currentPaymentDetails,
+        img: imgURL ,
+      };
+
+      await dispatch(updatePayment({ id: paymentId, data: updatedPaymentData }));
+
+      Swal.fire({
+        title: 'Upload Successful',
+        text: 'Payment proof has been successfully uploaded.',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      }).then(() => {
+        window.location.reload();  
+      });
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      Swal.fire('Error!', 'Failed to upload image.', 'error');
+    }
+  } else {
+    Swal.fire('Notice!', 'No file selected for upload.', 'info');
+  }
+};
+const [isUploadingEnabled, setIsUploadingEnabled] = useState(false);
+
+
+
 
 const handleCreateVnPayLink = async () => {
   const totalAmount = fees.filter(fee => fee?.programId === details.program?.programId)
@@ -235,7 +270,7 @@ const handleCreateVnPayLink = async () => {
   dispatch(createVnPayLink(paymentData))
       .then(response => {
           Swal.fire({
-              title: 'Hoàn tất',
+              title: 'Hoàn tất khởi tạo đơn thanh toán',
               text: 'Nhấn vào nút bên dưới để đến trang thanh toán VNPAY!',
               icon: 'success',
               showCancelButton: true,
@@ -290,7 +325,20 @@ const handleCreateVnPayLink = async () => {
 
   const activeStage = details?.applyStage?.find(stage => stage.status === 1);
 
+  const itemsPerPage = 6;
+  const [page, setPage] = useState(2);
+  const pageCount = Math.ceil(payments?.length / itemsPerPage);
 
+  const currentPayments = payments?.slice(page * itemsPerPage, (page + 1) * itemsPerPage);
+  
+  const nextPage = () => {
+      setPage((prevPage) => (prevPage + 1 < pageCount ? prevPage + 1 : prevPage));
+  };
+  
+  const prevPage = () => {
+      setPage((prevPage) => (prevPage > 0 ? prevPage - 1 : prevPage));
+  };
+  
   const getStatusText = (status) => {
     switch (status) {
       case 0:
@@ -371,7 +419,14 @@ const handleCreateVnPayLink = async () => {
 
   
   return (
-    <Grid container spacing={2} style={{ margin: "20px" }}>
+<div style={{ maxHeight: "100vh" }}> 
+      <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={loading}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+        <Grid container spacing={2} style={{ margin: "20px" }}>
       <Grid item xs={12} >
  
         <div style={{display:'flex',justifyContent:'center',alignItems:'center'}}>
@@ -590,12 +645,16 @@ const handleCreateVnPayLink = async () => {
   <FormControl as="textarea" rows={3} value={note} onChange={handleNoteChange} />
 </InputGroup>
 <Button variant="primary" onClick={handlePaymentSubmit}>Xác nhận</Button>
+
 {paymentSuccess && (
-            <>
-              <input type="file" onChange={handleFileChange} />
-              <button onClick={handleImageUpload}>Upload Image</button>
-            </>
-          )}
+  <>
+    <input type="file" onChange={handleFileChange} />
+    <button onClick={handleImageUpload}>Upload Image</button>
+  </>
+)}
+
+
+
 <>
 
 <Typography variant="h6" gutterBottom style={{cursor: 'pointer'}} onClick={toggleFeesDetail}>
@@ -659,50 +718,68 @@ Hoặc có thể đóng toàn bộ phí cho tiến trình (cập nhật tự đ�
 
 
 
-<TabPanel value={tabIndex} index={2 }> 
+
        
 <TabPanel value={tabIndex} index={2}>
   <Typography variant="h6" gutterBottom>
     Lịch sử thanh toán
   </Typography>
-  <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-    <TableContainer component={Paper} sx={{ maxWidth: 1600, width: '100%', overflowX: 'auto' }}>
-      <Table sx={{ minWidth: 650 }} aria-label="payment history table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Payment ID</TableCell>
-            <TableCell align="right">Số tiền</TableCell>
-            <TableCell align="right">Phương thức</TableCell>
-            <TableCell align="right">Ghi chú</TableCell>
-            <TableCell align="right">Ngày thanh toán</TableCell>
-            <TableCell align="right">Trạng thái</TableCell>
+  <TableContainer component={Paper}>
+    <Table sx={{ minWidth: 600 }} style={{ maxWidth: 1400, margin: 'auto' }} aria-label="payment history table">
+      <TableHead>
+        <TableRow>
+          <TableCell>Payment ID</TableCell>
+          <TableCell align="right">Số tiền</TableCell>
+          <TableCell align="right">Phương thức</TableCell>
+          <TableCell align="right">Ghi chú</TableCell>
+          <TableCell align="right">Ngày thanh toán</TableCell>
+          <TableCell align="right">Trạng thái</TableCell>
+          <TableCell align="right">Hình ảnh</TableCell> {/* Thêm cột mới này */}
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {currentPayments?.map((payment) => (
+          <TableRow key={payment.paymentId}>
+            <TableCell component="th" scope="row">
+              {payment.paymentId}
+            </TableCell>
+            <TableCell align="right">{payment.amount.toLocaleString()}</TableCell>
+            <TableCell align="right">{payment.method}</TableCell>
+            <TableCell align="right">{payment.note}</TableCell>
+            <TableCell align="right">{new Date(payment.paymentDate).toLocaleDateString()}</TableCell>
+            <TableCell align="right">{getPaymentStatusLabel(payment.status)}</TableCell>
+            <TableCell align="right">
+  {payment.img ? (
+    <Button
+      variant="contained"
+      color="primary"
+      onClick={() => window.open(payment.img, '_blank')}
+      style={{ textTransform: 'none' }}
+    >
+      Xem Ảnh
+    </Button>
+  ) : 'Không có ảnh'}
+</TableCell>
+
           </TableRow>
-        </TableHead>
-        <TableBody>
-          {payments?.map((payment) => (
-            <TableRow key={payment.id}>
-              <TableCell component="th" scope="row">
-                {payment.paymentId}
-              </TableCell>
-              <TableCell align="right">{payment.amount.toLocaleString()}</TableCell>
-              <TableCell align="right">{payment.method}</TableCell>
-              <TableCell align="right">{payment.note || 'Không có'}</TableCell>
-              <TableCell align="right">{new Date(payment.paymentDate).toLocaleDateString()}</TableCell>
-              <TableCell align="right">{getPaymentStatusLabel(payment.status)}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+        ))}
+      </TableBody>
+    </Table>
+  </TableContainer>
+  <Box sx={{ display: 'flex', justifyContent: 'space-between ', margin: '20px' }}>
+    <Button variant="primary" onClick={prevPage} disabled={page === 0}>Previous</Button>
+    <Button variant="primary" onClick={nextPage} disabled={page + 1 === pageCount}>Next</Button>
   </Box>
 </TabPanel>
 
-        </TabPanel>
+      
 
         </Box>
     
 
     </Grid>
+    </div>
+    
     
   );
 };

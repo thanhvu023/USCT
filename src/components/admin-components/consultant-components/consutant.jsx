@@ -15,7 +15,7 @@ const theadData = [
   { heading: "Email", sortingValue: "email" },
   { heading: "Education", sortingValue: "education" },
   { heading: "Specialize", sortingValue: "specialize" },
-  { heading: "Thao tác", sortingValue: "action" },
+  { heading: "Giới thiệu", sortingValue: "introduction" },
 ];
 
 const AllConsultant = () => {
@@ -93,10 +93,11 @@ const AllConsultant = () => {
                           <td><Link to="#">{consultant.email}</Link></td>
                           <td>{consultant.education}</td>
                           <td>{consultant.specialize}</td>
-                          <td style={{ display: "flex", alignItems: "center" }}>
+                          <td>{consultant.introduction}</td>
+                          {/* <td style={{ display: "flex", alignItems: "center" }}>
                             <button className="btn btn-xs sharp btn-primary me-1" style={{ width: "30px", height: "30px", display: "flex", justifyContent: "center", alignItems: "center", marginRight: "5px" }}><i className="fa fa-pencil" /></button>
                             <button className="btn btn-xs sharp btn-danger" style={{ width: "30px", height: "30px", display: "flex", justifyContent: "center", alignItems: "center" }}><i className="fa fa-trash" /></button>
-                          </td>
+                          </td> */}
                         </tr>
                       ))}
                     </tbody>

@@ -31,7 +31,7 @@ const getConsultantByConsultantId = (consultantId) => {
   
   const status = {
 	0: "Chưa được tư vấn",
-	1: "Tư vấn đã duyệt",
+	1: "Tư vấn viên đã duyệt",
 	2: "Đã được tư vấn",
   };
   
@@ -46,6 +46,13 @@ const getConsultantByConsultantId = (consultantId) => {
   };
 export const COLUMNS = [
 	{
+		Header : 'Mã đơn',
+		Footer : 'Mã đơn',
+		accessor: 'registrationFormId',
+		Filter: ColumnFilter,
+		//disableFilters: true,
+	},
+	{
 		Header : 'Chuyên ngành tư vấn',
 		Footer : 'Chuyên ngành tư vấn',
 		accessor: 'majorChoose',
@@ -57,12 +64,13 @@ export const COLUMNS = [
 		Footer : 'Lý do gửi đơn',
 		accessor: 'destinationReason',
 		Filter: ColumnFilter,
-	},	{
-		Header : 'Trường mong muốn',
-		Footer : 'Trường mong muốn',
-		accessor: 'programChoose',
-		Filter: ColumnFilter,
-	},
+	},	
+	// {
+	// 	Header : 'Trường mong muốn',
+	// 	Footer : 'Trường mong muốn',
+	// 	accessor: 'programChoose',
+	// 	Filter: ColumnFilter,
+	// },
 	{
 		Header : ' Tư vấn viên phụ trách',
 		Footer : ' Tư vấn viên phụ trách',

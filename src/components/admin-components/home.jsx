@@ -7,6 +7,7 @@ import { getProgramById } from "../../redux/slice/programSlice";
 import { getAllStage } from '../../redux/slice/applyStageSlice';
 import { getAllProgramStages } from '../../redux/slice/programStageSlice';
 import { getAllUsers } from "../../redux/slice/authSlice";
+import { Backdrop, CircularProgress } from "@mui/material";
 
 import { Col, Dropdown, Row, Nav, Tab } from 'react-bootstrap';
 import { Link, useNavigate } from "react-router-dom"; // Import Link và useNavigate từ react-router-dom
@@ -54,7 +55,7 @@ const AdminHome = ({handleAllConsultantClick }) => {
       );
 
     const programStages = useSelector((state) => state.programStages.stages);
-    // console.log("programApplications",programApplications)
+    console.log("programApplications",programApplications)
     useEffect(() => {
         dispatch(getAllConsultants());
     }, [dispatch]);
@@ -128,7 +129,13 @@ const AdminHome = ({handleAllConsultantClick }) => {
 
       
     return (
-        <>
+<div style={{ maxHeight: "100vh" }}> 
+        <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={loading}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
             <div className='container-fluid' style={{ backgroundColor: 'whitesmoke',paddingBottom:'50px' }}>
                 <Row>
                     {CarddBlog.map((item, index) => (
@@ -191,7 +198,7 @@ const AdminHome = ({handleAllConsultantClick }) => {
                         <th scope="col">Họ và tên học sinh</th>
                         <th scope="col">Ngày tạo</th>
                         <th scope="col">Chương trình</th>
-                        <th scope="col">Trạng thái hồ sơ</th>
+                        
                       
                     </tr>
                 </thead>
@@ -224,12 +231,7 @@ const AdminHome = ({handleAllConsultantClick }) => {
                               <td>
                                 {programs[application.programId]?.nameProgram}
                               </td>
-                              <td>
-                                {
-                                  application.applyStage?.programStage
-                                    ?.stageName
-                                }
-                              </td>
+                             
                             </tr>
                           ))}
                         </tbody>
@@ -241,7 +243,7 @@ const AdminHome = ({handleAllConsultantClick }) => {
                     </Col>
                 </Row>
             </div>
-        </>
+        </div>
     );
 };
 

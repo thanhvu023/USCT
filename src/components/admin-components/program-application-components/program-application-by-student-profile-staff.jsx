@@ -37,7 +37,7 @@ const theadData = [
   { heading: "Ngày tạo", sortingVale: "date" },
   { heading: "Chương trình ứng tuyển", sortingVale: "program" },
   { heading: "Trạng thái hồ sơ", sortingVale: "status" },
-  { heading: "Thao tác", sortingVale: "action" },
+//   { heading: "Thao tác", sortingVale: "action" },
 ];
 const style = {
   button: {
@@ -57,7 +57,7 @@ const style = {
     marginRight: "10px",
   },
 };
-const ProgramApplicationPage = ({setMain }) => {
+const ProgramApplicationPageAdmin = ({setMain }) => {
 
   const { setSelectedApp } = useContext(PaymentContext);
   
@@ -92,7 +92,7 @@ const ProgramApplicationPage = ({setMain }) => {
   const activeStage = programApplications?.applyStage?.find(stage => stage.status === 1);
   const findActiveStageName = (application) => {
     const activeStage = application.applyStage?.find(stage => stage.status === 1);
-    return activeStage ? activeStage.programStage.stageName : 'Hồ sơ đã hoàn thành';
+    return activeStage ? activeStage.programStage.stageName : 'Hồ sơ đã hoàn tất';
   };
   
   
@@ -341,7 +341,6 @@ const ProgramApplicationPage = ({setMain }) => {
                         <th>Ngày tạo</th>
                         <th>Chương trình ứng tuyển</th>
                         <th>Trạng thái hồ sơ</th>
-                        <th>Thao tác</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -356,11 +355,11 @@ const ProgramApplicationPage = ({setMain }) => {
                       
       <td>{findActiveStageName(application)}</td>
                    
-      <td style={{textAlign: "center", VerticalAlign: "middle"}}>
+      {/* <td style={{textAlign: "center", VerticalAlign: "middle"}}>
   <Button variant="info"  onClick={() => handleCreateFee(application)}>
     <i className="fa fa-info-circle" />
   </Button>
-</td>
+</td> */}
 
                         </tr>
                       ))}
@@ -391,4 +390,4 @@ const ProgramApplicationPage = ({setMain }) => {
   );
 };
 
-export default ProgramApplicationPage;
+export default ProgramApplicationPageAdmin;

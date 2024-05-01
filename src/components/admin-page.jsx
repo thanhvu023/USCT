@@ -10,6 +10,7 @@ import ProgramApplicationPage from "./admin-components/program-application-compo
 import AllPrograms from "./admin-components/program-components/programs";
 import Registration from "./admin-components/registration-components/registration";
 import UniversityPage from "./admin-components/uni-components/all-university";
+import ProgramApplicationPageAdmin from "./admin-components/program-application-components/program-application-by-student-profile-staff";
 
 
 const AdminPage = () => {
@@ -23,7 +24,7 @@ const AdminPage = () => {
     "Tư vấn viên": <AllConsultant setMain={setMain} />,
     "Khách hàng": <AllCustomer />,
     "Chương trình": <AllPrograms />,
-    "Hồ sơ đăng ký": <ProgramApplicationPage />,
+    "Hồ sơ đăng ký": <ProgramApplicationPageAdmin />,
     "Đơn tư vấn": <Registration />,
     "Trường Đại học": <UniversityPage />,
   };

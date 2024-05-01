@@ -32,14 +32,8 @@ export const createPayment = createAsyncThunk(
   "payment/createPayment",
   async (paymentData, thunkAPI) => {
     try {
-      const response = await instance.post('/payment', paymentData, {
-        params: {
-          amount: paymentData.amount,
-          orderInfo: paymentData.orderInfo,
-          img: paymentData.img,
-          
-        },
-      });
+      // Directly pass paymentData as the body of the POST request
+      const response = await instance.post('/payment', paymentData);
       return response.data;
     } catch (error) {
       console.error("API error:", error);
@@ -47,6 +41,7 @@ export const createPayment = createAsyncThunk(
     }
   }
 );
+
 
 export const createVnPayLink = createAsyncThunk(
   "payment/createVnPayLink",
@@ -72,13 +67,12 @@ export const createVnPayLink = createAsyncThunk(
     }
   }
 );
-
 export const updatePayment = createAsyncThunk(
   "payment/updatePayment",
-  async ({ id, img }, thunkAPI) => {
+  async ({ id, data }, thunkAPI) => {
     try {
-      const response = await instance.put(`/payment/${id}`, { img });
-      console.log("Update Response:", response);
+      const response = await instance.put(`/payment/${id}`, data);
+      console.log("Update Response:", response.data);
       return response.data;
     } catch (error) {
       console.error("API error on update:", error);
@@ -86,6 +80,21 @@ export const updatePayment = createAsyncThunk(
     }
   }
 );
+
+
+export const getPaymentById = createAsyncThunk(
+  "payment/getPaymentById",
+  async (paymentId, thunkAPI) => {
+    try {
+      const response = await instance.get(`/payment/${paymentId}`);
+      return response.data;
+    } catch (error) {
+      console.error("API error when fetching payment by ID:", error);
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
 
 
 
@@ -125,7 +134,28 @@ const paymentSlice = createSlice({
       state.loading = false;
       state.error = action.error.message;
     })
-    
+.addCase(getPaymentById.pending, (state) => {
+  state.loading = true;
+})
+.addCase(getPaymentById.fulfilled, (state, action) => {
+  state.loading = false;
+  state.currentPayment = action.payload;
+})
+.addCase(getPaymentById.rejected, (state, action) => {
+  state.loading = false;
+  state.error = action.error.message;
+})
+.addCase(updatePayment.pending, (state) => {
+  state.loading = true;
+})
+.addCase(updatePayment.fulfilled, (state, action) => {
+  state.loading = false;
+  console.log("Payment updated:", action.payload);
+})
+.addCase(updatePayment.rejected, (state, action) => {
+  state.loading = false;
+  state.error = action.error.message;
+})
       .addCase(createPayment.pending, (state) => {
         state.loading = true;
       })
@@ -147,18 +177,8 @@ const paymentSlice = createSlice({
       .addCase(createVnPayLink.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-      })
-      .addCase(updatePayment.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(updatePayment.fulfilled, (state, action) => {
-        state.loading = false;
-        console.log("Payment updated:", action.payload);
-      })
-      .addCase(updatePayment.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message;
       });
+   
   },
 });
 

@@ -2,13 +2,13 @@ import React from "react";
 
 export const MenuList = [
   //Dashboard
-  {
-    title: "Thống kê",
-    to: "admin",
-    classChange: "mm-collapse",
-    iconStyle: <i className="la la-home" />,
-    filterName: "admin",
-  },
+  // {
+  //   title: "Thống kê",
+  //   to: "admin",
+  //   classChange: "mm-collapse",
+  //   iconStyle: <i className="la la-home" />,
+  //   filterName: "admin",
+  // },
 
   //Professors
   //   {
