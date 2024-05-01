@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { getAllProgram } from "../../redux/slice/programSlice";
 import { Backdrop, CircularProgress } from "@mui/material";
-
+import { getAllMajor } from "../../redux/slice/majorSlice";
 // const handleSliderChange = (event, setCurrentValue) => {
 //   setCurrentValue(event.target.value);
 // };
@@ -17,9 +17,11 @@ function ProgramsPage() {
   // const [maxPrice, setMaxPrice] = useState(2000000);
   const [currentValue, setCurrentValue] = useState(100000);
   const [currentPage, setCurrentPage] = useState(1);
+  
   const handleSliderChange = (event) => {
     setCurrentValue(event.target.value);
   };
+  // const [filteredPrograms, setFilteredPrograms] = useState([]);
 
   const formatCurrency = (value) => {
     return `${value / 1000}k$`; // Định dạng giá trị sang đơn vị $k
@@ -30,7 +32,7 @@ function ProgramsPage() {
     const [selectedItems, setSelectedItems] = useState([]);
 
     const handleCheckboxChange = (item) => {
-      if (selectedItems.includes(item)) {
+      if (selectedItems?.includes(item)) {
         setSelectedItems(
           selectedItems.filter((selectedItem) => selectedItem !== item)
         );
@@ -41,7 +43,7 @@ function ProgramsPage() {
     return (
       <div className="widget widget_checkbox_list">
         <h4 className="widget-title">{title}</h4>
-        {items.map((item, index) => (
+        {items?.map((item, index) => (
           <label key={index} className="single-checkbox">
             <input
               type="checkbox"
@@ -104,10 +106,17 @@ function ProgramsPage() {
   };
   const dispatch = useDispatch();
   const programs = useSelector((state) => state?.program?.programs);
+
+  const majors = useSelector((state)=> state.major.allMajor)
   const loading = useSelector((state) => state?.program?.loading);
   // const token = useSelector((state) => state.auth?.token);
+  const [selectedMajors, setSelectedMajors] = useState([]);
+  console.log("majors",majors)
   useEffect(() => {
     dispatch(getAllProgram(programName)); // Dispatch action with program name
+  }, [dispatch, programName]);
+  useEffect(() => {
+    dispatch(getAllMajor(programName)); // Dispatch action with program name
   }, [dispatch, programName]);
   const [programsPerPage] = useState(8); // Number of programs to display per page
   const indexOfLastProgram = currentPage * programsPerPage;
@@ -115,6 +124,78 @@ function ProgramsPage() {
   const currentPrograms = programs.slice(
     indexOfFirstProgram,
     indexOfLastProgram
+  );
+  const handleMajorSelection = (majorId) => {
+    setSelectedMajors(prev => {
+      if (prev.includes(majorId)) {
+        return prev.filter(mId => mId !== majorId);
+      } else {
+        return [...prev, majorId];
+      }
+    });
+  };
+  const filteredPrograms = programs.filter(program =>
+    selectedMajors.length === 0 || selectedMajors.includes(program.majorId)
+  );
+  const majorOptions = majors?.map(major => ({
+    id: major.majorId,
+    name: major.majorName
+  }));
+  const [filters, setFilters] = useState({});
+  useEffect(() => {
+    const newFilters = {
+      majors: new Set(),
+      universities: new Set(),
+      levels: new Set()
+    };
+    programs.forEach(program => {
+      if (program.majorId) newFilters.majors.add(program.majorName);
+      if (program.university?.universityName) newFilters.universities.add(program.university.universityName);
+      if (program.level) newFilters.levels.add(program.level);
+    });
+    setFilters({
+      majors: Array.from(newFilters.majors),
+      universities: Array.from(newFilters.universities),
+      levels: Array.from(newFilters.levels)
+    });
+  }, [programs]);
+
+  const [selectedFilters, setSelectedFilters] = useState({
+    majors: [],
+    universities: [],
+    levels: []
+  }); 
+  
+  const handleCheckboxChange = (category, value) => {
+    setSelectedFilters(prev => ({
+        ...prev,
+        [category]: prev[category] ? toggleItemInArray(prev[category], value) : [value]
+    }));
+};
+
+function toggleItemInArray(array, item) {
+    const index = array.indexOf(item);
+    if (index > -1) {
+        // Item exists, remove it
+        return array.filter(i => i !== item);
+    } else {
+        // Item does not exist, add it
+        return [...array, item];
+    }
+}
+
+  const renderCheckboxList = (title, items) => (
+
+    <div className="widget widget_checkbox_list">
+      <h4 className="widget-title">{title}</h4>
+      {items?.map((item, index) => (
+        <label key={index} className="single-checkbox">
+          <input type="checkbox" onChange={() => handleCheckboxChange(title.toLowerCase(), item)} />
+          <span className="checkmark" />
+          {item}
+        </label>
+      ))}
+    </div>
   );
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
   return (
@@ -131,7 +212,7 @@ function ProgramsPage() {
             <div className="row go-top">
               {currentPrograms
                 .filter((program) => program.status === "Active") // Filter programs with active status
-                .map((program, index) => (
+                ?.map((program, index) => (
                   <div
                     key={index}
                     className="col-md-6"
@@ -167,7 +248,7 @@ function ProgramsPage() {
               <ul className="pagination">
                 {Array(Math.ceil(programs.length / programsPerPage))
                   .fill()
-                  .map((_, index) => (
+                  ?.map((_, index) => (
                     <li key={index} className="page-item">
                       <button
                         onClick={() => paginate(index + 1)}
@@ -227,14 +308,24 @@ function ProgramsPage() {
               <div className="widget widget_catagory">
                 <h4 className="widget-title">Thông tin du học</h4>
                 <ul className="catagory-items go-top">
-                  {categories.map((category, index) => (
-                    <div key={index} style={{ margin: "20px" }}>
-                      <CategoryCheckboxList
-                        title={category.title}
-                        items={category.items}
-                      />
-                    </div>
-                  ))}
+                <div className="td-sidebar mt-5 mt-lg-0">
+                <div className="td-sidebar mt-5 mt-lg-0">
+        <h4 className="widget-title">Chuyên ngành</h4>
+        {majorOptions?.map(major => (
+          <label key={major.id} className="single-checkbox">
+            <input
+              type="checkbox"
+              checked={selectedMajors.includes(major.id)}
+              onChange={() => handleMajorSelection(major.id)}
+            />
+            <span className="checkmark" />
+            {major.name}
+          </label>
+        ))}
+      </div>
+              {filters.universities && renderCheckboxList("Trường đại học", filters.universities)}
+              {filters.levels && renderCheckboxList("Trình độ", filters.levels)}
+            </div>
                 </ul>
               </div>
               <div className="widget widget_checkbox_list">

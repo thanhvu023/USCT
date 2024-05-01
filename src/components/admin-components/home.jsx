@@ -10,20 +10,19 @@ import {
   getAllStudentProfile,
   getStudentProfileById,
 } from "../../redux/slice/studentSlice";
-
+import { getAllPayments } from "../../redux/slice/paymentSlice";
 import { Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom"; // Import Link và useNavigate từ react-router-dom
 
 import { ProgressCard } from "./card-design";
 import IncomeExpense from "./IncomeExpense";
 import { getRegistration } from "../../redux/slice/registrationSlice";
-import { getAllPayments } from "../../redux/slice/paymentSlice";
 
 const AdminHome = ({ handleAllConsultantClick }) => {
   const numberOfStudentProfile = useSelector(
     (state) => state?.student?.studentProfile.length
   );
-  const payments = useSelector((state) => state.payment.allPayments);
+  // const payments = useSelector((state) => state.payment.allPayments);
 
   const numberOfRegistration = useSelector(
     (state) => state?.registration?.registrationForms.length
@@ -31,11 +30,12 @@ const AdminHome = ({ handleAllConsultantClick }) => {
   const numberOfProgram = useSelector(
     (state) => state?.programApplication?.programApplications.length
   );
-  const totalAmount = payments.reduce(
-    (total, payment) => total + payment.amount,
-    0
-  );
-
+  // const totalAmount = payments?.reduce(
+  //   (total, payment) => total + payment.amount,
+  //   0
+  // );
+  const payments = useSelector(state => state.payment.allPayments);
+  const totalAmount = payments?.reduce((sum, payment) => sum + payment.amount, 0);
   const tabelData = [
     {
       no: "01",
@@ -332,7 +332,7 @@ const AdminHome = ({ handleAllConsultantClick }) => {
                         <th scope="col">Họ và tên học sinh</th>
                         <th scope="col">Ngày tạo</th>
                         <th scope="col">Chương trình</th>
-                        <th scope="col">Trạng thái hồ sơ</th>
+                       
                       </tr>
                     </thead>
                     <tbody>
@@ -360,9 +360,7 @@ const AdminHome = ({ handleAllConsultantClick }) => {
                           <td>
                             {programs[application.programId]?.nameProgram}
                           </td>
-                          <td>
-                            {application.applyStage?.programStage?.stageName}
-                          </td>
+                         
                         </tr>
                       ))}
                     </tbody>
