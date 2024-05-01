@@ -19,7 +19,7 @@ const Payment = () => {
     const { studentProfile, program } = selectedApplication;
 
     const applyStages = useSelector((state) => state.applyStage.applyStages || []);
-    const activeStage = selectedApplication?.applyStage?.find(stage => stage.status === 1);
+    const activeStage = selectedApplication?.applyStage?.find(stage => stage?.status === 1);
     const [tabIndex, setTabIndex] = useState(0);
 
     const handleTabChange = (event, newValue) => {
@@ -203,7 +203,19 @@ const Payment = () => {
             </Stepper>
         );
     };
-
+    const getPaymentStatus = (status) => {
+        switch (status) {
+            case 0:
+                return { text: 'Chưa thanh toán', icon: <RadioButtonUncheckedIcon color="error" /> };
+            case 1:
+                return { text: 'Thanh toán thành công', icon: <CheckCircleOutline color="primary" /> };
+            case 2:
+                return { text: 'Hủy bỏ', icon: <HighlightOff color="secondary" /> };
+            default:
+                return { text: 'Trạng thái không xác định', icon: <RadioButtonUncheckedIcon /> };
+        }
+    };
+    
     const findActiveStageIndex = () => {
         return selectedApplication.applyStage.findIndex(stage => stage.status === 1); // Assuming '1' indicates the current active stage
     };
@@ -348,7 +360,7 @@ const Payment = () => {
                 <div style={{ marginBottom: '24px' }}>
                     {applyStages?.map(stage => (
                         <div key={stage.id}>
-                            {stage.name} - Status: {stage.status}
+                            {stage.name} - Status: {stage?.status}
                         </div>
                     ))}
                 </div>
@@ -368,6 +380,15 @@ const Payment = () => {
                         <Col sm={9}>
                             <Form.Label> <strong  style={{ color: '#007bff' }}>{renderPaymentStatus(activeStage?.programStage?.isPayment)}</strong></Form.Label>
                         </Col>
+                        <Col sm={3}>
+        <Form.Label><strong>Trạng thái thanh toán:</strong></Form.Label>
+    </Col>
+    <Col sm={9}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            {getPaymentStatus(selectedApplication.payment?.status).icon}
+            <span>{getPaymentStatus(selectedApplication.payment?.status).text}</span>
+        </div>
+    </Col>
                     </Row>
                     <Row>
                         <Col sm={{ span: 3, offset: 9 }}> 
