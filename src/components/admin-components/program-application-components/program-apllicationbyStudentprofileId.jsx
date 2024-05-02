@@ -20,6 +20,7 @@ import {
 } from "react-bootstrap";
 import { getAllUsers } from "../../../redux/slice/authSlice";
 import PaymentContext from "./context/payment-context";
+import { Pagination } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 import { getAllProgramStages } from "../../../redux/slice/programStageSlice";
 import {
@@ -31,7 +32,7 @@ import Swal from "sweetalert2";
 import { Typography } from "@mui/material";
 import { Backdrop, CircularProgress } from "@mui/material";
 import { VerticalAlignTop } from "@mui/icons-material";
-
+import './program-applicationbyStudentprofile.css'
 const theadData = [
   { heading: "Mã hồ sơ", sortingVale: "id" },
   { heading: "Hồ sơ sinh viên", sortingVale: "name" },
@@ -62,7 +63,10 @@ const style = {
 const ProgramApplicationPage = ({ setMain }) => {
   const { setSelectedApp } = useContext(PaymentContext);
 
+
+ 
   const handleCreateFee = (application) => {
+
     setSelectedApp(application);
     setMain("Thanh toán");
   };
@@ -303,6 +307,30 @@ const ProgramApplicationPage = ({ setMain }) => {
     link.click();
   };
 
+  const [activePage, setActivePage] = useState(0);
+const [itemsPerPage, setItemsPerPage] = useState(7); // Default items per page
+const [filteredData, setFilteredData] = useState([]);
+
+useEffect(() => {
+  const search = searchTerm.toLowerCase();
+  const filtered = programApplications.filter(application => {
+    return (
+      application.programApplicationId.toString().includes(search) ||
+      application.studentProfile?.fullName.toLowerCase().includes(search) ||
+      application.studentProfile?.createDate.includes(search) ||
+      application.program?.nameProgram.toLowerCase().includes(search)
+    );
+  });
+  setFilteredData(filtered);
+  setActivePage(0); // Reset to the first page upon search change
+}, [programApplications, searchTerm]);
+
+const displayedData = filteredData.slice(activePage * itemsPerPage, (activePage + 1) * itemsPerPage);
+const paginationLength = Math.ceil(filteredData.length / itemsPerPage);
+const handlePageChange = (newPage) => {
+  setActivePage(newPage);
+};
+
   return (
     <div style={{ maxHeight: "100vh" }}>
       <Backdrop
@@ -342,48 +370,54 @@ const ProgramApplicationPage = ({ setMain }) => {
               <div className="table-responsive">
                 <Table striped bordered hover responsive>
                   <thead>
-                    <tr>
-                      <th>PAId</th>
-                      <th>Hồ sơ sinh viên</th>
-                      <th>Ngày tạo</th>
-                      <th>Chương trình ứng tuyển</th>
-                      <th>Trạng thái hồ sơ</th>
-                      <th>Thao tác</th>
-                    </tr>
+                  <tr>
+                        {theadData.map((item, index) => (
+                          <th key={index}>{item.heading}</th>
+                        ))}
+                      </tr>
                   </thead>
                   <tbody>
-                    {programApplications.map((application) => (
-                      <tr key={application.studentProfileId}>
-                        <td>{application.programApplicationId}</td>
-                        <td
-                          onClick={() =>
-                            handleOpenModal(application.studentProfileId)
-                          }
-                        >
-                          {application.studentProfile?.fullName}
-                        </td>
-                        <td>{application.studentProfile?.createDate}</td>
-                        <td>{application.program?.nameProgram}</td>
-
-                        <td>{findActiveStageName(application)}</td>
-
-                        <td
-                          style={{
-                            textAlign: "center",
-                            VerticalAlign: "middle",
-                          }}
-                        >
-                          <Button
-                            variant="info"
-                            onClick={() => handleCreateFee(application)}
-                          >
-                            <i className="fa fa-info-circle" />
-                          </Button>
+                    {displayedData.map((item, index) => (
+                      <tr key={index}>
+                        <td>{item.programApplicationId}</td>
+                        <td>{item.studentProfile?.fullName}</td>
+                        <td>{item.studentProfile?.createDate}</td>
+                        <td>{item.program?.nameProgram}</td>
+                        <td>{findActiveStageName(item)}</td>
+                        <td>
+                          <Button onClick={() => handleCreateFee(item)}>Chi tiết   <i className="fa fa-info-circle" /></Button>
                         </td>
                       </tr>
                     ))}
                   </tbody>
+               
+
                 </Table>
+                <div className="pagination-wrapper">
+                  <div className="pagination justify-content-center mt-4">
+                    <button
+                      className={`btn ${activePage === 0 ? "disabled" : ""}`}
+                      onClick={() => setActivePage(Math.max(0, activePage - 1))}
+                    >
+                      Trước
+                    </button>
+                    {[...Array(paginationLength).keys()].map(page => (
+                      <button
+                        key={page}
+                        className={`btn ${activePage === page ? "btn-primary" : "btn-light"}`}
+                        onClick={() => setActivePage(page)}
+                      >
+                        {page + 1}
+                      </button>
+                    ))}
+                    <button
+                      className={`btn ${activePage === paginationLength - 1 ? "disabled" : ""}`}
+                      onClick={() => setActivePage(Math.min(paginationLength - 1, activePage + 1))}
+                    >
+                      Sau
+                    </button>
+                  </div>
+</div>
               </div>
               <Modal
                 show={selectedProfileId}

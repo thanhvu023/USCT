@@ -63,9 +63,16 @@ export const updateRegistrationById = createAsyncThunk(
   "registration/updateRegistrationById",
   async ({ registrationFormId, consultantId, status }, thunkAPI) => {
     try {
+      const state = thunkAPI.getState();
+      const registration = state.registration.registrationForms.find(r => r.registrationFormId === registrationFormId);
+
+      const isNewConsultant = consultantId !== registration.consultantId;
+
+      const updatedStatus = isNewConsultant ? 0 : status;
+
       const res = await instance.put(
         `/registration-forms/${registrationFormId}`,
-        { consultantId, status }
+        { consultantId, status: updatedStatus } 
       );
       return res.data;
     } catch (error) {
@@ -73,6 +80,7 @@ export const updateRegistrationById = createAsyncThunk(
     }
   }
 );
+
 const initialState = {
   msg: "",
   loading: false,

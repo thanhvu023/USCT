@@ -9,7 +9,6 @@ import SideBarStaff from "./admin-components/side-bar/side-bar-staff";
 import PaymentForm from "./admin-components/program-application-components/payment";
 import { PaymentProvider } from "./admin-components/program-application-components/context/payment-context";
 import AllUniversitiesStaffPage from "./admin-components/uni-components/all-university-staff";
-
 const StaffPage = () => {
   const [main, setMain] = useState("admin");
   const [selectedApp, setSelectedApp] = useState(null);
@@ -25,8 +24,8 @@ const StaffPage = () => {
 
   const getContentComponent = () => {
     switch (main) {
-      // case "Tư vấn viên":
-      //   return <Test1 />;
+      case "Tư vấn viên":
+        return <Test1 />;
       case "Trường đại học":
         return <AllUniversitiesStaffPage />;
         case "Chương trình":
@@ -38,7 +37,7 @@ const StaffPage = () => {
       case "Đơn tư vấn":
         return <Registration />;
       default:
-        return <ProgramApplicationPage  />;
+        return <AdminHome handleAllConsultantClick={() => setMain("Tư vấn viên")} />;
     }
   };
 

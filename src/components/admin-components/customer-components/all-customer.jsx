@@ -112,7 +112,7 @@ const AllCustomer = () => {
                       className={`btn ${activePage === 0 ? "disabled" : ""}`}
                       onClick={() => setActivePage(Math.max(0, activePage - 1))}
                     >
-                      Previous
+                      Trước
                     </button>
                     {[...Array(paginationLength).keys()].map(page => (
                       <button
@@ -127,7 +127,7 @@ const AllCustomer = () => {
                       className={`btn ${activePage === paginationLength - 1 ? "disabled" : ""}`}
                       onClick={() => setActivePage(Math.min(paginationLength - 1, activePage + 1))}
                     >
-                      Next
+                      Sau
                     </button>
                   </div>
                 </div>

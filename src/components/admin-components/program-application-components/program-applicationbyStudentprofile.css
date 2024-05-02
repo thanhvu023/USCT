@@ -1,3 +1,13 @@
 .modal-backdrop.show {
     opacity: 0.3 !important; /* Adjust the value as needed */
 }
+
+  /* Add to your CSS file */
+.column-paId {
+    width: 10%; /* Adjust the width as needed */
+  }
+  .column-details {
+    width: 15%; /* Adjust based on your content */
+  }
+  /* Ensure other columns are adjusted proportionally */
+  

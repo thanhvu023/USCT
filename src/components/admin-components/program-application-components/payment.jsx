@@ -199,12 +199,16 @@ console.log("vì sao",selectedApplication)
     return isPayment ? "Cần đóng khoản phí" : "Không có khoản phí cần đóng";
 };
     const displayApplicationStages = () => {
+        
         return (
             <Stepper activeStep={findActiveStageIndex()} alternativeLabel>
                 {selectedApplication.applyStage.map((stage, index) => (
                     <Step key={stage.applyStageId}>
                         <StepLabel icon={<StepIcon status={stage.status}/>}>
                         {stage.programStage.stageName} 
+                        <div style={{ fontSize: 'smaller', color: 'gray' }}>
+                            Updated: {stage.updateDate ? new Date(stage.updateDate).toLocaleDateString() : 'N/A'}
+                        </div>
                         </StepLabel>
                     </Step>
                 ))}
@@ -322,9 +326,9 @@ console.log("vì sao",selectedApplication)
 <Box sx={{ width: '100%', bgcolor: 'background.paper', marginTop: 4 }}>
             <Tabs value={tabIndex} onChange={handleTabChange} centered>
                 <Tab label="Chương trình" />
-                <Tab label="Lich sử thanh toán" />
+               
                 <Tab label="Cập nhật tiếng trình hồ sơ" />
-            
+                <Tab label="Lich sử thanh toán" />
             </Tabs>
       
             <TabPanel value={tabIndex} index={0}>
@@ -376,7 +380,7 @@ console.log("vì sao",selectedApplication)
                   </Card.Body>
               </Card>
             </TabPanel>
-            <TabPanel value={tabIndex} index={2}>
+            <TabPanel value={tabIndex} index={1}>
              
                 
 
@@ -436,7 +440,7 @@ console.log("vì sao",selectedApplication)
 </Row>
 
             </TabPanel>
-            <TabPanel value={tabIndex} index={1}>
+            <TabPanel value={tabIndex} index={2}>
   <Typography variant="h6" gutterBottom>
     Lịch sử thanh toán
   </Typography>

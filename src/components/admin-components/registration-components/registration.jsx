@@ -69,10 +69,12 @@ const Registration = () => {
   const [showCheckSuccess, setShowCheckSuccess] = useState(false);
   const [showDeleteSuccess, setShowDeleteSuccess] = useState(false);
   const [selectedRegistration, setSelectedRegistration] = useState(null);
-  console.log("selectedRegistration", selectedRegistration);
+
   const [searchResults, setSearchResults] = useState([]);
   const [initialList, setInitialList] = useState([]);
   const [selectedConsultantId, setSelectedConsultantId] = useState("");
+
+  console.log("selectedConsultantId", selectedConsultantId);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
 
   // const [selectedStatus, setSelectedStatus] = useState("");
@@ -271,6 +273,7 @@ const Registration = () => {
         updateRegistrationById({
           registrationFormId: selectedRegistration.registrationFormId,
           consultantId: selectedConsultantId,
+          status : status
         })
       )
         .then(() => {
