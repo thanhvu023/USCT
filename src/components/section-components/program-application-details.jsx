@@ -416,7 +416,7 @@ const handleCreateVnPayLink = async () => {
           <Step key={index}>
             <StepLabel
               StepIconComponent={StepIconComponent}
-              optional={<Typography variant="caption">{step.date}</Typography>}>
+              optional={<Typography variant="caption"></Typography>}>
               {step.label}
               <br/>
               <Typography variant="caption" color="textSecondary">
