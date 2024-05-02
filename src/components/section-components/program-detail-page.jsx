@@ -250,7 +250,7 @@ function ProgramDetailPage() {
         showConfirmButton: false,
         timer: 1500,
       });
-      navigate('students-profile')
+      navigate('/students-profile')
     } else {
       Swal.fire({
         icon: "warning",

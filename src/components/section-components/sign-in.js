@@ -52,12 +52,12 @@ function Signin() {
   return (
     <div className="signin-page-area pd-top-120 pd-bottom-120">
       <div className="container">
-        <Backdrop
+        {/* <Backdrop
           sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={loading}
         >
           <CircularProgress color="inherit" />
-        </Backdrop>
+        </Backdrop> */}
         <div className="row justify-content-center">
           <div className="col-xl-6 col-lg-7">
             <form className="signin-inner" onSubmit={handleSubmit}>
