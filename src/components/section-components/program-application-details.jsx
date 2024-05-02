@@ -326,7 +326,7 @@ const handleCreateVnPayLink = async () => {
   const activeStage = details?.applyStage?.find(stage => stage.status === 1);
 
   const itemsPerPage = 6;
-  const [page, setPage] = useState(2);
+  const [page, setPage] = useState(0);
   const pageCount = Math.ceil(payments?.length / itemsPerPage);
 
   const currentPayments = payments?.slice(page * itemsPerPage, (page + 1) * itemsPerPage);
