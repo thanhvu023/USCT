@@ -47,7 +47,6 @@ function ProgramDetailPage() {
     dispatch(resetStudent());
     setShowModal(true);
   };
-
   const handleCloseModal = () => {
     setShowModal(false);
     setFormData({
@@ -251,6 +250,7 @@ function ProgramDetailPage() {
         showConfirmButton: false,
         timer: 1500,
       });
+      navigate('students-profile')
     } else {
       Swal.fire({
         icon: "warning",
