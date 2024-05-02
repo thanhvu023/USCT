@@ -237,19 +237,19 @@ const handleImageUpload = async () => {
       await dispatch(updatePayment({ id: paymentId, data: updatedPaymentData }));
 
       Swal.fire({
-        title: 'Upload Successful',
-        text: 'Payment proof has been successfully uploaded.',
+        title: 'Tải lên thành công',
+        text: 'Ảnh xác thực thanh toán đã được tải lên thành công.',
         icon: 'success',
         confirmButtonText: 'OK'
       }).then(() => {
         window.location.reload();  
       });
     } catch (error) {
-      console.error("Error uploading image:", error);
-      Swal.fire('Error!', 'Failed to upload image.', 'error');
+      console.error("Lỗi! Tải hình ảnh lên:", error);
+      Swal.fire('Lỗi!', 'Không thể tải hình ảnh lên.', 'error');
     }
   } else {
-    Swal.fire('Notice!', 'No file selected for upload.', 'info');
+    Swal.fire('Cảnh báo!', 'Không có tệp nào được chọn để tải lên.', 'info');
   }
 };
 const [isUploadingEnabled, setIsUploadingEnabled] = useState(false);
