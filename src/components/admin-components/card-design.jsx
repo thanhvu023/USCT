@@ -1,26 +1,17 @@
 import React from 'react';
-
 const ProgressCard = (props) => {
-    const { percent, color } = props;
-
-    const style = {
-        width: percent,
-        backgroundColor: color
-    };
+    const { title, number, color, unit } = props;
 
     return (        
         <div className="card-body">
-            <h4 className="card-title">{props.title}</h4>
-            <h3 className="fw-bold">{props.number}</h3>
-            {/* <div className="progress mb-2">
-                <div className={`progress-bar progress-animated`} style={style}></div>
-            </div> */}
-            {/* <small>{props.percent} Increase in 20 Days</small> */}
+            <h4 className="card-title">{title}</h4>
+            <h3 className="fw-bold">{number} {unit}</h3>
+            {/* Optional progress bar can be added if needed */}
         </div>  
     )
 }
 
-export  {ProgressCard};
+export { ProgressCard };
 
 const styles = `
 .progress-bar.progress-animated {

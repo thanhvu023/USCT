@@ -15,8 +15,12 @@ import { Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom"; // Import Link và useNavigate từ react-router-dom
 
 import { ProgressCard } from "./card-design";
-import IncomeExpense from "./IncomeExpense";
+import IncomeExpense from "./income-expense";
 import { getRegistration } from "../../redux/slice/registrationSlice";
+import PaymentRevenueChart from "./payment-revenue-chart ";
+import RevenueChart from "./payment-revenue-chart ";
+import ApplicationStatusChart from "../application-status-chart";
+import RegistrationStatusChart from "../RegistrationStatusChart ";
 
 const AdminHome = ({ handleAllConsultantClick }) => {
   const numberOfStudentProfile = useSelector(
@@ -90,23 +94,31 @@ const AdminHome = ({ handleAllConsultantClick }) => {
   ];
   const CarddBlog = [
     {
-      title: " Tổng hồ sơ học sinh",
-      number: numberOfStudentProfile,
-      color: "primary",
+      title: "Tổng hồ sơ học sinh",
+      number: 36,
+      color: "#3498db",  // Custom blue
+      unit: "hồ sơ"
     },
     {
-      title: " Số lượng đơn tư vấn",
-      number: numberOfRegistration,
-      color: "primary",
+      title: "Số lượng đơn tư vấn",
+      number: 25,
+      color: "#2ecc71",  // Custom green
+      unit: "đơn"
     },
     {
-      title: "Tổng số hồ sơ du học",
-      number: numberOfProgram,
-      color: "primary",
+      title: "Tổng số hồ sơ du học",
+      number: 37,
+      color: "#f39c12",  // Custom orange
+      unit: "hồ sơ"
     },
-    { title: "Lợi Nhuận", number: totalAmount, color: "primary" },
+    {
+      title: "Lợi Nhuận",
+      number: 57400000,
+      color: "#e74c3c",  // Custom red
+      unit: "VND"
+    },
   ];
-
+  
   const studentTable = [
     {
       id: 1,
@@ -237,32 +249,89 @@ const AdminHome = ({ handleAllConsultantClick }) => {
   useEffect(() => {
     dispatch(getAllUsers());
   }, []);
-
+  const determineApplicationStatus = (application) => {
+    const isComplete = application.applyStage.every(stage => stage.status === 2);
+    return {
+      statusText: isComplete ? "Hoàn thành" : "Đang xử lý",
+      badgeClass: isComplete ? "badge bg-success" : "badge bg-warning"  // Use Bootstrap badge classes
+    };
+  };
+  
+  
+  
   return (
     <>
       <div
         className="container-fluid"
         style={{ backgroundColor: "whitesmoke", paddingBottom: "50px" }}
       >
-        <Row>
-          {CarddBlog.map((item, index) => (
-            <Col key={index} xl={3} lg={4} md={6} sm={6}>
-              <div className="widget-stat card mt-4">
-                <ProgressCard
-                  title={item.title}
-                  number={item.number}
-                  color={item.color}
-                />
-              </div>
-            </Col>
-          ))}
-        </Row>
+      <Row>
+  {CarddBlog.map((item, index) => (
+    <Col key={index} xl={3} lg={4} md={6} sm={6}>
+      <div className="widget-stat card mt-4">
+        <ProgressCard
+          title={item.title}
+          number={item.number}
+          color={item.color}
+          unit={item.unit}  // Add this line
+        />
+      </div>
+    </Col>
+  ))}
+</Row>
+
+
+<Row>
+  <Col xl={12} style={{ marginTop: "48px" }}>
+    <div className="card">
+      <div className="card-header" style={{ backgroundColor: "white" }}>
+        <h4 className="card-title">Danh sách hồ sơ du học</h4>
+      </div>
+      <div className="card-body pt-2">
+        <div className="table-responsive recentOrderTable">
+          <table className="table verticle-middle text-nowrap table-responsive-md">
+            <thead>
+              <tr>
+                <th scope="col">Mã hồ sơ</th>
+                <th scope="col">Họ và tên học sinh</th>
+                <th scope="col">Ngày tạo</th>
+                <th scope="col">Chương trình</th>
+                <th scope="col">Trạng thái</th>  {/* Added header for status */}
+              </tr>
+            </thead>
+            <tbody>
+              {programApplications.slice(0, 5).map((application) => {
+                const { statusText, badgeClass } = determineApplicationStatus(application);
+                return (
+                  <tr key={application.studentProfileId} className="table-row-border">
+                    <td>{application.programApplicationId}</td>
+                    <td>
+                      {studentProfiles[application.studentProfileId]?.fullName}
+                    </td>
+                    <td>
+                      {studentProfiles[application.studentProfileId]?.createDate}
+                    </td>
+                    <td>
+                      {programs[application.programId]?.nameProgram}
+                    </td>
+                    <td><span className={badgeClass}>{statusText}</span></td> {/* Display status as a badge */}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </Col>
+</Row>
+
 
         <Row>
           <Col xl={8} lg={8} md={12}>
             <div className="card mt-4">
               <div className="card-header" style={{ backgroundColor: "white" }}>
-                <h3 className="card-title">Báo cáo hồ sơ tiếp nhận</h3>
+                <h3 className="card-title">Báo cáo Đơn Thanh Toán Theo Trạng Thái</h3>
               </div>
               <div className="card-body">
                 <IncomeExpense />
@@ -318,58 +387,31 @@ const AdminHome = ({ handleAllConsultantClick }) => {
           </Col>
         </Row>
         <Row>
-          <Col xl={12} style={{ marginTop: "48px" }}>
-            <div className="card">
+        <Col xl={8} style={{ marginTop: "48px" }}>
+        <div className="card mt-4">
               <div className="card-header" style={{ backgroundColor: "white" }}>
-                <h4 className="card-title">Danh sách hồ sơ du học</h4>
+                <h3 className="card-title">Tổng quan doanh thu thanh toán</h3>
               </div>
-              <div className="card-body pt-2">
-                <div className="table-responsive recentOrderTable">
-                  <table className="table verticle-middle text-nowrap table-responsive-md">
-                    <thead>
-                      <tr>
-                        <th scope="col">Mã hồ sơ</th>
-                        <th scope="col">Họ và tên học sinh</th>
-                        <th scope="col">Ngày tạo</th>
-                        <th scope="col">Chương trình</th>
-                       
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {programApplications.slice(0, 5).map((application) => (
-                        <tr
-                          key={application.studentProfileId}
-                          className="table-row-border"
-                        >
-                          <td>{application.programApplicationId}</td>
-                          <Link>
-                            <td>
-                              {
-                                studentProfiles[application.studentProfileId]
-                                  ?.fullName
-                              }
-                            </td>
-                          </Link>
-                          <td>
-                            {
-                              studentProfiles[application.studentProfileId]
-                                ?.createDate
-                            }
-                          </td>
-
-                          <td>
-                            {programs[application.programId]?.nameProgram}
-                          </td>
-                         
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+              <div className="card-body">
+                <PaymentRevenueChart />
               </div>
             </div>
           </Col>
         </Row>
+        <Row>
+        <Col xl={8} style={{ marginTop: "48px" }}>
+    <div className="card mt-4">
+      <div className="card-header" style={{ backgroundColor: "white" }}>
+        <h3 className="card-title">Tổng quan doanh thu thanh toán</h3>
+      </div>
+      <div className="card-body">
+        <ApplicationStatusChart />
+      </div>
+    </div>
+  </Col>
+  {/* <RegistrationStatusChart /> */}
+</Row>
+
       </div>
     </>
   );

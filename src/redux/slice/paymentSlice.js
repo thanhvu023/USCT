@@ -17,12 +17,10 @@ export const getAllPayments = createAsyncThunk(
 );
 
 export const getPaymentReport = createAsyncThunk(
-  "payment/getPaymentReport",
+  'payment/getPaymentReport',
   async ({ startDate, endDate }, thunkAPI) => {
     try {
-      const response = await instance.get(`/payment/report`, {
-        params: { startDate, endDate }
-      });
+      const response = await instance.get(`/payment/report?startDate=${startDate}&endDate=${endDate}`);
       return response.data;
     } catch (error) {
       console.error("API error:", error);
@@ -30,6 +28,7 @@ export const getPaymentReport = createAsyncThunk(
     }
   }
 );
+
 
 export const getPaymentByProgramApplicationId = createAsyncThunk(
   "payment/getPaymentsByProgramApplicationId",

@@ -224,7 +224,7 @@ function ProgramsPage() {
                   </button>
                 </form>
               </div>
-              <div className="widget widget_catagory">
+              {/* <div className="widget widget_catagory">
                 <h4 className="widget-title">Thông tin du học</h4>
                 <ul className="catagory-items go-top">
                   {categories.map((category, index) => (
@@ -236,8 +236,8 @@ function ProgramsPage() {
                     </div>
                   ))}
                 </ul>
-              </div>
-              <div className="widget widget_checkbox_list">
+              </div> */}
+              {/* <div className="widget widget_checkbox_list">
                 <h4 className="widget-title">Trình độ Tiếng Anh</h4>
                 <label className="single-checkbox">
                   <input type="checkbox" defaultChecked="checked" />
@@ -264,8 +264,8 @@ function ProgramsPage() {
                   <span className="checkmark" />
                   GRE
                 </label>
-              </div>
-              <div className="widget widget_price" style={{ width: "70%" }}>
+              </div> */}
+              {/* <div className="widget widget_price" style={{ width: "70%" }}>
                 <h4 className="widget-title">Chi Phí Du Học</h4>
                 <input
                   type="range"
@@ -303,7 +303,7 @@ function ProgramsPage() {
                   </span>
                   <span style={{ fontWeight: "bold" }}>$2M</span>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
