@@ -30,6 +30,31 @@ import { getAllProgramStages } from "../../redux/slice/programStageSlice";
 import Swal from "sweetalert2";
 import { getProgramById } from "../../redux/slice/programSlice";
 
+const styles = {
+  container: {
+    display: 'flex',
+    flexDirection: 'row', // Adjust based on media query if needed
+    justifyContent: 'space-between',
+    padding: '20px',
+    margin: '20px 0',
+  },
+  textSection: {
+    flex: 1,
+    paddingRight: '20px', // Give some space between the text and the image
+  },
+  imageSection: {
+    flex: 1,
+    maxWidth: '400px', // Limit the size of the image
+    height: 'auto',
+    borderRadius: '4px',
+  },
+  header: {
+    marginBottom: '10px', // Space between header and text
+  },
+  text: {
+    lineHeight: '1.5', // Improve readability
+  },
+};
 const   ProgramApplicationDetails = () => {
   const { programApplicationId } = useParams();
 
@@ -460,7 +485,7 @@ const handleCreateVnPayLink = async () => {
   </Typography>
 
   <Grid container spacing={2}>
-    <Grid item xs={12} md={6}>
+    <Grid item xs={8} md={6}>
       {details.program?.img && (
         <Box
           component="img"
@@ -474,7 +499,7 @@ const handleCreateVnPayLink = async () => {
           alt="Program Image"
         />
       )}
-        <div className="row mt-4">
+        <div className="row mt-4" >
 <div className="col-lg-12">
           <h4 className="title ">Mô tả</h4>
           <p>{details.program?.description}</p>
