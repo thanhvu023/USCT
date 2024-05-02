@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Select from "react-select";
 import { createStudentProfile } from "../../redux/slice/studentSlice";
 import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
@@ -107,6 +107,7 @@ const CreateStudentProfile = () => {
         setPage("basicInfo");
     }
   };
+  const navigate = useNavigate()
 
   const handlePreviousStep = () => {
     switch (page) {
@@ -308,11 +309,11 @@ const CreateStudentProfile = () => {
         showConfirmButton: false,
         timer: 1500,
       });
+      navigate('/students-profile')
     } else {
       setErrors(newErrors);
     }
   };
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
