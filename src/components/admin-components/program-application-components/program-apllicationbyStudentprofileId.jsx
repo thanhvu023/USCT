@@ -348,10 +348,10 @@ const handlePageChange = (newPage) => {
             <Card.Body>
               <Form>
                 <Row className="mb-3">
-                  <Col sm={3}>
-                    <Form.Control type="search" placeholder="Search" />
-                  </Col>
-                  <Col sm={3}>
+                  {/* <Col sm={3}>
+                    <Form.Control type="search"  onChange={searchData} placeholder="Search" />
+                  </Col> */}
+                  {/* <Col sm={3}>
                     <div className="d-flex">
                       <Typography>hiển thị </Typography>
                       <Form.Select
@@ -364,7 +364,7 @@ const handlePageChange = (newPage) => {
                       </Form.Select>
                       <Typography> hàng</Typography>
                     </div>
-                  </Col>
+                  </Col> */}
                 </Row>
               </Form>
               <div className="table-responsive">
