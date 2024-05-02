@@ -674,7 +674,7 @@ const handleCreateVnPayLink = async () => {
 {paymentSuccess && (
   <>
     <input type="file" onChange={handleFileChange} />
-    <button onClick={handleImageUpload}>Upload Image</button>
+    <button onClick={handleImageUpload}>Tải ảnh lịch sử giao dịch</button>
   </>
 )}
 
