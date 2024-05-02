@@ -63,16 +63,20 @@ export const updateRegistrationById = createAsyncThunk(
   "registration/updateRegistrationById",
   async ({ registrationFormId, consultantId, status }, thunkAPI) => {
     try {
+      console.log(registrationFormId);
+      console.log(consultantId);
+      console.log(status);
       const state = thunkAPI.getState();
-      const registration = state.registration.registrationForms.find(r => r.registrationFormId === registrationFormId);
-
+      const registration = state.registration.registrationForms.find(
+        (r) => r.registrationFormId === registrationFormId
+      );
+      console.log(registration);
       const isNewConsultant = consultantId !== registration.consultantId;
-
       const updatedStatus = isNewConsultant ? 0 : status;
 
       const res = await instance.put(
         `/registration-forms/${registrationFormId}`,
-        { consultantId, status: updatedStatus } 
+        { consultantId, status: updatedStatus }
       );
       return res.data;
     } catch (error) {
@@ -81,6 +85,20 @@ export const updateRegistrationById = createAsyncThunk(
   }
 );
 
+export const updateStateConsultant = createAsyncThunk(
+  "registration/updateStateConsultant",
+  async ({ registrationFormId, consultantId, status }, thunkAPI) => {
+    try {
+      const res = await instance.put(
+        `/registration-forms/${registrationFormId}`,
+        { consultantId, status }
+      );
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response);
+    }
+  }
+);
 const initialState = {
   msg: "",
   loading: false,
@@ -165,6 +183,17 @@ export const registrationSlice = createSlice({
         state.msg = "Update successful";
       })
       .addCase(updateRegistrationById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(updateStateConsultant.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updateStateConsultant.fulfilled, (state, action) => {
+        state.loading = false;
+        state.msg = "Update successful";
+      })
+      .addCase(updateStateConsultant.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       });

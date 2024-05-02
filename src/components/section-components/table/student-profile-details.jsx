@@ -49,8 +49,6 @@ const StudentProfileDetails = () => {
         });
     });
   };
-  const fileUrl = useSelector((state) => state.auth.studentFileUrl);
-  console.log(fileUrl);
   const options = [
     { value: "basic_english", label: "Tiếng Anh cơ bản" },
     { value: "ielts", label: "IELTS" },
@@ -356,13 +354,7 @@ const StudentProfileDetails = () => {
               )}
               {!editMode && (
                 <div className="d-flex justify-content-between mt-4">
-                  <div>
-                    <button
-                      className="btn btn-info me-3"
-                      onClick={handleEditClick}
-                    >
-                      Sửa thông tin
-                    </button>
+                  <div>                  
                     <button
                       onClick={handleDownloadFile}
                       className="btn btn-secondary ml-3"

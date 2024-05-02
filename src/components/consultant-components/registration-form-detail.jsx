@@ -7,6 +7,7 @@ import {
   getRegistrationByRegistrationFormId,
   resetRegistration,
   updateRegistrationById,
+  updateStateConsultant,
 } from "../../redux/slice/registrationSlice";
 import Swal from "sweetalert2";
 const statusOptions = [
@@ -35,7 +36,6 @@ const RegistrationFormDetail = () => {
     }
   }, [customerId]);
   const userDetail = useSelector((state) => state?.auth?.userById) || {};
-  // nguyên nhân bug hello mng lai la My day
   const consultantId = useSelector(
     (state) => state?.consultant?.consultantById?.consultantId
   );
@@ -45,9 +45,6 @@ const RegistrationFormDetail = () => {
     () => statusOptions.find((option) => option.value === status),
     [status]
   );
-  // const resetcustomerId =()=>{
-  //   dispatch(logoutUser())
-  // }
 
   useEffect(() => {
     setStatus(registration.status);
@@ -57,9 +54,11 @@ const RegistrationFormDetail = () => {
   };
   const handleSubmitChangeStatus = () => {
     dispatch(
-      updateRegistrationById({ status, consultantId, registrationFormId })
+      updateStateConsultant({ status, consultantId, registrationFormId })
     );
-    dispatch(createNotification({ registrationFormId, customerId, consultantId }));
+    dispatch(
+      createNotification({ registrationFormId, customerId, consultantId })
+    );
     Swal.fire({
       icon: "success",
       title: "Cập nhật đơn tư vấn thành công!",

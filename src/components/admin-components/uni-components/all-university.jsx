@@ -145,7 +145,7 @@ const AllUniversitiesPage = () => {
               <div className="col-lg-4 col-md-6 col-sm-6 col-12 mb-4" key={index}>
                 <div className="card mx-4 mt-4" style={{ width: '450px', height: '551px',boxShadow: "0 4px 8px rgba(0,0,0,0.1)", borderRadius: "10px" }}>
                   <div className="card-body">
-                    <div className="d-flex justify-content-end mb-2">
+                    {/* <div className="d-flex justify-content-end mb-2">
                       <Dropdown>
                         <Dropdown.Toggle
                           as="button"
@@ -168,7 +168,7 @@ const AllUniversitiesPage = () => {
                           </div>
                         </Dropdown.Menu>
                       </Dropdown>{" "}
-                    </div>
+                    </div> */}
                     <div className="text-center">
                       <img
                         src={university.img}
