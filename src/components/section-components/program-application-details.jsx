@@ -684,7 +684,7 @@ const handleCreateVnPayLink = async () => {
 
 <Typography variant="h6" gutterBottom style={{cursor: 'pointer'}} onClick={toggleFeesDetail}>
 Hoặc có thể đóng toàn bộ phí cho tiến trình (cập nhật tự động)</Typography>
-  {showDetailedFees && (
+
                         <>
                             <Typography variant="subtitle1">
                                 Phí tổng cộng để hoàn thành hồ sơ:
@@ -715,7 +715,7 @@ Hoặc có thể đóng toàn bộ phí cho tiến trình (cập nhật tự đ�
                                 </Button>
                             </Form.Group>
                         </>
-                    )}
+                 
 </>
             </>
           ) : (
