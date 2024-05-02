@@ -324,7 +324,7 @@ function ProgramDetailPage() {
                 </div>
                 <div className="row">
                   <div className="col-lg-12">
-                    <h4 className="title ">Trách nhiệm</h4>
+                    <h4 className="title ">Các ưu đãi</h4>
                     <ul>
                       {programDetail &&
                         programDetail.responsibilities &&

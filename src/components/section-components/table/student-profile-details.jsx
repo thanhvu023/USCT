@@ -279,28 +279,8 @@ const StudentProfileDetails = () => {
                     <div className="profile-about-me">
                       <div className="profile-about-me">
                         <div className="pt-4 border-bottom-1 pb-3">
-                          <h4 className="text-primary">Qúa trình học tập</h4>
-                          <EducationItem
-                            year="2020 - 2023"
-                            details="Trường THPT Chuyên Khoa học Tự nhiên (Hà Nội)
-    Chuyên Toán
-    Tốt nghiệp loại Xuất sắc"
-                            achievements={[
-                              "Giải Nhất học sinh giỏi cấp quốc gia môn Toán",
-                              "Huy chương Bạc Olympic Toán học Quốc tế",
-                              "Giải Nhất cuộc thi nghiên cứu khoa học cấp tỉnh",
-                            ]}
-                          />
-                          <EducationItem
-                            year="2017 - 2020"
-                            details="Trường THCS Nguyễn Tất Thành (Hà Nội)
-    Học sinh giỏi toàn diện"
-                            achievements={[
-                              "Giải Nhất học sinh giỏi cấp thành phố môn Toán",
-                              "Giải Nhì học sinh giỏi cấp thành phố môn Tiếng Anh",
-                            ]}
-                          />
-
+                          <h4 className="text-primary">Trình độ học vấn</h4>
+                          {studentDetail.studyProcess}
                           <div className="profile-skills mb-5">
                             <h4 className="text-primary mb-2">
                               Văn bằng tiếng anh
@@ -354,7 +334,7 @@ const StudentProfileDetails = () => {
               )}
               {!editMode && (
                 <div className="d-flex justify-content-between mt-4">
-                  <div>                  
+                  <div>
                     <button
                       onClick={handleDownloadFile}
                       className="btn btn-secondary ml-3"
