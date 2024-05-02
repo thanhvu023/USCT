@@ -92,7 +92,7 @@ const PaymentResponsePage = () => {
 
           </>
         )}
-       <Button variant="contained" color="primary" onClick={() => navigate(`/`)} fullWidth>
+       <Button variant="contained" color="primary" onClick={() => navigate(`/students-profile/appliedList`)} fullWidth>
   Trở về trang chi tiết chương trình đã ứng tuyển !
 </Button>
 

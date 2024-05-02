@@ -62,6 +62,7 @@ const Payment = () => {
   const dispatch = useDispatch();
   const { selectedApp: selectedApplication } = useContext(PaymentContext);
   const { studentProfile, program } = selectedApplication;
+  const [refresh, setRefresh] = useState(false);
 
   const applyStages = useSelector(
     (state) => state.applyStage.applyStages || []
@@ -102,7 +103,7 @@ const Payment = () => {
         )
       );
     }
-  }, [dispatch, selectedApplication]);
+  }, [dispatch, selectedApplication, refresh]);
 
   const updateStages = () => {
     if (!selectedApplication || !selectedApplication.applyStage) {
@@ -113,10 +114,10 @@ const Payment = () => {
       });
       return;
     }
-
+  
     const currentStages = selectedApplication.applyStage;
     const activeIndex = currentStages.findIndex((stage) => stage.status === 1);
-
+  
     if (activeIndex === -1) {
       Swal.fire({
         icon: "error",
@@ -125,7 +126,7 @@ const Payment = () => {
       });
       return;
     }
-
+  
     const currentStage = currentStages[activeIndex];
     if (currentStage) {
       dispatch(
@@ -137,9 +138,9 @@ const Payment = () => {
         })
       )
         .then(() => {
-          dispatch(getAllStage());
+          dispatch(getAllStage()); // Refresh stages after update
           const nextStage = currentStages[activeIndex + 1];
-
+  
           if (nextStage) {
             dispatch(
               updateApplyStage({
@@ -155,9 +156,11 @@ const Payment = () => {
               text: `Tiến trình hồ sơ đã được cập nhật từ ${currentStage.programStage.stageName} đến ${nextStage.programStage.stageName}`,
               showConfirmButton: false,
               timer: 1500,
+            }).then(() => {
+              setRefresh(prev => !prev); // Toggle the refresh state to re-fetch/re-render
             });
           } else {
-            // Nếu không có giai đoạn tiếp theo, hiển thị thông báo hồ sơ hoàn tất
+            // No next stage, indicating completion of the process
             Swal.fire({
               icon: "success",
               title: "Hoàn tất!",
@@ -171,7 +174,7 @@ const Payment = () => {
           Swal.fire({
             icon: "error",
             title: "Lỗi cập nhật!",
-            text: "Không thể c update the current stage",
+            text: "Không thể cập nhật giai đoạn hiện tại",
             confirmButtonText: "OK",
           });
           console.error("Failed to update the current stage:", error);
@@ -180,6 +183,7 @@ const Payment = () => {
       console.log("Không có giai đoạn hiện tại hợp lệ để cập nhật.");
     }
   };
+  
 
   const customers = useSelector((state) => state.auth.user);
   const programs = useSelector((state) => state.program.programs);
@@ -257,10 +261,7 @@ const Payment = () => {
             <StepLabel icon={<StepIcon status={stage.status} />}>
               {stage.programStage.stageName}
               <div style={{ fontSize: "smaller", color: "gray" }}>
-                Updated:{" "}
-                {stage.updateDate
-                  ? new Date(stage.updateDate).toLocaleDateString()
-                  : "N/A"}
+             {getPaymentStatusLabel(stage.status)}
               </div>
             </StepLabel>
           </Step>
@@ -602,7 +603,7 @@ const Payment = () => {
                               </strong>
                             </Form.Label>
                           </Col>
-                          <Col sm={3}>
+                          {/* <Col sm={3}>
                             <Form.Label>
                               <strong>Trạng thái thanh toán:</strong>
                             </Form.Label>
@@ -628,7 +629,7 @@ const Payment = () => {
                                 }
                               </span>
                             </div>
-                          </Col>
+                          </Col> */}
                         </Row>
                         <Row>
                           <Col sm={{ span: 3, offset: 9 }}>
@@ -713,14 +714,14 @@ const Payment = () => {
                   onClick={prevPage}
                   disabled={page === 0}
                 >
-                  Previous
+                  Trước
                 </Button>
                 <Button
                   variant="primary"
                   onClick={nextPage}
                   disabled={page + 1 === pageCount}
                 >
-                  Next
+                  Kế tiếp
                 </Button>
               </Box>
             </TabPanel>

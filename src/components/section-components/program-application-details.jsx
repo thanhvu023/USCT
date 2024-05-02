@@ -30,6 +30,31 @@ import { getAllProgramStages } from "../../redux/slice/programStageSlice";
 import Swal from "sweetalert2";
 import { getProgramById } from "../../redux/slice/programSlice";
 
+const styles = {
+  container: {
+    display: 'flex',
+    flexDirection: 'row', // Adjust based on media query if needed
+    justifyContent: 'space-between',
+    padding: '20px',
+    margin: '20px 0',
+  },
+  textSection: {
+    flex: 1,
+    paddingRight: '20px', // Give some space between the text and the image
+  },
+  imageSection: {
+    flex: 1,
+    maxWidth: '400px', // Limit the size of the image
+    height: 'auto',
+    borderRadius: '4px',
+  },
+  header: {
+    marginBottom: '10px', // Space between header and text
+  },
+  text: {
+    lineHeight: '1.5', // Improve readability
+  },
+};
 const   ProgramApplicationDetails = () => {
   const { programApplicationId } = useParams();
 
@@ -237,19 +262,19 @@ const handleImageUpload = async () => {
       await dispatch(updatePayment({ id: paymentId, data: updatedPaymentData }));
 
       Swal.fire({
-        title: 'Upload Successful',
-        text: 'Payment proof has been successfully uploaded.',
+        title: 'Tải lên thành công',
+        text: 'Ảnh xác thực thanh toán đã được tải lên thành công.',
         icon: 'success',
         confirmButtonText: 'OK'
       }).then(() => {
         window.location.reload();  
       });
     } catch (error) {
-      console.error("Error uploading image:", error);
-      Swal.fire('Error!', 'Failed to upload image.', 'error');
+      console.error("Lỗi! Tải hình ảnh lên:", error);
+      Swal.fire('Lỗi!', 'Không thể tải hình ảnh lên.', 'error');
     }
   } else {
-    Swal.fire('Notice!', 'No file selected for upload.', 'info');
+    Swal.fire('Cảnh báo!', 'Không có tệp nào được chọn để tải lên.', 'info');
   }
 };
 const [isUploadingEnabled, setIsUploadingEnabled] = useState(false);
@@ -326,7 +351,7 @@ const handleCreateVnPayLink = async () => {
   const activeStage = details?.applyStage?.find(stage => stage.status === 1);
 
   const itemsPerPage = 6;
-  const [page, setPage] = useState(2);
+  const [page, setPage] = useState(0);
   const pageCount = Math.ceil(payments?.length / itemsPerPage);
 
   const currentPayments = payments?.slice(page * itemsPerPage, (page + 1) * itemsPerPage);
@@ -460,7 +485,7 @@ const handleCreateVnPayLink = async () => {
   </Typography>
 
   <Grid container spacing={2}>
-    <Grid item xs={12} md={6}>
+    <Grid item xs={8} md={6}>
       {details.program?.img && (
         <Box
           component="img"
@@ -474,7 +499,7 @@ const handleCreateVnPayLink = async () => {
           alt="Program Image"
         />
       )}
-        <div className="row mt-4">
+        <div className="row mt-4" >
 <div className="col-lg-12">
           <h4 className="title ">Mô tả</h4>
           <p>{details.program?.description}</p>
@@ -739,7 +764,7 @@ Hoặc có thể đóng toàn bộ phí cho tiến trình (cập nhật tự đ�
       </TableHead>
       <TableBody>
         {currentPayments?.map((payment) => (
-          <TableRow key={payment.paymentId}>
+          <TableRow  key={payment.paymentId}>
             <TableCell component="th" scope="row">
               {payment.paymentId}
             </TableCell>
@@ -767,8 +792,8 @@ Hoặc có thể đóng toàn bộ phí cho tiến trình (cập nhật tự đ�
     </Table>
   </TableContainer>
   <Box sx={{ display: 'flex', justifyContent: 'space-between ', margin: '20px' }}>
-    <Button variant="primary" onClick={prevPage} disabled={page === 0}>Previous</Button>
-    <Button variant="primary" onClick={nextPage} disabled={page + 1 === pageCount}>Next</Button>
+    <Button variant="primary" onClick={prevPage} disabled={page === 0}>Trước</Button>
+    <Button variant="primary" onClick={nextPage} disabled={page + 1 === pageCount}>Kế tiếp</Button>
   </Box>
 </TabPanel>
 

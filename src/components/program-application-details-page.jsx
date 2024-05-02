@@ -10,7 +10,6 @@ const ProgramApplicationDetailsPage = () => {
         <Navbar />
         <Page_header headertitle="Chi tiết chương trình đã ứng tuyển "/>
         <ProgramApplicationDetails/>
-        <Footer />
     </div>
 }
 

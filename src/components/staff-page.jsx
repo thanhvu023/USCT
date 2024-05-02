@@ -37,7 +37,7 @@ const StaffPage = () => {
       case "Đơn tư vấn":
         return <Registration />;
       default:
-        return <AdminHome handleAllConsultantClick={() => setMain("Tư vấn viên")} />;
+        return <ProgramApplicationPage setMain={setMain} setSelectedApp={handleSetSelectedApp} />;
     }
   };
 

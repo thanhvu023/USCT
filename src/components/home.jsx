@@ -18,8 +18,8 @@ const HomePage = () => {
         <HowToWork />
         <CourseFilter />
         <FunFact />
-        <Team />
-        
+        {/* <Team />
+         */}
         <Footer />
     </div>
 }
