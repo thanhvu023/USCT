@@ -261,10 +261,7 @@ const Payment = () => {
             <StepLabel icon={<StepIcon status={stage.status} />}>
               {stage.programStage.stageName}
               <div style={{ fontSize: "smaller", color: "gray" }}>
-                Updated:{" "}
-                {stage.updateDate
-                  ? new Date(stage.updateDate).toLocaleDateString()
-                  : "N/A"}
+             {getPaymentStatusLabel(stage.status)}
               </div>
             </StepLabel>
           </Step>
