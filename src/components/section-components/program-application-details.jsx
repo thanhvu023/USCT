@@ -767,8 +767,8 @@ Hoặc có thể đóng toàn bộ phí cho tiến trình (cập nhật tự đ�
     </Table>
   </TableContainer>
   <Box sx={{ display: 'flex', justifyContent: 'space-between ', margin: '20px' }}>
-    <Button variant="primary" onClick={prevPage} disabled={page === 0}>Previous</Button>
-    <Button variant="primary" onClick={nextPage} disabled={page + 1 === pageCount}>Next</Button>
+    <Button variant="primary" onClick={prevPage} disabled={page === 0}>Trước</Button>
+    <Button variant="primary" onClick={nextPage} disabled={page + 1 === pageCount}>Kế tiếp</Button>
   </Box>
 </TabPanel>
 

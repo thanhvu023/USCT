@@ -37,6 +37,7 @@ const ApplicationStatusChart = () => {
       label: 'Số lượng hồ sơ ứng tuyển',
       backgroundColor: ['#42A5F5', '#66BB6A', '#FFA726'],
       data: [applicationStats.total, applicationStats.completed, applicationStats.processing],
+      
     }],
   };
 

@@ -714,14 +714,14 @@ const Payment = () => {
                   onClick={prevPage}
                   disabled={page === 0}
                 >
-                  Previous
+                  Trước
                 </Button>
                 <Button
                   variant="primary"
                   onClick={nextPage}
                   disabled={page + 1 === pageCount}
                 >
-                  Next
+                  Kế tiếp
                 </Button>
               </Box>
             </TabPanel>
