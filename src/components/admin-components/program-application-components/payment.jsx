@@ -602,7 +602,7 @@ const Payment = () => {
                               </strong>
                             </Form.Label>
                           </Col>
-                          <Col sm={3}>
+                          {/* <Col sm={3}>
                             <Form.Label>
                               <strong>Trạng thái thanh toán:</strong>
                             </Form.Label>
@@ -628,7 +628,7 @@ const Payment = () => {
                                 }
                               </span>
                             </div>
-                          </Col>
+                          </Col> */}
                         </Row>
                         <Row>
                           <Col sm={{ span: 3, offset: 9 }}>
