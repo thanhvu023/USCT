@@ -34,7 +34,7 @@ const ApplicationStatusChart = () => {
   const data = {
     labels: ['Tổng số hồ sơ ứng tuyển', 'Hồ sơ hoàn thành', 'Hồ sơ đang còn trong tiến trình'],
     datasets: [{
-      label: 'Number of Applications',
+      label: 'Số lượng hồ sơ ứng tuyển',
       backgroundColor: ['#42A5F5', '#66BB6A', '#FFA726'],
       data: [applicationStats.total, applicationStats.completed, applicationStats.processing],
     }],
