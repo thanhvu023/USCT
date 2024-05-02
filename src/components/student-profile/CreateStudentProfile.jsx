@@ -350,7 +350,7 @@ const CreateStudentProfile = () => {
                         <Link to={`/students-profile/appliedList`}></Link>
                       }
                     >
-                      Danh sách hồ sơ đã duyêt
+                      Danh sách hồ sơ đã nộp đơn
                     </MenuItem>
                     <MenuItem
                       component={<Link to={`/create-student-profile`}></Link>}
@@ -586,7 +586,7 @@ const CreateStudentProfile = () => {
                             htmlFor="imageInput"
                             className="custom-file-upload mr-3"
                           >
-                            Tải lên thông tin cá nhân
+                            Tải lên thông tin cá nhân / các bằng cấp
                           </label>
                           {loadingUpFile && (
                             <i className="fa fa-refresh fa-spin mr-2" />
