@@ -34,7 +34,12 @@ const BasicMenu = ({ anchorEl, open, handleClose, menuItems }) => {
           >
             <div className="shopee-notification-content">
               <div className="shopee-notification-title">{item.title}</div>
-              <div className="shopee-notification-body">{item.content}</div>
+              <div
+                className="shopee-notification-body"
+                style={{ maxHeight: "100px", overflow: "auto", whiteSpace: "pre-wrap" }}
+              >
+                {item.content}
+              </div>
               <div className="shopee-notification-date">{item.date}</div>
             </div>
           </MenuItem>
