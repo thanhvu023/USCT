@@ -3,7 +3,8 @@ import { Collapse } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { MenuList } from "./menu-staff";
 import "./sidebar.css";
-
+import { useDispatch, useSelector } from "react-redux";
+import { logoutUser } from "../../../redux/slice/authSlice";
 const reducer = (previousState, updatedState) => ({
   ...previousState,
   ...updatedState,
@@ -17,7 +18,11 @@ const initialState = {
 const SideBarStaff = ({ setMain }) => {
   const [state, setState] = useReducer(reducer, initialState);
   const [selectedFilter, setSelectedFilter] = useState(null);
-
+  const dispatch = useDispatch();
+  
+  const handleLogout = () => {
+    dispatch(logoutUser());
+  };
   const handleFilterClick = (filterName) => {
     setSelectedFilter(filterName);
     setMain(filterName);
@@ -168,8 +173,17 @@ const SideBarStaff = ({ setMain }) => {
             ></span>{" "}
             by USCT
           </p>
+        
         </div>
+        <button
+                        onClick={handleLogout}
+                        className="btn btn-base"
+                        to="/sign-in"
+                    >
+                        Đăng xuất
+                    </button>
       </div>
+    
     </div>
   );
 };

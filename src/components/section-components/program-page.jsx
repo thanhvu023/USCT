@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { getAllProgram } from "../../redux/slice/programSlice";
 import { Backdrop, CircularProgress } from "@mui/material";
+import { getMajorById } from "../../redux/slice/majorSlice";
 
 // const handleSliderChange = (event, setCurrentValue) => {
 //   setCurrentValue(event.target.value);
@@ -11,7 +12,15 @@ import { Backdrop, CircularProgress } from "@mui/material";
 // const formatCurrency = (value) => {
 //   return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 // };
-
+const descriptionStyle = {
+  display: '-webkit-box',
+  WebkitLineClamp: 3,
+  WebkitBoxOrient: 'vertical',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  maxHeight: '4.5em',
+  lineHeight: '1.5em', 
+};
 function ProgramsPage() {
   // const [minPrice, setMinPrice] = useState(100000);
   // const [maxPrice, setMaxPrice] = useState(2000000);
@@ -98,12 +107,28 @@ function ProgramsPage() {
       ],
     },
   ];
+  const truncateString = (str, num) => {
+    if (str.length > num) {
+      return str.slice(0, num) + "...";
+    } else {
+      return str;
+    }
+  };
+  
   const [programName, setProgramName] = useState("");
   const handleInputChangeName = (event) => {
     setProgramName(event.target.value); // Update the program name state with the input value
   };
   const dispatch = useDispatch();
   const programs = useSelector((state) => state?.program?.programs);
+  const majorId = useSelector((state) => state?.program?.programById?.majorId);
+  const majorDetail = useSelector((state) => state?.major?.majorById);
+  useEffect(() => {
+    if (majorId) {
+      dispatch(getMajorById(majorId));
+    }
+  }, [dispatch, majorId]);
+
   const loading = useSelector((state) => state?.program?.loading);
   // const token = useSelector((state) => state.auth?.token);
   useEffect(() => {
@@ -135,7 +160,7 @@ function ProgramsPage() {
                   <div
                     key={index}
                     className="col-md-6"
-                    style={{ height: "381px" }}
+                    
                   >
                     <div className="single-course-inner">
                       <div className="thumb">
@@ -148,12 +173,13 @@ function ProgramsPage() {
                               {program.nameProgram}
                             </Link>
                           </h6>
+                          <span style={descriptionStyle}>{program.description}</span>
                         </div>
                         <div className="emt-course-meta">
                           <div className="row">
-                            <div className="col-6">
-                              <div className="rating">
-                                <span>Lộ trình: {program.duration}</span>
+                            <div className="col-12">
+                              <div className="rating d-flex">
+                              <span>Chuyênn ngành:{majorDetail.majorName}</span>
                               </div>
                             </div>
                           </div>

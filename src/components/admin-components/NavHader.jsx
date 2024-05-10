@@ -16,6 +16,7 @@ export function NavMenuToggle() {
 const NavHader = () => {
   const [toggle, setToggle] = useState(false);
 
+
   return (
     <div className="nav-header d-flex justify-content-center align-items-center">
     
@@ -52,6 +53,7 @@ const NavHader = () => {
               fill="black"
             />
           </svg>
+      
         </Fragment>
     
 

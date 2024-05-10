@@ -8,7 +8,7 @@ import Swal from "sweetalert2";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { imageDb } from "../FirebaseImage/Config";
 import { Backdrop, CircularProgress } from "@mui/material";
-
+import './create-student-profile.css'
 const MultiStepProgressBar = () => {};
 
 const CreateStudentProfile = () => {
@@ -17,6 +17,7 @@ const CreateStudentProfile = () => {
   const loading = useSelector((state) => state?.student?.loading);
   const [loadingUpFile, setLoadingUpfile] = useState(false);
   const [loadingImg, setLoadingImg] = useState(false);
+  const [selectedCert, setSelectedCert] = useState("");
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -510,29 +511,44 @@ const CreateStudentProfile = () => {
                           )}
                         </div>
                       </div>
-                      <div className="col-lg-6 mb-3">
-                        <Select
-                          placeholder="Chứng chỉ tiếng anh"
-                          name="grade"
-                          value={gradeOptions.find(
-                            (option) => option.value === formData.grade
-                          )}
-                          onChange={(e) => {
-                            handleInputChange({
-                              target: {
-                                name: "grade",
-                                value: e.value,
-                              },
-                            });
-                          }}
-                          options={gradeOptions}
-                        />
-                         {errors.grade && (
-                            <p className="text-center text-danger mt-1">
-                              {errors.grade}
-                            </p>
-                          )}
-                      </div>
+                     <div className="col-lg-6 mb-3">
+  <Select
+    placeholder="Chứng chỉ tiếng anh"
+    name="grade"
+    value={gradeOptions.find(
+      option => option.value === formData.grade
+    )}
+    onChange={(e) => {
+      handleInputChange({
+        target: {
+          name: "grade",
+          value: e.value,
+        },
+      });
+      setSelectedCert(e.value);
+    }}
+    options={gradeOptions}
+  />
+  {errors.grade && (
+    <p className="text-center text-danger mt-1">
+      {errors.grade}
+    </p>
+  )}
+  {selectedCert && (
+ <div className="score-inputs mt-2">
+ <div className="input-group">
+   <input type="number" placeholder="Reading" name="reading" onChange={handleInputChange} />
+   <input type="number" placeholder="Listening" name="listening" onChange={handleInputChange} />
+ </div>
+ <div className="input-group">
+   <input type="number" placeholder="Writing" name="writing" onChange={handleInputChange} />
+   <input type="number" placeholder="Speaking" name="speaking" onChange={handleInputChange} />
+ </div>
+</div>
+
+  )}
+</div>
+
                       <div className="col-lg-6 mb-3">
                         <Select
                           placeholder="Trình độ tiếng anh"

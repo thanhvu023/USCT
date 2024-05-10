@@ -261,7 +261,7 @@ const Payment = () => {
             <StepLabel icon={<StepIcon status={stage.status} />}>
               {stage.programStage.stageName}
               <div style={{ fontSize: "smaller", color: "gray" }}>
-         
+             {getPaymentStatusLabel(stage.status)}
               </div>
             </StepLabel>
           </Step>
