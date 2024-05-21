@@ -2,12 +2,14 @@ import { Backdrop, CircularProgress } from "@mui/material";
 import { getDownloadURL, ref } from "firebase/storage";
 import jwtDecode from "jwt-decode";
 import React, { useEffect, useState } from "react";
-import { OverlayTrigger, Popover } from "react-bootstrap";
+import { OverlayTrigger, Popover,Card, Row, Col, ListGroup,ListGroupItem, ProgressBar, Badge,Accordion, useAccordionButton   } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Select from "react-select";
 import Slider from "react-slick";
 import Swal from "sweetalert2";
+import { FaChevronDown } from 'react-icons/fa';
+
 import {
   createNotification,
   getNotification,
@@ -30,6 +32,28 @@ import {
 import { getUniversityById } from "../../redux/slice/universitySlice";
 import { imageDb } from "../FirebaseImage/Config";
 
+const descriptionStyle = {
+  display: '-webkit-box',
+  WebkitLineClamp: 2,
+  WebkitBoxOrient: 'vertical',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  maxHeight: '4.5em',
+  lineHeight: '1.5em', 
+};
+
+function CustomToggle({ children, eventKey, callback }) {
+  const decoratedOnClick = useAccordionButton(eventKey, () => callback && callback(eventKey));
+
+  return (
+    <div onClick={decoratedOnClick} style={{ cursor: 'pointer' }}>
+      {children}
+      <span className="float-right">
+        <i className="bi bi-chevron-down"></i>
+      </span>
+    </div>
+  );
+}
 function ProgramDetailPage() {
   const [showModal, setShowModal] = useState(false);
 
@@ -278,6 +302,10 @@ function ProgramDetailPage() {
     }
   };
 
+  const calculateStageCompletion = (index, stages) => {
+    return ((index + 1) / stages.length) * 100;
+  };
+ 
   return (
     <>
       <div className="course-single-area pd-top-120 pd-bottom-90">
@@ -289,20 +317,13 @@ function ProgramDetailPage() {
             <CircularProgress color="inherit" />
           </Backdrop>
           <div className="row">
+          <div className="details-inner" style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', margin: '20px 0', width:'100%' }}>
+                
+          <h3 className="title" style={{ fontSize: '2.5rem' }}>{programDetail.nameProgram}</h3>
+              </div>
             <div className="col-lg-8">
               <div className="course-course-detaila-inner">
-                <div className="details-inner">
-                  {/* <div className="emt-user">
-                  <span className="u-thumb">
-                    <img
-                      src={publicUrl + "assets/img/author/1.png"}
-                      alt="img"
-                    />
-                  </span>
-                  <span className="align-self-center">Nancy Reyes</span>
-                </div> */}
-                  <h3 className="title">{programDetail.nameProgram}</h3>
-                </div>
+              
                 <div className="thumb">
                   <img
                     src={programDetail.img}
@@ -322,154 +343,140 @@ function ProgramDetailPage() {
                     </div>
                   </div>
                 </div>
+               
+         
+             
                 <div className="row">
-                  <div className="col-lg-12">
-                    <h4 className="title ">Các ưu đãi</h4>
-                    <ul>
-                      {programDetail &&
-                        programDetail.responsibilities &&
-                        programDetail.responsibilities
-                          .split("\\r\\n")
-                          .map((responsibility, index) => (
-                            <li key={index}>{responsibility}</li>
-                          ))}
+                <Col lg={6}>   
+                <Card className="mb-4">
+                <Card.Body>
+              <h4 className="title">Yêu cầu của chương trình</h4>
+              <ListGroup variant="flush">
+              {programDetail.requirement?.split(',').map((item, index) => (
+                  <ListGroupItem key={index} className="d-flex align-items-center"
+                    style={{ border: 'none', padding: '10px 15px', fontSize: '16px', backgroundColor: 'transparent' }}
+                  >
+                    <ul className="single-list-wrap">
+                      <li className="single-list-inner style-check-box">
+                        {index + 1}. {item}
+                      </li>
                     </ul>
-                  </div>
-                  <div className="col-lg-12">
-                    <h4 className="title ">Yêu cầu của chương trình</h4>
-                    <p>{programDetail?.requirement}</p>
-                  </div>
-                  <div className="col-lg-12">
-                    <h4 className="title">Chi phí khám khảo</h4>
-                    <ul>
-                      {programDetail?.tuition &&
-                        programDetail.tuition
-                          .split("\\r\\n")
-                          .map((item, index) => <li key={index}>{item}</li>)}
-                    </ul>
-                  </div>
+                  </ListGroupItem>
+                ))}
+              </ListGroup>
+            </Card.Body>
+      </Card>
+  </Col>
+  <Col lg={6}>   
+                <Card className="mb-4">
+                <Card.Body>
+                 <h4 className="title">Các ưu đãi</h4>
+    <ListGroup variant="flush">
+        {programDetail.responsibilities?.split("\\r\\n").map((item, index) => (
+          <ListGroupItem key={index} className="d-flex align-items-center"
+          style={{border:'none', padding:'10px 15px', fontSize:'16px', backgroundColor:'transparent'}}
+          >
+               <ul className="single-list-wrap">
+               <li className="single-list-inner style-check-box">
+            <i className="fa fa-check" /> {item}
+            </li>
+               </ul>
+             
+          </ListGroupItem>
+        ))}
+      </ListGroup>
+      </Card.Body>
+      </Card>
+  </Col>
+</div>
+
+                <div className="row">
+                <div className="col-lg-12">
+
+             
+          {/* Table to display additional information */}
+          {/* <div className="widget">
+      <h4 className="widget-title">Các ưu đãi</h4>
+      <ListGroup variant="flush">
+        {programDetail.responsibilities?.split("\\r\\n").map((item, index) => (
+          <ListGroupItem key={index} className="d-flex align-items-center"
+          style={{border:'none', padding:'10px 15px', fontSize:'16px', backgroundColor:'transparent'}}
+          >
+               <ul className="single-list-wrap">
+               <li className="single-list-inner style-check-box">
+            <i className="fa fa-check" /> {item}
+            </li>
+               </ul>
+             
+          </ListGroupItem>
+        ))}
+      </ListGroup>
+    </div> */}
+    <div className="widget">
+      <h4 className="widget-title">Chi phí kham thảo</h4>
+      <table className="table table-striped">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Thông tin</th>
+            <th>Giá trị</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Phí đăng ký</td>
+            <td>{programDetail.tuition?.split("\\r\\n")[0]}</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Học phí</td>
+            <td>{programDetail.tuition?.split("\\r\\n")[1]}</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Chi phí dịch vụ</td>
+            <td>{programDetail.tuition?.split("\\r\\n")[2]}</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Bảo hiểm</td>
+            <td>{programDetail.tuition?.split("\\r\\n")[3]}</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>Chi phí sinh hoạt</td>
+            <td>{programDetail.tuition?.split("\\r\\n")[4]}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  
+      </div>
                 </div>
               </div>
             </div>
             <div className="col-lg-4">
-              <div className="td-sidebar">
-                <div className="widget widget_feature">
-                  <h4 className="widget-title">Chi tiết Chương trình</h4>
-                  <ul>
-                    <li>
-                      <i className="fa fa-university" />
-                      <span>Trường Đại học:</span>
-                      <OverlayTrigger
-                        trigger="click"
-                        placement="right"
-                        overlay={uniDetailsPopover}
-                        rootClose
-                      >
-                        <button
-                          className="p-0 border-0 bg-transparent"
-                          style={{
-                            textDecoration: "none",
-                            color: "inherit",
-                            boxShadow: "none",
-                          }}
-                          type="button"
-                        >
-                          {universityIdDetail?.universityName}
-                        </button>
-                      </OverlayTrigger>
-                    </li>
-                    <li>
-                      <i className="fa fa-map-marker" />
-                      <span>Tiểu Bang:</span> {stateDetail.stateName}
-                    </li>
-                    <li>
-                      <i className="fa fa-laptop" />
-                      <span>Chuyên ngành chính:</span>
-                      <OverlayTrigger
-                        trigger="click"
-                        placement="right"
-                        overlay={majorDetailsPopover}
-                        rootClose
-                      >
-                        <button
-                          className="p-0 border-0 bg-transparent"
-                          style={{
-                            textDecoration: "none",
-                            color: "inherit",
-                            boxShadow: "none",
-                          }}
-                          type="button"
-                        >
-                          {majorDetail.majorName}
-                        </button>
-                      </OverlayTrigger>
-                    </li>
-                    <li>
-                      <i className="fa fa-clipboard" />
-                      <span>Lộ trình học:</span> {programDetail.duration}
-                    </li>
-                    <li>
-                      <i className="fa fa-language" />
-                      <span>Trình độ đào tạo:</span> {programDetail.level}
-                    </li>
-                    <li>
-                      <i className="fa fa-calendar"></i>
-                      <span>
-                        Học kỳ:
-                        <span style={{ marginLeft: "5px" }}>
-                          {semesterDetails.startDate
-                            ? new Date(
-                                semesterDetails.startDate
-                              ).toLocaleDateString()
-                            : "Loading..."}
-                        </span>
-                        đến
-                        <span style={{ marginLeft: "3px" }}>
-                          {semesterDetails.endDate
-                            ? new Date(
-                                semesterDetails.endDate
-                              ).toLocaleDateString()
-                            : "Loading..."}
-                        </span>
-                      </span>
-                    </li>
-
-                    <li>
-                      <i className="fa fa-graduation-cap" />
-                      <span>Loại chương trình:</span>
-                      <OverlayTrigger
-                        trigger="click"
-                        placement="right"
-                        overlay={programTypePopover}
-                        rootClose
-                      >
-                        <button
-                          className="p-0 border-0 bg-transparent"
-                          style={{
-                            textDecoration: "none",
-                            color: "inherit",
-                            boxShadow: "none",
-                          }}
-                          type="button"
-                        >
-                          {getTypeName(programDetail.programTypeId)}
-                        </button>
-                      </OverlayTrigger>
-                    </li>
-                  </ul>
-                  <div className="price-wrap text-center">
-                    <h5>Tham gia ngay !!!</h5>
-
-                    <a
-                      className="btn btn-base btn-radius"
-                      onClick={handleOpenModal}
-                    >
-                      GỬI ĐƠN ĐĂNG KÝ CHƯƠNG TRÌNH
-                    </a>
-                  </div>
-                </div>
-                {/* Modal */}
-                {showModal && (
+  <div className="td-sidebar">
+    <div className="widget widget_feature">
+      <h4 className="widget-title">Chi tiết Chương trình</h4>
+      <ul>
+        <li><i className="fa fa-university" /> <span>Trường Đại học:</span> {universityIdDetail?.universityName}</li>
+        <li><i className="fa fa-map-marker" /> <span>Tiểu Bang:</span> {stateDetail.stateName}</li>
+        <li><i className="fa fa-laptop" /> <span>Chuyên ngành chính:</span> {majorDetail.majorName}</li>
+        <li><i className="fa fa-clipboard" /> <span>Lộ trình học:</span> {programDetail.duration}</li>
+        <li><i className="fa fa-language" /> <span>Trình độ đào tạo:</span> {programDetail.level}</li>
+        <li><i className="fa fa-calendar" /> <span>Học kỳ:</span> {semesterDetails.startDate} đến {semesterDetails.endDate}</li>
+        <li><i className="fa fa-graduation-cap" /> <span>Loại chương trình:</span> {getTypeName(programDetail.programTypeId)}</li>
+      </ul>
+      <div className="price-wrap text-center">
+        <h5>Tham gia ngay !!!</h5>
+        <a className="btn btn-base btn-radius" onClick={handleOpenModal}>GỬI ĐƠN ĐĂNG KÝ CHƯƠNG TRÌNH</a>
+      </div>
+    </div>
+       {/* Modal */}
+       {showModal && (
                   <form onSubmit={handleSubmitProgramApplication}>
                     <div
                       id="modal-bg"
@@ -607,8 +614,37 @@ function ProgramDetailPage() {
                     </div>
                   </form>
                 )}
-              </div>
-            </div>
+
+  </div>
+ 
+  <div className="row">
+                  <div className="col-lg-12">
+                    <h4 className="title">Tiến trình</h4>
+                    {programDetail && programDetail.programStageDtos && (
+                      <Accordion defaultActiveKey="0">
+                        {programDetail.programStageDtos.map((stage, index) => (
+                          <ListGroup.Item key={stage.programStageId}>
+                            <CustomToggle eventKey={`${index}`} expanded={stage.expanded}>
+                              <h5>{index + 1}. {stage.stageName} <FaChevronDown className="float-right" style={{ margin: '0 auto' }} /></h5>
+                            </CustomToggle>
+                            <Accordion.Collapse eventKey={`${index}`}>
+                              <div>
+                                <div>Fee ID: {stage.programFeeId || "N/A"}</div>
+                                <Badge bg={stage.isPayment ? "success" : "danger"}>
+                                  {stage.isPayment ? "Yêu cầu thanh toán" : "Không yêu cầu thanh toán"}
+                                </Badge>
+                              </div>
+                            </Accordion.Collapse>
+                          </ListGroup.Item>
+                        ))}
+                      </Accordion>
+                    )}
+                  </div>
+                </div>
+
+</div>
+
+            
           </div>
           <div className="widget">
             <h4 className="widget-title">Những Chương Trình Tương Tự</h4>
@@ -648,7 +684,7 @@ function ProgramDetailPage() {
                     <div key={index} className="col-lg-12 col-md-6">
                       <div className="single-course-inner">
                         <div className="thumb">
-                          <img src={program.img} alt="img" />
+                          <img src={program.img} alt="img" style={{ width: "100%",height: "150px",objectFit:'cover'}} />
                         </div>
                         <div className="details">
                           <div
@@ -659,17 +695,19 @@ function ProgramDetailPage() {
                               <Link
                                 onClick={handleScrollToTop}
                                 to={`/program-details/${program.programId}`}
-                                style={{ fontSize: "16px" }}
+                                style={{ fontSize: "14px" }}
                               >
                                 {program.nameProgram}
                               </Link>
                             </h5>
+                            <p className="card-text">{program.university.universityName}</p>
+
                           </div>
                           <div className="emt-course-meta">
                             <div className="row">
                               <div className="col-12">
-                                <div className="rating">
-                                  <span>Lộ trình: {program.duration}</span>
+                                <div className="text-center" style={{fontSize:'12px'}}>
+                                  <span style={descriptionStyle}>{program.description}...</span>
                                 </div>
                               </div>
                             </div>
