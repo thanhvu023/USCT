@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import instance from "../axiosCustom";
 
-
 export const getStudentProfileByCustomerId = createAsyncThunk(
   "student/getStudentProfileByCustomerId",
   async (userId, thunkAPI) => {
@@ -17,8 +16,8 @@ export const getAllStudentProfile = createAsyncThunk(
   "student/getAllStudentProfile",
   async (profileId, thunkAPI) => {
     try {
-      const res = await instance.get('/profile/');
-      console.log(res)
+      const res = await instance.get("/profile/");
+      console.log(res);
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.res.data);
@@ -40,17 +39,81 @@ export const getStudentProfileById = createAsyncThunk(
 
 export const createStudentProfile = createAsyncThunk(
   "student/createStudentProfile",
-  async (studentData, thunkAPI) => {
+  async (params, thunkAPI) => {
     try {
-      const res = await instance.post("/profile/", studentData, {
-        headers: "Access-Control-Allow-Origin",
+      console.log(params);
+      const { formData } = params;
+      const { certificates } = params;
+      const studentProfileResponse = await instance.post("/profile/", formData);
+      const { studentProfileId } = studentProfileResponse.data;
+      const certificatesData = certificates.map((cert) => ({
+        ...cert,
+        studentProfileId,
+      }));
+      const {
+        schoolProfile10,
+        schoolProfile11,
+        schoolProfile12,
+        scoreProfile10,
+        scoreProfile11,
+        scoreProfile12,
+      } = params;
+
+      const schoolProfileData10 = await instance.post("/school-profiles", {
+        studentProfileId,
+        ...schoolProfile10,
       });
-      return res.data;
+      const schoolProfileData11 = await instance.post("/school-profiles", {
+        studentProfileId,
+        ...schoolProfile11,
+      });
+      const schoolProfileData12 = await instance.post("/school-profiles", {
+        studentProfileId,
+        ...schoolProfile12,
+      });
+
+      const schoolProfileId10 = schoolProfileData10.data.schoolProfileId;
+      const schoolProfileId11 = schoolProfileData11.data.schoolProfileId;
+      const schoolProfileId12 = schoolProfileData12.data.schoolProfileId;
+
+      const updatedScoreProfile10 = scoreProfile10.map((item) => ({
+        ...item,
+        schoolProfileId: schoolProfileId10,
+      }));
+      const updatedScoreProfile11 = scoreProfile11.map((item) => ({
+        ...item,
+        schoolProfileId: schoolProfileId11,
+      }));
+      const updatedScoreProfile12 = scoreProfile12.map((item) => ({
+        ...item,
+        schoolProfileId: schoolProfileId12,
+      }));
+
+      const scoreProfileGrade10 = await instance.post(
+        "/profile-score/list-profile-score",
+        updatedScoreProfile10
+      );
+      const scoreProfileGrade11 = await instance.post(
+        "/profile-score/list-profile-score",
+        updatedScoreProfile11
+      );
+      const scoreProfileGrade12 = await instance.post(
+        "/profile-score/list-profile-score",
+        updatedScoreProfile12
+      );
+      const certificatesStudent = await instance.post(
+        "/certificates/list-certificate",
+        certificatesData
+      );
+      console.log(certificatesStudent.data)
+      return; // Return only serializable data
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.res.data);
+      console.error(error);
+      return thunkAPI.rejectWithValue(error.response.data);
     }
   }
 );
+
 const initialState = {
   msg: "",
   token: null,
@@ -58,7 +121,8 @@ const initialState = {
   error: "",
   studentProfileByCustomerId: [],
   profileById: {},
-  studentProfile:[]
+  studentProfile: [],
+  studentProfileAfterCreate: {},
 };
 
 export const studentSlice = createSlice({
@@ -98,7 +162,8 @@ export const studentSlice = createSlice({
       .addCase(getStudentProfileById.rejected, (state) => {
         state.loading = false;
         state.error = null;
-      }) .addCase(getAllStudentProfile.pending, (state) => {
+      })
+      .addCase(getAllStudentProfile.pending, (state) => {
         state.loading = true;
       })
       .addCase(getAllStudentProfile.fulfilled, (state, action) => {
@@ -117,9 +182,9 @@ export const studentSlice = createSlice({
         state.loading = false;
         state.error = action.error;
       })
-      .addCase(createStudentProfile.fulfilled, (state) => {
+      .addCase(createStudentProfile.fulfilled, (state, action) => {
         state.loading = false;
-        state.error = null;
+        state.studentProfileAfterCreate = action.payload;
       });
   },
 });
