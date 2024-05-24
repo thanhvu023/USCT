@@ -33,6 +33,7 @@ import StaffRoute from "./StaffRoute.jsx";
 import ConsultantRoute from "./ConsultantRoute.jsx";
 import ProgramApplicationDetailsPage from "../components/program-application-details-page.jsx";
 import PaymentResponsePage from "../components/payment-response-page.jsx";
+import CheckRequirement from "../components/check-requirement-page.jsx";
 
 const Routers = () => {
   const token = useSelector((state) => state?.auth?.token);
@@ -71,6 +72,14 @@ const Routers = () => {
           element={
             <PrivateRoute userRole={userRole}>
               <ProgramDetail />
+            </PrivateRoute>
+          }
+        />
+          <Route
+          path="/program-details/check-requirement/:programById"
+          element={
+            <PrivateRoute userRole={userRole}>
+              <CheckRequirement />
             </PrivateRoute>
           }
         />

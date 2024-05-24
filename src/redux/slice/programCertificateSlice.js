@@ -28,6 +28,18 @@ export const getCertificateById = createAsyncThunk(
   }
 );
 
+export const getCertificatesByProgramId = createAsyncThunk(
+  "certificate/getCertificatesByProgramId",
+  async (programId, thunkAPI) => {
+    try {
+      const res = await instance.get(`/program-certificates/program/${programId}`);
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response);
+    }
+  }
+);
+
 const initialState = {
   msg: "",
   loading: false,
@@ -69,6 +81,18 @@ export const certificateSlice = createSlice({
         state.error = null;
       })
       .addCase(getAllCertificates.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(getCertificatesByProgramId.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getCertificatesByProgramId.fulfilled, (state, action) => {
+        state.loading = false;
+        state.certificatesByProgramId = action.payload;
+        state.error = null;
+      })
+      .addCase(getCertificatesByProgramId.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       });
