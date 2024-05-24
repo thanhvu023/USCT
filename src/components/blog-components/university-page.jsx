@@ -1,190 +1,253 @@
-/* eslint-disable react/jsx-no-target-blank */
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { getAllUniversity } from "../../redux/slice/universitySlice";
-import { Backdrop, CircularProgress } from "@mui/material";
+import { Link, useParams } from "react-router-dom";
+import {
+  Backdrop,
+  CircularProgress,
+  Grid,
+  Paper,
+  Typography,
+  Pagination,
+  Autocomplete,
+  TextField,
+} from "@mui/material";
+import {
+  getAllUniversity,
+  getUniversityByTypeId,
+  filterUniversitiesByStates,
+  getAllUniversityType,
+} from "../../redux/slice/universitySlice";
+import { getAllState } from "../../redux/slice/stateSlice";
+
 function UniversityPage() {
   const dispatch = useDispatch();
+  const { typeId } = useParams();
+
   const [universityName, setUniversityName] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [universitiesPerPage] = useState(6); // Number of universities to display per page
+  const [expandedType, setExpandedType] = useState(null);
+  const [selectedStates, setSelectedStates] = useState([]);
+  const [filteredUniversities, setFilteredUniversities] = useState([]);
 
+  const universitiesPerPage = 6;
+  const universityTypes = useSelector(
+    (state) => state.university.universityTypes
+  );
   const universities = useSelector((state) => state.university.universities);
+  const states = useSelector((state) => state.state.states);
+  const loading = useSelector((state) => state.university.loading);
+
   useEffect(() => {
     dispatch(getAllUniversity(universityName));
-  }, [universityName]);
+    dispatch(getAllUniversityType());
+    dispatch(getAllState());
+    if (typeId) {
+      dispatch(getUniversityByTypeId(typeId));
+    }
+  }, [dispatch, universityName, typeId]);
+
   const handleInputChangeName = (event) => {
-    setUniversityName(event.target.value); // Update the program name state with the input value
+    setUniversityName(event.target.value);
   };
+
   const indexOfLastUniversity = currentPage * universitiesPerPage;
   const indexOfFirstUniversity = indexOfLastUniversity - universitiesPerPage;
-  const currentUniversities = universities.slice(indexOfFirstUniversity, indexOfLastUniversity);
+  const currentUniversities = universities.slice(
+    indexOfFirstUniversity,
+    indexOfLastUniversity
+  );
+  const filteredCurrentUniversities = filteredUniversities.slice(
+    indexOfFirstUniversity,
+    indexOfLastUniversity
+  );
 
-  // Change page
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const handleChangePage = (event, value) => {
+    setCurrentPage(value);
+  };
 
-  const loading = useSelector((state) => state?.university?.loading);
-  return (
-    <div className="blog-area pd-top-120 pd-bottom-120 go-top">
-      <div className="container">
+  const handleTypeClick = (typeId) => {
+    if (expandedType === typeId) {
+      setExpandedType(null);
+    } else {
+      setExpandedType(typeId);
+      dispatch(getUniversityByTypeId(typeId));
+    }
+  };
+
+  const handleStateChange = (event, value) => {
+    setSelectedStates(value);
+    const selectedStateIds = value.map((state) => state.stateId);
+    if (selectedStateIds.length > 0) {
+      const filtered = universities.filter((university) =>
+        selectedStateIds.includes(university.stateId)
+      );
+      setFilteredUniversities(filtered);
+    } else {
+      setFilteredUniversities(universities);
+    }
+  };
+
+  const universitiesToDisplay =
+    selectedStates.length > 0 ? filteredUniversities : currentUniversities;
+
+    return (
+      <div style={{ padding: "24px" ,backgroundColor:'#F1F7FF'}}>
         <Backdrop
           sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={loading}
         >
           <CircularProgress color="inherit" />
         </Backdrop>
-        <div className="row">
-          <div className="col-lg-12">
-            <div className="td-sidebar">
-              <div className="widget widget_search">
-                <form className="search-form">
-                  <div className="form-group">
-                    <input
-                      type="text"
-                      placeholder="Tên trường đại học"
-                      onChange={handleInputChangeName}
-                      value={universityName}
-                    />
-                  </div>
-                  <button className="submit-btn" type="submit">
-                    <i className="fa fa-search" />
-                  </button>
-                </form>
-              </div>
-              {/* <div className="widget widget_catagory">
-                <h4 className="widget-title">Loại Trường</h4>
+        <Grid container spacing={4} style={{}}>
+        <Grid item xs={12}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <Paper elevation={3} sx={{ padding: "16px" }}>
+              <Typography variant="h5" align="center" gutterBottom>
+Tìm kiếm theo tên
+              </Typography>
+                <div className="widget widget_search">
+                  <form className="search-form">
+                    <div className="form-group">
+                      <input
+                        type="text"
+                        placeholder="Tên trường đại học"
+                        onChange={handleInputChangeName}
+                        value={universityName}
+                      />
+                    </div>
+                    <button className="submit-btn" type="submit">
+                      <i className="fa fa-search" />
+                    </button>
+                  </form>
+                </div>
+              </Paper>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+            <Paper elevation={3} sx={{ padding: "16px" }}>
+            <Typography variant="h5" align="center" gutterBottom>
+               Tìm kiếm theo Bang
+              </Typography>
+                <div className="widget widget_search">
+                <Autocomplete
+                multiple
+                options={states}
+                getOptionLabel={(option) => option.stateName}
+                value={selectedStates}
+                onChange={handleStateChange}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    variant="outlined"
+                    label="Tìm kiếm theo bang"
+                    placeholder="Chọn bang"
+                  />
+                )}
+                sx={{ marginBottom: 2 }}
+              />
+                </div>
+              </Paper>
+           
+            </Grid>
+          </Grid>
+        </Grid>
+  
+          <Grid item xs={12} sm={3}>
+            <Paper elevation={3} sx={{ padding: "16px" }}>
+              <Typography variant="h5" align="center" gutterBottom>
+                Loại Trường
+              </Typography>
+              <div className="widget widget_catagory">
                 <ul className="catagory-items go-top">
-                  <li>
-                    <Link to="/university-type">
-                      Đại học Liberal Arts <i className="fa fa-caret-right" />
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/university-type">
-                      Đại học Quốc gia
-                      <i className="fa fa-caret-right" />
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/university-type">
-                      Đại học miền <i className="fa fa-caret-right" />
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/university-type">
-                      Cao đẳng cộng đồng
-                      <i className="fa fa-caret-right" />
-                    </Link>
-                  </li>
+                  {universityTypes.map((type) => (
+                    <li key={type.universityTypeId}>
+                      <Link to="#" onClick={() => handleTypeClick(type.universityTypeId)}>
+                        {type.typeName} <i className="fa fa-caret-right" />
+                      </Link>
+                      {expandedType === type.universityTypeId && (
+                        <ul style={{ paddingLeft: "20px" }}>
+                          {universities
+                            .filter(
+                              (university) =>
+                                university.universityTypeId === type.universityTypeId
+                            )
+                            .map((university) => (
+                              <li key={university.universityId} style={{ marginTop: "12px" }}>
+                                <Link to={`/university-details/${university.universityId}`}>
+                                  {university.universityName}
+                                </Link>
+                              </li>
+                            ))}
+                        </ul>
+                      )}
+                    </li>
+                  ))}
                 </ul>
               </div>
+            </Paper>
+          
+          </Grid>
+  
+          <Grid item xs={12} sm={9}>
+            <Grid container spacing={4}>
+              {universitiesToDisplay.map((university, index) => (
+                <Grid item xs={12} sm={6} md={4} key={index}>
+                  <Paper elevation={3} sx={{ padding: "16px", height: "100%", backgroundColor:'#F5F6F8' }}>
+                  <div className="single-course-inner" >
 
-              <div className="widget widget_tags mb-0">
-                <h4 className="widget-title">Tags</h4>
-                <div className="tagcloud go-top">
-                  <Link to="/tag">Du học Mỹ</Link>
-                  <Link to="/tag">Visa</Link>
-                  <Link to="/tag">Học bổng</Link>
-                </div>
-              </div> */}
-            </div>
-          </div>
-          <div className="col-lg-12 ">
-            <div className="row go-top">
-              {currentUniversities.map((university, index) => (
-                <div
-                  key={index}
-                  className="single-blog-inner style-border col-lg-5 m-4"
-                  style={{ paddingLeft: "0px", paddingRight: "0px" }}
-                >
                   <div className="thumb">
                     <img
                       src={university.img}
-                      alt="university 1"
-                      style={{ width: "500px", height: "300px" }}
+                      style={{ width: "100%", height: "200px", objectFit: "cover" }}
                     />
-                  </div>
-                  <div className="details">
-                    <ul className="blog-meta">
-                      <li>
-                        <i className="fa fa-university" /> {university.slogan}
-                      </li>
-                      <li>
-                        <i className="fa fa-map-marker" />{" "}
-                        <a
-                          href={university.website}
-                          rel="noopener noreferrer"
-                          target="_blank"
-                        >
-                          {university.website}
-                        </a>
-                      </li>
-                    </ul>
-                    <h3 className="title">
-                      <Link
-                        to={`/university-details/${university.universityId}`}
+                    </div>
+                    <div className="details">
+                      <div className="details-inner" style={{height:'209px'}}> 
+                    <Typography variant="h6" gutterBottom>
+                      {university.universityName}
+                    </Typography>
+                    <Typography variant="body2" gutterBottom style={{height:'60px'}}>
+                      {university.slogan}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary" gutterBottom>
+                      <a
+                        href={university.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
                       >
-                        {university?.universityName}
-                      </Link>
-                    </h3>
+                        {university.website}
+                      </a>
+                    </Typography>
                     <Link
                       className="read-more-text"
                       to={`/university-details/${university.universityId}`}
                     >
                       Thông tin về trường <i className="fa fa-angle-right" />
                     </Link>
-                  </div>
-                </div>
+                    </div>
+                      </div>
+                    </div>
+                  </Paper>
+                </Grid>
               ))}
-            </div>
-            <nav className="td-page-navigation">
-              <ul className="pagination">
-                {Array(Math.ceil(universities.length / universitiesPerPage))
-                  .fill()
-                  .map((_, index) => (
-                    <li key={index} className="page-item">
-                      <button onClick={() => paginate(index + 1)} className="page-link">
-                        {index + 1}
-                      </button>
-                    </li>
-                  ))}
-              </ul>
-            </nav>
-            {/* <nav className="td-page-navigation">
-              <ul className="pagination">
-                <li className="pagination-arrow">
-                  <Link to="#">
-                    <i className="fa fa-angle-double-left" />
-                  </Link>
-                </li>
-                <li>
-                  <Link to="#">1</Link>
-                </li>
-                <li>
-                  <Link className="active" to="#">
-                    2
-                  </Link>
-                </li>
-                <li>
-                  <Link to="#">...</Link>
-                </li>
-                <li>
-                  <Link to="#">3</Link>
-                </li>
-                <li className="pagination-arrow">
-                  <Link to="#">
-                    <i className="fa fa-angle-double-right" />
-                  </Link>
-                </li>
-              </ul>
-            </nav> */}
-          </div>
-          {/* <Sidebar /> */}
-        </div>
+            </Grid>
+          </Grid>
+  
+          <Grid item xs={12} justifyContent="center" display="flex">
+            <Pagination
+              count={Math.ceil(
+                (selectedStates.length === 0
+                  ? universities.length
+                  : filteredUniversities.length) / universitiesPerPage
+              )}
+              page={currentPage}
+              onChange={handleChangePage}
+              color="primary"
+            />
+          </Grid>
+        </Grid>
       </div>
-    </div>
-  );
+    );
 }
 
 export default UniversityPage;

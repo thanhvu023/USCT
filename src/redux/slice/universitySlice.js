@@ -49,7 +49,17 @@ export const getUniversityById = createAsyncThunk(
     }
   }
 );
-
+export const filterUniversitiesByStates = createAsyncThunk(
+  "/university/filterByStates",
+  async (stateIds, thunkAPI) => {
+    try {
+      const res = await instance.get(`/universities?stateIds=${stateIds.join(',')}`);
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response);
+    }
+  }
+);
 export const getUniversityTypeById = createAsyncThunk(
   "/university/getUniversityType",
   async (param, thunkAPI) => {
@@ -74,6 +84,19 @@ export const getAllUniversityType = createAsyncThunk(
     }
   }
 );
+
+export const getUniversityByTypeId = createAsyncThunk(
+  "/university/getByTypeId",
+  async (typeId, thunkAPI) => {
+    try {
+      const res = await instance.get(`/universities?typeId=${typeId}`);
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response);
+    }
+  }
+);
+
 export const createUniversity = createAsyncThunk(
   "/university/create",
   async (universityData, thunkAPI) => {
@@ -124,6 +147,18 @@ export const universitySlice = createSlice({
         state.error = null;
       })
       .addCase(getAllUniversity.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(getUniversityByTypeId.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getUniversityByTypeId.fulfilled, (state, action) => {
+        state.loading = false;
+        state.universities = action.payload;
+        state.error = null;
+      })
+      .addCase(getUniversityByTypeId.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       })
@@ -183,6 +218,18 @@ export const universitySlice = createSlice({
         state.error = null;
       })
       .addCase(updateUniversity.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(filterUniversitiesByStates.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(filterUniversitiesByStates.fulfilled, (state, action) => {
+        state.loading = false;
+        state.universities = action.payload;
+        state.error = null;
+      })
+      .addCase(filterUniversitiesByStates.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       });
