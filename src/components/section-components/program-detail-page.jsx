@@ -20,6 +20,7 @@ import { getUniversityById } from "../../redux/slice/universitySlice";
 import { imageDb } from "../FirebaseImage/Config";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { getSchoolProfilesByStudentProfileId } from "../../redux/slice/schoolProfileSlice";
 
 const descriptionStyle = {
   display: '-webkit-box',
@@ -49,8 +50,10 @@ function CustomToggle({ children, eventKey, callback }) {
 
 function ProgramDetailPage() {
   const [showModal, setShowModal] = useState(false);
+ 
 
   const dispatch = useDispatch();
+  
   const { programById } = useParams();
 
   const token = useSelector((state) => state.auth.token);
@@ -60,7 +63,10 @@ function ProgramDetailPage() {
     // Điều hướng đến trang create-student-profile
     navigate("/create-student-profile");
   };
-
+  const handleCheckReq = () => {
+    // Điều hướng đến trang create-student-profile
+    navigate(`/program-details/check-requirement/${programById}`);
+  };
   const handleOpenModal = () => {
     dispatch(resetStudent());
     setShowModal(true);
@@ -286,6 +292,19 @@ function ProgramDetailPage() {
     }
   }, [dispatch, studentProfileDetail.studentProfileId]);
 
+  useEffect(() => {
+    if (studentProfileDetail?.studentProfileId) {
+      dispatch(getSchoolProfilesByStudentProfileId(studentProfileDetail.studentProfileId));
+    }
+  }, [dispatch, studentProfileDetail?.studentProfileId]);
+
+  const schoolProfiles = useSelector(
+    (state) => state.schoolProfile.schoolProfilesByStudentProfileId
+  ).filter(profile => profile.studentProfileId === studentProfileDetail.studentProfileId);
+
+console.log("schoolProfiles",schoolProfiles)
+console.log("studentProfileDetail",studentProfileDetail)
+
   const handleSubmitProgramApplication = (e) => {
     e.preventDefault();
     if (formData.studentProfileId) {
@@ -343,7 +362,7 @@ const handleSelectCertificateChange = (selectedOption) => {
 };
 
 const selectedStudentCertificate = studentCertificates?.find(c => c?.certificateTypeDto?.certificateName === selectedCertificate?.certificateType?.certificateName);
-console.log("studentCertificates",selectedStudentCertificate)
+// console.log("studentProfileDetail",selectedStudentCertificate)
 
 
   return (
@@ -475,164 +494,179 @@ console.log("studentCertificates",selectedStudentCertificate)
                   </ul>
                   <div className="price-wrap text-center">
                     <h5>Tham gia ngay !!!</h5>
-                    <a className="btn btn-base btn-radius" onClick={handleOpenModal}>GỬI ĐƠN ĐĂNG KÝ CHƯƠNG TRÌNH</a>
+                    <a className="btn btn-base btn-radius" onClick={handleCheckReq}>GỬI ĐƠN ĐĂNG KÝ CHƯƠNG TRÌNH</a>
                   </div>
                 </div>
                 {showModal && (
-                  <form onSubmit={handleSubmitProgramApplication}>
-                    <div id="modal-bg" className="modal-bg" style={modalBgStyle}></div>
-                    <div id="modal" className="modal" style={modalStyle}>
-                      <div className="modal-content" style={modalContentStyle} id="profile-content">
-                        <Grid container spacing={2}>
-                          <Grid item xs={12} style={{ textAlign: "center", marginBottom: "20px" }}>
-                            <h4>Thông tin Hồ sơ</h4>
-                          </Grid>
-                          {/* <Grid item xs={12} sm={3}>
-                            <img src={studentProfileDetail.img || "placeholder.jpg"} alt="Student" style={{ width: "100%" }} />
-                          </Grid> */}
-                           <Grid item xs={12} sm={6}>
-                           <div style={{ fontWeight: "bold", fontSize: "18px" }}>
-       {studentProfileDetail.fullName}
-  </div>
-  <div style={{ fontSize: "16px" }}>
-    <strong>Ngày tạo hồ sơ:</strong> {studentProfileDetail.createDate}
-  </div>
-  <div style={{ fontSize: "16px" }}>
-  <strong>Email:</strong> {studentProfileDetail.email}
-  </div>
-  <div style={{ fontSize: "16px" }}>
-  <strong>Số điện thoại:</strong>{studentProfileDetail.phone}
-  </div>
-  <div style={{ fontSize: "16px" }}>
-  <strong>Địa chỉ hiện tại:</strong>{studentProfileDetail.address}
-  </div>
-                           </Grid>
-                          <Grid item xs={12} sm={6}>
-                          <div style={{ height: "30px" }}></div>
-                            <div style={{ fontSize: "16px" }}>
-    <strong>Nơi sinh:</strong> {studentProfileDetail.placeOfBirth}
-  </div>
+  <form onSubmit={handleSubmitProgramApplication}>
+    <div id="modal-bg" className="modal-bg" style={modalBgStyle}></div>
+    <div id="modal" className="modal" style={modalStyle}>
+      <div className="modal-content" style={modalContentStyle} id="profile-content">
+        <Grid container spacing={2}>
+          <Grid item xs={12} style={{ textAlign: "center", marginBottom: "20px" }}>
+            <h4>Thông tin Hồ sơ</h4>
+          </Grid>
+          <Grid item xs={12} sm={3}>
+            <img src={studentProfileDetail.img || "placeholder.jpg"} alt="Student" style={{ width: "100%" }} />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <div style={{ fontWeight: "bold", fontSize: "18px" }}>
+              {studentProfileDetail.fullName}
+            </div>
+            <div style={{ fontSize: "16px" }}>
+              <strong>Ngày tạo hồ sơ:</strong> {studentProfileDetail.createDate}
+            </div>
+            <div style={{ fontSize: "16px" }}>
+              <strong>Email:</strong> {studentProfileDetail.email}
+            </div>
+            <div style={{ fontSize: "16px" }}>
+              <strong>Số điện thoại:</strong> {studentProfileDetail.phone}
+            </div>
+            <div style={{ fontSize: "16px" }}>
+              <strong>Địa chỉ hiện tại:</strong> {studentProfileDetail.address}
+            </div>
+            <div style={{ fontSize: "16px" }}>
+              <strong>Nơi sinh:</strong> {studentProfileDetail.placeOfBirth}
+            </div>
+            <div style={{ fontSize: "16px" }}>
+              <strong>Quá trình học tập:</strong> {studentProfileDetail.studyProcess}
+            </div>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <div style={{ height: "30px" }}></div>
+            {/* {schoolProfiles.map((profile, index) => (
+              <div key={index} style={{ marginBottom: "20px" }}>
+                <h5 style={{ fontWeight: "bold", fontSize: "18px" }}>
+                  Lớp {profile.schoolGrade}
+                </h5>
+                <img src={profile.img} alt={`Lớp ${profile.schoolGrade}`} style={{ width: "100%" }} />
+                <table className="table table-bordered" style={{ marginTop: "10px" }}>
+                  <thead>
+                    <tr>
+                      <th>Môn học</th>
+                      <th>Điểm</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {profile.profileScoreDtos.map((score) => (
+                      <tr key={score.profileScoreId}>
+                        <td>{score.subjectDto.subjectName}</td>
+                        <td>{score.score}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <div style={{ fontSize: "16px", marginTop: "10px" }}>
+                  <strong>GPA:</strong> {profile.gpa}
+                </div>
+              </div>
+            ))} */}
+          </Grid>
+          <Grid item xs={12}>
+            <div className="form-group">
+              <label htmlFor="cvFile" style={{ fontWeight: "bold", fontSize: "16px", marginBottom: "5px" }}>Hồ sơ học sinh:</label>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <div style={{ flex: "1" }}>
+                  {profileStudent?.length > 0 ? (
+                    <Select
+                      options={profileStudent.map((profile) => ({
+                        value: profile.studentProfileId,
+                        label: profile.fullName,
+                      }))}
+                      placeholder="Chọn hồ sơ học sinh"
+                      onChange={handleSelectChange}
+                    />
+                  ) : (
+                    <p style={{ fontStyle: "italic" }}>Không có hồ sơ học sinh.</p>
+                  )}
+                </div>
+                <div style={{ marginLeft: "10px", height: "50px" }}>
+                  <Button variant="contained" onClick={() => handleCreateProfile()} style={{ height: "100%", fontSize: "14px" }}>Tạo hồ sơ</Button>
+                </div>
+              </div>
+            </div>
+          </Grid>
 
-  <div style={{ fontSize: "16px" }}>
-    <strong>Quá trình học tập:</strong> {studentProfileDetail.studyProcess}
-  </div>
-  <div style={{ fontSize: "16px" }}>
-    <strong>Trình độ tiếng Anh:</strong> {studentProfileDetail.englishLevel}
-  </div>
-  <div style={{ fontSize: "16px" }}>
-    <strong>Học lực:</strong> {studentProfileDetail.grade}
-  </div>
-</Grid>
-<Grid item xs={12}>
-                            <div className="form-group">
-                              <label htmlFor="cvFile" style={{ fontWeight: "bold", fontSize: "16px", marginBottom: "5px" }}>Hồ sơ học sinh:</label>
-                              <div style={{ display: "flex", alignItems: "center" }}>
-                                <div style={{ flex: "1" }}>
-                                  {profileStudent?.length > 0 ? (
-                                    <Select
-                                      options={profileStudent.map((profile) => ({
-                                        value: profile.studentProfileId,
-                                        label: profile.fullName,
-                                      }))}
-                                      placeholder="Chọn hồ sơ học sinh"
-                                      onChange={handleSelectChange}
-                                    />
-                                  ) : (
-                                    <p style={{ fontStyle: "italic" }}>Không có hồ sơ học sinh.</p>
-                                  )}
-                                </div>
-                                <div style={{ marginLeft: "10px", height: "50px" }}>
-                                  <Button variant="contained" onClick={() => handleCreateProfile()} style={{ height: "100%", fontSize: "14px" }}>Tạo hồ sơ</Button>
-                                </div>
-                              </div>
-                            </div>
-                          </Grid>
-                         
-
-                          <Grid item xs={12}>
-                            <hr />
-                          </Grid>
-                          <Grid item xs={12}>
-  <Grid container spacing={2}>
-    <Grid item xs={6}>
-      <div style={{ fontWeight: "bold", fontSize: "18px", textAlign: "center", marginBottom: "20px" }}>
-        Chọn loại chứng chỉ tiếng Anh
-      </div>
-    </Grid>
-    <Grid item xs={6}></Grid>
-    <Grid item xs={6}>
-      <Select
-        options={certificatesByProgramId.map((certificate) => ({
-          value: certificate.certificateType.certificateName,
-          label: certificate.certificateType.certificateName,
-        }))}
-        placeholder="Chọn loại chứng chỉ"
-        onChange={handleSelectCertificateChange}
-      />
-      {selectedCertificate && (
-        <div style={{ fontSize: "16px", marginTop: "10px" }}>
-          <strong>Điểm tối thiểu:</strong> {selectedCertificate.minLevel}
-        </div>
-      )}
-      {selectedCertificate && (
-        <div style={{ fontSize: "16px", marginTop: "10px" }}>
-          <strong>Điểm trung bình:</strong> {selectedCertificate.averageLevel}
-        </div>
-      )}
-    </Grid>
-    <Grid item xs={6}>
-      <div style={{height:'41px'}}></div>
-      {selectedStudentCertificate && (
-        <div style={{ fontSize: "16px", marginTop: "10px" }}>
-          <strong>Chứng chỉ của bạn:</strong> {selectedStudentCertificate.certificateTypeDto.certificateName}
-        </div>
-      )}
-      {selectedStudentCertificate && (
-        <div style={{ fontSize: "16px", marginTop: "10px" }}>
-          <strong>Điểm chứng chỉ:</strong> {selectedStudentCertificate.certificateValue}
-        </div>
-      )}
-    </Grid>
-  </Grid>
-</Grid>
-
-                      
-                             
-                          
-       
-                          <Grid item xs={12}>
-                            <hr />
-                          </Grid>
-                          <Grid item xs={12}>
-                            <div className="form-group">
-                              <label htmlFor="fileUploads" style={{ fontWeight: "bold", fontSize: "16px" }}>File uploads</label>
-                              <div>
-                                {studentProfileDetail.fileUploads?.map((file, index) => (
-                                  <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '5px' }}>
-                                    <a
-                                      href={file.fileAttach}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="btn btn-info"
-                                      style={{ fontSize: "14px", marginRight: "10px" }}
-                                    >
-                                      Xem File {index + 1}
-                                    </a>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          </Grid>
-                        </Grid>
-                        <div className="modal-footer">
-                          <Button variant="contained" onClick={handleCloseModal} color="secondary">Hủy</Button>
-                          <Button variant="contained" onClick={generatePDF} color="primary">Xuất PDF</Button>
-                          <Button variant="contained" color="primary" type="submit">Lưu</Button>
-                        </div>
-                      </div>
-                    </div>
-                  </form>
+          <Grid item xs={12}>
+            <hr />
+          </Grid>
+          <Grid item xs={12}>
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <div style={{ fontWeight: "bold", fontSize: "18px", textAlign: "center", marginBottom: "20px" }}>
+                  Chọn loại chứng chỉ tiếng Anh
+                </div>
+              </Grid>
+              <Grid item xs={6}></Grid>
+              <Grid item xs={6}>
+                <Select
+                  options={certificatesByProgramId.map((certificate) => ({
+                    value: certificate.certificateType.certificateName,
+                    label: certificate.certificateType.certificateName,
+                  }))}
+                  placeholder="Chọn loại chứng chỉ"
+                  onChange={handleSelectCertificateChange}
+                />
+                {selectedCertificate && (
+                  <div style={{ fontSize: "16px", marginTop: "10px" }}>
+                    <strong>Điểm tối thiểu:</strong> {selectedCertificate.minLevel}
+                  </div>
                 )}
+                {selectedCertificate && (
+                  <div style={{ fontSize: "16px", marginTop: "10px" }}>
+                    <strong>Điểm trung bình:</strong> {selectedCertificate.averageLevel}
+                  </div>
+                )}
+              </Grid>
+              <Grid item xs={6}>
+                <div style={{ height: '41px' }}></div>
+                {selectedStudentCertificate && (
+                  <div style={{ fontSize: "16px", marginTop: "10px" }}>
+                    <strong>Chứng chỉ của bạn:</strong> {selectedStudentCertificate.certificateTypeDto.certificateName}
+                  </div>
+                )}
+                {selectedStudentCertificate && (
+                  <div style={{ fontSize: "16px", marginTop: "10px" }}>
+                    <strong>Điểm chứng chỉ:</strong> {selectedStudentCertificate.certificateValue}
+                  </div>
+                )}
+              </Grid>
+            </Grid>
+          </Grid>
+
+          <Grid item xs={12}>
+            <hr />
+          </Grid>
+          <Grid item xs={12}>
+            <div className="form-group">
+              <label htmlFor="fileUploads" style={{ fontWeight: "bold", fontSize: "16px" }}>File uploads</label>
+              <div>
+                {studentProfileDetail.fileUploads?.map((file, index) => (
+                  <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '5px' }}>
+                    <a
+                      href={file.fileAttach}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn btn-info"
+                      style={{ fontSize: "14px", marginRight: "10px" }}
+                    >
+                      Xem File {index + 1}
+                    </a>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Grid>
+        </Grid>
+        <div className="modal-footer">
+          <Button variant="contained" onClick={handleCloseModal} color="secondary">Hủy</Button>
+          <Button variant="contained" onClick={generatePDF} color="primary">Xuất PDF</Button>
+          <Button variant="contained" color="primary" type="submit">Lưu</Button>
+        </div>
+      </div>
+    </div>
+  </form>
+)}
               </div>
               <div className="row">
                 <div className="col-lg-12">
@@ -768,7 +802,7 @@ const modalStyle = {
   top: "50%",
   transform: "translate(-50%, -50%)",
   width: "60%",
-  height: "100%",
+  height: "90%",
   overflow: "auto",
 };
 

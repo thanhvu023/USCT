@@ -5728,6 +5728,36 @@ margin: 10px;
 .program-description {
   cursor: pointer;
 }
+/* animations.css */
+@keyframes successAnimation {
+  0% { transform: scale(0.9); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+@keyframes failureAnimation {
+  0% { transform: scale(0.9); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.success-animation {
+  animation: successAnimation 0.5s ease-in-out;
+}
+
+.failure-animation {
+  animation: failureAnimation 0.5s ease-in-out;
+}
+
+@keyframes goodLuckAnimation {
+  0% { opacity: 0; transform: scale(0.5); }
+  50% { opacity: 1; transform: scale(1.1); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.good-luck-animation {
+  animation: goodLuckAnimation 1s ease-in-out;
+}
 
 @tailwind components;
 @tailwind utilities;
