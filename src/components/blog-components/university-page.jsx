@@ -193,7 +193,7 @@ Tìm kiếm theo tên
               {universitiesToDisplay.map((university, index) => (
                 <Grid item xs={12} sm={6} md={4} key={index}>
                   <Paper elevation={3} sx={{ padding: "16px", height: "100%", backgroundColor:'#F5F6F8' }}>
-                  <div className="single-course-inner"style={{paddingBottom:'20px'}} >
+                  <div className="single-course-inner" >
 
                   <div className="thumb">
                     <img

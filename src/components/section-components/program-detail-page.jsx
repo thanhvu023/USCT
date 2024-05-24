@@ -1,36 +1,25 @@
-import { Backdrop, CircularProgress } from "@mui/material";
+import { Backdrop, CircularProgress, Grid, Button } from "@mui/material";
 import { getDownloadURL, ref } from "firebase/storage";
 import jwtDecode from "jwt-decode";
 import React, { useEffect, useState } from "react";
-import { OverlayTrigger, Popover,Card, Row, Col, ListGroup,ListGroupItem, ProgressBar, Badge,Accordion, useAccordionButton   } from "react-bootstrap";
+import { OverlayTrigger, Popover, Card, Row, Col, ListGroup, ListGroupItem, ProgressBar, Badge, Accordion, useAccordionButton } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Select from "react-select";
 import Slider from "react-slick";
 import Swal from "sweetalert2";
 import { FaChevronDown } from 'react-icons/fa';
-
-import {
-  createNotification,
-  getNotification,
-} from "../../redux/slice/authSlice";
+import { getAllCertificates, filterCertificatesByProgramId } from "../../redux/slice/programCertificateSlice";
+import { createNotification, getNotification } from "../../redux/slice/authSlice";
 import { getMajorById } from "../../redux/slice/majorSlice";
-import {
-  createProgramApplication,
-  getProgramById,
-  getProgramByProgramType,
-  getProgramByUniId,
-  getProgramTypes,
-} from "../../redux/slice/programSlice";
+import { createProgramApplication, getProgramById, getProgramByProgramType, getProgramByUniId, getProgramTypes } from "../../redux/slice/programSlice";
 import { getSemesterById } from "../../redux/slice/semesterSlice";
 import { getStateById } from "../../redux/slice/stateSlice";
-import {
-  getStudentProfileByCustomerId,
-  getStudentProfileById,
-  resetStudent,
-} from "../../redux/slice/studentSlice";
+import { getStudentProfileByCustomerId, getStudentProfileById, resetStudent } from "../../redux/slice/studentSlice";
 import { getUniversityById } from "../../redux/slice/universitySlice";
 import { imageDb } from "../FirebaseImage/Config";
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 const descriptionStyle = {
   display: '-webkit-box',
@@ -41,6 +30,9 @@ const descriptionStyle = {
   maxHeight: '4.5em',
   lineHeight: '1.5em', 
 };
+import {
+  getAllStudentCertificates, getAllStudentCertificatesByProfile
+} from "../../redux/slice/studentCertificateSlice";
 
 function CustomToggle({ children, eventKey, callback }) {
   const decoratedOnClick = useAccordionButton(eventKey, () => callback && callback(eventKey));
@@ -54,11 +46,13 @@ function CustomToggle({ children, eventKey, callback }) {
     </div>
   );
 }
+
 function ProgramDetailPage() {
   const [showModal, setShowModal] = useState(false);
 
   const dispatch = useDispatch();
   const { programById } = useParams();
+
   const token = useSelector((state) => state.auth.token);
   const customerId = jwtDecode(token).UserId;
   const navigate = useNavigate();
@@ -102,23 +96,26 @@ function ProgramDetailPage() {
   const programByType = useSelector(
     (state) => state?.program?.programsByProgramType
   );
-  // const UniversityDetails = useSelector(
-  //   (state) => state?.program?.programsByUniId
-  // );
-  // console.log(UniversityDetails)
   const loading = useSelector((state) => state?.program?.loading);
 
   const programDetail = useSelector((state) => state?.program?.programById);
   const stateDetail = useSelector((state) => state?.state?.stateById);
   const majorDetail = useSelector((state) => state?.major?.majorById);
   const programType = useSelector((state) => state?.program?.programTypes);
+  const certificates = useSelector((state) => state.certificate.certificates);
+  const certificatesByProgramId = useSelector(
+    (state) => state.certificate.certificatesByProgramId
+  );
+  const studentCertificates = useSelector((state) => state.studentCertificate.studentCertificates);
 
   const profileStudent = useSelector(
     (state) => state?.student?.studentProfileByCustomerId
   );
+
   useEffect(() => {
     dispatch(getProgramTypes());
   }, [dispatch]);
+
   useEffect(() => {
     if (programById) {
       dispatch(getProgramById(programById));
@@ -169,16 +166,35 @@ function ProgramDetailPage() {
       dispatch(getStudentProfileByCustomerId(customerId));
     }
   }, [dispatch, customerId]);
+
+  useEffect(() => {
+    dispatch(getAllCertificates());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (programById) {
+      dispatch(filterCertificatesByProgramId(Number(programById)));
+    }
+  }, [dispatch, programById]);
+
+  useEffect(() => {
+    dispatch(getAllStudentCertificates());
+  }, [dispatch]);
+
+
+
   const getTypeName = (typeId) => {
     if (!programType) return "";
     const type = programType.find((type) => type.programTypeId === typeId);
     return type ? type.typeName : "";
   };
+
   const getDescriptionByProgramTypeId = (typeId) => {
     if (!programType) return "";
     const type = programType.find((type) => type.programTypeId === typeId);
     return type ? type.description : "";
   };
+
   const getMajorDescriptionByMajorId = (majorId) => {
     if (!majorDetail) return "";
 
@@ -244,6 +260,7 @@ function ProgramDetailPage() {
     studentProfileId: undefined,
     programId: programById,
   });
+
   const profileStudentId = formData.studentProfileId;
   useEffect(() => {
     if (profileStudentId) {
@@ -251,6 +268,7 @@ function ProgramDetailPage() {
       dispatch(resetStudent());
     }
   }, [profileStudentId]);
+
   const studentProfileDetail = useSelector(
     (state) => state?.student?.profileById
   );
@@ -262,6 +280,12 @@ function ProgramDetailPage() {
       studentProfileId: selectedOption.value,
     });
   };
+  useEffect(() => {
+    if (studentProfileDetail.studentProfileId) {
+      dispatch(getAllStudentCertificatesByProfile(studentProfileDetail.studentProfileId));
+    }
+  }, [dispatch, studentProfileDetail.studentProfileId]);
+
   const handleSubmitProgramApplication = (e) => {
     e.preventDefault();
     if (formData.studentProfileId) {
@@ -274,7 +298,7 @@ function ProgramDetailPage() {
         showConfirmButton: false,
         timer: 1500,
       });
-      navigate('/students-profile')
+      navigate('/students-profile');
     } else {
       Swal.fire({
         icon: "warning",
@@ -284,28 +308,44 @@ function ProgramDetailPage() {
       });
     }
   };
+
   const handleScrollToTop = () => {
     window.scrollTo({
       top: 0,
       behavior: "smooth",
     });
   };
-  dispatch(getNotification(customerId));
 
-  const downloadFileFromStorage = async (fileName) => {
-    try {
-      const fileRef = ref(imageDb, `Image/ProfileStudent/${fileName}`);
-      const downloadURL = await getDownloadURL(fileRef);
-      window.open(downloadURL);
-    } catch (error) {
-      console.error("Error downloading file:", error);
+  const generatePDF = () => {
+    const input = document.getElementById('profile-content');
+    if (!input) {
+      console.error('Could not find element with id profile-content');
+      return;
     }
+
+    html2canvas(input, { useCORS: true })
+      .then((canvas) => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF();
+        pdf.addImage(imgData, 'PNG', 0, 0);
+        pdf.save("profile.pdf");
+      })
+      .catch((error) => {
+        console.error('Error generating PDF:', error);
+      });
   };
 
-  const calculateStageCompletion = (index, stages) => {
-    return ((index + 1) / stages.length) * 100;
-  };
- 
+  const [selectedCertificate, setSelectedCertificate] = useState(null);
+
+const handleSelectCertificateChange = (selectedOption) => {
+  const certificate = certificatesByProgramId.find(c => c.certificateType.certificateName === selectedOption.value);
+  setSelectedCertificate(certificate);
+};
+
+const selectedStudentCertificate = studentCertificates?.find(c => c?.certificateTypeDto?.certificateName === selectedCertificate?.certificateType?.certificateName);
+console.log("studentCertificates",selectedStudentCertificate)
+
+
   return (
     <>
       <div className="course-single-area pd-top-120 pd-bottom-90">
@@ -317,13 +357,11 @@ function ProgramDetailPage() {
             <CircularProgress color="inherit" />
           </Backdrop>
           <div className="row">
-          <div className="details-inner" style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', margin: '20px 0', width:'100%' }}>
-                
-          <h3 className="title" style={{ fontSize: '2.5rem' }}>{programDetail.nameProgram}</h3>
-              </div>
+            <div className="details-inner" style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', margin: '20px 0', width:'100%' }}>
+              <h3 className="title" style={{ fontSize: '2.5rem' }}>{programDetail.nameProgram}</h3>
+            </div>
             <div className="col-lg-8">
               <div className="course-course-detaila-inner">
-              
                 <div className="thumb">
                   <img
                     src={programDetail.img}
@@ -336,315 +374,314 @@ function ProgramDetailPage() {
                     <div className="course-details-content">
                       <h4 className="title">Mô tả chi tiết</h4>
                       <p>{programDetail.description}</p>
-                      {/* <p>
-                        Sau đây là những lợi ích lớn lao từ việc thực tập ở nước
-                        ngoài:
-                      </p> */}
                     </div>
                   </div>
                 </div>
-               
-         
-             
                 <div className="row">
-                <Col lg={6}>   
-                <Card className="mb-4">
-                <Card.Body>
-              <h4 className="title">Yêu cầu của chương trình</h4>
-              <ListGroup variant="flush">
-              {programDetail.requirement?.split(',').map((item, index) => (
-                  <ListGroupItem key={index} className="d-flex align-items-center"
-                    style={{ border: 'none', padding: '10px 15px', fontSize: '16px', backgroundColor: 'transparent' }}
-                  >
-                    <ul className="single-list-wrap">
-                      <li className="single-list-inner style-check-box">
-                        {index + 1}. {item}
-                      </li>
-                    </ul>
-                  </ListGroupItem>
-                ))}
-              </ListGroup>
-            </Card.Body>
-      </Card>
-  </Col>
-  <Col lg={6}>   
-                <Card className="mb-4">
-                <Card.Body>
-                 <h4 className="title">Các ưu đãi</h4>
-    <ListGroup variant="flush">
-        {programDetail.responsibilities?.split("\\r\\n").map((item, index) => (
-          <ListGroupItem key={index} className="d-flex align-items-center"
-          style={{border:'none', padding:'10px 15px', fontSize:'16px', backgroundColor:'transparent'}}
-          >
-               <ul className="single-list-wrap">
-               <li className="single-list-inner style-check-box">
-            <i className="fa fa-check" /> {item}
-            </li>
-               </ul>
-             
-          </ListGroupItem>
-        ))}
-      </ListGroup>
-      </Card.Body>
-      </Card>
-  </Col>
-</div>
-
+                  <Col lg={6}>
+                    <Card className="mb-4">
+                      <Card.Body>
+                        <h4 className="title">Yêu cầu của chương trình</h4>
+                        <ListGroup variant="flush">
+                          {programDetail.requirement?.split(',').map((item, index) => (
+                            <ListGroupItem key={index} className="d-flex align-items-center" style={{ border: 'none', padding: '10px 15px', fontSize: '16px', backgroundColor: 'transparent' }}>
+                              <ul className="single-list-wrap">
+                                <li className="single-list-inner style-check-box">
+                                  {index + 1}. {item}
+                                </li>
+                              </ul>
+                            </ListGroupItem>
+                          ))}
+                        </ListGroup>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                  <Col lg={6}>
+                    <Card className="mb-4">
+                      <Card.Body>
+                        <h4 className="title">Các ưu đãi</h4>
+                        <ListGroup variant="flush">
+                          {programDetail.responsibilities?.split("\\r\\n").map((item, index) => (
+                            <ListGroupItem key={index} className="d-flex align-items-center" style={{ border: 'none', padding: '10px 15px', fontSize: '16px', backgroundColor: 'transparent' }}>
+                              <ul className="single-list-wrap">
+                                <li className="single-list-inner style-check-box">
+                                  <i className="fa fa-check" /> {item}
+                                </li>
+                              </ul>
+                            </ListGroupItem>
+                          ))}
+                        </ListGroup>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                </div>
                 <div className="row">
-                <div className="col-lg-12">
-
-             
-          {/* Table to display additional information */}
-          {/* <div className="widget">
-      <h4 className="widget-title">Các ưu đãi</h4>
-      <ListGroup variant="flush">
-        {programDetail.responsibilities?.split("\\r\\n").map((item, index) => (
-          <ListGroupItem key={index} className="d-flex align-items-center"
-          style={{border:'none', padding:'10px 15px', fontSize:'16px', backgroundColor:'transparent'}}
-          >
-               <ul className="single-list-wrap">
-               <li className="single-list-inner style-check-box">
-            <i className="fa fa-check" /> {item}
-            </li>
-               </ul>
-             
-          </ListGroupItem>
-        ))}
-      </ListGroup>
-    </div> */}
-    <div className="widget">
-      <h4 className="widget-title">Chi phí kham thảo</h4>
-      <table className="table table-striped">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Thông tin</th>
-            <th>Giá trị</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>1</td>
-            <td>Phí đăng ký</td>
-            <td>{programDetail.tuition?.split("\\r\\n")[0]}</td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>Học phí</td>
-            <td>{programDetail.tuition?.split("\\r\\n")[1]}</td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>Chi phí dịch vụ</td>
-            <td>{programDetail.tuition?.split("\\r\\n")[2]}</td>
-          </tr>
-          <tr>
-            <td>4</td>
-            <td>Bảo hiểm</td>
-            <td>{programDetail.tuition?.split("\\r\\n")[3]}</td>
-          </tr>
-          <tr>
-            <td>5</td>
-            <td>Chi phí sinh hoạt</td>
-            <td>{programDetail.tuition?.split("\\r\\n")[4]}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-  
-      </div>
+                  <div className="col-lg-12">
+                    <div className="widget">
+                      <h4 className="widget-title">Chi phí kham thảo</h4>
+                      <table className="table table-striped">
+                        <thead>
+                          <tr>
+                            <th>#</th>
+                            <th>Thông tin</th>
+                            <th>Giá trị</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>1</td>
+                            <td>Phí đăng ký</td>
+                            <td>{programDetail.tuition?.split("\\r\\n")[0]}</td>
+                          </tr>
+                          <tr>
+                            <td>2</td>
+                            <td>Học phí</td>
+                            <td>{programDetail.tuition?.split("\\r\\n")[1]}</td>
+                          </tr>
+                          <tr>
+                            <td>3</td>
+                            <td>Chi phí dịch vụ</td>
+                            <td>{programDetail.tuition?.split("\\r\\n")[2]}</td>
+                          </tr>
+                          <tr>
+                            <td>4</td>
+                            <td>Bảo hiểm</td>
+                            <td>{programDetail.tuition?.split("\\r\\n")[3]}</td>
+                          </tr>
+                          <tr>
+                            <td>5</td>
+                            <td>Chi phí sinh hoạt</td>
+                            <td>{programDetail.tuition?.split("\\r\\n")[4]}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
             <div className="col-lg-4">
-  <div className="td-sidebar">
-    <div className="widget widget_feature">
-      <h4 className="widget-title">Chi tiết Chương trình</h4>
-      <ul>
-        <li><i className="fa fa-university" /> <span>Trường Đại học:</span> {universityIdDetail?.universityName}</li>
-        <li><i className="fa fa-map-marker" /> <span>Tiểu Bang:</span> {stateDetail.stateName}</li>
-        <li><i className="fa fa-laptop" /> <span>Chuyên ngành chính:</span> {majorDetail.majorName}</li>
-        <li><i className="fa fa-clipboard" /> <span>Lộ trình học:</span> {programDetail.duration}</li>
-        <li><i className="fa fa-language" /> <span>Trình độ đào tạo:</span> {programDetail.level}</li>
-        <li><i className="fa fa-calendar" /> <span>Học kỳ:</span> {semesterDetails.startDate} đến {semesterDetails.endDate}</li>
-        <li><i className="fa fa-graduation-cap" /> <span>Loại chương trình:</span> {getTypeName(programDetail.programTypeId)}</li>
-      </ul>
-      <div className="price-wrap text-center">
-        <h5>Tham gia ngay !!!</h5>
-        <a className="btn btn-base btn-radius" onClick={handleOpenModal}>GỬI ĐƠN ĐĂNG KÝ CHƯƠNG TRÌNH</a>
-      </div>
-    </div>
-       {/* Modal */}
-       {showModal && (
+              <div className="td-sidebar">
+                <div className="widget widget_feature">
+                  <h4 className="widget-title">Chi tiết Chương trình</h4>
+                  <ul>
+                    <li><i className="fa fa-university" /> <span>Trường Đại học:</span> {universityIdDetail?.universityName}</li>
+                    <li><i className="fa fa-map-marker" /> <span>Tiểu Bang:</span> {stateDetail.stateName}</li>
+                    <li><i className="fa fa-laptop" /> <span>Chuyên ngành chính:</span> {majorDetail.majorName}</li>
+                    <li><i className="fa fa-clipboard" /> <span>Lộ trình học:</span> {programDetail.duration}</li>
+                    <li><i className="fa fa-language" /> <span>Trình độ đào tạo:</span> {programDetail.level}</li>
+                    <li><i className="fa fa-calendar" /> <span>Học kỳ:</span> {semesterDetails.startDate} đến {semesterDetails.endDate}</li>
+                    <li><i className="fa fa-graduation-cap" /> <span>Loại chương trình:</span> {getTypeName(programDetail.programTypeId)}</li>
+                  </ul>
+                  <div className="price-wrap text-center">
+                    <h5>Tham gia ngay !!!</h5>
+                    <a className="btn btn-base btn-radius" onClick={handleOpenModal}>GỬI ĐƠN ĐĂNG KÝ CHƯƠNG TRÌNH</a>
+                  </div>
+                </div>
+                {showModal && (
                   <form onSubmit={handleSubmitProgramApplication}>
-                    <div
-                      id="modal-bg"
-                      className="modal-bg"
-                      style={modalBgStyle}
-                    ></div>
+                    <div id="modal-bg" className="modal-bg" style={modalBgStyle}></div>
                     <div id="modal" className="modal" style={modalStyle}>
-                      <div className="modal-content" style={modalContentStyle}>
-                        <span
-                          className="close"
-                          onClick={handleCloseModal}
-                          style={{
-                            position: "absolute",
-                            top: "10px",
-                            right: "10px",
-                            fontSize: "32px",
-                            cursor: "pointer",
-                          }}
-                        >
-                          &times;
-                        </span>
+                      <div className="modal-content" style={modalContentStyle} id="profile-content">
+                        <Grid container spacing={2}>
+                          <Grid item xs={12} style={{ textAlign: "center", marginBottom: "20px" }}>
+                            <h4>Thông tin Hồ sơ</h4>
+                          </Grid>
+                          {/* <Grid item xs={12} sm={3}>
+                            <img src={studentProfileDetail.img || "placeholder.jpg"} alt="Student" style={{ width: "100%" }} />
+                          </Grid> */}
+                           <Grid item xs={12} sm={6}>
+                           <div style={{ fontWeight: "bold", fontSize: "18px" }}>
+       {studentProfileDetail.fullName}
+  </div>
+  <div style={{ fontSize: "16px" }}>
+    <strong>Ngày tạo hồ sơ:</strong> {studentProfileDetail.createDate}
+  </div>
+  <div style={{ fontSize: "16px" }}>
+  <strong>Email:</strong> {studentProfileDetail.email}
+  </div>
+  <div style={{ fontSize: "16px" }}>
+  <strong>Số điện thoại:</strong>{studentProfileDetail.phone}
+  </div>
+  <div style={{ fontSize: "16px" }}>
+  <strong>Địa chỉ hiện tại:</strong>{studentProfileDetail.address}
+  </div>
+                           </Grid>
+                          <Grid item xs={12} sm={6}>
+                          <div style={{ height: "30px" }}></div>
+                            <div style={{ fontSize: "16px" }}>
+    <strong>Nơi sinh:</strong> {studentProfileDetail.placeOfBirth}
+  </div>
 
-                        <h4>
-                          Bạn đang đăng ký vào chương trình [
-                          {programDetail.nameProgram}] tại
-                          {universityIdDetail?.universityName}
-                        </h4>
-                        <div className="form-group">
-                          <label
-                            htmlFor="fullName"
-                            style={{ fontWeight: "bold", fontSize: "16px" }}
-                          >
-                            Họ và tên
-                          </label>
-                          <input
-                            type="text"
-                            id="fullName"
-                            className="form-control"
-                            defaultValue={studentProfileDetail.fullName}
-                            disabled
-                          />
-                        </div>
-                        <div className="form-group">
-                          <label
-                            htmlFor="countryId"
-                            style={{ fontWeight: "bold", fontSize: "16px" }}
-                          >
-                            Căn cước công dân
-                          </label>
-                          <input
-                            type="text"
-                            id="countryId"
-                            className="form-control"
-                            defaultValue={studentProfileDetail.nationalId}
-                            disabled
-                          />
-                        </div>
-                        <div className="form-group">
-                          <label
-                            htmlFor="countryId"
-                            style={{ fontWeight: "bold", fontSize: "16px" }}
-                          >
-                            Email
-                          </label>
-                          <input
-                            type="text"
-                            id="email"
-                            className="form-control"
-                            defaultValue={studentProfileDetail.email}
-                            disabled
-                          />
-                        </div>
-                        <div className="form-group">
-                          <label
-                            htmlFor="cvFile"
-                            style={{
-                              fontWeight: "bold",
-                              fontSize: "16px",
-                              marginBottom: "5px",
-                            }}
-                          >
-                            Hồ sơ học sinh:
-                          </label>
-                          <div
-                            style={{ display: "flex", alignItems: "center" }}
-                          >
-                            {/* Select */}
-                            <div style={{ flex: "1" }}>
-                              {profileStudent?.length > 0 ? (
-                                <Select
-                                  options={profileStudent.map((profile) => ({
-                                    value: profile.studentProfileId,
-                                    label: profile.fullName,
-                                  }))}
-                                  placeholder="Chọn hồ sơ học sinh"
-                                  onChange={handleSelectChange}
-                                />
-                              ) : (
-                                <p style={{ fontStyle: "italic" }}>
-                                  Không có hồ sơ học sinh.
-                                </p>
-                              )}
+  <div style={{ fontSize: "16px" }}>
+    <strong>Quá trình học tập:</strong> {studentProfileDetail.studyProcess}
+  </div>
+  <div style={{ fontSize: "16px" }}>
+    <strong>Trình độ tiếng Anh:</strong> {studentProfileDetail.englishLevel}
+  </div>
+  <div style={{ fontSize: "16px" }}>
+    <strong>Học lực:</strong> {studentProfileDetail.grade}
+  </div>
+</Grid>
+<Grid item xs={12}>
+                            <div className="form-group">
+                              <label htmlFor="cvFile" style={{ fontWeight: "bold", fontSize: "16px", marginBottom: "5px" }}>Hồ sơ học sinh:</label>
+                              <div style={{ display: "flex", alignItems: "center" }}>
+                                <div style={{ flex: "1" }}>
+                                  {profileStudent?.length > 0 ? (
+                                    <Select
+                                      options={profileStudent.map((profile) => ({
+                                        value: profile.studentProfileId,
+                                        label: profile.fullName,
+                                      }))}
+                                      placeholder="Chọn hồ sơ học sinh"
+                                      onChange={handleSelectChange}
+                                    />
+                                  ) : (
+                                    <p style={{ fontStyle: "italic" }}>Không có hồ sơ học sinh.</p>
+                                  )}
+                                </div>
+                                <div style={{ marginLeft: "10px", height: "50px" }}>
+                                  <Button variant="contained" onClick={() => handleCreateProfile()} style={{ height: "100%", fontSize: "14px" }}>Tạo hồ sơ</Button>
+                                </div>
+                              </div>
                             </div>
+                          </Grid>
+                         
 
-                            {/* Button */}
-                            <div style={{ marginLeft: "10px", height: "50px" }}>
-                              {/* <button
-                                onClick={() =>
-                                  downloadFileFromStorage("DSC_7398.JPG")
-                                }
-                              >
-                                Download File
-                              </button> */}
-                              <button
-                                className="btn btn-primary"
-                                onClick={() => handleCreateProfile()}
-                                style={{ height: "100%", fontSize: "14px" }}
-                              >
-                                Tạo hồ sơ
-                              </button>
+                          <Grid item xs={12}>
+                            <hr />
+                          </Grid>
+                          <Grid item xs={12}>
+  <Grid container spacing={2}>
+    <Grid item xs={6}>
+      <div style={{ fontWeight: "bold", fontSize: "18px", textAlign: "center", marginBottom: "20px" }}>
+        Chọn loại chứng chỉ tiếng Anh
+      </div>
+    </Grid>
+    <Grid item xs={6}></Grid>
+    <Grid item xs={6}>
+      <Select
+        options={certificatesByProgramId.map((certificate) => ({
+          value: certificate.certificateType.certificateName,
+          label: certificate.certificateType.certificateName,
+        }))}
+        placeholder="Chọn loại chứng chỉ"
+        onChange={handleSelectCertificateChange}
+      />
+      {selectedCertificate && (
+        <div style={{ fontSize: "16px", marginTop: "10px" }}>
+          <strong>Điểm tối thiểu:</strong> {selectedCertificate.minLevel}
+        </div>
+      )}
+      {selectedCertificate && (
+        <div style={{ fontSize: "16px", marginTop: "10px" }}>
+          <strong>Điểm trung bình:</strong> {selectedCertificate.averageLevel}
+        </div>
+      )}
+    </Grid>
+    <Grid item xs={6}>
+      <div style={{height:'41px'}}></div>
+      {selectedStudentCertificate && (
+        <div style={{ fontSize: "16px", marginTop: "10px" }}>
+          <strong>Chứng chỉ của bạn:</strong> {selectedStudentCertificate.certificateTypeDto.certificateName}
+        </div>
+      )}
+      {selectedStudentCertificate && (
+        <div style={{ fontSize: "16px", marginTop: "10px" }}>
+          <strong>Điểm chứng chỉ:</strong> {selectedStudentCertificate.certificateValue}
+        </div>
+      )}
+    </Grid>
+  </Grid>
+</Grid>
+
+                      
+                             
+                          
+       
+                          <Grid item xs={12}>
+                            <hr />
+                          </Grid>
+                          <Grid item xs={12}>
+                            <div className="form-group">
+                              <label htmlFor="fileUploads" style={{ fontWeight: "bold", fontSize: "16px" }}>File uploads</label>
+                              <div>
+                                {studentProfileDetail.fileUploads?.map((file, index) => (
+                                  <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '5px' }}>
+                                    <a
+                                      href={file.fileAttach}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="btn btn-info"
+                                      style={{ fontSize: "14px", marginRight: "10px" }}
+                                    >
+                                      Xem File {index + 1}
+                                    </a>
+                                  </div>
+                                ))}
+                              </div>
                             </div>
-                          </div>
-                        </div>
-
+                          </Grid>
+                        </Grid>
                         <div className="modal-footer">
-                          <button
-                            className="btn btn-secondary"
-                            onClick={handleCloseModal}
-                          >
-                            Hủy
-                          </button>
-                          <button className="btn btn-primary">Lưu</button>
+                          <Button variant="contained" onClick={handleCloseModal} color="secondary">Hủy</Button>
+                          <Button variant="contained" onClick={generatePDF} color="primary">Xuất PDF</Button>
+                          <Button variant="contained" color="primary" type="submit">Lưu</Button>
                         </div>
                       </div>
                     </div>
                   </form>
                 )}
-
-  </div>
- 
-  <div className="row">
-                  <div className="col-lg-12">
-                    <h4 className="title">Tiến trình</h4>
-                    {programDetail && programDetail.programStageDtos && (
-                      <Accordion defaultActiveKey="0">
-                        {programDetail.programStageDtos.map((stage, index) => (
-                          <ListGroup.Item key={stage.programStageId}>
-                            <CustomToggle eventKey={`${index}`} expanded={stage.expanded}>
-                              <h5>{index + 1}. {stage.stageName} <FaChevronDown className="float-right" style={{ margin: '0 auto' }} /></h5>
-                            </CustomToggle>
-                            <Accordion.Collapse eventKey={`${index}`}>
-                              <div>
-                                <div>Fee ID: {stage.programFeeId || "N/A"}</div>
-                                <Badge bg={stage.isPayment ? "success" : "danger"}>
-                                  {stage.isPayment ? "Yêu cầu thanh toán" : "Không yêu cầu thanh toán"}
-                                </Badge>
-                              </div>
-                            </Accordion.Collapse>
-                          </ListGroup.Item>
-                        ))}
-                      </Accordion>
-                    )}
-                  </div>
+              </div>
+              <div className="row">
+                <div className="col-lg-12">
+                  <h4 className="title">Tiến trình</h4>
+                  {programDetail && programDetail.programStageDtos && (
+                    <Accordion defaultActiveKey="0">
+                      {programDetail.programStageDtos.map((stage, index) => (
+                        <ListGroup.Item key={stage.programStageId}>
+                          <CustomToggle eventKey={`${index}`} expanded={stage.expanded}>
+                            <h5>{index + 1}. {stage.stageName} <FaChevronDown className="float-right" style={{ margin: '0 auto' }} /></h5>
+                          </CustomToggle>
+                          <Accordion.Collapse eventKey={`${index}`}>
+                            <div>
+                              <div>Fee ID: {stage.programFeeId || "N/A"}</div>
+                              <Badge bg={stage.isPayment ? "success" : "danger"}>
+                                {stage.isPayment ? "Yêu cầu thanh toán" : "Không yêu cầu thanh toán"}
+                              </Badge>
+                            </div>
+                          </Accordion.Collapse>
+                        </ListGroup.Item>
+                      ))}
+                    </Accordion>
+                  )}
                 </div>
-
-</div>
-
-            
+              </div>
+              <div className="widget" style={{marginTop:'24px'}}>
+                <h4 className="widget-title">Những Chứng Chỉ Liên Quan</h4>
+                <table className="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Loại chứng chỉ</th>
+                      <th>Điểm tối thiểu</th>
+                      <th>Điểm trung bình</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {certificatesByProgramId.map((certificate, index) => (
+                      <tr key={index}>
+                        <td>{index + 1}</td>
+                        <td>{certificate.certificateType.certificateName}</td>
+                        <td>{certificate.minLevel}</td>
+                        <td>{certificate.averageLevel}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
           <div className="widget">
             <h4 className="widget-title">Những Chương Trình Tương Tự</h4>
@@ -687,21 +724,13 @@ function ProgramDetailPage() {
                           <img src={program.img} alt="img" style={{ width: "100%",height: "150px",objectFit:'cover'}} />
                         </div>
                         <div className="details">
-                          <div
-                            className="details-inner"
-                            style={{ height: "100px" }}
-                          >
+                          <div className="details-inner" style={{ height: "100px" }}>
                             <h5>
-                              <Link
-                                onClick={handleScrollToTop}
-                                to={`/program-details/${program.programId}`}
-                                style={{ fontSize: "14px" }}
-                              >
+                              <Link onClick={handleScrollToTop} to={`/program-details/${program.programId}`} style={{ fontSize: "14px" }}>
                                 {program.nameProgram}
                               </Link>
                             </h5>
                             <p className="card-text">{program.university.universityName}</p>
-
                           </div>
                           <div className="emt-course-meta">
                             <div className="row">
@@ -723,84 +752,12 @@ function ProgramDetailPage() {
               </div>
             )}
           </div>
-
-          {/* <div className="mt-4">
-            <h4 className="widget-title display-5">
-              Những Trường Đại Học Có Mở Chương Trình Này
-            </h4>
-            <Slider
-              dots={true}
-              infinite={true}
-              speed={500}
-              slidesToShow={3} // Hiển thị 3 trường đại học trên mỗi slide
-              slidesToScroll={1}
-              autoplay={true}
-              autoplaySpeed={5000}
-              nextArrow={
-                <div
-                  className="slick-arrow slick-next"
-                  style={{ color: "black", width: "50px" }}
-                >
-                  Next
-                </div>
-              }
-              prevArrow={
-                <div
-                  className="slick-arrow slick-prev"
-                  style={{ color: "black" }}
-                >
-                  Previous
-                </div>
-              }
-            >
-              {UniversityDetails.map((university, index) => (
-                <div key={index} className="col-lg-12 col-md-6">
-                  <div className="single-course-inner">
-                    <div className="thumb">
-                      <img src={university.img} alt="img" />
-                    </div>
-                    <div className="details">
-                      <div className="details-inner">
-                        <h5
-                          className="h6"
-                          style={{ height: "50px", marginBottom: "12px" }}
-                        >
-                          <Link to={`/program-details/${university.programId}`}>
-                            {university.nameProgram}
-                          </Link>
-                        </h5>
-                        <div className="specialization-icon mb-2">
-                          <i className="fa fa-university mr-1"></i>
-                          <span className="fw-bold">
-                            {university.universityName}
-                          </span>
-                        </div>
-                        <div className="specialization-icon">
-                          <i className="fa fa-map-marker mr-2" />
-                          <span className="fw-bold">Tiểu Bang: Ohana</span>
-                        </div>
-                        <div className="emt-course-meta">
-                          <div className="price text-right mt-3">
-                            <Link
-                              to={`/program-details/${university.programId}`}
-                              className="btn btn-primary"
-                            >
-                              Xem Thêm
-                            </Link>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </Slider>
-          </div> */}
         </div>
       </div>
     </>
   );
 }
+
 const modalStyle = {
   display: "flex",
   justifyContent: "center",
@@ -820,6 +777,7 @@ const modalContentStyle = {
   padding: "20px",
   borderRadius: "8px",
 };
+
 const modalBgStyle = {
   position: "fixed",
   zIndex: "0",
@@ -829,8 +787,10 @@ const modalBgStyle = {
   height: "100%",
   backgroundColor: "rgba(0,0,0,0.4)",
 };
+
 const customCarouselStyle = {
   controlIconSize: "2rem", // Kích thước của biểu tượng điều khiển
   controlIconColor: "#333", // Màu sắc của biểu tượng điều khiển
 };
+
 export default ProgramDetailPage;

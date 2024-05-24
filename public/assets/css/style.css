@@ -5684,6 +5684,50 @@ margin: 10px;
   background-color: #0056b3;
 }
 
+.certificate-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  gap: 5px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.certificate-tags .tag {
+  background-color: #f1f1f1;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  padding: 5px 10px;
+  font-size: 0.875em;
+  color: #333;
+}
+
+.certificate-tags .tag:hover {
+  background-color: #ddd;
+}
+
+.single-course-inner .program-card .thumb {
+  position: relative;
+}
+
+.single-course-inner .details-inner {
+  padding: 10px;
+}
+
+.single-course-inner .details {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  overflow: hidden;
+  background-color: #fff;
+}
+
+.single-course-inner .additional-details p {
+  margin-bottom: 5px;
+}
+
+.program-description {
+  cursor: pointer;
+}
 
 @tailwind components;
 @tailwind utilities;

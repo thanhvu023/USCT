@@ -5,6 +5,7 @@ import { getAllProgram, getProgramByUniId } from "../../redux/slice/programSlice
 import { Backdrop, CircularProgress } from "@mui/material";
 import { getAllMajor, getMajorById } from "../../redux/slice/majorSlice";
 import { getAllUniversity } from "../../redux/slice/universitySlice";
+import { getAllCertificates } from "../../redux/slice/programCertificateSlice";
 
 // const handleSliderChange = (event, setCurrentValue) => {
 //   setCurrentValue(event.target.value);
@@ -115,6 +116,7 @@ function ProgramsPage() {
   const universities = useSelector(state => state.university.universities);
   const [selectedUniversityId, setSelectedUniversityId] = useState([]);
   const programs = useSelector((state) => state?.program?.programs);
+  const certificates = useSelector((state) => state.certificate.certificates);
 
   const [expandedDescriptions, setExpandedDescriptions] = useState({});
   const toggleDescription = (programId) => {
@@ -168,6 +170,10 @@ useEffect(() => {
   useEffect(() => {
     dispatch(getAllProgram()); 
   }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(getAllCertificates());
+  }, [dispatch]);
   const loading = useSelector((state) => state?.program?.loading);
 
   // const token = useSelector((state) => state.auth?.token);
@@ -218,6 +224,7 @@ useEffect(() => {
             <div className="row go-top" >
             {filteredPrograms.map((program, index) => {
                                   const universityName = universities.find(uni => uni.universityId === program.universityId)?.universityName || 'University not found';
+                                  const programCertificates = certificates.filter(certificate => certificate.programId === program.programId);
 
  return (
                   <div
@@ -241,6 +248,19 @@ useEffect(() => {
     </h5>
     <h6 className="university-name">{universityName || 'University not found'}</h6>
     </div>
+    <div className="certificate-tags">
+      
+                            {programCertificates.length > 0 ? (
+                              programCertificates.map((certificate, certIndex) => (
+                              
+                                <span key={certIndex} className="tag">
+                                  {certificate.certificateType.certificateName}
+                                </span>
+                              ))
+                            ) : (
+                              <span>Không có chứng chỉ liên quan</span>
+                            )}
+                          </div>
     <div className="program-description">
                                         <strong>Mô tả chương trình: </strong>
                                         <span onClick={() => toggleDescription(program.programId)}>
