@@ -21,7 +21,7 @@ import {
 import { getAllUsers } from "../../../redux/slice/authSlice";
 import PaymentContext from "./context/payment-context";
 import { Pagination } from 'react-bootstrap';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getAllProgramStages } from "../../../redux/slice/programStageSlice";
 import {
   getAllStage,
@@ -63,6 +63,7 @@ const style = {
 const ProgramApplicationPage = ({ setMain }) => {
   const { setSelectedApp } = useContext(PaymentContext);
 
+  const navigate = useNavigate();
 
  
   const handleCreateFee = (application) => {
@@ -70,7 +71,12 @@ const ProgramApplicationPage = ({ setMain }) => {
     setSelectedApp(application);
     setMain("Thanh toán");
   };
-
+  const handleDetailClick = (application) => {
+    setSelectedApp(application);
+    navigate(`/checkpayment/${application.programApplicationId}`, {
+      state: application,
+    });
+  }
   const dispatch = useDispatch();
   const [sort, setSortData] = useState(10);
   const { programApplications, loading, error } = useSelector(
@@ -386,6 +392,7 @@ const handlePageChange = (newPage) => {
                         <td>{findActiveStageName(item)}</td>
                         <td>
                           <Button onClick={() => handleCreateFee(item)}>Chi tiết   <i className="fa fa-info-circle" /></Button>
+                          <Button onClick={() => handleDetailClick(item)}>Thanh toán</Button>
                         </td>
                       </tr>
                     ))}

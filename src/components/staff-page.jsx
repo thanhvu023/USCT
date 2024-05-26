@@ -9,7 +9,7 @@ import SideBarStaff from "./admin-components/side-bar/side-bar-staff";
 import PaymentForm from "./admin-components/program-application-components/payment";
 import { PaymentProvider } from "./admin-components/program-application-components/context/payment-context";
 import AllUniversitiesStaffPage from "./admin-components/uni-components/all-university-staff";
-
+import { Outlet } from "react-router-dom";
 
 const StaffPage = () => {
   const [main, setMain] = useState("admin");
@@ -30,12 +30,12 @@ const StaffPage = () => {
         return <Test1 />;
       case "Trường đại học":
         return <AllUniversitiesStaffPage />;
-        case "Chương trình":
-          return <AllPrograms />;
+      case "Chương trình":
+        return <AllPrograms />;
       case "Hồ sơ đăng ký":
         return <ProgramApplicationPage setMain={setMain} setSelectedApp={handleSetSelectedApp} />;
       case "Thanh toán":
-        return <PaymentForm selectedApp={selectedApp} />;
+        return <PaymentForm selectedApp={selectedApp} setMain={setMain} />;
       case "Đơn tư vấn":
         return <Registration />;
       default:
@@ -47,14 +47,11 @@ const StaffPage = () => {
     <PaymentProvider value={{ selectedApp, setSelectedApp }}>
       <div id="main-wrapper">
         <NavHader />
-     
         <div id="content-wrapper" className="d-flex flex-row">
-      
           <SideBarStaff setMain={setMain} />
-          
           <div className={`content-area ${main === "Thanh toán" ? 'w-100' : ''}`} style={{ flex: '1', display: 'flex', flexDirection: 'column' }}>
-            
             {getContentComponent()}
+            <Outlet /> {/* Render nested routes */}
           </div>
         </div>
       </div>
@@ -63,4 +60,3 @@ const StaffPage = () => {
 };
 
 export default StaffPage;
-

@@ -5759,5 +5759,15 @@ margin: 10px;
   animation: goodLuckAnimation 1s ease-in-out;
 }
 
+.card-styles {
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 8px;
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+
+
 @tailwind components;
 @tailwind utilities;

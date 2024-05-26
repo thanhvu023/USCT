@@ -30,6 +30,9 @@ import paymentReducer from "./slice/paymentSlice";
 import certificateReducer from "./slice/programCertificateSlice";
 import studentCertificateReducer from "./slice/studentCertificateSlice";
 import schoolProfileReducer from "./slice/schoolProfileSlice";
+import programDocumentReducer from "./slice/program-document";
+import studentDocumentReducer from "./slice/student-document";
+import documentReducer from "./slice/documentTypesSlice";
 const persistConfig = {
   key: "root",
   storage,
@@ -57,7 +60,10 @@ const rootReducer = combineReducers({
   payment : paymentReducer,
   certificate : certificateReducer,
   studentCertificate : studentCertificateReducer,
-  schoolProfile : schoolProfileReducer
+  schoolProfile : schoolProfileReducer,
+  programDocument : programDocumentReducer,
+  studentDocument : studentDocumentReducer,
+  document : documentReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

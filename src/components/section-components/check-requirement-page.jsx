@@ -4,18 +4,19 @@ import Select from 'react-select';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
-import { createProgramApplication } from "../../redux/slice/programSlice";
+import { createProgramApplication, getProgramById, getProgramByProgramType, getProgramByUniId, getProgramTypes } from "../../redux/slice/programSlice";
 import { getStudentProfileById } from "../../redux/slice/studentSlice";
 import { getSchoolProfilesByStudentProfileId } from "../../redux/slice/schoolProfileSlice";
 import { getAllCertificates, filterCertificatesByProgramId } from "../../redux/slice/programCertificateSlice";
 import { getAllStudentCertificates, getAllStudentCertificatesByProfile } from '../../redux/slice/studentCertificateSlice';
 import { createNotification, getNotification } from "../../redux/slice/authSlice";
+import { getMajorById } from "../../redux/slice/majorSlice";
+import { getSemesterById } from "../../redux/slice/semesterSlice";
 
 import { css, keyframes } from '@emotion/react';
 import Confetti from 'react-confetti';
 import jwtDecode from "jwt-decode";
 const steps = ['Chọn hồ sơ học sinh', 'Chọn chứng chỉ tiếng Anh', ' Kiểm tra điều kiện ứng tuyển '];
-
 
 
 
@@ -37,11 +38,25 @@ const CheckRequirementPage = () => {
   const customerId = jwtDecode(token).UserId;
   
   const programDetail = useSelector((state) => state.program.programById);
+  console.log("programDetail",programDetail)
+  const majorId = useSelector((state) => state?.program?.programById?.majorId);
+  const majorDetail = useSelector((state) => state?.major?.majorById);
+  const programType = useSelector((state) => state?.program?.programTypes);
+
   const profileStudent = useSelector((state) => state.student.studentProfileByCustomerId);
   const schoolProfiles = useSelector((state) => state.schoolProfile.schoolProfilesByStudentProfileId);
   const certificatesByProgramId = useSelector((state) => state.certificate.certificatesByProgramId);
+  const semesterDetails = useSelector((state) => state.semester.semesterById);
+  const semesterId = useSelector(
+    (state) => state?.program?.programById?.semesterId
+  );
+  const programTypeId = useSelector(
+    (state) => state?.program?.programById?.programTypeId
+  );
   const studentCertificates = useSelector((state) => state.studentCertificate.studentCertificates);
   const studentProfileDetail = useSelector((state) => state?.student?.profileById);
+  
+  
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
@@ -79,6 +94,31 @@ const CheckRequirementPage = () => {
     dispatch(getAllStudentCertificates());
   }, [dispatch]);
 
+  useEffect(() => {
+    if (majorId) {
+      dispatch(getMajorById(majorId));
+    }
+  }, [dispatch, majorId]);
+
+  useEffect(() => {
+    if (semesterId) {
+      dispatch(getSemesterById(semesterId));
+    }
+    if (programDetail.semesterId) {
+      dispatch(getSemesterById(programDetail.semesterId));
+    }
+  }, [dispatch, programDetail.semesterId, semesterId]);
+
+  
+  useEffect(() => {
+    dispatch(getProgramTypes());
+  }, [dispatch]);
+
+  const getTypeName = (typeId) => {
+    if (!programType) return "";
+    const type = programType.find((type) => type.programTypeId === typeId);
+    return type ? type.typeName : "";
+  };
   const handleSelectCertificateChange = (selectedOption) => {
     const certificate = studentCertificates.find(c => c.certificateTypeDto.certificateName === selectedOption.value);
     setSelectedCertificate(certificate);
@@ -144,7 +184,20 @@ const CheckRequirementPage = () => {
 
   const handleNext1 = () => {
     if (eligibility) {
-      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+      Swal.fire({
+        title: 'Xác nhận',
+        text: "Bạn có muốn nộp hồ sơ vào chương trình này không?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Nộp hồ sơ',
+        cancelButtonText: 'Hủy'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          handleSubmitProgramApplication();
+        }
+      });
     } else {
       navigate(`/program-details/${programById}`);
     }
@@ -351,24 +404,47 @@ const CheckRequirementPage = () => {
       </Box>
     )}
  {activeStep === 2 && (
+  
     <form onSubmit={handleSubmitProgramApplication}>
-
-      <Box style={{marginBottom:'24px'}}>
       {eligibility && <Confetti />}
+      <Box style={{marginBottom:'24px'}}>
+
     
           <Typography variant="h4" align="center" marginBottom={2} marginTop={4}>
             Kết quả xét tuyển
           </Typography>
-        
+      
         <Typography
           variant="h2"
           align="center"
           className={eligibility ? 'success-animation' : 'failure-animation'}
           style={{ color: '#FF5733', marginBottom: '20px' }}
         >
-          {eligibility ? 'Bạn đủ điều kiện xét tuyển.' : 'Bạn không đủ điều kiện xét tuyển.'}
+          {eligibility ? 'Bạn đủ điều kiện xét tuyển !' : 'Bạn không đủ điều kiện xét tuyển.'}
         </Typography>
-  
+        <Card className='card-styles'>
+  <CardContent>
+    <Typography variant="h5" align="center" marginBottom={2}>
+      {programDetail.nameProgram}
+    </Typography>
+    <Grid container spacing={2} alignItems="center">
+      <Grid item xs={12} sm={4}>
+        <img src={programDetail.img} alt={programDetail.nameProgram} style={{ width: '100%', borderRadius: '8px' }} />
+      </Grid>
+      <Grid item xs={12} sm={8}>
+      <Typography variant="body1"><strong>Chuyên ngành chính:</strong> {majorDetail.majorName}</Typography>
+        <Typography variant="body1"><strong>Trường Đại học:</strong> {programDetail.university.universityName}</Typography>
+        <Typography variant="body1"><strong>Tiểu Bang:</strong> {programDetail.university.state.stateName}</Typography>
+        <Typography variant="body1"><strong>Lộ trình học:</strong> {programDetail.duration}</Typography>
+        <Typography variant="body1"><strong>Trình độ đào tạo:</strong> {programDetail.level}</Typography>
+        <Typography variant="body1"><strong>Học kỳ:</strong> {semesterDetails.startDate} đến {semesterDetails.endDate}</Typography>
+        <Typography variant="body1"><strong>Loại chương trình:</strong> {getTypeName(programDetail.programTypeId)}</Typography>
+      </Grid>
+    </Grid>
+  </CardContent>
+</Card>
+
+
         <Box mt={4}>
           <Grid container spacing={4}>
             <Grid item xs={12} sm={6}>
@@ -422,7 +498,7 @@ const CheckRequirementPage = () => {
 
           <Button variant="contained" color="primary" onClick={handleBack1} style={{ marginRight: '10px', marginTop: '20px' }}>Quay lại</Button>
           {eligibility ? (
-            <Button variant="contained" color="primary"type="submit" style={{ marginTop: '20px' }}>Kế tiếp</Button>
+            <Button variant="contained" color="primary" onClick={handleNext1} style={{ marginTop: '20px' }}>Nộp hồ sơ</Button>
           ) : (
             <Button variant="contained" color="primary" onClick={() => navigate(`/program-details/${programById}`)} style={{ marginTop: '20px' }}>Quay lại</Button>
           )}
