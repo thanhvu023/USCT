@@ -770,40 +770,46 @@ const handleCreateVnPayLink = async () => {
         </Typography>
         {programDocuments?.map((document) => (
           <div key={document.programDocumentId} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            
             <Accordion
               expanded={expanded === document.programDocumentId}
               onChange={handleChange(document.programDocumentId)}
               style={{ flex: 1 }}
             >
+              
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls={`${document.programDocumentId}-content`}
                 id={`${document.programDocumentId}-header`}
               >
-                <Typography>{document?.documentTypeDto?.typeName}</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Typography variant="subtitle2">Mô tả:</Typography>
-                <Typography
-                  dangerouslySetInnerHTML={{ __html: formatDescription1(document.description) }}
-                />
-              </AccordionDetails>
-            </Accordion>
-            <IconButton
+                <Typography style={{display:'flex', justifyContent:'center', alignItems:'center'}}>{document?.documentTypeDto?.typeName}</Typography>
+                <IconButton
               color="primary"
               // onClick={() => handleFileUpload(document.programDocumentId)}
             >
               <CloudUploadIcon />
             </IconButton>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography variant="subtitle2">Mô tả:</Typography>
+                <Typography
+                style={{textAlign:'left'}}
+                  dangerouslySetInnerHTML={{ __html: formatDescription1(document.description) }}
+                />
+              </AccordionDetails>
+            </Accordion>
+           
           </div>
         ))}
       </CardContent>
     </Card>
-    <div>
-                          <Typography variant="h6" gutterBottom>Upload Document</Typography>
+    <div className="price-wrap text-center" style={{marginTop:'24px'}}>
+    <Card raised>
+    <CardContent>
+                          <Typography variant="h6" gutterBottom>Tải tệp</Typography>
                           <form onSubmit={handleDSubmit}>
                             <Form.Group as={Row} className="mb-3">
-                              <Form.Label column sm="4">Document Type:</Form.Label>
+                              <Form.Label column sm="4">Loại tài liệu:</Form.Label>
                               <Col sm="8">
                                 <Form.Control
                                   as="select"
@@ -811,7 +817,7 @@ const handleCreateVnPayLink = async () => {
                                   value={documentData.documentTypeId}
                                   onChange={handleDChange}
                                 >
-                                  <option value="">Select Document Type</option>
+                                  <option value="">Chọn loại tài liệu</option>
                                   {documentTypes.map((type) => (
                                     <option key={type.documentTypeId} value={type.documentTypeId}>
                                       {type.typeName}
@@ -821,7 +827,7 @@ const handleCreateVnPayLink = async () => {
                               </Col>
                             </Form.Group>
                             <Form.Group as={Row} className="mb-3">
-                              <Form.Label column sm="4">Upload File:</Form.Label>
+                              <Form.Label column sm="4">Tệp tin:</Form.Label>
                               <Col sm="8">
                                 <Form.Control
                                   type="file"
@@ -830,8 +836,10 @@ const handleCreateVnPayLink = async () => {
                                 />
                               </Col>
                             </Form.Group>
-                            <Button variant="primary" type="submit">Upload</Button>
+                            <Button variant="primary" type="submit">Tải lên</Button>
                           </form>
+                          </CardContent>
+                          </Card>
                         </div>
           </div>
         </div>

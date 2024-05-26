@@ -38,6 +38,7 @@ import {
 import {
   getPaymentByProgramApplicationId,
   createPayment,
+  updatePayment
 } from "../../../redux/slice/paymentSlice";
 import {
   getAllProgramFees,
@@ -264,11 +265,13 @@ console.log("tài liệu:",documents)
       case 0:
         return " Chờ xác nhận thanh toán";
       case 1:
-        return "Đang xử lý";
-      case 2:
         return "Thành công";
-      default:
+      case 2:
         return "Thất bại";
+        case 3:
+            return "Hủy bỏ"
+      default:
+        return "Không có";
     }
   };
 
@@ -321,13 +324,31 @@ console.log("tài liệu:",documents)
       </div>
     );
   }
-  
+  const getFileExtension = (url) => {
+    const ext = url.split('.').pop().split('?')[0]; 
+    switch (ext.toLowerCase()) {
+      case 'jpg':
+      case 'jpeg':
+      case 'png':
+      case 'gif':
+      case 'bmp':
+      case 'tiff':
+      case 'pdf':
+      case 'doc':
+      case 'docx':
+      case 'txt':
+        return ext;
+      default:
+        return 'file'; 
+    }
+  };
   const handleDocumentDownload = (doc) => {
     dispatch(getFile(doc.file))
       .then((fileUrl) => {
         const link = document.createElement("a");
         link.href = fileUrl.payload;
-        link.setAttribute("download", doc.documentTypeDto.typeName || "document");
+        const fileName = `${doc.documentTypeDto.typeName || "document"}.${getFileExtension(doc.file)}`;
+        link.setAttribute("download", fileName);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -338,6 +359,47 @@ console.log("tài liệu:",documents)
   };
   
   
+  const handleStatusChange = (paymentId, newStatus) => {
+    const payment = payments.find((p) => p.paymentId === paymentId);
+    if (payment) {
+      const updatedPayment = {
+        ...payment,
+        status: newStatus,
+      };
+      dispatch(updatePayment({ id: paymentId, data: updatedPayment }))
+        .then(() => {
+          setRefresh(true);
+          Swal.fire({
+            icon: "success",
+            title: "Cập nhật thành công!",
+            text: "Trạng thái thanh toán đã được cập nhật.",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        })
+        .catch((error) => {
+          Swal.fire({
+            icon: "error",
+            title: "Lỗi cập nhật!",
+            text: "Không thể cập nhật trạng thái thanh toán",
+            confirmButtonText: "OK",
+          });
+          console.error("Failed to update the payment status:", error);
+        });
+    }
+  };
+  const getStatusText = (status) => {
+    switch (status) {
+      case 0:
+        return 'Chưa hoàn thành';
+      case 1:
+        return 'Đang xử lý';
+      case 2:
+        return 'Đã hoàn thành';
+      default:
+        return 'Trạng thái đang bị lỗi';
+    }
+  };
   return (
     <Container>
       <div className="card-header">
@@ -404,7 +466,17 @@ console.log("tài liệu:",documents)
                           <strong>Email:</strong> {studentProfile.email}
                         </p>
                         <p>
-                          <strong>Học vấn :</strong> {studentProfile.grade}
+                          <strong>Học vấn :</strong> 
+                          <ul>
+                          {studentProfile?.studyProcess?.split("|").map((item, index) => {
+            const [label, value] = item.split(":");
+            return (
+              <p key={index}>
+                <strong>{label}:</strong> {value}
+              </p>
+            );
+          })}
+                          </ul>
                         </p>
                       </Col>
                     </Row>
@@ -578,7 +650,7 @@ console.log("tài liệu:",documents)
                             <StepLabel icon={<StepIcon status={stage.status} />}>
                               {index + 1}. {stage.programStage.stageName}
                               <div style={{ fontSize: "smaller", color: "gray" }}>
-                                {getPaymentStatusLabel(stage.status)}
+                                {getStatusText(stage.status)}
                               </div>
                             </StepLabel>
                           </Step>
@@ -641,12 +713,13 @@ console.log("tài liệu:",documents)
                 >
                   <TableHead>
                     <TableRow>
-                      <TableCell>Payment ID</TableCell>
+                      <TableCell>ID</TableCell>
                       <TableCell align="right">Số tiền</TableCell>
                       <TableCell align="right">Phương thức</TableCell>
                       <TableCell align="right">Ghi chú</TableCell>
                       <TableCell align="right">Ngày thanh toán</TableCell>
                       <TableCell align="right">Trạng thái</TableCell>
+                      <TableCell align="right">Cập nhật trạng thái</TableCell>
                       <TableCell align="right">Hình ảnh</TableCell>{" "}
                     </TableRow>
                   </TableHead>
@@ -666,6 +739,23 @@ console.log("tài liệu:",documents)
                         </TableCell>
                         <TableCell align="right">
                           {getPaymentStatusLabel(payment.status)}
+                        </TableCell>
+                        <TableCell align="right">
+                          <Form.Control
+                            as="select"
+                            value={payment.status}
+                            onChange={(e) =>
+                              handleStatusChange(
+                                payment.paymentId,
+                                Number(e.target.value)
+                              )
+                            }
+                          >
+                            <option value={0}>Chờ xác nhận thanh toán</option>
+                            <option value={1}>Thành công</option>
+                            <option value={2}>Thất bại</option>
+                            <option value={3}>Hủy bỏ</option>
+                          </Form.Control>
                         </TableCell>
                         <TableCell align="right">
                           {payment.img ? (
@@ -724,7 +814,7 @@ console.log("tài liệu:",documents)
                       <TableCell>ID</TableCell>
                       {/* <TableCell align="right">Tên tài liệu</TableCell> */}
                       <TableCell align="right">Loại tài liệu</TableCell>
-                      <TableCell align="right">Ngày tải lên</TableCell>
+                      <TableCell align="right">Thời gian tải lên</TableCell>
                       <TableCell align="right">Hành động</TableCell>
                     </TableRow>
                   </TableHead>
@@ -736,7 +826,16 @@ console.log("tài liệu:",documents)
                         </TableCell>
                         <TableCell align="right">{document?.documentTypeDto?.typeName}</TableCell>
                         {/* <TableCell align="right">{document.documentType}</TableCell> */}
-                        <TableCell align="right">{new Date(document.uploadDate).toLocaleDateString()}</TableCell>
+                        <TableCell align="right">
+  {new Date(document.updateDate).toLocaleString('en-GB', { 
+    year: 'numeric', 
+    month: '2-digit', 
+    day: '2-digit', 
+    hour: '2-digit', 
+    minute: '2-digit', 
+    second: '2-digit' 
+  })}
+</TableCell>
                         <TableCell align="right">
                         <Button
                             variant="contained"
