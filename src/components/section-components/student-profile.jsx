@@ -49,21 +49,7 @@ const AchievementList = ({ achievements }) => (
 );
 
 const StudentProfilePage = () => {
-  // const [name, setName] = useState('');
-  // const [customerId, setCustomerId] = useState('');
-  // const [dob, setDob] = useState(null);
-  // const [countryId, setCountryId] = useState('');
-  // const customerId = useSelector((state) => state.auth.userById.customerId);
-  // const data = useSelector(
-  //   (state) => state?.student?.studentProfileByCustomerId
-  // );
-  // console.log(data);
-  // const dispatch = useDispatch();
-  // useEffect(() => {
-  //   if (customerId) {
-  //     dispatch(getStudentProfileByCustomerId(customerId));
-  //   }
-  // }, [customerId]);
+ 
 
   const handleSubmit = (e) => {
     e.preventDefault();
