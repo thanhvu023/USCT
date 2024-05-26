@@ -16,6 +16,7 @@ const StudentProfileDetails = () => {
     dispatch(getStudentProfileById(studentProfileId));
   }, []);
   const studentDetail = useSelector((state) => state.student.profileById);
+  console.log(studentDetail);
   const [editMode, setEditMode] = useState(false);
   const handleEditClick = () => {
     setEditMode(true);
@@ -28,27 +29,27 @@ const StudentProfileDetails = () => {
     e.preventDefault();
     // Add your submit logic here
   };
-  const handleDownloadFile = () => {
-    // Assuming studentDetail.fileUploads is an array of file objects
-    studentDetail.fileUploads.forEach((file) => {
-      dispatch(getFile(file.fileAttach))
-        .then((fileUrl) => {
-          // Create a temporary link element
-          const link = document.createElement("a");
-          link.href = fileUrl.payload;
-          link.setAttribute("download", file.fileName); // Set the file name
-          // Trigger the download
-          document.body.appendChild(link);
-          link.click();
-          // Clean up
-          document.body.removeChild(link);
-        })
-        .catch((error) => {
-          // Handle error
-          console.error("Error downloading file:", error);
-        });
-    });
-  };
+  // const handleDownloadFile = () => {
+  //   // Assuming studentDetail.fileUploads is an array of file objects
+  //   studentDetail.fileUploads.forEach((file) => {
+  //     dispatch(getFile(file.fileAttach))
+  //       .then((fileUrl) => {
+  //         // Create a temporary link element
+  //         const link = document.createElement("a");
+  //         link.href = fileUrl.payload;
+  //         link.setAttribute("download", file.fileName); // Set the file name
+  //         // Trigger the download
+  //         document.body.appendChild(link);
+  //         link.click();
+  //         // Clean up
+  //         document.body.removeChild(link);
+  //       })
+  //       .catch((error) => {
+  //         // Handle error
+  //         console.error("Error downloading file:", error);
+  //       });
+  //   });
+  // };
   const options = [
     { value: "basic_english", label: "Tiếng Anh cơ bản" },
     { value: "ielts", label: "IELTS" },
@@ -58,38 +59,6 @@ const StudentProfileDetails = () => {
   ];
 
   // Options for country select
-
-  const EducationItem = ({ year, details, achievements }) => (
-    <div className="education-item">
-      <p
-        className="education-year"
-        style={{ fontSize: "16px", fontWeight: "bold" }}
-      >
-        {year}
-      </p>
-      <div className="education-details">
-        <p>{details}</p>
-        {achievements && <AchievementList achievements={achievements} />}
-      </div>
-    </div>
-  );
-  const SkillsList = ({ skills }) => (
-    <div className="skills-list">
-      <h5 className="text-primary">Kỹ năng:</h5>
-      <ul>
-        {skills.map((skill, index) => (
-          <li key={index}>{skill}</li>
-        ))}
-      </ul>
-    </div>
-  );
-  const AchievementList = ({ achievements }) => (
-    <ul>
-      {achievements.map((achievement, index) => (
-        <li key={index}>{achievement}</li>
-      ))}
-    </ul>
-  );
   const SettingProfile = () => (
     <div className="pt-3">
       <div className="settings-form">
@@ -132,7 +101,7 @@ const StudentProfileDetails = () => {
             </div>
           </div>
           <div className="form-group mb-3">
-            <label className="form-label">Qúa trình học tập</label>
+            <label className="form-label">Quá trình học tập</label>
             <div className="card h-auto">
               <div className="card-body">
                 <form></form>
@@ -182,179 +151,230 @@ const StudentProfileDetails = () => {
       </div>
     </div>
   );
+  const handleDownloadFile = (fileUrl, fileName) => {
+    // Fetch the file using getFile action
+    dispatch(getFile(fileUrl))
+      .then((response) => {
+        const url = response.payload;
+        // Create a temporary link element
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", fileName); // Set the file name
+        // Trigger the download
+        document.body.appendChild(link);
+        link.click();
+        // Clean up
+        document.body.removeChild(link);
+      })
+      .catch((error) => {
+        // Handle error
+        console.error("Error downloading file:", error);
+      });
+  };
+  const downloadFile = (url, filename) => {
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
   const loading = useSelector((state) => state?.student?.loading);
-
+  if (loading) {
+    return (
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    );
+  }
   return (
-    <>
-      <div className="col-xl-8 mx-auto mt-5">
-        <Backdrop
-          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-          open={loading}
-        >
-          <CircularProgress color="inherit" />
-        </Backdrop>
-        <div className="card">
-          <div className="inner-content">
-            <div className="card-body">
-              {editMode ? (
-                <SettingProfile />
-              ) : (
-                <div className="profile-tab">
-                  <div className="custom-tab-1">
-                    <div className="profile-personal-info mt-3">
-                      <h4 className="text-primary mb-4">Thông Tin Học Sinh</h4>
-                      <div className="col-lg-12">
-                        <div
-                          className="card overflow-hidden"
-                          id="student-avatar-card"
-                        >
-                          <div className="row">
-                            <div className="col-lg-5">
-                              <div className="text-center p-3 overlay-box">
-                                <div className="profile-photo">
-                                  <img
-                                    src={studentDetail.img}
-                                    alt="img"
-                                    className="bg-info rounded-circle mb-4"
-                                    style={{ width: "100px", height: "100px" }}
-                                  />
-                                </div>
-                                <h3 className="mt-3 mb-1 text-black">
-                                  {studentDetail.fullName}
-                                </h3>
-                                {/* <p className="text-black mb-0">Clerk</p> */}
+    <div className="col-xl-8 mx-auto mt-5">
+      <div className="card">
+        <div className="inner-content">
+          <div className="card-body">
+            {editMode ? (
+              <SettingProfile handleSubmit={handleSubmit} />
+            ) : (
+              <div className="profile-tab">
+                <div className="custom-tab-1">
+                  <div className="profile-personal-info mt-3">
+                    <h4 className="text-primary mb-4">Thông Tin Học Sinh</h4>
+                    <div className="col-lg-12">
+                      <div
+                        className="card overflow-hidden"
+                        id="student-avatar-card"
+                      >
+                        <div className="row">
+                          <div className="col-lg-5">
+                            <div className="text-center p-3 overlay-box">
+                              <div className="profile-photo">
+                                <img
+                                  src={studentDetail.img}
+                                  alt="img"
+                                  className="bg-info rounded-circle mb-4"
+                                  style={{ width: "100px", height: "100px" }}
+                                />
+                              </div>
+                              <h3 className="mt-3 mb-1 text-black">
+                                {studentDetail.fullName}
+                              </h3>
+                            </div>
+                          </div>
+                          <div className="col-lg-7 align-self-center">
+                            <div className="row mb-2 align-items-center">
+                              <div className="col-6">
+                                <h5 className="f-w-500">
+                                  Nơi Sinh<span className="pull-right">:</span>
+                                </h5>
+                              </div>
+                              <div className="col-6">
+                                <span>{studentDetail.placeOfBirth}</span>
                               </div>
                             </div>
-                            <div className="col-lg-7 align-self-center">
-                              <div className="row mb-2 align-items-center">
-                                <div className="col-6">
-                                  <h5 className="f-w-500">
-                                    Nơi Sinh
-                                    <span className="pull-right">:</span>
-                                  </h5>
-                                </div>
-                                <div className="col-6">
-                                  <span>{studentDetail.placeOfBirth}</span>
-                                </div>
+                            <div className="row mb-2 align-items-center">
+                              <div className="col-6">
+                                <h5 className="f-w-500">
+                                  Email<span className="pull-right">:</span>
+                                </h5>
                               </div>
-                              <div className="row mb-2 align-items-center">
-                                <div className="col-6">
-                                  <h5 className="f-w-500">
-                                    Email
-                                    <span className="pull-right">:</span>
-                                  </h5>
-                                </div>
-                                <div className="col-6">
-                                  <span>{studentDetail.email}</span>
-                                </div>
+                              <div className="col-6">
+                                <span>{studentDetail.email}</span>
                               </div>
-
-                              <div className="row mb-2 align-items-center">
-                                <div className="col-6">
-                                  <h5 className="f-w-500">
-                                    Số điện thoại
-                                    <span className="pull-right">:</span>
-                                  </h5>
-                                </div>
-                                <div className="col-6">
-                                  <span>{studentDetail.phone}</span>
-                                </div>
+                            </div>
+                            <div className="row mb-2 align-items-center">
+                              <div className="col-6">
+                                <h5 className="f-w-500">
+                                  Số điện thoại
+                                  <span className="pull-right">:</span>
+                                </h5>
                               </div>
-                              <div className="row mb-2 align-items-center">
-                                <div className="col-6">
-                                  <h5 className="f-w-500">
-                                    Căn cước công dân
-                                    <span className="pull-right">:</span>
-                                  </h5>
-                                </div>
-                                <div className="col-6">
-                                  <span>{studentDetail.nationalId}</span>
-                                </div>
+                              <div className="col-6">
+                                <span>{studentDetail.phone}</span>
+                              </div>
+                            </div>
+                            <div className="row mb-2 align-items-center">
+                              <div className="col-6">
+                                <h5 className="f-w-500">
+                                  Căn cước công dân
+                                  <span className="pull-right">:</span>
+                                </h5>
+                              </div>
+                              <div className="col-6">
+                                <span>{studentDetail.nationalId}</span>
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                    <div className="profile-about-me">
-                      <div className="profile-about-me">
-                        <div className="pt-4 border-bottom-1 pb-3">
-                          <h4 className="text-primary">Trình độ học vấn</h4>
-                          {studentDetail.studyProcess}
-                          <div className="profile-skills mb-5">
-                            <h4 className="text-primary mb-2">
-                              Văn bằng tiếng anh
-                            </h4>
-                            <div className="education-item">
-                              <p
-                                className="education-year"
-                                style={{ fontSize: "16px", fontWeight: "bold" }}
-                              ></p>
-                              <div className="education-details">
-                                <ul>
-                                  <li>
-                                    Chứng chỉ tiếng anh: {studentDetail.grade}
+                  </div>
+                  <div className="profile-about-me">
+                    <div className="pt-4 border-bottom-1 ">
+                      <h4 className="text-primary">Trình độ học vấn</h4>
+                      {studentDetail.studyProcess}
+                      <div className="profile-skills">
+                        <h4 className="text-primary mb-2">
+                          Văn bằng tiếng anh
+                        </h4>
+                        <div className="education-item d-flex flex-wrap">
+                          {(studentDetail.certificateDtos || []).map(
+                            (item, index) => (
+                              <div
+                                key={index}
+                                className="education-details"
+                                style={{
+                                  marginRight: "30px",
+                                }}
+                              >
+                                <ul className="col-lg-12">
+                                  <li className="">
+                                    Chứng chỉ tiếng anh:{" "}
+                                    {item.certificateTypeDto.certificateName}
                                   </li>
                                   <li>
-                                    Trình độ tiếng anh:{" "}
-                                    {studentDetail.englishLevel}
+                                    Trình độ tiếng anh: {item.certificateValue}
                                   </li>
                                 </ul>
                               </div>
-                            </div>
-                            {/* {options.map((option, index) => (
-                              <Link
-                                key={index}
-                                to="/app-profile"
-                                className="btn  btn-xs mb-1 me-1 mr-3"
-                                style={{
-                                  backgroundColor: "#F0F1FE",
-                                  color: "#6A73FA",
-                                  transition:
-                                    "background-color 0.3s, color 0.3s",
-                                }}
-                                onMouseOver={(e) => {
-                                  e.target.style.backgroundColor = "#6A73FA";
-                                  e.target.style.color = "#ffffff";
-                                }}
-                                onMouseOut={(e) => {
-                                  e.target.style.backgroundColor = "#F0F1FE";
-                                  e.target.style.color = "#6A73FA";
-                                }}
-                              >
-                                {option.label}
-                              </Link>
-                            ))} */}
-                          </div>
+                            )
+                          )}
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              )}
-              {!editMode && (
-                <div className="d-flex justify-content-between mt-4">
-                  <div>
-                    <button
-                      onClick={handleDownloadFile}
-                      className="btn btn-secondary ml-3"
-                    >
-                      Tải file
-                    </button>
+                  <div className="profile-skills">
+                    <h4 className="text-primary mb-2">Điểm học bạ</h4>
+                    <div className="education-item ">
+                      {(studentDetail.schoolProfileDtos || []).map(
+                        (item, index) => (
+                          <div
+                            key={index}
+                            className="education-details d-flex"
+                            style={{
+                              marginRight: "90px",
+                            }}
+                          >
+                            <ul className="col-lg-6">
+                              <li>Điểm năm lớp {item.schoolGrade}:</li>
+                              <li className="d-flex">
+                                Tổng điểm trung bình năm lớp {item.schoolGrade}:
+                                <p className=" ml-2">{item.gpa}</p>
+                              </li>
+                            </ul>
+                            <button
+                              onClick={() =>
+                                handleDownloadFile(
+                                  item.img,
+                                  `Diem_nam_lop_${item.schoolGrade}.jpg`
+                                )
+                              }
+                              className="ml-5 btn"
+                              style={{
+                                width: "120px",
+                                height: "40px",
+                                display: "inline-block",
+                                textAlign: "center",
+                                lineHeight: "30px",
+                                backgroundColor: "#007bff",
+                                color: "#fff",
+                                borderRadius: "4px",
+                                border: "none",
+                                cursor: "pointer",
+                                fontSize: "15px",
+                              }}
+                            >
+                              Tải về
+                            </button>
+                          </div>
+                        )
+                      )}
+                    </div>
                   </div>
-                  {/* Thêm nút Cancel nếu cần */}
-                  <div className="text-right mb-3 ">
-                    <Link to="/students-profile" className="btn btn-secondary">
-                      Quay lại
-                    </Link>
-                  </div>
                 </div>
-              )}
+              </div>
+            )}
+            <div className="d-flex justify-content-between mt-4">
+              {/* <div>
+                <button
+                  onClick={handleDownloadFile}
+                  className="btn btn-secondary ml-3"
+                >
+                  Tải file
+                </button>
+              </div> */}
+              <div className="text-right mb-3">
+                <Link to="/students-profile" className="btn btn-secondary">
+                  Quay lại
+                </Link>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

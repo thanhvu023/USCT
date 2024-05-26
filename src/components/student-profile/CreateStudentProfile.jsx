@@ -131,11 +131,7 @@ const CreateStudentProfile = () => {
     customerId,
   });
   const [certificates, setCertificates] = useState([
-    {
-      certificateTypeId: "",
-      certificateValue: "",
-      file: "",
-    },
+    { id: 1, certificateTypeId: '', certificateValue: '', file: '' },
   ]);
   const certificateOptions = [
     { value: 1, label: "IELTS" },
@@ -146,22 +142,17 @@ const CreateStudentProfile = () => {
   ];
 
   const handleCertificateChange = (id, field, value) => {
-    setCertificates(
-      certificates.map((cert) =>
+    setCertificates((prevCertificates) =>
+      prevCertificates.map((cert) =>
         cert.id === id ? { ...cert, [field]: value } : cert
       )
     );
   };
-
+  console.log(certificates)
   const addCertificate = () => {
     setCertificates([
       ...certificates,
-      {
-        certificateTypeId: "",
-        certificateValue: "",
-        file: "",
-        studentProfileId: 0,
-      },
+      { id: Date.now(), certificateTypeId: '', certificateValue: '', file: '' },
     ]);
   };
   const [schoolProfile10, setSchoolProfile10] = useState({
@@ -193,7 +184,7 @@ const CreateStudentProfile = () => {
     setScoreProfile10((prevProfile) =>
       prevProfile.map((item) =>
         item.subjectId === subjectId
-          ? { ...item, score: selectedOption.value }
+          ? { ...item, score: selectedOption.target.value }
           : item
       )
     );
@@ -202,7 +193,7 @@ const CreateStudentProfile = () => {
     setScoreProfile11((prevProfile) =>
       prevProfile.map((item) =>
         item.subjectId === subjectId
-          ? { ...item, score: selectedOption.value }
+          ? { ...item, score: selectedOption.target.value }
           : item
       )
     );
@@ -211,7 +202,7 @@ const CreateStudentProfile = () => {
     setScoreProfile12((prevProfile) =>
       prevProfile.map((item) =>
         item.subjectId === subjectId
-          ? { ...item, score: selectedOption.value }
+          ? { ...item, score: selectedOption.target.value }
           : item
       )
     );
@@ -243,7 +234,6 @@ const CreateStudentProfile = () => {
   //     }
   //   }
   // };
-  console.log(certificates);
   const handleUploadCertificate = async (certId, field, file) => {
     const imgRef = ref(imageDb, `Image/Certificate/${file.name}`);
     try {
@@ -439,7 +429,7 @@ const CreateStudentProfile = () => {
       formData.studyProcess,
       "Trình độ học vấn không được để trống!"
     );
-   
+
     validateField("img", formData.img, "Ảnh đại diện không được để trống!");
 
     if (formData.dateOfBirth.trim() !== "") {
@@ -471,7 +461,6 @@ const CreateStudentProfile = () => {
       newErrors.nationalId = "Căn cước công dân không hợp lệ!";
     }
 
-
     return newErrors;
   };
 
@@ -479,8 +468,8 @@ const CreateStudentProfile = () => {
     e.preventDefault();
 
     const newErrors = validateForm();
-    
-    console.log(newErrors)
+
+    console.log(newErrors);
     if (Object.keys(newErrors)?.length === 0) {
       dispatch(
         createStudentProfile({
@@ -748,7 +737,7 @@ const CreateStudentProfile = () => {
                                   )
                                 }
                                 className="form-control mt-2"
-                              />                              
+                              />
                             </div>
                           </div>
                         ))}
@@ -764,7 +753,7 @@ const CreateStudentProfile = () => {
                         </div>
                       </div>
                       {/* Gender */}
-                      <div className="col-lg-12 mb-3">
+                      <div className="col-lg-6 mb-3">
                         <Select
                           value={genderOptions.find(
                             (option) => option.value === formData.gender
@@ -791,18 +780,14 @@ const CreateStudentProfile = () => {
                         <div className="row ml-2">
                           {scoreProfile10.map((item) => (
                             <div key={item.subjectId} className="m-2 col-lg-2">
-                              <Select
-                                options={scoreOptions}
+                              <input
+                                type="number"
                                 placeholder={item.subjectName}
-                                onChange={(selectedOption) =>
-                                  handleScore10Change(
-                                    selectedOption,
-                                    item.subjectId
-                                  )
+                                value={item.score ?? ""}
+                                onChange={(e) =>
+                                  handleScore10Change(e, item.subjectId)
                                 }
-                                value={scoreOptions.find(
-                                  (option) => option.value === item.score
-                                )}
+                                className="form-control"
                               />
                             </div>
                           ))}
@@ -827,18 +812,14 @@ const CreateStudentProfile = () => {
                         <div className="row ml-2">
                           {scoreProfile11.map((item) => (
                             <div key={item.subjectId} className="m-2 col-lg-2">
-                              <Select
-                                options={scoreOptions}
+                              <input
+                                type="number"
                                 placeholder={item.subjectName}
-                                onChange={(selectedOption) =>
-                                  handleScore11Change(
-                                    selectedOption,
-                                    item.subjectId
-                                  )
+                                value={item.score ?? ""}
+                                onChange={(e) =>
+                                  handleScore11Change(e, item.subjectId)
                                 }
-                                value={scoreOptions.find(
-                                  (option) => option.value === item.score
-                                )}
+                                className="form-control"
                               />
                             </div>
                           ))}
@@ -863,18 +844,14 @@ const CreateStudentProfile = () => {
                         <div className="row ml-2">
                           {scoreProfile12.map((item) => (
                             <div key={item.subjectId} className="m-2 col-lg-2">
-                              <Select
-                                options={scoreOptions}
+                              <input
+                                type="number"
                                 placeholder={item.subjectName}
-                                onChange={(selectedOption) =>
-                                  handleScore12Change(
-                                    selectedOption,
-                                    item.subjectId
-                                  )
+                                value={item.score ?? ""}
+                                onChange={(e) =>
+                                  handleScore12Change(e, item.subjectId)
                                 }
-                                value={scoreOptions.find(
-                                  (option) => option.value === item.score
-                                )}
+                                className="form-control"
                               />
                             </div>
                           ))}
