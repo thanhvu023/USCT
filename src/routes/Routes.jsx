@@ -34,6 +34,8 @@ import ConsultantRoute from "./ConsultantRoute.jsx";
 import ProgramApplicationDetailsPage from "../components/program-application-details-page.jsx";
 import PaymentResponsePage from "../components/payment-response-page.jsx";
 import CheckRequirement from "../components/check-requirement-page.jsx";
+import Payment from "../components/admin-components/program-application-components/payment.jsx";
+import PaymentDetailsPage from "../components/admin-components/program-application-components/thanhtoan.jsx";
 
 const Routers = () => {
   const token = useSelector((state) => state?.auth?.token);
@@ -220,7 +222,18 @@ const Routers = () => {
               <StaffPage />
             </StaffRoute>
           }
-        />
+        >
+         
+        </Route>
+        <Route
+            path="checkpayment/:programApplicationId" // Remove the leading slash for nested route
+            element={
+              <StaffRoute userRole={userRole}>
+                <PaymentDetailsPage />  
+              </StaffRoute>
+            }
+          />
+        
       </Routes>
     </Router>
   );

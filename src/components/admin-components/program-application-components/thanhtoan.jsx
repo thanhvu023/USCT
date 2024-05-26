@@ -9,7 +9,7 @@ import {
   Form,
   ListGroup,
   ListGroupItem,
-  Accordion 
+  Accordion
 } from "react-bootstrap";
 import {
   Box,
@@ -38,6 +38,7 @@ import {
 import {
   getPaymentByProgramApplicationId,
   createPayment,
+  updatePayment
 } from "../../../redux/slice/paymentSlice";
 import {
   getAllProgramFees,
@@ -49,55 +50,72 @@ import {
   updateApplyStage,
 } from "../../../redux/slice/applyStageSlice";
 import { getFile } from "../../../redux/slice/authSlice";
-import PaymentContext from "./context/payment-context";
-import { Grid } from "rsuite";
+import { useLocation, useParams } from "react-router-dom";
+import { getProgramApplicationById } from "../../../redux/slice/programApplicationSlice";
+import { getDocumentsByProgramApplicationId } from "../../../redux/slice/student-document"; 
 
-const Payment = () => {
+const PaymentDetailsPage = () => {
+  const { programApplicationId } = useParams();
+  const location = useLocation();
   const dispatch = useDispatch();
-  
-  const { selectedApp: selectedApplication } = useContext(PaymentContext);
-  const { studentProfile, program } = selectedApplication;
-  console.log("selectedApplication",studentProfile)
+  const [application, setApplication] = useState(location.state || null);
+  const program = application?.program;
+  const studentProfile = application?.studentProfile;
   const [refresh, setRefresh] = useState(false);
-  const applyStages = useSelector(
-    (state) => state.applyStage.applyStages || []
-  );
-  const activeStage = selectedApplication?.applyStage?.find(
-    (stage) => stage?.status === 1
-  );
+
+  useEffect(() => {
+    if (!application || refresh) {
+      const fetchApplication = async () => {
+        const response = await dispatch(getProgramApplicationById(programApplicationId));
+        if (response.payload) {
+          setApplication(response.payload);
+        }
+      };
+      fetchApplication();
+      setRefresh(false);
+    }
+  }, [dispatch, programApplicationId, application, refresh]);
+
+  if (!application) {
+    return <div>Loading...</div>;
+  }
+
+  const applyStages = useSelector((state) => state.applyStage.applyStages || []);
+  const activeStage = application?.applyStage?.find((stage) => stage?.status === 1);
   const [tabIndex, setTabIndex] = useState(0);
-  const payments = useSelector(
-    (state) => state.payment.paymentsByApplicationId
-  );
+  const payments = useSelector((state) => state.payment.paymentsByApplicationId);
   const customers = useSelector((state) => state.auth.user);
   const programs = useSelector((state) => state.program.programs);
   const fees = useSelector((state) => state.programFee.fees);
   const feeTypes = useSelector((state) => state.feeType.feeTypes);
-
+  const documents = useSelector(state => state.studentDocument.documentsByProgramApplicationId); 
+console.log("tài liệu:",documents)
   useEffect(() => {
     dispatch(getAllStage());
   }, [dispatch]);
-
+  
   useEffect(() => {
-    if (selectedApplication && selectedApplication.programApplicationId) {
-      dispatch(
-        getPaymentByProgramApplicationId(
-          selectedApplication.programApplicationId
-        )
-      );
+    if (application && application.programApplicationId) {
+      dispatch(getDocumentsByProgramApplicationId(application.programApplicationId)); // Fetch documents by programApplicationId
     }
-  }, [dispatch, selectedApplication, refresh]);
+  }, [dispatch, application]);
+  
+  useEffect(() => {
+    if (application && application.programApplicationId) {
+      dispatch(getPaymentByProgramApplicationId(application.programApplicationId));
+    }
+  }, [dispatch, application]);
 
   useEffect(() => {
     dispatch(getAllProgramFees());
     dispatch(getAllFeeTypes());
-    if (selectedApplication) {
-      dispatch(getProgramFeesByProgramId(selectedApplication.programId));
+    if (application) {
+      dispatch(getProgramFeesByProgramId(application.programId));
     }
-  }, [dispatch, selectedApplication]);
+  }, [dispatch, application]);
 
   const updateStages = () => {
-    if (!selectedApplication || !selectedApplication.applyStage) {
+    if (!application || !application.applyStage) {
       Swal.fire({
         icon: "error",
         title: "Lỗi...",
@@ -105,10 +123,10 @@ const Payment = () => {
       });
       return;
     }
-  
-    const currentStages = selectedApplication.applyStage;
+
+    const currentStages = application.applyStage;
     const activeIndex = currentStages.findIndex((stage) => stage.status === 1);
-  
+
     if (activeIndex === -1) {
       Swal.fire({
         icon: "error",
@@ -117,7 +135,7 @@ const Payment = () => {
       });
       return;
     }
-  
+
     const currentStage = currentStages[activeIndex];
     if (currentStage) {
       dispatch(
@@ -130,7 +148,7 @@ const Payment = () => {
       )
         .then(() => {
           const nextStage = currentStages[activeIndex + 1];
-  
+
           if (nextStage) {
             dispatch(
               updateApplyStage({
@@ -147,10 +165,9 @@ const Payment = () => {
               showConfirmButton: false,
               timer: 1500,
             }).then(() => {
-              setRefresh((prev) => !prev); // Toggle the refresh state to re-fetch/re-render
+              setRefresh(true); // Trigger a refresh to re-fetch/re-render
             });
           } else {
-            // No next stage, indicating completion of the process
             Swal.fire({
               icon: "success",
               title: "Hoàn tất!",
@@ -158,7 +175,7 @@ const Payment = () => {
               showConfirmButton: true,
               confirmButtonText: "OK",
             }).then(() => {
-              setRefresh((prev) => !prev); // Toggle the refresh state to re-fetch/re-render
+              setRefresh(true); // Trigger a refresh to re-fetch/re-render
             });
           }
         })
@@ -175,20 +192,17 @@ const Payment = () => {
       console.log("Không có giai đoạn hiện tại hợp lệ để cập nhật.");
     }
   };
-  
 
   const [filteredFees, setFilteredFees] = useState([]);
   const [selectedFee, setSelectedFee] = useState(null);
   const [note, setNote] = useState("");
 
   useEffect(() => {
-    if (selectedApplication) {
-      const filtered = fees.filter(
-        (fee) => fee.programId === selectedApplication.programId
-      );
+    if (application) {
+      const filtered = fees.filter((fee) => fee.programId === application.programId);
       setFilteredFees(filtered);
     }
-  }, [fees, selectedApplication]);
+  }, [fees, application]);
 
   const handleFeeSelection = (event) => {
     const feeId = event.target.value;
@@ -203,7 +217,7 @@ const Payment = () => {
   const handlePaymentSubmit = () => {
     if (selectedFee) {
       const paymentData = {
-        programApplicationId: selectedApplication.programApplicationId,
+        programApplicationId: application.programApplicationId,
         method: "",
         amount: selectedFee.amount,
         orderInfo: note,
@@ -221,7 +235,7 @@ const Payment = () => {
     return feeType ? feeType.typeName : "";
   };
 
-  if (!selectedApplication) {
+  if (!application) {
     return <div>Please select an application to make a payment.</div>;
   }
 
@@ -230,9 +244,7 @@ const Payment = () => {
   };
 
   const findActiveStageIndex = () => {
-    return selectedApplication.applyStage.findIndex(
-      (stage) => stage.status === 1
-    );
+    return application.applyStage.findIndex((stage) => stage.status === 1);
   };
 
   const StepIcon = ({ status }) => {
@@ -253,11 +265,13 @@ const Payment = () => {
       case 0:
         return " Chờ xác nhận thanh toán";
       case 1:
-        return "Đang xử lý";
-      case 2:
         return "Thành công";
-      default:
+      case 2:
         return "Thất bại";
+        case 3:
+            return "Hủy bỏ"
+      default:
+        return "Không có";
     }
   };
 
@@ -265,10 +279,7 @@ const Payment = () => {
   const [page, setPage] = useState(0);
   const pageCount = Math.ceil(payments?.length / itemsPerPage);
 
-  const currentPayments = payments?.slice(
-    page * itemsPerPage,
-    (page + 1) * itemsPerPage
-  );
+  const currentPayments = payments?.slice(page * itemsPerPage, (page + 1) * itemsPerPage);
 
   const nextPage = () => {
     setPage((prevPage) => (prevPage + 1 < pageCount ? prevPage + 1 : prevPage));
@@ -313,7 +324,82 @@ const Payment = () => {
       </div>
     );
   }
-
+  const getFileExtension = (url) => {
+    const ext = url.split('.').pop().split('?')[0]; 
+    switch (ext.toLowerCase()) {
+      case 'jpg':
+      case 'jpeg':
+      case 'png':
+      case 'gif':
+      case 'bmp':
+      case 'tiff':
+      case 'pdf':
+      case 'doc':
+      case 'docx':
+      case 'txt':
+        return ext;
+      default:
+        return 'file'; 
+    }
+  };
+  const handleDocumentDownload = (doc) => {
+    dispatch(getFile(doc.file))
+      .then((fileUrl) => {
+        const link = document.createElement("a");
+        link.href = fileUrl.payload;
+        const fileName = `${doc.documentTypeDto.typeName || "document"}.${getFileExtension(doc.file)}`;
+        link.setAttribute("download", fileName);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      })
+      .catch((error) => {
+        console.error("Error downloading file:", error);
+      });
+  };
+  
+  
+  const handleStatusChange = (paymentId, newStatus) => {
+    const payment = payments.find((p) => p.paymentId === paymentId);
+    if (payment) {
+      const updatedPayment = {
+        ...payment,
+        status: newStatus,
+      };
+      dispatch(updatePayment({ id: paymentId, data: updatedPayment }))
+        .then(() => {
+          setRefresh(true);
+          Swal.fire({
+            icon: "success",
+            title: "Cập nhật thành công!",
+            text: "Trạng thái thanh toán đã được cập nhật.",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        })
+        .catch((error) => {
+          Swal.fire({
+            icon: "error",
+            title: "Lỗi cập nhật!",
+            text: "Không thể cập nhật trạng thái thanh toán",
+            confirmButtonText: "OK",
+          });
+          console.error("Failed to update the payment status:", error);
+        });
+    }
+  };
+  const getStatusText = (status) => {
+    switch (status) {
+      case 0:
+        return 'Chưa hoàn thành';
+      case 1:
+        return 'Đang xử lý';
+      case 2:
+        return 'Đã hoàn thành';
+      default:
+        return 'Trạng thái đang bị lỗi';
+    }
+  };
   return (
     <Container>
       <div className="card-header">
@@ -380,7 +466,17 @@ const Payment = () => {
                           <strong>Email:</strong> {studentProfile.email}
                         </p>
                         <p>
-                          <strong>Học vấn :</strong> {studentProfile.grade}
+                          <strong>Học vấn :</strong> 
+                          <ul>
+                          {studentProfile?.studyProcess?.split("|").map((item, index) => {
+            const [label, value] = item.split(":");
+            return (
+              <p key={index}>
+                <strong>{label}:</strong> {value}
+              </p>
+            );
+          })}
+                          </ul>
                         </p>
                       </Col>
                     </Row>
@@ -397,74 +493,142 @@ const Payment = () => {
               <Tab label="Chương trình" />
               <Tab label="Cập nhật tiến trình hồ sơ" />
               <Tab label="Lich sử thanh toán" />
+              <Tab label="Tài liệu đã nộp" />
             </Tabs>
             <TabPanel value={tabIndex} index={0}>
-            <Card className="mb-4 shadow" style={{ marginTop: "24px", borderRadius: "10px" }}>
-        <Card.Body>
-          <Row>
-            <Col md={4} style={{display:'flex', justifyContent:'center',alignItems:'center'}}>
-              <img src={program.img} alt="Program" style={{ width: "90%", borderRadius: "10px" }} />
-            </Col>
-            <Col md={8}>
-              <h3>Thông tin chương trình</h3>
-              
-              <p><strong>Tên Chương trình:</strong> {program.nameProgram}</p>
-              <p><strong>Chuyên ngành:</strong> {program.major.majorName}</p>
-              <p><strong>Trường đại học:</strong> {program.university.universityName} ({program.university.universityType.typeName})</p>
-              <p><strong>Thuộc bang:</strong> {program.university.state.stateName}</p>
-              <p><strong>Loại chương trình:</strong> {program.programType.typeName}</p>
-              <p><strong>Thời gian:</strong> {program.duration}</p>
-              <p><strong>Mô tả chương trình:</strong> {program.description}</p>
-           
-            </Col>
-          </Row>
-        </Card.Body>
-      </Card>
+              <Card
+                className="mb-4 shadow"
+                style={{ marginTop: "24px", borderRadius: "10px" }}
+              >
+                <Card.Body>
+                  <Row>
+                    <Col
+                      md={4}
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <img
+                        src={program.img}
+                        alt="Program"
+                        style={{ width: "90%", borderRadius: "10px" }}
+                      />
+                    </Col>
+                    <Col md={8}>
+                      <h3>Thông tin chương trình</h3>
 
-      <Row style={{display:'flex', alignContent:'space-around'}}>
-       <Col md={4} >
-          <Card className="mb-4 shadow" style={{ borderRadius: "10px",width:'320px',height:'330px' }}>
-            <Card.Header className="text-center" style={{ backgroundColor: "#f8f9fa" }}>
-              <h5>Yêu cầu của chương trình</h5>
-            </Card.Header>
-            <Card.Body>
-              <ul>
-                {program?.requirement.split(",").map((requirement, index) => (
-                  <li key={index}>{requirement}</li>
-                ))}
-              </ul>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col md={4}>
-          <Card className="mb-4 shadow" style={{ borderRadius: "10px",width:'320px',height:'330px' }}>
-            <Card.Header className="text-center" style={{ backgroundColor: "#f8f9fa" }}>
-              <h5>Chi phí tham khảo</h5>
-            </Card.Header>
-            <Card.Body>
-              <ul>
-                {program?.tuition.split("\\r\\n").map((tuition, index) => (
-                  <li key={index}>{tuition}</li>
-                ))}
-              </ul>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col md={4}>
-          <Card className="mb-4 shadow" style={{ borderRadius: "10px",width:'320px',height:'330px' }}>
-            <Card.Header className="text-center" style={{ backgroundColor: "#f8f9fa" }}>
-              <h5>Các ưu đãi</h5>
-            </Card.Header>
-            <Card.Body>
-              <ul>
-                {program?.responsibilities.split("\\r\\n").map((responsibility, index) => (
-                  <li key={index}>{responsibility}</li>
-                ))}
-              </ul>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
+                      <p>
+                        <strong>Tên Chương trình:</strong> {program.nameProgram}
+                      </p>
+                      <p>
+                        <strong>Chuyên ngành:</strong> {program.major.majorName}
+                      </p>
+                      <p>
+                        <strong>Trường đại học:</strong>{" "}
+                        {program.university.universityName} (
+                        {program.university.universityType.typeName})
+                      </p>
+                      <p>
+                        <strong>Thuộc bang:</strong>{" "}
+                        {program.university.state.stateName}
+                      </p>
+                      <p>
+                        <strong>Loại chương trình:</strong>{" "}
+                        {program.programType.typeName}
+                      </p>
+                      <p>
+                        <strong>Thời gian:</strong> {program.duration}
+                      </p>
+                      <p>
+                        <strong>Mô tả chương trình:</strong> {program.description}
+                      </p>
+                    </Col>
+                  </Row>
+                </Card.Body>
+              </Card>
+
+              <Row style={{ display: "flex", alignContent: "space-around" }}>
+                <Col md={4}>
+                  <Card
+                    className="mb-4 shadow"
+                    style={{
+                      borderRadius: "10px",
+                      width: "320px",
+                      height: "330px",
+                    }}
+                  >
+                    <Card.Header
+                      className="text-center"
+                      style={{ backgroundColor: "#f8f9fa" }}
+                    >
+                      <h5>Yêu cầu của chương trình</h5>
+                    </Card.Header>
+                    <Card.Body>
+                      <ul>
+                        {program?.requirement
+                          .split(",")
+                          .map((requirement, index) => (
+                            <li key={index}>{requirement}</li>
+                          ))}
+                      </ul>
+                    </Card.Body>
+                  </Card>
+                </Col>
+                <Col md={4}>
+                  <Card
+                    className="mb-4 shadow"
+                    style={{
+                      borderRadius: "10px",
+                      width: "320px",
+                      height: "330px",
+                    }}
+                  >
+                    <Card.Header
+                      className="text-center"
+                      style={{ backgroundColor: "#f8f9fa" }}
+                    >
+                      <h5>Chi phí tham khảo</h5>
+                    </Card.Header>
+                    <Card.Body>
+                      <ul>
+                        {program?.tuition
+                          .split("\\r\\n")
+                          .map((tuition, index) => (
+                            <li key={index}>{tuition}</li>
+                          ))}
+                      </ul>
+                    </Card.Body>
+                  </Card>
+                </Col>
+                <Col md={4}>
+                  <Card
+                    className="mb-4 shadow"
+                    style={{
+                      borderRadius: "10px",
+                      width: "320px",
+                      height: "330px",
+                    }}
+                  >
+                    <Card.Header
+                      className="text-center"
+                      style={{ backgroundColor: "#f8f9fa" }}
+                    >
+                      <h5>Các ưu đãi</h5>
+                    </Card.Header>
+                    <Card.Body>
+                      <ul>
+                        {program?.responsibilities
+                          .split("\\r\\n")
+                          .map((responsibility, index) => (
+                            <li key={index}>{responsibility}</li>
+                          ))}
+                      </ul>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              </Row>
             </TabPanel>
             <TabPanel value={tabIndex} index={1}>
               <Row className="gx-2">
@@ -481,12 +645,12 @@ const Payment = () => {
                     </Card.Header>
                     <Card.Body>
                       <Stepper activeStep={findActiveStageIndex()} alternativeLabel>
-                        {selectedApplication.applyStage.map((stage, index) => (
+                        {application.applyStage.map((stage, index) => (
                           <Step key={stage.applyStageId}>
                             <StepLabel icon={<StepIcon status={stage.status} />}>
                               {index + 1}. {stage.programStage.stageName}
                               <div style={{ fontSize: "smaller", color: "gray" }}>
-                                {getPaymentStatusLabel(stage.status)}
+                                {getStatusText(stage.status)}
                               </div>
                             </StepLabel>
                           </Step>
@@ -549,12 +713,13 @@ const Payment = () => {
                 >
                   <TableHead>
                     <TableRow>
-                      <TableCell>Payment ID</TableCell>
+                      <TableCell>ID</TableCell>
                       <TableCell align="right">Số tiền</TableCell>
                       <TableCell align="right">Phương thức</TableCell>
                       <TableCell align="right">Ghi chú</TableCell>
                       <TableCell align="right">Ngày thanh toán</TableCell>
                       <TableCell align="right">Trạng thái</TableCell>
+                      <TableCell align="right">Cập nhật trạng thái</TableCell>
                       <TableCell align="right">Hình ảnh</TableCell>{" "}
                     </TableRow>
                   </TableHead>
@@ -574,6 +739,23 @@ const Payment = () => {
                         </TableCell>
                         <TableCell align="right">
                           {getPaymentStatusLabel(payment.status)}
+                        </TableCell>
+                        <TableCell align="right">
+                          <Form.Control
+                            as="select"
+                            value={payment.status}
+                            onChange={(e) =>
+                              handleStatusChange(
+                                payment.paymentId,
+                                Number(e.target.value)
+                              )
+                            }
+                          >
+                            <option value={0}>Chờ xác nhận thanh toán</option>
+                            <option value={1}>Thành công</option>
+                            <option value={2}>Thất bại</option>
+                            <option value={3}>Hủy bỏ</option>
+                          </Form.Control>
                         </TableCell>
                         <TableCell align="right">
                           {payment.img ? (
@@ -617,6 +799,59 @@ const Payment = () => {
                 </Button>
               </Box>
             </TabPanel>
+            <TabPanel value={tabIndex} index={3}> {/* Add new TabPanel */}
+              <Typography variant="h6" gutterBottom>
+                Tài liệu đã nộp
+              </Typography>
+              <TableContainer component={Paper}>
+                <Table
+                  sx={{ minWidth: 600 }}
+                  style={{ maxWidth: 1400, margin: "auto" }}
+                  aria-label="document table"
+                >
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>ID</TableCell>
+                      {/* <TableCell align="right">Tên tài liệu</TableCell> */}
+                      <TableCell align="right">Loại tài liệu</TableCell>
+                      <TableCell align="right">Thời gian tải lên</TableCell>
+                      <TableCell align="right">Hành động</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {documents?.map((document) => (
+                      <TableRow key={document.documentId}>
+                        <TableCell component="th" scope="row">
+                          {document.documentId}
+                        </TableCell>
+                        <TableCell align="right">{document?.documentTypeDto?.typeName}</TableCell>
+                        {/* <TableCell align="right">{document.documentType}</TableCell> */}
+                        <TableCell align="right">
+  {new Date(document.updateDate).toLocaleString('en-GB', { 
+    year: 'numeric', 
+    month: '2-digit', 
+    day: '2-digit', 
+    hour: '2-digit', 
+    minute: '2-digit', 
+    second: '2-digit' 
+  })}
+</TableCell>
+                        <TableCell align="right">
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => handleDocumentDownload(document)}
+                            style={{ textTransform: "none" }}
+                          >
+                            Tải xuống
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </TabPanel>
           </Box>
         </div>
       </div>
@@ -624,4 +859,4 @@ const Payment = () => {
   );
 };
 
-export default Payment;
+export default PaymentDetailsPage;

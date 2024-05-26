@@ -10,8 +10,29 @@ import {
   Grid,
   Box,
   Tab, Tabs,
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField
+  Table, 
+  TableBody, 
+  TableCell, 
+  TableContainer, 
+  TableHead, 
+  TableRow, Paper, 
+  TextField,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Avatar,
+  Chip,
+  IconButton,
+  
+
 } from "@mui/material";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+
+import { styled } from "@mui/system";
+
+import { FaChevronDown, FaChevronRight } from "react-icons/fa";
+
 import { Stepper, Step, StepLabel } from '@mui/material';
 import { Check as CheckIcon, Clear as ClearIcon, HourglassEmpty as HourglassEmptyIcon, RadioButtonUnchecked as RadioButtonUncheckedIcon } from '@mui/icons-material';
 import { Backdrop, CircularProgress } from "@mui/material";
@@ -19,7 +40,8 @@ import {  getAllProgramFees } from '../../redux/slice/programFeeSlice';
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { imageDb } from "../FirebaseImage/Config";
 import { useNavigate } from "react-router-dom";
-import { Modal, ListGroup,Button, Row, Col,  Form, InputGroup, FormControl } from 'react-bootstrap';
+import { Modal, ListGroup,Button, Row, Col,  Form, InputGroup, FormControl,
+  Badge,ListGroupItem } from 'react-bootstrap';
 import { getAllFeeTypes } from '../../redux/slice/feeTypeSlice';
 import { getAllUniversity } from "../../redux/slice/universitySlice";
 import { getAllUniversityType } from "../../redux/slice/universitySlice";
@@ -29,50 +51,51 @@ import { getAllStage } from "../../redux/slice/applyStageSlice";
 import { getAllProgramStages } from "../../redux/slice/programStageSlice";
 import Swal from "sweetalert2";
 import { getProgramById } from "../../redux/slice/programSlice";
+import { getProgramCertificateByProgramId } from "../../redux/slice/program-document";
+import { getAllStudentCertificatesByProfile } from "../../redux/slice/studentCertificateSlice";
+import { createDocument } from "../../redux/slice/student-document";
+import { getAllDocumentTypes } from "../../redux/slice/documentTypesSlice";
+const StyledCard = styled(Card)(({ theme }) => ({
+  border: `1px solid ${theme.palette.divider || '#e0e0e0'}`,
+  boxShadow: theme.shadows ? theme.shadows[3] : '0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12)',
+  maxWidth: '90%',
+  margin: '0 auto',
+ 
+ 
+}));
 
-const styles = {
-  container: {
-    display: 'flex',
-    flexDirection: 'row', // Adjust based on media query if needed
-    justifyContent: 'space-between',
-    padding: '20px',
-    margin: '20px 0',
-  },
-  textSection: {
-    flex: 1,
-    paddingRight: '20px', // Give some space between the text and the image
-  },
-  imageSection: {
-    flex: 1,
-    maxWidth: '400px', // Limit the size of the image
-    height: 'auto',
-    borderRadius: '4px',
-  },
-  header: {
-    marginBottom: '10px', // Space between header and text
-  },
-  text: {
-    lineHeight: '1.5', // Improve readability
-  },
-};
 const   ProgramApplicationDetails = () => {
   const { programApplicationId } = useParams();
 
   const [tabIndex, setTabIndex] = useState(0);
+  const [expanded, setExpanded] = useState(false);
 
+  const handleChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
 const handleTabChange = (event, newValue) => {
   setTabIndex(newValue);
 };
 
   const dispatch = useDispatch();
+  const  documentTypes = useSelector((state) => state.document.allDocumentTypes);
+ const newDocument = useSelector((state) => state.studentDocument);
+ console.log('Document Types:', documentTypes);
 
- 
+ const [documentData, setDocumentData] = useState({
+  file: null  ,
+  programApplicationId: programApplicationId,
+  documentTypeId: '',
+});
+
   const details = useSelector(
     (state) => state.programApplication.programApplicationById
   );
+  console.log("details",details)
   const payments = useSelector((state) => state.payment .paymentsByApplicationId);
 
-  console.log("payments",payments)
+  const programDocuments = useSelector((state) => state.programDocument.programCertificateByProgramId);
+  console.log("programDocuments",programDocuments)
 
   const handleNavigateToProfile = () => {
     const studentProfileId = details?.studentProfileId;
@@ -89,17 +112,23 @@ const handleTabChange = (event, newValue) => {
     if (programApplicationId) {
       dispatch(getProgramApplicationById(programApplicationId));
       dispatch(getPaymentByProgramApplicationId(programApplicationId));
+      dispatch(getProgramCertificateByProgramId(details?.program?.programId)); // Thêm dòng này
 
       dispatch(getAllStage());
       dispatch(getAllProgramStages());
       dispatch(getAllProgramFees());
       dispatch(getAllFeeTypes());
+   
     }
   }, [dispatch, programApplicationId]);
   
+  useEffect(()=>{
+    dispatch(getAllDocumentTypes());
+  },[dispatch]);
+
   React.useEffect(() => {
     dispatch(getProgramApplicationById(programApplicationId));
-  }, [dispatch, programApplicationId]);
+  }, [dispatch, programApplicationId, details?.program?.programId]);
 
   if (!details) {
     return <div>Loading...</div>;
@@ -123,16 +152,17 @@ const handleTabChange = (event, newValue) => {
   const [selectedProgramApplication, setSelectedProgramApplication] = useState(null);
   const programs = useSelector(state => state.program.programs);
   const universities = useSelector(state =>state.university.universities)
-  console.log("details?.programApplicationId,",details?.programApplicationId)
-console.log("selectedFee",selectedFee?.amount)
-console.log("note",note)
-console.log("method",method)
+//   console.log("details?.programApplicationId,",details?.programApplicationId)
+// console.log("selectedFee",selectedFee?.amount)
+// console.log("note",note)
+
 
   const fees = useSelector(state => state?.programFee?.fees);
   const feeTypes = useSelector(state => state.feeType.feeTypes);
   const stages = useSelector(state=>state.applyStage.stages)
   const programStages = useSelector(state=>state.programStages.stages)
-
+  const studentCertificates = useSelector((state) => state.studentCertificate.studentCertificates);
+  console.log("studentCertificates",studentCertificates)
 
 const getStageNameByProgramStageId = () =>{
 
@@ -157,7 +187,11 @@ const getStageNameByProgramStageId = () =>{
     useEffect(() => {
       dispatch(getProgramStagesByProgramId());
     }, [dispatch]);
-
+    useEffect(() => {
+      if (details?.studentProfileId) {
+        dispatch(getAllStudentCertificatesByProfile(details?.studentProfileId));
+      }
+    }, [dispatch, details?.studentProfileId]);
   const handleNoteChange = (event) => {
     setNote(event.target.value);
 };
@@ -187,6 +221,8 @@ const getStageNameByProgramStageId = () =>{
 
 console.log("ảnh aaaa",img)
 console.log(" paymentId",paymentId)
+
+
 const handleFileChange = (e) => {
   const file = e.target.files[0];
   if (file) {
@@ -342,7 +378,9 @@ const handleCreateVnPayLink = async () => {
       </React.Fragment>
     ));
   };
-
+  const handleChange1 = (documentId) => (event, isExpanded) => {
+    setExpanded(isExpanded ? documentId : false);
+  };
   const programImageUrl = details?.program?.img;
   const universityImageUrl =
     details?.program?.university?.img;
@@ -431,27 +469,66 @@ const handleCreateVnPayLink = async () => {
   const getPaymentStatusLabel = (status) => {
     switch (status) {
       case 0:
-        return "Chưa thanh toán";
+        return "Đang đợi xác nhận";
       case 1:
         return "Thành công";
       case 2:
         return "Thất bại";
       default:
-        return "Đang đợi xác nhận";
+        return "Chưa thanh toán";
+    }
+  };
+  const formatDescription1 = (description) => {
+    if (!description) return "";
+    const paragraphs = description.split(/\\r\\n|\r\n/);
+    return paragraphs.map((para, index) => `<strong>${index + 1}.</strong> ${para}`).join("<br />");
+  };
+  const handleDChange = (e) => {
+    setDocumentData({
+      ...documentData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleDFileChange = (e) => {
+    const file = e.target.files[0];
+    setDocumentData({
+      ...documentData,
+      file: file,
+    });
+  };
+  const handleDSubmit = async (e) => {
+    e.preventDefault();
+    if (documentData.file) {
+      const imgRef = ref(imageDb, `Image/StudentDocument/${documentData.file.name}`);
+      try {
+        await uploadBytes(imgRef, documentData.file);
+        const imgUrl = await getDownloadURL(imgRef);
+        const updatedDocumentData = {
+          ...documentData,
+          file: imgUrl,
+        };
+        dispatch(createDocument(updatedDocumentData));
+        Swal.fire('Thành công', 'Tài liệu đã được tải lên thành công', 'success');
+      } catch (error) {
+        console.error("Error uploading file:", error);
+        Swal.fire('Lỗi', 'Không thể tải lên tài liệu', 'error');
+      }
+    } else {
+      Swal.fire('Cảnh báo', 'Vui lòng chọn tệp để tải lên', 'warning');
     }
   };
   
 
-  
   return (
-<div style={{ maxHeight: "100vh" }}> 
+<div style={{ maxHeight: "100vh",backgroundColor:'#F0F4F9'  }}> 
       <Backdrop
           sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={loading}
         >
           <CircularProgress color="inherit" />
         </Backdrop>
-        <Grid container spacing={2} style={{ margin: "20px" }}>
+        <Grid container spacing={2} style={{ marginTop:'20px', backgroundColor:'#F0F4F9' }}>
       <Grid item xs={12} >
  
         <div style={{display:'flex',justifyContent:'center',alignItems:'center'}}>
@@ -481,58 +558,152 @@ const handleCreateVnPayLink = async () => {
 
             <TabPanel value={tabIndex} index={0}>
   <Typography variant="h3" component="h2" style={{ fontWeight: "700", textAlign: "center", marginBottom:'24px' }}>
-    {details.program?.nameProgram}
+  THÔNG TIN ỨNG TUYỂN
   </Typography>
 
   <Grid container spacing={2}>
     <Grid item xs={8} md={6}>
-      {details.program?.img && (
-        <Box
-          component="img"
-          src={details.program?.img}
-          sx={{
-            width: '100%',
-            maxHeight: { xs: 'auto', md: '500px' },
-            objectFit: 'contain',
-            borderRadius: '4px',
-          }}
-          alt="Program Image"
-        />
-      )}
-        <div className="row mt-4" >
-<div className="col-lg-12">
-          <h4 className="title ">Mô tả</h4>
-          <p>{details.program?.description}</p>
-        </div>
-        <div className="col-lg-12">
-          <h4 className="title ">Trách nhiệm</h4>
-          <ul>
-            {details.program?.responsibilities
-                .split("\\r\\n")
-                .map((responsibilities, index) => (
-                  <li key={index}>{responsibilities}</li>
-                ))}
-          </ul>
-        </div>
-        <div className="col-lg-12">
-          <h4 className="title ">Yêu cầu của chương trình</h4>
-          <p>{details.program?.requirement}</p>
-        </div>
-        <div className="col-lg-12">
-          <h4 className="title">Chi phí khám khảo</h4>
-          <ul>
-            {details.program?.tuition
-                .split("\\r\\n")
-                .map((item, index) => <li key={index}>{item}</li>)}
-          </ul>
-        </div>
-      </div>
+    <Card raised>
+    <CardContent>
+      <Grid container spacing={2} alignItems="center">
+        <Grid item xs={12} sm={2}>
+        <Avatar
+            alt={details?.studentProfile?.fullName}
+            src={details?.studentProfile?.img}
+            sx={{ width: 100, height: 100, borderRadius: 0 }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={10}>
+          <Typography variant="h5" style={{color: '#4CAF50'}}gutterBottom>
+            {details?.studentProfile?.fullName}
+          </Typography>
+          <Typography variant="body1">
+            <strong>Email:</strong> {details?.studentProfile?.email}
+          </Typography>
+          <Typography variant="body1">
+            <strong>Ngày sinh:</strong> {details?.studentProfile?.dateOfBirth}
+          </Typography>
+          <Typography variant="body1">
+            <strong>Giới tính:</strong> {details?.studentProfile?.gender}
+          </Typography>
+          <Typography variant="body1">
+            <strong>Điện thoại:</strong> {details?.studentProfile?.phone}
+          </Typography>
+          <Typography variant="body1">
+            <strong>Địa chỉ:</strong> {details?.studentProfile?.address}
+          </Typography>
+          <Typography variant="body1">
+            <strong>CCCD:</strong> {details?.studentProfile?.nationalId}
+          </Typography>
+        </Grid>
+      </Grid>
+    </CardContent>
+  </Card>
+
+  <Card raised sx={{ mt: 2 }}>
+    <CardContent>
+      <Typography variant="h5" gutterBottom >
+        Quá trình học tập và Chứng chỉ
+      </Typography>
+      <Typography variant="body1">
+        <Typography variant="h6"style={{color:'#6A73FA'}}>Quá trình học tập</Typography> 
+        <ul>
+          {details?.studentProfile?.studyProcess?.split("|").map((item, index) => {
+            const [label, value] = item.split(":");
+            return (
+              <p key={index}>
+                <strong>{label}:</strong> {value}
+              </p>
+            );
+          })}
+        </ul>
+      </Typography>
+      <Typography variant="h6"style={{color:'#6A73FA'}}>
+      <strong>Chứng chỉ Tiếng Anh</strong> 
+      <ul>
+        {studentCertificates.map((certificate, index) => (
+  <Chip
+  key={index}
+  label={certificate?.certificateTypeDto?.certificateName}
+  color="primary"
+/>        ))}
+      </ul>     
+       </Typography>
+    </CardContent>
+  </Card>
+{/*     
+        <div className="row mt-4">
+        <Grid container direction="column" flexWrap="nowrap" spacing={2}>
+          <Grid item xs={8}>
+            <StyledCard>
+                <CardContent>
+                  <Typography variant="h6" gutterBottom>
+                    Mô tả chương trình
+                  </Typography>
+                  <Typography variant="body2">{details.program?.description}</Typography>
+                </CardContent>
+            </StyledCard>
+          </Grid>
+          <Grid item xs={12}>
+            <StyledCard>
+                <CardContent>
+                  <Typography variant="h6" gutterBottom>
+                    Lợi ích khi tham gia
+                  </Typography>
+                  <ul>
+                    {details.program?.responsibilities?.split("\\r\\n").map((responsibility, index) => (
+                      <li key={index}>{responsibility}</li>
+                    ))}
+                  </ul>
+                </CardContent>
+            </StyledCard>
+          </Grid>
+          <Grid item xs={12}>
+            <StyledCard>
+                <CardContent>
+                  <Typography variant="h6" gutterBottom>
+                    Yêu cầu 
+                  </Typography>
+                  <ListGroup variant="flush">
+                          {details?.program?.requirement?.split(',').map((item, index) => (
+                            <ListGroupItem key={index} className="d-flex align-items-center" style={{ border: 'none', padding: '10px 15px', fontSize: '16px', backgroundColor: 'transparent' }}>
+                              <ul className="single-list-wrap">
+                                <li className="single-list-inner style-check-box">
+                                  {index + 1}. {item}
+                                </li>
+                              </ul>
+                            </ListGroupItem>
+                          ))}
+                        </ListGroup>
+                                          </CardContent>
+            </StyledCard>
+          </Grid>
+          <Grid item xs={12}>
+            <StyledCard>
+                <CardContent>
+                  <Typography variant="h6" gutterBottom>
+                   Chi phí (tham khảo)
+                  </Typography>
+                  <ul>
+                    {details.program?.tuition?.split("\\r\\n").map((fee, index) => (
+                      <li key={index}>{fee}</li>
+                    ))}
+                  </ul>
+                </CardContent>
+            </StyledCard>
+          </Grid>
+        </Grid>
+      </div> */}
     </Grid>
 
     <Grid item xs={12} md={6}>
-      <div className="td-sidebar">
-        <div className="widget widget_feature">
-          <h4 className="widget-title">Chi tiết Chương trình</h4>
+   
+      <div className="td-sidebar" >
+        <div className="widget widget_feature" style={{backgroundColor:'white'}}>
+          <h4 className="widget-title" style={{textAlign:'center'}}> {details.program?.nameProgram}</h4>
+          <Grid container spacing={2}>
+         
+          <Grid item xs={12} md={6}>
           <ul>
             <li>
               <i className="fa fa-university" />
@@ -575,13 +746,175 @@ const handleCreateVnPayLink = async () => {
               </Button>
             </li> */}
           </ul>
+          </Grid>
+          <Grid item xs={12} md={5}>
+            <Box
+              component="img"
+              src={details.program?.img}
+              sx={{
+                width: "100%",
+                maxHeight: { xs: "auto", md: "500px" },
+                objectFit: "contain",
+                borderRadius: "4px",
+              }}
+              alt="Program Image"
+            />
+          </Grid>
+          </Grid>
+         
           <div className="price-wrap text-center">
-          <Button  color="primary" onClick={handleNavigateToProfile}>
-                XEM HỒ SƠ HỌC SINH ỨNG TUYỂN VÀO CHƯƠNG TRÌNH NÀY
-              </Button>
+          <Card raised>
+      <CardContent>
+        <Typography variant="h6" gutterBottom>
+          Tài liệu yêu cầu
+        </Typography>
+        {programDocuments?.map((document) => (
+          <div key={document.programDocumentId} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            
+            <Accordion
+              expanded={expanded === document.programDocumentId}
+              onChange={handleChange(document.programDocumentId)}
+              style={{ flex: 1 }}
+            >
+              
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls={`${document.programDocumentId}-content`}
+                id={`${document.programDocumentId}-header`}
+              >
+                <Typography style={{display:'flex', justifyContent:'center', alignItems:'center'}}>{document?.documentTypeDto?.typeName}</Typography>
+                <IconButton
+              color="primary"
+              // onClick={() => handleFileUpload(document.programDocumentId)}
+            >
+              <CloudUploadIcon />
+            </IconButton>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography variant="subtitle2">Mô tả:</Typography>
+                <Typography
+                style={{textAlign:'left'}}
+                  dangerouslySetInnerHTML={{ __html: formatDescription1(document.description) }}
+                />
+              </AccordionDetails>
+            </Accordion>
+           
+          </div>
+        ))}
+      </CardContent>
+    </Card>
+    <div className="price-wrap text-center" style={{marginTop:'24px'}}>
+    <Card raised>
+    <CardContent>
+                          <Typography variant="h6" gutterBottom>Tải tệp</Typography>
+                          <form onSubmit={handleDSubmit}>
+                            <Form.Group as={Row} className="mb-3">
+                              <Form.Label column sm="4">Loại tài liệu:</Form.Label>
+                              <Col sm="8">
+                                <Form.Control
+                                  as="select"
+                                  name="documentTypeId"
+                                  value={documentData.documentTypeId}
+                                  onChange={handleDChange}
+                                >
+                                  <option value="">Chọn loại tài liệu</option>
+                                  {documentTypes.map((type) => (
+                                    <option key={type.documentTypeId} value={type.documentTypeId}>
+                                      {type.typeName}
+                                    </option>
+                                  ))}
+                                </Form.Control>
+                              </Col>
+                            </Form.Group>
+                            <Form.Group as={Row} className="mb-3">
+                              <Form.Label column sm="4">Tệp tin:</Form.Label>
+                              <Col sm="8">
+                                <Form.Control
+                                  type="file"
+                                  name="file"
+                                  onChange={handleDFileChange}
+                                />
+                              </Col>
+                            </Form.Group>
+                            <Button variant="primary" type="submit">Tải lên</Button>
+                          </form>
+                          </CardContent>
+                          </Card>
+                        </div>
           </div>
         </div>
       </div>
+     
+   
+    {/* <Card raised>
+    <CardContent>
+      <Grid container spacing={2} alignItems="center">
+        <Grid item xs={12} sm={2}>
+        <Avatar
+            alt={details?.studentProfile?.fullName}
+            src={details?.studentProfile?.img}
+            sx={{ width: 100, height: 100, borderRadius: 0 }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={10}>
+          <Typography variant="h5" style={{color: '#4CAF50'}}gutterBottom>
+            {details?.studentProfile?.fullName}
+          </Typography>
+          <Typography variant="body1">
+            <strong>Email:</strong> {details?.studentProfile?.email}
+          </Typography>
+          <Typography variant="body1">
+            <strong>Ngày sinh:</strong> {details?.studentProfile?.dateOfBirth}
+          </Typography>
+          <Typography variant="body1">
+            <strong>Giới tính:</strong> {details?.studentProfile?.gender}
+          </Typography>
+          <Typography variant="body1">
+            <strong>Điện thoại:</strong> {details?.studentProfile?.phone}
+          </Typography>
+          <Typography variant="body1">
+            <strong>Địa chỉ:</strong> {details?.studentProfile?.address}
+          </Typography>
+          <Typography variant="body1">
+            <strong>CCCD:</strong> {details?.studentProfile?.nationalId}
+          </Typography>
+        </Grid>
+      </Grid>
+    </CardContent>
+  </Card>
+
+  <Card raised sx={{ mt: 2 }}>
+    <CardContent>
+      <Typography variant="h5" gutterBottom >
+        Quá trình học tập và Chứng chỉ
+      </Typography>
+      <Typography variant="body1">
+        <Typography variant="h6"style={{color:'#6A73FA'}}>Quá trình học tập</Typography> 
+        <ul>
+          {details?.studentProfile?.studyProcess?.split("|").map((item, index) => {
+            const [label, value] = item.split(":");
+            return (
+              <p key={index}>
+                <strong>{label}:</strong> {value}
+              </p>
+            );
+          })}
+        </ul>
+      </Typography>
+      <Typography variant="h6"style={{color:'#6A73FA'}}>
+      <strong>Chứng chỉ Tiếng Anh</strong> 
+      <ul>
+        {studentCertificates.map((certificate, index) => (
+  <Chip
+  key={index}
+  label={certificate?.certificateTypeDto?.certificateName}
+  color="primary"
+/>        ))}
+      </ul>     
+       </Typography>
+    </CardContent>
+  </Card> */}
+    
     </Grid>
   </Grid>
 
@@ -750,7 +1083,7 @@ Hoặc có thể đóng toàn bộ phí cho tiến trình (cập nhật tự đ�
     Lịch sử thanh toán
   </Typography>
   <TableContainer component={Paper}>
-    <Table sx={{ minWidth: 600 }} style={{ maxWidth: 1400, margin: 'auto' }} aria-label="payment history table">
+    <Table sx={{ minWidth: 600 }} style={{ margin: 'auto' }} aria-label="payment history table">
       <TableHead>
         <TableRow>
           <TableCell>Payment ID</TableCell>
@@ -808,6 +1141,7 @@ Hoặc có thể đóng toàn bộ phí cho tiến trình (cập nhật tự đ�
     
   );
 };
+
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
   return (

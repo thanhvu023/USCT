@@ -266,7 +266,7 @@ const Registration = () => {
       Swal.fire({
         icon: "error",
         title: "Lỗi",
-        text: "Vui lòng chọn consultant",
+        text: "Vui lòng chọn tư vấn viên",
       });
     } else {
       dispatch(
@@ -453,83 +453,62 @@ const Registration = () => {
           </Row>
           {/* Modal */}
           <Modal show={showCheckModal} onHide={handleCloseCheckModal} centered>
-            <Modal.Header closeButton>
-              <Modal.Title>
-                Thông tin chi tiết đơn tư vấn - Mã ID:{" "}
-                {selectedRegistration &&
-                  selectedRegistration.registrationFormId}
-              </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              {selectedRegistration && (
-                <div style={{ display: "flex" }}>
-                  <div>
-                    <img
-                      src={getCustomerImage(selectedRegistration.customerId)}
-                      style={{ width: "300px", marginRight: "20px" }}
-                      alt="Customer Avatar"
-                    />
-                  </div>
-                  <Card  style={{ marginRight: "20px" }}>
-      <Card.Body>
-        <Card.Title>Thông tin cơ bản</Card.Title>
-        <ListGroup variant="flush">
-  <ListGroup.Item style={{ display: 'flex', alignItems: 'center' }}>
-    <span style={{ marginRight: '10px', minWidth: '150px' }}> Tên khách hàng:</span>
-    <strong style={{ color: '#007bff' }}>
-      {getFullName(selectedRegistration.customerId)}
-    </strong>
-  </ListGroup.Item>
-
-  <ListGroup.Item style={{ display: 'flex', alignItems: 'center' }}>
-    <span style={{ marginRight: '10px', minWidth: '150px' }}>Chuyên ngành đã chọn:</span>
-    <strong  style={{ color: '#007bff' }}>{selectedRegistration.majorChoose}</strong>
-  </ListGroup.Item>
-
-  <ListGroup.Item style={{ display: 'flex', alignItems: 'center' }}>
-    <span style={{ marginRight: '10px', minWidth: '150px' }}>Chương trình đã chọn:</span>
-    <strong  style={{ color: '#007bff' }}>{selectedRegistration.programChoose}</strong>
-  </ListGroup.Item>
-
-
-  <ListGroup.Item style={{ display: 'flex', alignItems: 'center' }}>
-    <span style={{ marginRight: '10px', minWidth: '150px' }}>   Thông tin thêm:</span>
-    <strong  style={{ color: '#007bff' }}>{selectedRegistration.moreInformation}</strong>
-  </ListGroup.Item>
-
-</ListGroup>
-
-      </Card.Body>
-    </Card>
-    <Card>
-      <Card.Body>
-        <Card.Title>Lý do và ưu tiên</Card.Title>
-        <ListGroup variant="flush">
-  <ListGroup.Item style={{ display: 'flex', alignItems: 'center' }}>
-    <span style={{ marginRight: '10px', minWidth: '150px' }}> Lý do du học:</span>
-    <strong style={{ color: '#007bff' }}>
-    {selectedRegistration?.studyAbroadReason}
-    </strong>
-  </ListGroup.Item>
-
-  <ListGroup.Item style={{ display: 'flex', alignItems: 'center' }}>
-    <span style={{ marginRight: '10px', minWidth: '150px' }}> Lý do chọn điểm đến:</span>
-    <strong  style={{ color: '#007bff' }}>{selectedRegistration.destinationReason}</strong>
-  </ListGroup.Item>
-
-  <ListGroup.Item style={{ display: 'flex', alignItems: 'center' }}>
-    <span style={{ marginRight: '10px', minWidth: '150px' }}>Tư vấn viên phụ trách:</span>
-    <strong  style={{ color: '#007bff' }}>{getFullNameByConsultantId(selectedRegistration.consultantId)}</strong>
-  </ListGroup.Item>
-  <ListGroup.Item style={{ display: 'flex', alignItems: 'center' }}>
-  <span style={{ marginRight: '10px', minWidth: '150px' }}>Lựa chọn Tư vấn viên </span>
-
-  <Form.Select
+      <Modal.Header closeButton>
+        <Modal.Title>
+          Thông tin chi tiết đơn tư vấn - Mã ID: {selectedRegistration?.registrationFormId}
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        {selectedRegistration && (
+          <div style={{ display: 'flex', gap: '20px' }}>
+            <div>
+              <img
+                src={getCustomerImage(selectedRegistration.customerId)}
+                style={{ width: '150px', borderRadius: '50%' }}
+                alt="Customer Avatar"
+              />
+            </div>
+            <div style={{ flex: 1 }}>
+              <Card>
+                <Card.Body>
+                  <Card.Title style={{color: '#007bff' }} >Thông tin cơ bản</Card.Title>
+                  <ListGroup variant="flush">
+                    <ListGroup.Item>
+                      <strong>Tên khách hàng: </strong>{getFullName(selectedRegistration.customerId)}
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                      <strong>Chuyên ngành đã chọn: </strong>{selectedRegistration.majorChoose}
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                      <strong>Chương trình đã chọn: </strong>{selectedRegistration.programChoose}
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                      <strong>Thông tin thêm: </strong>{selectedRegistration.moreInformation}
+                    </ListGroup.Item>
+                  </ListGroup>
+                </Card.Body>
+              </Card>
+              <Card style={{ marginTop: '20px' }}>
+                <Card.Body>
+                  <Card.Title style={{color: '#007bff' }}>Lý do và ưu tiên</Card.Title>
+                  <ListGroup variant="flush">
+                    <ListGroup.Item>
+                      <strong>Lý do du học: </strong>{selectedRegistration.studyAbroadReason}
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                      <strong>Lý do chọn điểm đến: </strong>{selectedRegistration.destinationReason}
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                    <span style={{ marginRight: '10px', minWidth: '150px' }}><strong>Tư vấn viên phụ trách:</strong></span>
+                    <span  >{getFullNameByConsultantId(selectedRegistration.consultantId)}</span>
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                      <Form.Group controlId="consultantSelect">
+                        <Form.Label><strong>Chọn Tư vấn viên:</strong></Form.Label>
+                        <Form.Control
+                          as="select"
                           value={selectedConsultantId}
-                          onChange={(e) =>
-                            setSelectedConsultantId(e.target.value)
-                          }
-                          
+                          onChange={(e) => setSelectedConsultantId(e.target.value)}
                         >
                           <option value="">Chọn Consultant</option>
                           {consultantSpecializeId.map((consultant) => (
@@ -540,30 +519,31 @@ const Registration = () => {
                               {consultant.userName}
                             </option>
                           ))}
-                        </Form.Select>
-  </ListGroup.Item>
-  <ListGroup.Item style={{ display: 'flex', alignItems: 'center' }}>
-    <span style={{ marginRight: '10px', minWidth: '150px' }}>Chuyên môn:</span>
-    <strong  style={{ color: '#007bff' }}>{getSpecializeByConsultantId(selectedRegistration.consultantId)}</strong>
-  </ListGroup.Item>
- 
-</ListGroup>
 
-      </Card.Body>
-    </Card>
-               
-                </div>
-              )}
-            </Modal.Body>
-            <Modal.Footer>
-              <Button variant="secondary" onClick={handleCloseCheckModal}>
-                Hủy
-              </Button>
-              <Button variant="primary" onClick={handleUpdateRegistration}>
-                Duyệt
-              </Button>
-            </Modal.Footer>
-          </Modal>
+                        </Form.Control>
+                      </Form.Group>
+                    </ListGroup.Item>
+                    <ListGroup.Item style={{ display: 'flex', alignItems: 'center' }}>
+    <span style={{ marginRight: '10px', minWidth: '150px' }}><strong>Chuyên môn:</strong></span>
+    <span >{getSpecializeByConsultantId(selectedRegistration.consultantId)}</span>
+  </ListGroup.Item>
+
+                  </ListGroup>
+                </Card.Body>
+              </Card>
+            </div>
+          </div>
+        )}
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={handleCloseCheckModal}>
+          Hủy
+        </Button>
+        <Button variant="primary" onClick={handleUpdateRegistration}>
+          Duyệt
+        </Button>
+      </Modal.Footer>
+    </Modal>
           <Modal
             show={showDeleteModal}
             onHide={handleCloseDeleteModal}
