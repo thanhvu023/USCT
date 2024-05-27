@@ -226,7 +226,7 @@ const Routers = () => {
          
         </Route>
         <Route
-            path="checkpayment/:programApplicationId" // Remove the leading slash for nested route
+            path="staff-programApplication-operation/:programApplicationId" // Remove the leading slash for nested route
             element={
               <StaffRoute userRole={userRole}>
                 <PaymentDetailsPage />  

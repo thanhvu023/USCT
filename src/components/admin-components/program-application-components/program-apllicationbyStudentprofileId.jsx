@@ -73,7 +73,7 @@ const ProgramApplicationPage = ({ setMain }) => {
   };
   const handleDetailClick = (application) => {
     setSelectedApp(application);
-    navigate(`/checkpayment/${application.programApplicationId}`, {
+    navigate(`/staff-programApplication-operation/${application.programApplicationId}`, {
       state: application,
     });
   }
@@ -391,8 +391,8 @@ const handlePageChange = (newPage) => {
                         <td>{item.program?.nameProgram}</td>
                         <td>{findActiveStageName(item)}</td>
                         <td>
-                          <Button onClick={() => handleCreateFee(item)}>Chi tiết   <i className="fa fa-info-circle" /></Button>
-                          <Button onClick={() => handleDetailClick(item)}>Thanh toán</Button>
+                          <Button onClick={() => handleDetailClick(item)}>Chi tiết   <i className="fa fa-info-circle" /></Button>
+                          {/* <Button onClick={() => handleDetailClick(item)}>Thanh toán</Button> */}
                         </td>
                       </tr>
                     ))}

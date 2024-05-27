@@ -41,7 +41,8 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { imageDb } from "../FirebaseImage/Config";
 import { useNavigate } from "react-router-dom";
 import { Modal, ListGroup,Button, Row, Col,  Form, InputGroup, FormControl,
-  Badge,ListGroupItem } from 'react-bootstrap';
+  Badge,ListGroupItem, 
+  CardTitle} from 'react-bootstrap';
 import { getAllFeeTypes } from '../../redux/slice/feeTypeSlice';
 import { getAllUniversity } from "../../redux/slice/universitySlice";
 import { getAllUniversityType } from "../../redux/slice/universitySlice";
@@ -53,8 +54,9 @@ import Swal from "sweetalert2";
 import { getProgramById } from "../../redux/slice/programSlice";
 import { getProgramCertificateByProgramId } from "../../redux/slice/program-document";
 import { getAllStudentCertificatesByProfile } from "../../redux/slice/studentCertificateSlice";
-import { createDocument } from "../../redux/slice/student-document";
+import { createDocument, getDocumentsByProgramApplicationId } from "../../redux/slice/student-document";
 import { getAllDocumentTypes } from "../../redux/slice/documentTypesSlice";
+import { getFile } from "../../redux/slice/authSlice";
 const StyledCard = styled(Card)(({ theme }) => ({
   border: `1px solid ${theme.palette.divider || '#e0e0e0'}`,
   boxShadow: theme.shadows ? theme.shadows[3] : '0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12)',
@@ -66,7 +68,7 @@ const StyledCard = styled(Card)(({ theme }) => ({
 
 const   ProgramApplicationDetails = () => {
   const { programApplicationId } = useParams();
-
+  const [showModal, setShowModal] = useState(false);
   const [tabIndex, setTabIndex] = useState(0);
   const [expanded, setExpanded] = useState(false);
 
@@ -163,6 +165,7 @@ const handleTabChange = (event, newValue) => {
   const programStages = useSelector(state=>state.programStages.stages)
   const studentCertificates = useSelector((state) => state.studentCertificate.studentCertificates);
   console.log("studentCertificates",studentCertificates)
+  const documents = useSelector(state => state.studentDocument.documentsByProgramApplicationId); 
 
 const getStageNameByProgramStageId = () =>{
 
@@ -195,6 +198,13 @@ const getStageNameByProgramStageId = () =>{
   const handleNoteChange = (event) => {
     setNote(event.target.value);
 };
+
+useEffect(() => {
+  if (programApplicationId) {
+    dispatch(getDocumentsByProgramApplicationId(programApplicationId)); // Fetch documents by programApplicationId
+  }
+}, [dispatch, programApplicationId]);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -202,7 +212,7 @@ const getStageNameByProgramStageId = () =>{
   const handleRowClick = (programApplicationId) => {
     if (programApplicationId) {
       setSelectedProgramApplication(programApplicationId); // Set the selected program application
-      setIsModalOpen(true); // Open the modal
+      setIsModalOpen(true); 
     }
   };
   const getFeeTypeNameById = (feeTypeId) => {
@@ -221,8 +231,39 @@ const getStageNameByProgramStageId = () =>{
 
 console.log("ảnh aaaa",img)
 console.log(" paymentId",paymentId)
-
-
+const getFileExtension = (url) => {
+  const ext = url.split('.').pop().split('?')[0]; 
+  switch (ext.toLowerCase()) {
+    case 'jpg':
+    case 'jpeg':
+    case 'png':
+    case 'gif':
+    case 'bmp':
+    case 'tiff':
+    case 'pdf':
+    case 'doc':
+    case 'docx':
+    case 'txt':
+      return ext;
+    default:
+      return 'file'; 
+  }
+};
+const handleDocumentDownload = (doc) => {
+  dispatch(getFile(doc.file))
+    .then((fileUrl) => {
+      const link = document.createElement("a");
+      link.href = fileUrl.payload;
+      const fileName = `${doc.documentTypeDto.typeName || "document"}.${getFileExtension(doc.file)}`;
+      link.setAttribute("download", fileName);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    })
+    .catch((error) => {
+      console.error("Error downloading file:", error);
+    });
+};
 const handleFileChange = (e) => {
   const file = e.target.files[0];
   if (file) {
@@ -261,6 +302,7 @@ const handlePaymentSubmit = () => {
         }).then((result) => {
           if (result.isConfirmed) {
             setIsUploadingEnabled(true); // Cho phép hiển thị nút tải ảnh lên
+            setShowModal(true); // Hiển thị modal thông tin tài khoản ngân hàng
           }
         });
       })
@@ -274,7 +316,6 @@ const handlePaymentSubmit = () => {
     setPaymentSuccess(false);
   }
 };
-
 
 const handleImageUpload = async () => {
   if (!paymentId) {
@@ -393,7 +434,8 @@ const handleCreateVnPayLink = async () => {
   const pageCount = Math.ceil(payments?.length / itemsPerPage);
 
   const currentPayments = payments?.slice(page * itemsPerPage, (page + 1) * itemsPerPage);
-  
+  const currentDocuments = documents?.slice(page * itemsPerPage, (page + 1) * itemsPerPage);
+
   const nextPage = () => {
       setPage((prevPage) => (prevPage + 1 < pageCount ? prevPage + 1 : prevPage));
   };
@@ -480,7 +522,7 @@ const handleCreateVnPayLink = async () => {
   };
   const formatDescription1 = (description) => {
     if (!description) return "";
-    const paragraphs = description.split(/\\r\\n|\r\n/);
+    const paragraphs = description.split(/\\r\\n/);
     return paragraphs.map((para, index) => `<strong>${index + 1}.</strong> ${para}`).join("<br />");
   };
   const handleDChange = (e) => {
@@ -519,7 +561,22 @@ const handleCreateVnPayLink = async () => {
     }
   };
   
-
+  const handleDownloadFile = () => {
+    details?.studentProfile.fileUploads.forEach((file) => {
+      dispatch(getFile(file.fileAttach))
+        .then((fileUrl) => {
+          const link = document.createElement("a");
+          link.href = fileUrl.payload;
+          link.setAttribute("download", file.fileName);
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        })
+        .catch((error) => {
+          console.error("Error downloading file:", error);
+        });
+    });
+  };
   return (
 <div style={{ maxHeight: "100vh",backgroundColor:'#F0F4F9'  }}> 
       <Backdrop
@@ -552,7 +609,8 @@ const handleCreateVnPayLink = async () => {
   centered  
 >
   <Tab label="Thông tin Hồ sơ" />
-  <Tab label="Chọn khoản phí" />
+  <Tab label="Xem khoản phí" />
+  <Tab label="Tài liệu đã nộp" />
   <Tab label="Lịch sử thanh toán" />
 </Tabs>
 
@@ -564,6 +622,9 @@ const handleCreateVnPayLink = async () => {
   <Grid container spacing={2}>
     <Grid item xs={8} md={6}>
     <Card raised>
+    <h4 className="widget-title" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '67px', textAlign: 'center', borderBottom: '2px solid #F0F4F9' }}>
+  <span>Hồ sơ ứng tuyển</span>
+</h4>
     <CardContent>
       <Grid container spacing={2} alignItems="center">
         <Grid item xs={12} sm={2}>
@@ -595,6 +656,15 @@ const handleCreateVnPayLink = async () => {
           <Typography variant="body1">
             <strong>CCCD:</strong> {details?.studentProfile?.nationalId}
           </Typography>
+          <Typography variant="body1">
+            <strong>File hồ sơ:</strong> 
+            <button
+                              onClick={handleDownloadFile}
+                              className="btn btn-secondary ml-3"
+                            >
+                              Tải file
+                            </button>
+          </Typography>
         </Grid>
       </Grid>
     </CardContent>
@@ -619,13 +689,14 @@ const handleCreateVnPayLink = async () => {
         </ul>
       </Typography>
       <Typography variant="h6"style={{color:'#6A73FA'}}>
-      <strong>Chứng chỉ Tiếng Anh</strong> 
+      <strong>Chứng chỉ </strong> 
       <ul>
         {studentCertificates.map((certificate, index) => (
   <Chip
   key={index}
   label={certificate?.certificateTypeDto?.certificateName}
   color="primary"
+
 />        ))}
       </ul>     
        </Typography>
@@ -766,7 +837,7 @@ const handleCreateVnPayLink = async () => {
           <Card raised>
       <CardContent>
         <Typography variant="h6" gutterBottom>
-          Tài liệu yêu cầu
+          Tài liệu chương trình yêu cầu
         </Typography>
         {programDocuments?.map((document) => (
           <div key={document.programDocumentId} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -1002,15 +1073,43 @@ const handleCreateVnPayLink = async () => {
   <InputGroup.Text>Note:</InputGroup.Text>
   <FormControl as="textarea" rows={3} value={note} onChange={handleNoteChange} />
 </InputGroup>
-<Button variant="primary" onClick={handlePaymentSubmit}>Xác nhận</Button>
+<Button variant="primary" onClick={() => setShowModal(true)}>Xác nhận</Button>
 
 {paymentSuccess && (
-  <>
+  <div style={{marginLeft:'16px', marginTop:'10px'}}>
     <input type="file" onChange={handleFileChange} />
-    <button onClick={handleImageUpload}>Tải ảnh lịch sử giao dịch</button>
-  </>
+    <Button n variant="primary" onClick={handleImageUpload}>Tải ảnh lịch sử giao dịch</Button>
+  </div>
 )}
+<Modal show={showModal} onHide={() => setShowModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Thông tin tài khoản ngân hàng</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+  <div style={{ textAlign: 'center', padding: '20px', display: 'flex', justifyContent: 'space-evenly', alignItems: 'center',  }}>
+    <img src="https://website366.com/wp-content/uploads/2024/02/banner_vietqr_code-1.png" alt="QR Code" style={{ marginBottom: '20px', width: '500px', height: '500px' }} />
+  <div>
+  <Typography variant="h5" gutterBottom>Mở Ứng Dụng Ngân Hàng Quét QRCode</Typography>
+    <Typography variant="h4" gutterBottom>VietQR</Typography>
+    <div style={{ marginBottom: '20px' }}>
+    <Typography variant="body1" fontSize={18}>Số tiền: <strong>{selectedFee ? selectedFee.amount.toLocaleString() : 'N/A'} VND {selectedFee ? `(${getFeeTypeNameById(selectedFee.feeTypeId)})` : ''}</strong></Typography>
+      <Typography variant="body1"fontSize={18}>Nội dung CK<strong>: SPVQR TT SON10800</strong></Typography>
+      <Typography variant="body1"fontSize={18}>Tên chủ TK: <strong>AUTOMATION GHT</strong></Typography>
+      <Typography variant="body1"fontSize={18}>Số TK:<strong> 6310702040627</strong></Typography>
+    </div>
+    <Typography variant="body2" color="textSecondary">Giải pháp được cung cấp trên nền tảng Sapo</Typography>
+  </div>
+  </div>
+</Modal.Body>
 
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Hủy
+          </Button>
+          <Button variant="primary" onClick={handlePaymentSubmit}>Xác nhận</Button>
+
+        </Modal.Footer>
+      </Modal>
 
 
 <>
@@ -1078,7 +1177,7 @@ Hoặc có thể đóng toàn bộ phí cho tiến trình (cập nhật tự đ�
 
 
        
-<TabPanel value={tabIndex} index={2}>
+<TabPanel value={tabIndex} index={3}>
   <Typography variant="h6" gutterBottom>
     Lịch sử thanh toán
   </Typography>
@@ -1130,12 +1229,76 @@ Hoặc có thể đóng toàn bộ phí cho tiến trình (cập nhật tự đ�
   </Box>
 </TabPanel>
 
-      
+<TabPanel value={tabIndex} index={2}> {/* Add new TabPanel */}
+<Card raised>
+<CardContent>
+<Typography variant="h6" gutterBottom style={{textAlign:'center'}}>
+    Danh sách tài liệu đã nộp
+  </Typography>
+  <div style={{ display: 'flex', justifyContent: 'center' }}>
+    
+    <TableContainer component={Paper} sx={{ width: '80%', maxWidth: 1400 }}>
+      <Table
+        sx={{ minWidth: 600 }}
+        aria-label="document table"
+      >
+        <TableHead>
+          <TableRow>
+            <TableCell>ID</TableCell>
+            <TableCell align="right">Loại tài liệu</TableCell>
+            <TableCell align="right">Thời gian tải lên</TableCell>
+            <TableCell align="right">Hành động</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {documents?.map((document) => (
+            <TableRow key={document.documentId}>
+              <TableCell component="th" scope="row">
+                {document.documentId}
+              </TableCell>
+              <TableCell align="right">{document?.documentTypeDto?.typeName}</TableCell>
+              <TableCell align="right">
+                {new Date(document.updateDate).toLocaleString('en-GB', {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  second: '2-digit'
+                })}
+              </TableCell>
+              <TableCell align="right">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => handleDocumentDownload(document)}
+                  style={{ textTransform: "none" }}
+                >
+                  Tải xuống
+                </Button>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  </div>
+</CardContent>
+</Card>
+
+
+  <Box sx={{ display: 'flex', justifyContent: 'space-between', margin: '20px' }}>
+    <Button variant="primary" onClick={prevPage} disabled={page === 0}>Trước</Button>
+    <Button variant="primary" onClick={nextPage} disabled={page + 1 === pageCount}>Kế tiếp</Button>
+  </Box>
+</TabPanel>
+
 
         </Box>
     
 
     </Grid>
+    
     </div>
     
     
