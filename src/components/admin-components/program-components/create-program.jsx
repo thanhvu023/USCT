@@ -25,8 +25,8 @@ const CreateProgramModal = ({
   const [active, setActive] = useState(false);
   const [inactive, setInactive] = useState(false);
 
-  console.log("active:", active);
-  console.log("inactive:", inactive);
+  // console.log("active:", active);
+  // console.log("inactive:", inactive);
   useEffect(() => {
     if (setSelectedFile) {
       let OBJ = { ...formData, img: selectedFile };

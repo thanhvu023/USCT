@@ -21,6 +21,7 @@ import { imageDb } from "../../FirebaseImage/Config";
 import CreateProgramModal from "./create-program";
 import "./program.css";
 import { Link } from "react-router-dom";
+import { Backdrop, CircularProgress } from "@mui/material";
 
 const AllPrograms = () => {
   const dispatch = useDispatch();
@@ -332,7 +333,12 @@ const AllPrograms = () => {
     return (
       <div className="row">
         {loading ? (
-          <div>Loading...</div>
+            <Backdrop
+            sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            open={loading}
+          >
+            <CircularProgress color="inherit" />
+          </Backdrop>
         ) : showAllPrograms ? (
           currentPrograms.map((program, index) => (
             <div className="col-lg-4 col-md-6 col-sm-6 col-12 mb-4" key={index}>
