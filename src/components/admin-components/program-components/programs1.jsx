@@ -11,6 +11,7 @@ import { Row, Dropdown, Modal, Button, Form, Col } from "react-bootstrap";
 import Swal from "sweetalert2";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import { Backdrop, CircularProgress } from "@mui/material";
 
 const AllProgramsPage = () => {
   const dispatch = useDispatch();
@@ -109,7 +110,12 @@ const AllProgramsPage = () => {
     return (
       <div className="row">
         {loading ? (
-          <div>Loading...</div>
+             <Backdrop
+             sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+             open={loading}
+           >
+             <CircularProgress color="inherit" />
+           </Backdrop>
         ) : showAllPrograms ? (
           programs.map((program, index) => (
             <div className="col-lg-4 col-md-6 col-sm-6 col-12 mb-4" key={index}>
@@ -255,6 +261,12 @@ const AllProgramsPage = () => {
   };
   return (
     <div>
+        <Backdrop
+      sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+      open={loading}
+    >
+      <CircularProgress color="inherit" />
+    </Backdrop>
       <Row>
         <div className="col-lg-12">
           <div className="card-header d-flex justify-content-between align-items-center">

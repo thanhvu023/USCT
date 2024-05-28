@@ -136,7 +136,7 @@ const CreateStudentProfile = () => {
     { value: 2, label: "TOEFL" },
     { value: 3, label: "SAT" },
     { value: 4, label: "ACT" },
-    { value: 6, label: "Học bạ" },
+    
   ];
 
   const handleCertificateChange = (id, field, value) => {
@@ -708,7 +708,7 @@ const CreateStudentProfile = () => {
                               <Select
                                 placeholder="Chứng chỉ tiếng anh"
                                 name={`certificateTypeId-${cert.id}`}
-                                value={certificateOptions.find(
+                                value={certificateOptions.slice(0, -1).find(
                                   (option) =>
                                     option.value === cert.certificateTypeId
                                 )}

@@ -51,7 +51,11 @@ const initialState = {
 export const schoolProfileSlice = createSlice({
   name: "schoolProfile",
   initialState,
-  reducers: {},
+  reducers: {
+    resetSchoolProfiles: (state) => {
+      state.schoolProfilesByStudentProfileId = {};
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getSchoolProfileById.pending, (state) => {
@@ -93,5 +97,7 @@ export const schoolProfileSlice = createSlice({
   },
 });
 
-const { reducer: schoolProfileReducer } = schoolProfileSlice;
-export { schoolProfileReducer as default };
+const { reducer: schoolProfileReducer,
+  actions: {resetSchoolProfiles},
+ } = schoolProfileSlice;
+export { schoolProfileReducer as default, resetSchoolProfiles };

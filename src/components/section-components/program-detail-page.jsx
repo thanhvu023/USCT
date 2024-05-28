@@ -12,7 +12,7 @@ import { FaChevronDown } from 'react-icons/fa';
 import { getAllCertificates, filterCertificatesByProgramId } from "../../redux/slice/programCertificateSlice";
 import { createNotification, getNotification } from "../../redux/slice/authSlice";
 import { getMajorById } from "../../redux/slice/majorSlice";
-import { createProgramApplication, getProgramById, getProgramByProgramType, getProgramByUniId, getProgramTypes } from "../../redux/slice/programSlice";
+import { createProgramApplication, getProgramById, getProgramByProgramType, getProgramByUniId, getProgramTypes, resetProgramById } from "../../redux/slice/programSlice";
 import { getSemesterById } from "../../redux/slice/semesterSlice";
 import { getStateById } from "../../redux/slice/stateSlice";
 import { getStudentProfileByCustomerId, getStudentProfileById, resetStudent } from "../../redux/slice/studentSlice";
@@ -20,7 +20,7 @@ import { getUniversityById } from "../../redux/slice/universitySlice";
 import { imageDb } from "../FirebaseImage/Config";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import { getSchoolProfilesByStudentProfileId } from "../../redux/slice/schoolProfileSlice";
+import { getSchoolProfilesByStudentProfileId, resetShoolProfiles } from "../../redux/slice/schoolProfileSlice";
 
 const descriptionStyle = {
   display: '-webkit-box',
@@ -65,6 +65,8 @@ function ProgramDetailPage() {
   };
   const handleCheckReq = () => {
     // Điều hướng đến trang create-student-profile
+    dispatch(resetStudent());
+    // dispatch(resetShoolProfiles()); 
     navigate(`/program-details/check-requirement/${programById}`);
   };
   const handleOpenModal = () => {
@@ -109,8 +111,8 @@ function ProgramDetailPage() {
   const majorDetail = useSelector((state) => state?.major?.majorById);
   const programType = useSelector((state) => state?.program?.programTypes);
   const certificates = useSelector((state) => state.certificate.certificates);
-  const certificatesByProgramId = useSelector(
-    (state) => state.certificate.certificatesByProgramId
+  const certificatesByProgramId = useSelector((state) =>
+    state.certificate.certificatesByProgramId.filter((certificate) => certificate.minLevel !== 0)
   );
   const studentCertificates = useSelector((state) => state.studentCertificate.studentCertificates);
 
@@ -299,34 +301,34 @@ function ProgramDetailPage() {
   }, [dispatch, studentProfileDetail?.studentProfileId]);
 
   const schoolProfiles = useSelector(
-    (state) => state.schoolProfile.schoolProfilesByStudentProfileId
+    (state) => Array.isArray(state.schoolProfile.schoolProfilesByStudentProfileId) ? state.schoolProfile.schoolProfilesByStudentProfileId : []
   ).filter(profile => profile.studentProfileId === studentProfileDetail.studentProfileId);
 
 console.log("schoolProfiles",schoolProfiles)
 console.log("studentProfileDetail",studentProfileDetail)
 
-  const handleSubmitProgramApplication = (e) => {
-    e.preventDefault();
-    if (formData.studentProfileId) {
-      dispatch(createProgramApplication(formData));
-      const programId = programById;
-      dispatch(createNotification({ programId, customerId }));
-      Swal.fire({
-        icon: "success",
-        title: "Nộp hồ sơ thành công!",
-        showConfirmButton: false,
-        timer: 1500,
-      });
-      navigate('/students-profile');
-    } else {
-      Swal.fire({
-        icon: "warning",
-        title: "Chọn hồ sơ học sinh!",
-        showConfirmButton: false,
-        timer: 1500,
-      });
-    }
-  };
+  // const handleSubmitProgramApplication = (e) => {
+  //   e.preventDefault();
+  //   if (formData.studentProfileId) {
+  //     dispatch(createProgramApplication(formData));
+  //     const programId = programById;
+  //     dispatch(createNotification({ programId, customerId }));
+  //     Swal.fire({
+  //       icon: "success",
+  //       title: "Nộp hồ sơ thành công!",
+  //       showConfirmButton: false,
+  //       timer: 1500,
+  //     });
+  //     navigate('/students-profile');
+  //   } else {
+  //     Swal.fire({
+  //       icon: "warning",
+  //       title: "Chọn hồ sơ học sinh!",
+  //       showConfirmButton: false,
+  //       timer: 1500,
+  //     });
+  //   }
+  // };
 
   const handleScrollToTop = () => {
     window.scrollTo({

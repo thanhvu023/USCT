@@ -56,7 +56,17 @@ export const getProgramApplicationsByCustomerId = createAsyncThunk(
     }
   }
 );
-
+export const updateProgramApplication = createAsyncThunk(
+  "/programApplication/updateProgramApplication",
+  async (data, thunkAPI) => {
+    try {
+      const res = await instance.put(`/program-applications/${data.programApplicationId}`, data);
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response);
+    }
+  }
+);
 const initialState = {
   programApplications: [],
   programApplicationById: {},
@@ -131,6 +141,22 @@ export const programApplicationSlice = createSlice({
       )
       .addCase(getProgramApplicationsByCustomerId.rejected, (state, action) => {
         state.loading = false;
+      })
+      .addCase(updateProgramApplication.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updateProgramApplication.fulfilled, (state, action) => {
+        state.loading = false;
+        const index = state.programApplications.findIndex(
+          (application) => application.programApplicationId === action.payload.programApplicationId
+        );
+        if (index !== -1) {
+          state.programApplications[index] = action.payload;
+        }
+      })
+      .addCase(updateProgramApplication.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });

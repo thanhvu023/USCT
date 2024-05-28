@@ -12,6 +12,7 @@ import {
   logoutConsultant,
 } from "../../redux/slice/consultantSlice";
 import { resetRegistration } from "../../redux/slice/registrationSlice";
+import { Typography } from "@mui/material";
 function Navbar2() {
   const token = useSelector((state) => state?.auth?.token);
   const userId = token ? jwtDecode(token).UserId : null;
@@ -22,6 +23,7 @@ function Navbar2() {
   }, [userId]);
 
   const userDetail = useSelector((state) => state?.consultant?.consultantById);
+  console.log("userDetail",userDetail)
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleLogout = () => {
@@ -151,6 +153,7 @@ function Navbar2() {
             )}
             {token && (
               <div className="nav-right-part nav-right-part-desktop d-flex align-items-center">
+               <Typography variant="body1">Xin chào {userDetail.fullName}</Typography>
                 <Dropdown className="nav-item header-profile">
                   <Dropdown.Toggle
                     to={"#"}

@@ -26,6 +26,9 @@ import {
   TableHead,
   TableRow,
   Paper,
+  DialogContent,
+  CardContent,
+  Dialog,
 } from "@mui/material";
 import Swal from "sweetalert2";
 import {
@@ -53,6 +56,11 @@ import { getFile } from "../../../redux/slice/authSlice";
 import { useLocation, useParams } from "react-router-dom";
 import { getProgramApplicationById } from "../../../redux/slice/programApplicationSlice";
 import { getDocumentsByProgramApplicationId } from "../../../redux/slice/student-document"; 
+import { getAllDocumentTypes } from "../../../redux/slice/documentTypesSlice";
+import { getProgramCertificateByProgramId } from "../../../redux/slice/program-document";
+import { getSchoolProfilesByStudentProfileId } from "../../../redux/slice/schoolProfileSlice";
+import { getAllStudentCertificatesByProfile } from "../../../redux/slice/studentCertificateSlice";
+import { Grid } from "rsuite";
 
 const PaymentDetailsPage = () => {
   const { programApplicationId } = useParams();
@@ -83,29 +91,50 @@ const PaymentDetailsPage = () => {
   const applyStages = useSelector((state) => state.applyStage.applyStages || []);
   const activeStage = application?.applyStage?.find((stage) => stage?.status === 1);
   const [tabIndex, setTabIndex] = useState(0);
+  console.log("activeStage",activeStage)
   const payments = useSelector((state) => state.payment.paymentsByApplicationId);
   const customers = useSelector((state) => state.auth.user);
-  const programs = useSelector((state) => state.program.programs);
   const fees = useSelector((state) => state.programFee.fees);
   const feeTypes = useSelector((state) => state.feeType.feeTypes);
+  const programDocuments = useSelector((state) => state.programDocument.programCertificateByProgramId);
   const documents = useSelector(state => state.studentDocument.documentsByProgramApplicationId); 
-console.log("tài liệu:",documents)
+  const schoolProfiles = useSelector((state) => state.schoolProfile.schoolProfilesByStudentProfileId);
+  const studentCertificates = useSelector((state) => state.studentCertificate.studentCertificates);
+
+  console.log("tài liệu:",program)
   useEffect(() => {
     dispatch(getAllStage());
   }, [dispatch]);
   
+  useEffect(()=>{
+    if(program && program.programId){
+      dispatch(getProgramCertificateByProgramId(program.programId)); 
+
+    }
+  },[dispatch, program]);
+
   useEffect(() => {
     if (application && application.programApplicationId) {
+
       dispatch(getDocumentsByProgramApplicationId(application.programApplicationId)); // Fetch documents by programApplicationId
     }
   }, [dispatch, application]);
-  
+  useEffect(()=>{
+    dispatch(getAllDocumentTypes());
+
+  },[dispatch]);
   useEffect(() => {
     if (application && application.programApplicationId) {
       dispatch(getPaymentByProgramApplicationId(application.programApplicationId));
     }
   }, [dispatch, application]);
+  useEffect(() => {
+    if (application.studentProfileId) {
+      dispatch(getSchoolProfilesByStudentProfileId(application.studentProfileId));
 
+      dispatch(getAllStudentCertificatesByProfile(application.studentProfileId));
+    }
+  }, [dispatch, application.studentProfileId]);
   useEffect(() => {
     dispatch(getAllProgramFees());
     dispatch(getAllFeeTypes());
@@ -400,6 +429,34 @@ console.log("tài liệu:",documents)
         return 'Trạng thái đang bị lỗi';
     }
   };
+  const formatDescription1 = (description) => {
+    if (!description) return "";
+    const paragraphs = description.split(/\\r\\n/);
+    return paragraphs.map((para, index) => `<strong>${index + 1}.</strong> ${para}`).join("<br />");
+  };
+  const calculateOverallGPA = () => {
+    const year10 = schoolProfiles.find(profile => profile.schoolGrade === 10)?.gpa || 0;
+    const year11 = schoolProfiles.find(profile => profile.schoolGrade === 11)?.gpa || 0;
+    const year12 = schoolProfiles.find(profile => profile.schoolGrade === 12)?.gpa || 0;
+    const overallGPA = (year10 + year11 + year12) / 3;
+    return overallGPA.toFixed(2); 
+  };
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const handleOpenDialog = (imgSrc) => {
+    setSelectedImage(imgSrc);
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    setSelectedImage(null);
+  };
+
+  const getStageFee = (programFeeId) => {
+    const stageFee = fees.find((fee) => fee.programFeeId === programFeeId);
+    return stageFee ? stageFee.amount.toLocaleString()  : "0";
+  };
   return (
     <Container>
       <div className="card-header">
@@ -407,81 +464,111 @@ console.log("tài liệu:",documents)
           <Box sx={{ mx: "auto", width: "100%", maxWidth: "1460px" }}>
             <Row className="justify-content-center mt-4">
               <Col md={12}>
-                <Card
-                  className="mb-4 shadow"
-                  style={{
-                    boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)",
-                    borderRadius: "10px",
-                  }}
-                >
-                  <Card.Header style={{ textAlign: "center" }}>
-                    <h2>Thông tin hồ sơ</h2>
-                  </Card.Header>
-                  <Card.Body>
-                    <Row>
-                      <Col md={6}>
-                        <p>
-                          <strong>Mã hồ sơ:</strong>{" "}
-                          {studentProfile.studentProfileId}
-                        </p>
-                        <p>
-                          <strong>Ngày tạo hồ sơ:</strong>{" "}
-                          {studentProfile.createDate}
-                        </p>
-                        <p>
-                          <strong>Khai sinh:</strong>{" "}
-                          {studentProfile.dateOfBirth}
-                        </p>
-                        <p>
-                          <strong>Địa chỉ thường trú:</strong>{" "}
-                          {studentProfile.address}
-                        </p>
-                        <p>
-                          <strong>Mã số căn cước công dân:</strong>{" "}
-                          {studentProfile.nationalId}
-                        </p>
-                        <p className="d-flex">
-                          <span style={{ fontWeight: "bold" }}>Bộ hồ sơ</span>
-                          <div>
-                            <button
-                              onClick={handleDownloadFile}
-                              className="btn btn-secondary ml-3"
-                            >
-                              Tải file
-                            </button>
-                          </div>
-                        </p>
-                      </Col>
-                      <Col md={6}>
-                        <p>
-                          <strong>Họ và tên:</strong> {studentProfile.fullName}
-                        </p>
-                        <p>
-                          <strong>Giới tính:</strong> {studentProfile.gender}
-                        </p>
-                        <p>
-                          <strong>Số điện thoại:</strong> {studentProfile.phone}
-                        </p>
-                        <p>
-                          <strong>Email:</strong> {studentProfile.email}
-                        </p>
-                        <p>
-                          <strong>Học vấn :</strong> 
-                          <ul>
-                          {studentProfile?.studyProcess?.split("|").map((item, index) => {
-            const [label, value] = item.split(":");
-            return (
-              <p key={index}>
-                <strong>{label}:</strong> {value}
-              </p>
-            );
-          })}
-                          </ul>
-                        </p>
-                      </Col>
-                    </Row>
-                  </Card.Body>
-                </Card>
+              <Card
+      className="mb-4 shadow"
+      style={{
+        boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)",
+        borderRadius: "10px",
+      }}
+    >
+      <Card.Body>
+        <Row>
+          <Col md={3} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <img
+              src={studentProfile.img || 'https://via.placeholder.com/150'}
+              alt="Profile"
+              style={{ width: '100px', height: '100px', borderRadius: '50%' }}
+            />
+          </Col>
+          <Col md={6}>
+            <h3>{studentProfile.fullName}</h3>
+            <p>{studentProfile.jobTitle}</p>
+            <p>
+              <strong>Mã hồ sơ:</strong> {studentProfile.studentProfileId}
+            </p>
+            <p>
+              <strong>Ngày tạo hồ sơ:</strong> {studentProfile.createDate}
+            </p>
+            <p>
+              <strong>Khai sinh:</strong> {studentProfile.dateOfBirth}
+            </p>
+            <p>
+              <strong>Địa chỉ thường trú:</strong> {studentProfile.address}
+            </p>
+            <p>
+              <strong>Mã số căn cước công dân:</strong> {studentProfile.nationalId}
+            </p>
+            <p>
+              <strong>Học vấn:</strong>
+            </p>
+            <ul>
+              {studentProfile?.studyProcess?.split("|").map((item, index) => {
+                const [label, ...rest] = item.split(":");
+                const value = rest.join(":");
+                return (
+                  <li key={index}>
+                    <strong>{label}:</strong> {value}
+                    {label.startsWith('ThưGiớiThiệu') && (
+                      <ul>
+                        {value.split(",").map((subItem, subIndex) => (
+                          <li key={subIndex}>
+                            {subItem}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+            <p>
+              {/* <strong>GPA tổng:</strong> {overallGPA} */}
+            </p>
+            {/* <Grid container spacing={2} style={{ marginTop: '24px' }}>
+              {schoolProfiles.map((profile, index) => (
+                <Grid item xs={8} sm={4} key={index}>
+                  <Card>
+                    <CardContent>
+                      <Typography variant="h6" align="center">
+                        Lớp {profile.schoolGrade}
+                      </Typography>
+                      <Button
+                        variant="outlined"
+                        onClick={() => handleOpenDialog(profile.img)}
+                        fullWidth
+                      >
+                        Xem ảnh
+                      </Button>
+                      <Dialog
+                        open={openDialog}
+                        onClose={handleCloseDialog}
+                        maxWidth="md"
+                        fullWidth
+                      >
+                        <DialogContent>
+                          <img
+                            src={selectedImage}
+                            alt={`Lớp ${profile.schoolGrade}`}
+                            style={{ width: '100%' }}
+                          />
+                        </DialogContent>
+                      </Dialog>
+                      <Typography variant="body1" align="center" style={{ marginTop: '10px' }}>
+                        <strong>GPA:</strong> {profile.gpa}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid> */}
+          </Col>
+          <Col md={3} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+            <Button variant="secondary" onClick={handleDownloadFile}>File Hồ Sơ</Button>
+          </Col>
+        </Row>
+      </Card.Body>
+    </Card>
+
               </Col>
             </Row>
           </Box>
@@ -631,76 +718,95 @@ console.log("tài liệu:",documents)
               </Row>
             </TabPanel>
             <TabPanel value={tabIndex} index={1}>
-              <Row className="gx-2">
-                <Col md={12}>
-                  <Card
-                    className="mb-4 shadow"
-                    style={{
-                      boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)",
-                      borderRadius: "10px",
-                    }}
-                  >
-                    <Card.Header style={{ textAlign: "center" }}>
-                      <h2>Cập nhật tiến trình hồ sơ</h2>
-                    </Card.Header>
-                    <Card.Body>
-                      <Stepper activeStep={findActiveStageIndex()} alternativeLabel>
-                        {application.applyStage.map((stage, index) => (
-                          <Step key={stage.applyStageId}>
-                            <StepLabel icon={<StepIcon status={stage.status} />}>
-                              {index + 1}. {stage.programStage.stageName}
-                              <div style={{ fontSize: "smaller", color: "gray" }}>
-                                {getStatusText(stage.status)}
-                              </div>
-                            </StepLabel>
-                          </Step>
-                        ))}
-                      </Stepper>
-                      <Form>
-                        <Row className="mb-3">
-                          <Col sm={3}>
-                            <Form.Label>
-                              <strong>Hồ sơ đang ở tiến trình:</strong>
-                            </Form.Label>
-                          </Col>
-                          <Col sm={9}>
-                            <Form.Label>
-                              {" "}
-                              <strong style={{ color: "#007bff" }}>
-                                {activeStage?.programStage?.stageName ||
-                                  "Hồ sơ đã hoàn tiến trình"}
-                              </strong>
-                            </Form.Label>
-                          </Col>
-                          <Col sm={3}>
-                            <Form.Label>
-                              <strong>Phí giai đoạn:</strong>
-                            </Form.Label>
-                          </Col>
-                          <Col sm={9}>
-                            <Form.Label>
-                              {" "}
-                              <strong style={{ color: "#007bff" }}>
-                                {renderPaymentStatus(
-                                  activeStage?.programStage?.isPayment
-                                )}
-                              </strong>
-                            </Form.Label>
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col sm={{ span: 3, offset: 9 }}>
-                            <Button variant="primary" onClick={updateStages}>
-                              Cập nhật
-                            </Button>
-                          </Col>
-                        </Row>
-                      </Form>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              </Row>
-            </TabPanel>
+  <Row className="gx-2">
+    <Col md={12}>
+      <Card
+        className="mb-4 shadow"
+        style={{
+          boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)",
+          borderRadius: "10px",
+        }}
+      >
+        <Card.Header style={{ textAlign: "center" }}>
+          <h2>Cập nhật tiến trình hồ sơ</h2>
+        </Card.Header>
+        <Card.Body>
+          <Stepper activeStep={findActiveStageIndex()} alternativeLabel>
+            {application.applyStage.map((stage, index) => (
+              <Step key={stage.applyStageId}>
+                <StepLabel icon={<StepIcon status={stage.status} />}>
+                  {index + 1}. {stage.programStage.stageName}
+                  <div style={{ fontSize: "smaller", color: "gray" }}>
+                    {getStatusText(stage.status)}
+                  </div>
+                </StepLabel>
+              </Step>
+            ))}
+          </Stepper>
+          <Form>
+            <Row className="mb-3 mt-5 ml-3">
+              <Col sm={3}>
+                <Form.Label>
+                  <strong>Hồ sơ đang ở tiến trình:</strong>
+                </Form.Label>
+              </Col>
+              <Col sm={9}>
+                <Form.Label>
+                  {" "}
+                  <strong style={{ color: "#007bff" }}>
+                    {activeStage?.programStage?.stageName ||
+                      "Hồ sơ đã hoàn tiến trình"}
+                  </strong>
+                </Form.Label>
+              </Col>
+              <Col sm={3}>
+                <Form.Label>
+                  <strong>Phí giai đoạn:</strong>
+                </Form.Label>
+              </Col>
+              <Col sm={9}>
+                <Form.Label>
+                  {" "}
+                  <strong style={{ color: "#007bff" }}>
+                  {renderPaymentStatus(activeStage?.programStage?.isPayment)} 
+
+                  </strong>
+                </Form.Label>
+              </Col>
+              <Col sm={3}>
+                <Form.Label>
+                  <strong>Phí cần đóng:</strong>
+                </Form.Label>
+              </Col>
+              <Col sm={9}>
+                <Form.Label>
+                  {" "}
+                  <strong style={{ color: "#007bff" }}>
+               {getStageFee(activeStage?.programStage?.programFeeId)} VND 
+
+                  </strong>
+                </Form.Label>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={{ span: 3, offset: 9 }}>
+                <Button variant="primary" onClick={updateStages}>
+                  Cập nhật
+                </Button>
+              </Col>
+            </Row>
+          </Form>
+          
+  
+
+          {/* End of New Table for Program Document */}
+          
+        </Card.Body>
+      </Card>
+    </Col>
+  </Row>
+</TabPanel>
+
             <TabPanel value={tabIndex} index={2}>
               <Typography variant="h6" gutterBottom>
                 Lịch sử thanh toán
@@ -730,12 +836,12 @@ console.log("tài liệu:",documents)
                           {payment.paymentId}
                         </TableCell>
                         <TableCell align="right">
-                          {payment.amount.toLocaleString()}
+                          {payment.amount.toLocaleString()} VND
                         </TableCell>
                         <TableCell align="right">{payment.method}</TableCell>
                         <TableCell align="right">{payment.note}</TableCell>
                         <TableCell align="right">
-                          {new Date(payment.paymentDate).toLocaleDateString()}
+                          {new Date(payment.paymentDate).toLocaleDateString()} 
                         </TableCell>
                         <TableCell align="right">
                           {getPaymentStatusLabel(payment.status)}
@@ -800,6 +906,70 @@ console.log("tài liệu:",documents)
               </Box>
             </TabPanel>
             <TabPanel value={tabIndex} index={3}> {/* Add new TabPanel */}
+                      {/* New Table for Program Document */}
+          <Typography variant="h6" gutterBottom style={{ marginTop: '20px' }}>
+            Tài liệu chương trình
+          </Typography>
+          <TableContainer component={Paper} sx={{ margin: '20px 0' }}>
+  <Table
+    sx={{
+      minWidth: 600,
+      maxWidth: 1400,
+      margin: 'auto',
+      borderCollapse: 'separate',
+      borderSpacing: '0 10px',
+      '& thead th': {
+        backgroundColor: '#f5f5f5',
+        fontWeight: 'bold',
+        textAlign: 'center',
+      },
+      '& tbody tr': {
+        backgroundColor: '#fff',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+        borderRadius: '10px',
+        overflow: 'hidden',
+      },
+      '& tbody td': {
+        padding: '16px',
+        textAlign: 'center',
+      },
+      '& tbody td:first-of-type': {
+        borderTopLeftRadius: '10px',
+        borderBottomLeftRadius: '10px',
+      },
+      '& tbody td:last-of-type': {
+        borderTopRightRadius: '10px',
+        borderBottomRightRadius: '10px',
+      },
+    }}
+    aria-label="program document table"
+  >
+    <TableHead>
+      <TableRow>
+        <TableCell >ID</TableCell>
+        <TableCell sx={{ width: '15%' }} align="center">Tên tài liệu</TableCell>
+        <TableCell align="center">Mô tả</TableCell>
+      </TableRow>
+    </TableHead>
+    <TableBody>
+      {programDocuments?.map((document) => (
+        <TableRow key={document.programDocumentId}>
+          <TableCell component="th" scope="row" >
+            {document.programDocumentId}
+          </TableCell>
+          <TableCell align="center" sx={{ width: '15%' }}>{document.documentTypeDto?.typeName}</TableCell>
+          <TableCell align="left" sx={{ textAlign: 'left', whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>
+            <Typography
+              style={{ textAlign: 'left' }}
+              dangerouslySetInnerHTML={{ __html: formatDescription1(document.description) }}
+            />
+          </TableCell>
+        </TableRow>
+      ))}
+    </TableBody>
+  </Table>
+</TableContainer>
+
               <Typography variant="h6" gutterBottom>
                 Tài liệu đã nộp
               </Typography>

@@ -11,6 +11,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { imageDb } from "../../FirebaseImage/Config";
 import CreateUniversityModal from "./create-university";
 import jwtDecode from "jwt-decode";
+import { Backdrop, CircularProgress } from "@mui/material";
 
 
 const AllUniversitiesStaffPage = () => {
@@ -144,8 +145,12 @@ const AllUniversitiesStaffPage = () => {
       return (
         <div className="row">
           {loading ? (
-            <div>Loading...</div>
-          ) : (
+    <Backdrop
+    sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+    open={loading}
+  >
+    <CircularProgress color="inherit" />
+  </Backdrop>          ) : (
             currentUniversities.map((university, index) => (
               <div className="col-lg-4 col-md-6 col-sm-6 col-12 mb-4" key={index}>
                 <div className="card mx-4 mt-4" style={{ width: '450px', height: '551px',boxShadow: "0 4px 8px rgba(0,0,0,0.1)", borderRadius: "10px" }}>

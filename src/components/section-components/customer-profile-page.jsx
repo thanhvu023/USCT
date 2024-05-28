@@ -1,4 +1,4 @@
-import { Backdrop, CircularProgress } from "@mui/material";
+import { Avatar, Backdrop, CircularProgress } from "@mui/material";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import jwtDecode from "jwt-decode";
 import React, { Fragment, useEffect, useState } from "react";
@@ -159,7 +159,7 @@ const CustomerProfilePage = () => {
               <div className="profile-head">
                 <div className="profile-info d-flex">
                   <div className="profile-photo ">
-                    <img
+                    <Avatar
                       src={
                         avatar
                           ? avatar
