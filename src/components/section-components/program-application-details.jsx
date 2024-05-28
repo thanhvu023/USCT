@@ -23,12 +23,16 @@ import {
   Avatar,
   Chip,
   IconButton,
-  
+  Dialog,
+  Button,
+  DialogActions, DialogContent, DialogTitle,
+  ButtonBase,
 
 } from "@mui/material";
+import SendIcon from '@mui/icons-material/Send'; 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-
+import FastForwardIcon from '@mui/icons-material/FastForward';
 import { styled } from "@mui/system";
 
 import { FaChevronDown, FaChevronRight } from "react-icons/fa";
@@ -40,7 +44,7 @@ import {  getAllProgramFees } from '../../redux/slice/programFeeSlice';
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { imageDb } from "../FirebaseImage/Config";
 import { useNavigate } from "react-router-dom";
-import { Modal, ListGroup,Button, Row, Col,  Form, InputGroup, FormControl,
+import { Modal, ListGroup, Row, Col,  Form, InputGroup, FormControl,
   Badge,ListGroupItem, 
   CardTitle} from 'react-bootstrap';
 import { getAllFeeTypes } from '../../redux/slice/feeTypeSlice';
@@ -57,6 +61,7 @@ import { getAllStudentCertificatesByProfile } from "../../redux/slice/studentCer
 import { createDocument, getDocumentsByProgramApplicationId } from "../../redux/slice/student-document";
 import { getAllDocumentTypes } from "../../redux/slice/documentTypesSlice";
 import { getFile } from "../../redux/slice/authSlice";
+import { getSchoolProfilesByStudentProfileId } from "../../redux/slice/schoolProfileSlice";
 const StyledCard = styled(Card)(({ theme }) => ({
   border: `1px solid ${theme.palette.divider || '#e0e0e0'}`,
   boxShadow: theme.shadows ? theme.shadows[3] : '0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12)',
@@ -71,7 +76,18 @@ const   ProgramApplicationDetails = () => {
   const [showModal, setShowModal] = useState(false);
   const [tabIndex, setTabIndex] = useState(0);
   const [expanded, setExpanded] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
 
+  const handleClickOpen = (file) => {
+    setSelectedFile(file);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedFile(null);
+  };
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
@@ -166,6 +182,7 @@ const handleTabChange = (event, newValue) => {
   const studentCertificates = useSelector((state) => state.studentCertificate.studentCertificates);
   console.log("studentCertificates",studentCertificates)
   const documents = useSelector(state => state.studentDocument.documentsByProgramApplicationId); 
+  const schoolProfiles = useSelector((state) => state.schoolProfile.schoolProfilesByStudentProfileId);
 
 const getStageNameByProgramStageId = () =>{
 
@@ -193,6 +210,7 @@ const getStageNameByProgramStageId = () =>{
     useEffect(() => {
       if (details?.studentProfileId) {
         dispatch(getAllStudentCertificatesByProfile(details?.studentProfileId));
+        dispatch(getSchoolProfilesByStudentProfileId(details?.studentProfileId));
       }
     }, [dispatch, details?.studentProfileId]);
   const handleNoteChange = (event) => {
@@ -577,6 +595,15 @@ const handleCreateVnPayLink = async () => {
         });
     });
   };
+
+  const calculateOverallGPA = () => {
+    const year10 = schoolProfiles.find(profile => profile.schoolGrade === 10)?.gpa || 0;
+    const year11 = schoolProfiles.find(profile => profile.schoolGrade === 11)?.gpa || 0;
+    const year12 = schoolProfiles.find(profile => profile.schoolGrade === 12)?.gpa || 0;
+    const overallGPA = (year10 + year11 + year12) / 3;
+    return overallGPA.toFixed(2);
+  };
+
   return (
 <div style={{ maxHeight: "100vh",backgroundColor:'#F0F4F9'  }}> 
       <Backdrop
@@ -669,39 +696,102 @@ const handleCreateVnPayLink = async () => {
       </Grid>
     </CardContent>
   </Card>
-
   <Card raised sx={{ mt: 2 }}>
-    <CardContent>
-      <Typography variant="h5" gutterBottom >
-        Quá trình học tập và Chứng chỉ
-      </Typography>
-      <Typography variant="body1">
-        <Typography variant="h6"style={{color:'#6A73FA'}}>Quá trình học tập</Typography> 
-        <ul>
-          {details?.studentProfile?.studyProcess?.split("|").map((item, index) => {
-            const [label, value] = item.split(":");
-            return (
-              <p key={index}>
-                <strong>{label}:</strong> {value}
-              </p>
-            );
-          })}
-        </ul>
-      </Typography>
-      <Typography variant="h6"style={{color:'#6A73FA'}}>
-      <strong>Chứng chỉ </strong> 
-      <ul>
-        {studentCertificates.map((certificate, index) => (
-  <Chip
-  key={index}
-  label={certificate?.certificateTypeDto?.certificateName}
-  color="primary"
+                  <CardContent>
+                    <Typography variant="h5" gutterBottom>
+                      Quá trình học tập và Chứng chỉ
+                    </Typography>
+                    <Typography variant="body1">
+                      <Typography variant="h6" style={{ color: '#6A73FA' }}>Quá trình học tập</Typography>
+                      <ul>
+                        {details?.studentProfile?.studyProcess?.split("|").map((item, index) => {
+                          const [label, value] = item.split(":");
+                          return (
+                            <p key={index}>
+                              <strong>{label}:</strong> {value}
+                            </p>
+                          );
+                        })}
+                      </ul>
+                    </Typography>
+                    <Typography variant="h6" style={{ color: '#6A73FA' }}>
+                      <strong>Chứng chỉ</strong>
+                      <ul style={{ marginTop: '0 auto' }}>
+                        {studentCertificates.map((certificate, index) => (
+                          <li key={index} style={{margin:"12px"}}>
+                            <Chip
+                              label={`${certificate?.certificateTypeDto?.certificateName} - ${certificate.certificateValue}`}
+                              color="primary"
+                            
+                            />
+                            <Button style={{marginLeft:'10px'}} variant="outlined"  onClick={() => handleClickOpen(certificate.file)}>Xem chứng chỉ</Button>
+                          </li>
+                        ))}
+                      </ul>
+                    </Typography>
 
-/>        ))}
-      </ul>     
-       </Typography>
-    </CardContent>
-  </Card>
+                    <Typography variant="h6" style={{ color: '#6A73FA' }}>Điểm học bạ</Typography>
+                    <Typography variant="body1" align="center" style={{ marginTop: '10px' }}>
+                      <strong>GPA tổng:</strong> {calculateOverallGPA()}
+                    </Typography>
+                                        <Grid container spacing={2}>
+                      {schoolProfiles.map((profile, index) => (
+                        <Grid item xs={12} sm={4} key={index} mt={4}>
+                          <Card>
+                            <CardContent>
+                              <Typography variant="h6" align="center">
+                                Lớp {profile.schoolGrade}
+                              </Typography>
+                              <Button
+                                variant="outlined"
+                                onClick={() => handleClickOpen(profile.img)}
+                                fullWidth
+                              >
+                                Xem ảnh
+                              </Button>
+                              <Dialog
+                                open={open}
+                                onClose={handleClose}
+                                maxWidth="md"
+                                fullWidth
+                              >
+                                <DialogContent>
+                                  <img
+                                    src={selectedFile}
+                                    alt={`Lớp ${profile.schoolGrade}`}
+                                    style={{ width: '100%' }}
+                                  />
+                                </DialogContent>
+                              </Dialog>
+                              <TableContainer component={Paper} style={{ marginTop: '10px' }}>
+                                <Table aria-label="simple table">
+                                  <TableHead>
+                                    <TableRow>
+                                      <TableCell>Môn học</TableCell>
+                                      <TableCell>Điểm</TableCell>
+                                    </TableRow>
+                                  </TableHead>
+                                  <TableBody>
+                                    {profile.profileScoreDtos.map((score) => (
+                                      <TableRow key={score.profileScoreId}>
+                                        <TableCell>{score.subjectDto.subjectName}</TableCell>
+                                        <TableCell>{score.score}</TableCell>
+                                      </TableRow>
+                                    ))}
+                                  </TableBody>
+                                </Table>
+                              </TableContainer>
+                              <Typography variant="body1" align="center" style={{ marginTop: '10px' }}>
+                                <strong>GPA:</strong> {profile.gpa}
+                              </Typography>
+                            </CardContent>
+                          </Card>
+                        </Grid>
+                      ))}
+                    </Grid>
+                    
+                  </CardContent>
+                </Card>
 {/*     
         <div className="row mt-4">
         <Grid container direction="column" flexWrap="nowrap" spacing={2}>
@@ -811,6 +901,10 @@ const handleCreateVnPayLink = async () => {
               <i className="fa fa-forward" />
               <span>Giai đoạn hồ sơ:</span> {activeStage ? activeStage.programStage.stageName : "Không có giai đoạn đang xử lý"}
             </li>
+            <li>
+              <i className="fa fa-address-card" />
+              <span>Mô tả chương trình</span> {details.program?.description}
+            </li>
             {/* <li>
               <Button variant="contained" color="primary" onClick={handleNavigateToProfile}>
                 XEM HỒ SƠ HỌC SINH ỨNG TUYỂN VÀO CHƯƠNG TRÌNH NÀY
@@ -907,7 +1001,7 @@ const handleCreateVnPayLink = async () => {
                                 />
                               </Col>
                             </Form.Group>
-                            <Button variant="primary" type="submit">Tải lên</Button>
+                            <Button variant="contained" type="submit" endIcon={<SendIcon />}>Tải lên</Button>
                           </form>
                           </CardContent>
                           </Card>
@@ -1073,12 +1167,12 @@ const handleCreateVnPayLink = async () => {
   <InputGroup.Text>Note:</InputGroup.Text>
   <FormControl as="textarea" rows={3} value={note} onChange={handleNoteChange} />
 </InputGroup>
-<Button variant="primary" onClick={() => setShowModal(true)}>Xác nhận</Button>
+<Button variant="contained" onClick={() => setShowModal(true)}>Xác nhận</Button>
 
 {paymentSuccess && (
   <div style={{marginLeft:'16px', marginTop:'10px'}}>
     <input type="file" onChange={handleFileChange} />
-    <Button n variant="primary" onClick={handleImageUpload}>Tải ảnh lịch sử giao dịch</Button>
+    <Button  variant="contained" onClick={handleImageUpload}>Tải ảnh lịch sử giao dịch</Button>
   </div>
 )}
 <Modal show={showModal} onHide={() => setShowModal(false)} centered>
@@ -1103,10 +1197,10 @@ const handleCreateVnPayLink = async () => {
 </Modal.Body>
 
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
+          <Button variant="contained" color="error" onClick={() => setShowModal(false)}>
             Hủy
           </Button>
-          <Button variant="primary" onClick={handlePaymentSubmit}>Xác nhận</Button>
+          <Button variant="contained" onClick={handlePaymentSubmit}>Xác nhận</Button>
 
         </Modal.Footer>
       </Modal>
@@ -1142,7 +1236,7 @@ Hoặc có thể đóng toàn bộ phí cho tiến trình (cập nhật tự đ�
                                             .toLocaleString()} VND (Tổng các loại phí)
                                     </Typography>
                                 </Col>
-                                <Button  variant="warning" onClick={handleCreateVnPayLink} style={{ marginLeft: '10px', marginTop:'38px' }}>
+                                <Button  variant="contained" color="success"  endIcon={<FastForwardIcon />} onClick={handleCreateVnPayLink} style={{ marginLeft: '10px', marginTop:'38px' }}>
                                     Thanh toán bằng VNPAY
                                 </Button>
                             </Form.Group>
@@ -1224,8 +1318,8 @@ Hoặc có thể đóng toàn bộ phí cho tiến trình (cập nhật tự đ�
     </Table>
   </TableContainer>
   <Box sx={{ display: 'flex', justifyContent: 'space-between ', margin: '20px' }}>
-    <Button variant="primary" onClick={prevPage} disabled={page === 0}>Trước</Button>
-    <Button variant="primary" onClick={nextPage} disabled={page + 1 === pageCount}>Kế tiếp</Button>
+    <Button variant="contained" onClick={prevPage} disabled={page === 0}>Trước</Button>
+    <Button variant="contained" onClick={nextPage} disabled={page + 1 === pageCount}>Kế tiếp</Button>
   </Box>
 </TabPanel>
 
@@ -1288,8 +1382,9 @@ Hoặc có thể đóng toàn bộ phí cho tiến trình (cập nhật tự đ�
 
 
   <Box sx={{ display: 'flex', justifyContent: 'space-between', margin: '20px' }}>
-    <Button variant="primary" onClick={prevPage} disabled={page === 0}>Trước</Button>
-    <Button variant="primary" onClick={nextPage} disabled={page + 1 === pageCount}>Kế tiếp</Button>
+    <Button variant="contained" onClick={prevPage} disabled={page === 0}>Trước</Button>
+    <Button variant="contained" onClick={nextPage} disabled={page + 1 === pageCount}>Kế tiếp</Button>
+
   </Box>
 </TabPanel>
 

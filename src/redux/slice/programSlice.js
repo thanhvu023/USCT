@@ -242,6 +242,9 @@ export const programSlice = createSlice({
   state.programsByMajor=[]
 
     },
+    resetProgramById: (state) => {
+      state.programById = {};
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -351,6 +354,6 @@ export const programSlice = createSlice({
 });
 const {
   reducer: programReducer,
-  actions: { logoutProgram },
+  actions: { logoutProgram,resetProgramById  },
 } = programSlice;
-export { programReducer as default, logoutProgram };
+export { programReducer as default, logoutProgram,resetProgramById  };

@@ -12,7 +12,7 @@ import Swal from "sweetalert2"; // Import Swal
 import jwtDecode from "jwt-decode";
 import { generateToken, messaging } from "../FirebaseImage/Config";
 import { onMessage } from "firebase/messaging";
-import { Badge, IconButton, Tooltip } from "@mui/material";
+import { Badge, IconButton, Tooltip, Typography } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import BasicMenu from "./basicMenu";
 import { logoutStudent } from "../../redux/slice/studentSlice";
@@ -192,6 +192,7 @@ function Navbar() {
             )}
             {token && (
               <div className="nav-right-part nav-right-part-desktop d-flex align-items-center">
+
                 <div>
                   <Tooltip
                     title={
@@ -218,6 +219,7 @@ function Navbar() {
                   />
                   {/* )} */}
                 </div>
+
                 <Dropdown className="nav-item header-profile">
                   <Dropdown.Toggle
                     to={"#"}
@@ -260,7 +262,8 @@ function Navbar() {
                   </Dropdown.Menu>
                 </Dropdown>
 
-                
+                <Typography variant="body1"> {userDetail.fullName}</Typography>
+
               </div>
             )}
           </div>

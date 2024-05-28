@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   getAllProgramApplication,
   getProgramApplicationById,
+  updateProgramApplication,
 } from "../../../redux/slice/programApplicationSlice";
 import { getStudentProfileById } from "../../../redux/slice/studentSlice";
 import { getProgramById } from "../../../redux/slice/programSlice";
@@ -39,7 +40,9 @@ const theadData = [
   // { heading: "Tư vấn viên phụ trách", sortingVale: "advisor" },
   { heading: "Ngày tạo", sortingVale: "date" },
   { heading: "Chương trình ứng tuyển", sortingVale: "program" },
+  { heading: "Tiến trình hồ sơ", sortingVale: "stages" },
   { heading: "Trạng thái hồ sơ", sortingVale: "status" },
+
   { heading: "Thao tác", sortingVale: "action" },
 ];
 const style = {
@@ -336,130 +339,165 @@ const paginationLength = Math.ceil(filteredData.length / itemsPerPage);
 const handlePageChange = (newPage) => {
   setActivePage(newPage);
 };
+const getStatusText = (status) => {
+  switch (status) {
+    case 0:
+      return "Đang xử lí";
+    case 1:
+      return "Bổ sung tài liệu";
+    case 2:
+      return "Đăng ký thành công";
+    case 3:
+      return "Hủy bỏ đăng ký";
+    default:
+      return "Không xác định";
+  }
+};
+const handleStatusChange = (applicationId, newStatus) => {
+  const application = programApplications.find(app => app.programApplicationId === applicationId);
+  dispatch(updateProgramApplication({
+    ...application,
+    status: newStatus,
+  })).then(() => {
+    dispatch(getAllProgramApplication());
+  });
+};
 
-  return (
-    <div style={{ maxHeight: "100vh" }}>
-      <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={loading}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
-      <Row>
-        <div className="col-lg-12">
-          <Card className="mb-4">
-            <Card.Header as="h4">
-              Danh sách hồ sơ đăng ký chương trình
-            </Card.Header>
-            <Card.Body>
-              <Form>
-                <Row className="mb-3">
-                  {/* <Col sm={3}>
-                    <Form.Control type="search"  onChange={searchData} placeholder="Search" />
-                  </Col> */}
-                  {/* <Col sm={3}>
-                    <div className="d-flex">
-                      <Typography>hiển thị </Typography>
-                      <Form.Select
-                        value={sort}
-                        onChange={(e) => setSortData(e.target.value)}
-                      >
-                        <option value="10">10</option>
-                        <option value="20">20</option>
-                        <option value="30">30</option>
-                      </Form.Select>
-                      <Typography> hàng</Typography>
-                    </div>
-                  </Col> */}
-                </Row>
-              </Form>
-              <div className="table-responsive">
-                <Table striped bordered hover responsive>
-                  <thead>
-                  <tr>
-                        {theadData.map((item, index) => (
-                          <th key={index}>{item.heading}</th>
-                        ))}
-                      </tr>
-                  </thead>
-                  <tbody>
-                    {displayedData.map((item, index) => (
-                      <tr key={index}>
-                        <td>{item.programApplicationId}</td>
-                        <td>{item.studentProfile?.fullName}</td>
-                        <td>{item.studentProfile?.createDate}</td>
-                        <td>{item.program?.nameProgram}</td>
-                        <td>{findActiveStageName(item)}</td>
-                        <td>
-                          <Button onClick={() => handleDetailClick(item)}>Chi tiết   <i className="fa fa-info-circle" /></Button>
-                          {/* <Button onClick={() => handleDetailClick(item)}>Thanh toán</Button> */}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-               
 
-                </Table>
-                <div className="pagination-wrapper">
-                  <div className="pagination justify-content-center mt-4">
-                    <button
-                      className={`btn ${activePage === 0 ? "disabled" : ""}`}
-                      onClick={() => setActivePage(Math.max(0, activePage - 1))}
+return (
+  <div style={{ maxHeight: "100vh" }}>
+    <Backdrop
+      sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+      open={loading}
+    >
+      <CircularProgress color="inherit" />
+    </Backdrop>
+    <Row>
+      <div className="col-lg-12">
+        <Card className="mb-4">
+          <Card.Header as="h4">
+            Danh sách hồ sơ đăng ký chương trình
+          </Card.Header>
+          <Card.Body>
+            <Form>
+              <Row className="mb-3">
+                {/* <Col sm={3}>
+                  <Form.Control type="search"  onChange={searchData} placeholder="Search" />
+                </Col> */}
+                {/* <Col sm={3}>
+                  <div className="d-flex">
+                    <Typography>hiển thị </Typography>
+                    <Form.Select
+                      value={sort}
+                      onChange={(e) => setSortData(e.target.value)}
                     >
-                      Trước
-                    </button>
-                    {[...Array(paginationLength).keys()].map(page => (
-                      <button
-                        key={page}
-                        className={`btn ${activePage === page ? "btn-primary" : "btn-light"}`}
-                        onClick={() => setActivePage(page)}
-                      >
-                        {page + 1}
-                      </button>
-                    ))}
-                    <button
-                      className={`btn ${activePage === paginationLength - 1 ? "disabled" : ""}`}
-                      onClick={() => setActivePage(Math.min(paginationLength - 1, activePage + 1))}
-                    >
-                      Sau
-                    </button>
+                      <option value="10">10</option>
+                      <option value="20">20</option>
+                      <option value="30">30</option>
+                    </Form.Select>
+                    <Typography> hàng</Typography>
                   </div>
-</div>
+                </Col> */}
+              </Row>
+            </Form>
+            <div className="table-responsive">
+              <Table striped bordered hover responsive>
+                <thead>
+                  <tr>
+                    {theadData.map((item, index) => (
+                      <th key={index}>{item.heading}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {displayedData.map((item, index) => (
+                    <tr key={index}>
+                      <td>{item.programApplicationId}</td>
+                      <td>{item.studentProfile?.fullName}</td>
+                      <td>{item.studentProfile?.createDate}</td>
+                      <td>{item.program?.nameProgram}</td>
+                      <td>{findActiveStageName(item)}</td>
+                      <td>
+                  
+                          <Form.Control
+                            as="select"
+                            value={item.status}
+                            onChange={(e) => handleStatusChange(item.programApplicationId, parseInt(e.target.value))}
+                          >
+                             <option value={0}>Đang xử lí</option>
+                            <option value={1}>Bổ sung tài liệu</option>
+                            <option value={2}>Đăng ký thành công</option>
+                            <option value={3}>Hủy bỏ đăng ký</option>
+                          </Form.Control>
+                      </td>
+                      <td>
+                        <Button onClick={() => handleDetailClick(item)}>Chi tiết   <i className="fa fa-info-circle" /></Button>
+                        {/* <Button onClick={() => handleDetailClick(item)}>Thanh toán</Button> */}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+              <div className="pagination-wrapper">
+                <div className="pagination justify-content-center mt-4">
+                  <button
+                    className={`btn ${activePage === 0 ? "disabled" : ""}`}
+                    onClick={() => setActivePage(Math.max(0, activePage - 1))}
+                  >
+                    Trước
+                  </button>
+                  {[...Array(paginationLength).keys()].map(page => (
+                    <button
+                      key={page}
+                      className={`btn ${activePage === page ? "btn-primary" : "btn-light"}`}
+                      onClick={() => setActivePage(page)}
+                    >
+                      {page + 1}
+                    </button>
+                  ))}
+                  <button
+                    className={`btn ${activePage === paginationLength - 1 ? "disabled" : ""}`}
+                    onClick={() => setActivePage(Math.min(paginationLength - 1, activePage + 1))}
+                  >
+                    Sau
+                  </button>
+                </div>
               </div>
-              <Modal
-                show={selectedProfileId}
-                onHide={handleCloseModal}
-                centered
-              >
-                <Modal.Header closeButton>
-                  <Modal.Title>Hồ sơ học sinh</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                  {studentProfile && (
-                    <div>
-                      <p>
-                        <strong>Name:</strong> {studentProfile.fullName}
-                      </p>
-                      <p>
-                        <strong>Email:</strong> {studentProfile.email}
-                      </p>
-                      <p>
-                        <strong>Date of Birth:</strong>{" "}
-                        {studentProfile.dateOfBirth}
-                      </p>
-                      <p>
-                        <strong>Gender:</strong> {studentProfile.gender}
-                      </p>
-                    </div>
-                  )}
-                </Modal.Body>
-              </Modal>
-            </Card.Body>
-          </Card>
-        </div>
-      </Row>
-    </div>
-  );
+            </div>
+            <Modal
+              show={selectedProfileId}
+              onHide={handleCloseModal}
+              centered
+            >
+              <Modal.Header closeButton>
+                <Modal.Title>Hồ sơ học sinh</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                {studentProfile && (
+                  <div>
+                    <p>
+                      <strong>Name:</strong> {studentProfile.fullName}
+                    </p>
+                    <p>
+                      <strong>Email:</strong> {studentProfile.email}
+                    </p>
+                    <p>
+                      <strong>Date of Birth:</strong>{" "}
+                      {studentProfile.dateOfBirth}
+                    </p>
+                    <p>
+                      <strong>Gender:</strong> {studentProfile.gender}
+                    </p>
+                  </div>
+                )}
+              </Modal.Body>
+            </Modal>
+          </Card.Body>
+        </Card>
+      </div>
+    </Row>
+  </div>
+);
 };
 
 export default ProgramApplicationPage;

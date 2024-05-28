@@ -6,7 +6,7 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getStudentProfileById } from "../../../redux/slice/studentSlice";
-import { Backdrop, CircularProgress } from "@mui/material";
+import { Avatar, Backdrop, CircularProgress, Container, Box, Typography, Card, CardContent, Grid, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
 import { getFile, setStudentFileUrl } from "../../../redux/slice/authSlice";
 
 const StudentProfileDetails = () => {
@@ -201,7 +201,7 @@ const StudentProfileDetails = () => {
               <div className="profile-tab">
                 <div className="custom-tab-1">
                   <div className="profile-personal-info mt-3">
-                    <h4 className="text-primary mb-4">Thông Tin Học Sinh</h4>
+                    <h3 className="text-primary mb-4"  style={{textAlign:'center'}}>Thông Tin Học Sinh</h3>
                     <div className="col-lg-12">
                       <div
                         className="card overflow-hidden"
@@ -210,12 +210,11 @@ const StudentProfileDetails = () => {
                         <div className="row">
                           <div className="col-lg-5">
                             <div className="text-center p-3 overlay-box">
-                              <div className="profile-photo">
-                                <img
+                              <div className="profile-photo" style={{ display:'flex',justifyContent:'center',alignItems:'center' }}> 
+                                <Avatar
                                   src={studentDetail.img}
                                   alt="img"
-                                  className="bg-info rounded-circle mb-4"
-                                  style={{ width: "100px", height: "100px" }}
+                                  style={{ width: "80px", height: "80px" }}
                                 />
                               </div>
                               <h3 className="mt-3 mb-1 text-black">
@@ -273,86 +272,65 @@ const StudentProfileDetails = () => {
                   </div>
                   <div className="profile-about-me">
                     <div className="pt-4 border-bottom-1 ">
-                      <h4 className="text-primary">Trình độ học vấn</h4>
+                    <Typography variant="h5" color="primary">1. Quá trình học tập</Typography>
                       {studentDetail.studyProcess}
-                      <div className="profile-skills">
-                        <h4 className="text-primary mb-2">
-                          Văn bằng tiếng anh
-                        </h4>
-                        <div className="education-item d-flex flex-wrap">
-                          {(studentDetail.certificateDtos || []).map(
-                            (item, index) => (
-                              <div
-                                key={index}
-                                className="education-details"
-                                style={{
-                                  marginRight: "30px",
-                                }}
-                              >
-                                <ul className="col-lg-12">
-                                  <li className="">
-                                    Chứng chỉ tiếng anh:{" "}
-                                    {item.certificateTypeDto.certificateName}
-                                  </li>
-                                  <li>
-                                    Trình độ tiếng anh: {item.certificateValue}
-                                  </li>
-                                </ul>
-                              </div>
-                            )
-                          )}
-                        </div>
-                      </div>
+                      <Box mt={4}>
+                  <Typography variant="h5" color="primary"style={{marginBottom:'10px'}}>2. Văn bằng tiếng Anh</Typography>
+                  <TableContainer component={Paper}>
+                    <Table>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Chứng chỉ</TableCell>
+                          <TableCell>Trình độ</TableCell>
+                          <TableCell>Tải về</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {studentDetail.certificateDtos.map((item, index) => (
+                          <TableRow key={index}>
+                            <TableCell>{item.certificateTypeDto.certificateName}</TableCell>
+                            <TableCell>{item.certificateValue}</TableCell>
+                            <TableCell>
+                              <Button onClick={() => handleDownloadFile(item.file, `${item.certificateTypeDto.certificateName}.jpg`)} variant="contained" color="primary">
+                                Tải về
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </Box>
+                <Box mt={4}>
+                  <Typography variant="h5" color="primary" style={{marginBottom:'10px'}}>3. Điểm học bạ</Typography>
+                  <TableContainer component={Paper}>
+                    <Table>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Năm học</TableCell>
+                          <TableCell>GPA</TableCell>
+                          <TableCell>Tải về</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {studentDetail.schoolProfileDtos.map((item, index) => (
+                          <TableRow key={index}>
+                            <TableCell>Lớp {item.schoolGrade}</TableCell>
+                            <TableCell>{item.gpa}</TableCell>
+                            <TableCell>
+                              <Button onClick={() => handleDownloadFile(item.img, `Diem_nam_lop_${item.schoolGrade}.jpg`)} variant="contained" color="primary">
+                                Tải về
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </Box>
                     </div>
                   </div>
-                  <div className="profile-skills">
-                    <h4 className="text-primary mb-2">Điểm học bạ</h4>
-                    <div className="education-item ">
-                      {(studentDetail.schoolProfileDtos || []).map(
-                        (item, index) => (
-                          <div
-                            key={index}
-                            className="education-details d-flex"
-                            style={{
-                              marginRight: "90px",
-                            }}
-                          >
-                            <ul className="col-lg-6">
-                              <li>Điểm năm lớp {item.schoolGrade}:</li>
-                              <li className="d-flex">
-                                Tổng điểm trung bình năm lớp {item.schoolGrade}:
-                                <p className=" ml-2">{item.gpa}</p>
-                              </li>
-                            </ul>
-                            <button
-                              onClick={() =>
-                                handleDownloadFile(
-                                  item.img,
-                                  `Diem_nam_lop_${item.schoolGrade}.jpg`
-                                )
-                              }
-                              className="ml-5 btn"
-                              style={{
-                                width: "120px",
-                                height: "40px",
-                                display: "inline-block",
-                                textAlign: "center",
-                                lineHeight: "30px",
-                                backgroundColor: "#007bff",
-                                color: "#fff",
-                                borderRadius: "4px",
-                                border: "none",
-                                cursor: "pointer",
-                                fontSize: "15px",
-                              }}
-                            >
-                              Tải về
-                            </button>
-                          </div>
-                        )
-                      )}
-                    </div>
-                  </div>
+                  
                 </div>
               </div>
             )}

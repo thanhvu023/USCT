@@ -191,7 +191,20 @@ const ProgramApplicationPageAdmin = ({setMain }) => {
     searchData(searchTerm);
   }, [searchTerm]);
   
-
+  const getStatusText = (status) => {
+    switch (status) {
+      case 0:
+        return "Đang xử lí";
+      case 1:
+        return "Bổ sung tài liệu";
+      case 2:
+        return "Đăng ký thành công";
+      case 3:
+        return "Hủy bỏ đăng ký";
+      default:
+        return "Không xác định";
+    }
+  };
   const handleCloseCheckModal = () => setShowCheckModal(false);
 
 
@@ -353,7 +366,7 @@ const ProgramApplicationPageAdmin = ({setMain }) => {
                           <td>{application.studentProfile?.createDate}</td>
                           <td>{application.program?.nameProgram}</td>
                       
-      <td>{findActiveStageName(application)}</td>
+      <td>{getStatusText(application.status)}</td>
                    
       {/* <td style={{textAlign: "center", VerticalAlign: "middle"}}>
   <Button variant="info"  onClick={() => handleCreateFee(application)}>

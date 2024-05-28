@@ -91,6 +91,7 @@ const PaymentDetailsPage = () => {
   const applyStages = useSelector((state) => state.applyStage.applyStages || []);
   const activeStage = application?.applyStage?.find((stage) => stage?.status === 1);
   const [tabIndex, setTabIndex] = useState(0);
+  console.log("activeStage",activeStage)
   const payments = useSelector((state) => state.payment.paymentsByApplicationId);
   const customers = useSelector((state) => state.auth.user);
   const fees = useSelector((state) => state.programFee.fees);
@@ -451,6 +452,11 @@ const PaymentDetailsPage = () => {
     setOpenDialog(false);
     setSelectedImage(null);
   };
+
+  const getStageFee = (programFeeId) => {
+    const stageFee = fees.find((fee) => fee.programFeeId === programFeeId);
+    return stageFee ? stageFee.amount.toLocaleString()  : "0";
+  };
   return (
     <Container>
       <div className="card-header">
@@ -762,9 +768,22 @@ const PaymentDetailsPage = () => {
                 <Form.Label>
                   {" "}
                   <strong style={{ color: "#007bff" }}>
-                    {renderPaymentStatus(
-                      activeStage?.programStage?.isPayment
-                    )}
+                  {renderPaymentStatus(activeStage?.programStage?.isPayment)} 
+
+                  </strong>
+                </Form.Label>
+              </Col>
+              <Col sm={3}>
+                <Form.Label>
+                  <strong>Phí cần đóng:</strong>
+                </Form.Label>
+              </Col>
+              <Col sm={9}>
+                <Form.Label>
+                  {" "}
+                  <strong style={{ color: "#007bff" }}>
+               {getStageFee(activeStage?.programStage?.programFeeId)} VND 
+
                   </strong>
                 </Form.Label>
               </Col>
@@ -778,70 +797,7 @@ const PaymentDetailsPage = () => {
             </Row>
           </Form>
           
-          {/* New Table for Program Document */}
-          <Typography variant="h6" gutterBottom style={{ marginTop: '20px' }}>
-            Tài liệu chương trình
-          </Typography>
-          <TableContainer component={Paper} sx={{ margin: '20px 0' }}>
-  <Table
-    sx={{
-      minWidth: 600,
-      maxWidth: 1400,
-      margin: 'auto',
-      borderCollapse: 'separate',
-      borderSpacing: '0 10px',
-      '& thead th': {
-        backgroundColor: '#f5f5f5',
-        fontWeight: 'bold',
-        textAlign: 'center',
-      },
-      '& tbody tr': {
-        backgroundColor: '#fff',
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-        borderRadius: '10px',
-        overflow: 'hidden',
-      },
-      '& tbody td': {
-        padding: '16px',
-        textAlign: 'center',
-      },
-      '& tbody td:first-of-type': {
-        borderTopLeftRadius: '10px',
-        borderBottomLeftRadius: '10px',
-      },
-      '& tbody td:last-of-type': {
-        borderTopRightRadius: '10px',
-        borderBottomRightRadius: '10px',
-      },
-    }}
-    aria-label="program document table"
-  >
-    <TableHead>
-      <TableRow>
-        <TableCell >ID</TableCell>
-        <TableCell sx={{ width: '15%' }} align="center">Tên tài liệu</TableCell>
-        <TableCell align="center">Mô tả</TableCell>
-      </TableRow>
-    </TableHead>
-    <TableBody>
-      {programDocuments?.map((document) => (
-        <TableRow key={document.programDocumentId}>
-          <TableCell component="th" scope="row" >
-            {document.programDocumentId}
-          </TableCell>
-          <TableCell align="center" sx={{ width: '15%' }}>{document.documentTypeDto?.typeName}</TableCell>
-          <TableCell align="left" sx={{ textAlign: 'left', whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>
-            <Typography
-              style={{ textAlign: 'left' }}
-              dangerouslySetInnerHTML={{ __html: formatDescription1(document.description) }}
-            />
-          </TableCell>
-        </TableRow>
-      ))}
-    </TableBody>
-  </Table>
-</TableContainer>
-
+  
 
           {/* End of New Table for Program Document */}
           
@@ -880,12 +836,12 @@ const PaymentDetailsPage = () => {
                           {payment.paymentId}
                         </TableCell>
                         <TableCell align="right">
-                          {payment.amount.toLocaleString()}
+                          {payment.amount.toLocaleString()} VND
                         </TableCell>
                         <TableCell align="right">{payment.method}</TableCell>
                         <TableCell align="right">{payment.note}</TableCell>
                         <TableCell align="right">
-                          {new Date(payment.paymentDate).toLocaleDateString()}
+                          {new Date(payment.paymentDate).toLocaleDateString()} 
                         </TableCell>
                         <TableCell align="right">
                           {getPaymentStatusLabel(payment.status)}
@@ -950,6 +906,70 @@ const PaymentDetailsPage = () => {
               </Box>
             </TabPanel>
             <TabPanel value={tabIndex} index={3}> {/* Add new TabPanel */}
+                      {/* New Table for Program Document */}
+          <Typography variant="h6" gutterBottom style={{ marginTop: '20px' }}>
+            Tài liệu chương trình
+          </Typography>
+          <TableContainer component={Paper} sx={{ margin: '20px 0' }}>
+  <Table
+    sx={{
+      minWidth: 600,
+      maxWidth: 1400,
+      margin: 'auto',
+      borderCollapse: 'separate',
+      borderSpacing: '0 10px',
+      '& thead th': {
+        backgroundColor: '#f5f5f5',
+        fontWeight: 'bold',
+        textAlign: 'center',
+      },
+      '& tbody tr': {
+        backgroundColor: '#fff',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+        borderRadius: '10px',
+        overflow: 'hidden',
+      },
+      '& tbody td': {
+        padding: '16px',
+        textAlign: 'center',
+      },
+      '& tbody td:first-of-type': {
+        borderTopLeftRadius: '10px',
+        borderBottomLeftRadius: '10px',
+      },
+      '& tbody td:last-of-type': {
+        borderTopRightRadius: '10px',
+        borderBottomRightRadius: '10px',
+      },
+    }}
+    aria-label="program document table"
+  >
+    <TableHead>
+      <TableRow>
+        <TableCell >ID</TableCell>
+        <TableCell sx={{ width: '15%' }} align="center">Tên tài liệu</TableCell>
+        <TableCell align="center">Mô tả</TableCell>
+      </TableRow>
+    </TableHead>
+    <TableBody>
+      {programDocuments?.map((document) => (
+        <TableRow key={document.programDocumentId}>
+          <TableCell component="th" scope="row" >
+            {document.programDocumentId}
+          </TableCell>
+          <TableCell align="center" sx={{ width: '15%' }}>{document.documentTypeDto?.typeName}</TableCell>
+          <TableCell align="left" sx={{ textAlign: 'left', whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>
+            <Typography
+              style={{ textAlign: 'left' }}
+              dangerouslySetInnerHTML={{ __html: formatDescription1(document.description) }}
+            />
+          </TableCell>
+        </TableRow>
+      ))}
+    </TableBody>
+  </Table>
+</TableContainer>
+
               <Typography variant="h6" gutterBottom>
                 Tài liệu đã nộp
               </Typography>
