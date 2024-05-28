@@ -107,13 +107,11 @@ const CreateStudentProfile = () => {
   const [page, setPage] = useState("basicInfo");
   const customerId = useSelector((state) => state.auth.userById.customerId);
   const loading = useSelector((state) => state?.student?.loading);
-  const [loadingUpFile, setLoadingUpfile] = useState(false);
   const [loadingUpFile10, setLoadingUpfile10] = useState(false);
   const [loadingUpFile11, setLoadingUpfile11] = useState(false);
   const [loadingUpFile12, setLoadingUpfile12] = useState(false);
   const [loadingImg, setLoadingImg] = useState(false);
-  const [selectedCert, setSelectedCert] = useState("");
-  const [addMoreCertificate, setAddMoreCertificate] = useState(false);
+
   const [formData, setFormData] = useState({
     fullName: "",
     nationalId: "",
@@ -131,7 +129,7 @@ const CreateStudentProfile = () => {
     customerId,
   });
   const [certificates, setCertificates] = useState([
-    { id: 1, certificateTypeId: '', certificateValue: '', file: '' },
+    { id: 1, certificateTypeId: "", certificateValue: "", file: "" },
   ]);
   const certificateOptions = [
     { value: 1, label: "IELTS" },
@@ -148,11 +146,10 @@ const CreateStudentProfile = () => {
       )
     );
   };
-  console.log(certificates)
   const addCertificate = () => {
     setCertificates([
       ...certificates,
-      { id: Date.now(), certificateTypeId: '', certificateValue: '', file: '' },
+      { id: Date.now(), certificateTypeId: "", certificateValue: "", file: "" },
     ]);
   };
   const [schoolProfile10, setSchoolProfile10] = useState({
@@ -393,6 +390,19 @@ const CreateStudentProfile = () => {
       }
     };
 
+    const validateScore = (score, profileName) => {
+      score.forEach((subject, index) => {
+        if (
+          subject.score !== null &&
+          (subject.score < 0 || subject.score > 10)
+        ) {
+          newErrors[`${profileName}`] = `Điểm mỗi môn chỉ từ 0 đến 10`;
+        }
+      });
+    };
+    validateScore(scoreProfile10, "scoreProfile10");
+    validateScore(scoreProfile11, "scoreProfile11");
+    validateScore(scoreProfile12, "scoreProfile12");
     validateField(
       "fullName",
       formData.fullName,
@@ -776,7 +786,7 @@ const CreateStudentProfile = () => {
                         )}
                       </div>
                       <div className="container">
-                        <div className="col-12">Điểm học bạ năm lớp 10</div>
+                        <h5 className="col-12">Điểm học bạ năm lớp 10</h5>
                         <div className="row ml-2">
                           {scoreProfile10.map((item) => (
                             <div key={item.subjectId} className="m-2 col-lg-2">
@@ -791,6 +801,11 @@ const CreateStudentProfile = () => {
                               />
                             </div>
                           ))}
+                          {errors.scoreProfile10 && (
+                            <p className="col-lg-12 text-danger mt-1">
+                              {errors.scoreProfile10}
+                            </p>
+                          )}
                           <p className="mr-4">
                             Tải lên hình ảnh điểm học bạ năm 10
                           </p>
@@ -808,7 +823,7 @@ const CreateStudentProfile = () => {
                         </div>
                       </div>
                       <div className="container">
-                        <div className="col-12">Điểm học bạ năm lớp 11</div>
+                        <h5 className="col-12">Điểm học bạ năm lớp 11</h5>
                         <div className="row ml-2">
                           {scoreProfile11.map((item) => (
                             <div key={item.subjectId} className="m-2 col-lg-2">
@@ -823,6 +838,11 @@ const CreateStudentProfile = () => {
                               />
                             </div>
                           ))}
+                          {errors.scoreProfile11 && (
+                            <p className="col-lg-12 text-danger mt-1">
+                              {errors.scoreProfile11}
+                            </p>
+                          )}
                           <p className="mr-4">
                             Tải lên hình ảnh điểm học bạ năm 11
                           </p>
@@ -840,7 +860,7 @@ const CreateStudentProfile = () => {
                         </div>
                       </div>
                       <div className="container">
-                        <div className="col-12">Điểm học bạ năm lớp 12</div>
+                        <h5 className="col-12">Điểm học bạ năm lớp 12</h5>
                         <div className="row ml-2">
                           {scoreProfile12.map((item) => (
                             <div key={item.subjectId} className="m-2 col-lg-2">
@@ -855,22 +875,35 @@ const CreateStudentProfile = () => {
                               />
                             </div>
                           ))}
+                        </div>
+                        {errors.scoreProfile12 && (
+                          <div className="row ml-2">
+                            <div className="col-12">
+                              <p className="text-danger mt-1">
+                                {errors.scoreProfile12}
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                        <div className="row ml-2 mt-3">
                           <p className="mr-4">
                             Tải lên hình ảnh điểm học bạ năm 12
                           </p>
-                          <input
-                            type="file"
-                            // onChange={handleFileChange}
-                            name="img"
-                            onChange={(e) => {
-                              handleUploadScore12(e);
-                            }}
-                          />
-                          {loadingUpFile12 && (
-                            <i className="fa fa-refresh mt-2 " />
-                          )}
+                          <div className="">
+                            <input
+                              type="file"
+                              name="img"
+                              onChange={(e) => {
+                                handleUploadScore12(e);
+                              }}
+                            />
+                            {loadingUpFile12 && (
+                              <i className="fa fa-refresh ml-2" />
+                            )}
+                          </div>
                         </div>
                       </div>
+
                       {/* File Upload */}
                       {/* <div className="col-lg-6">
                         <div className=" style-bg-border mb-4">

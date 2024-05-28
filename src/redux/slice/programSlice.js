@@ -24,8 +24,6 @@ export const getAllProgram = createAsyncThunk(
   }
 );
 
-
-
 export const getProgramById = createAsyncThunk(
   "/program/getProgramById",
   async (param, thunkAPI) => {
@@ -125,9 +123,8 @@ export const createProgramApplication = createAsyncThunk(
   "/program/createProgramApplication",
   async (param, thunkAPI) => {
     try {
-      console.log(param)
       const res = await instance.post("/program-applications", param);
-      console.log(res)
+      console.log(res);
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response);
@@ -137,17 +134,51 @@ export const createProgramApplication = createAsyncThunk(
 
 export const createProgram = createAsyncThunk(
   "/program/createProgram",
-  async (programData, thunkAPI) => {
+  async (params, thunkAPI) => {
     // console.log("programData",programData)
+    const { programStage,formData, certificates, programFee, programDocument } = params;
     try {
-      const res = await instance.post(`/programs`, programData, {
+      const res = await instance.post(`/programs`, formData, {
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json",
           Accept: "application/json",
         },
       });
-      return res.data;
+      const programId = res.data.programId;
+      const certificatesData = certificates.map((cert) => ({
+        ...cert,
+        programId,
+      }));
+      const programFeeData = programFee.map((fee) => ({
+        ...fee,
+        programId,
+      }));
+      const programStageData =programStage.map((stage)=>({
+        ...stage,programId
+      }))
+      const programCer = await instance.post(
+        `/program-certificates`,
+        certificatesData
+      );
+      const programFeeRes = await instance.post(
+        `/program-fees`,
+        programFeeData
+      );
+      const programDocumentData = programDocument.map((doc) => ({
+        ...doc,
+        programId,
+      }));
+      const programDocRes = await instance.post(
+        `/program-documents`,
+        programDocumentData
+      );
+     const programStageRes = await instance.post(
+      `/program-stages`,
+      programStageData
+     )
+     console.log(programStageRes)
+      return;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -157,13 +188,17 @@ export const hideProgram = createAsyncThunk(
   "/program/hideProgram",
   async (programId, thunkAPI) => {
     try {
-      const res = await instance.put(`/programs/${programId}`, { status: "Inactive" }, {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-      });
+      const res = await instance.put(
+        `/programs/${programId}`,
+        { status: "Inactive" },
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        }
+      );
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -227,7 +262,7 @@ const initialState = {
   programById: {},
   programsByUniId: [],
   programsByProgramType: [],
-  programsByMajor:[]
+  programsByMajor: [],
 };
 
 export const programSlice = createSlice({
@@ -239,8 +274,7 @@ export const programSlice = createSlice({
       state.programById = {};
       state.programsByUniId = [];
       state.programsByProgramType = [];
-  state.programsByMajor=[]
-
+      state.programsByMajor = [];
     },
     resetProgramById: (state) => {
       state.programById = {};
@@ -274,7 +308,8 @@ export const programSlice = createSlice({
       .addCase(getProgramById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-      }).addCase(getProgramByMajorId.pending, (state) => {
+      })
+      .addCase(getProgramByMajorId.pending, (state) => {
         state.loading = true;
       })
       .addCase(getProgramByMajorId.fulfilled, (state, action) => {
@@ -349,7 +384,7 @@ export const programSlice = createSlice({
       .addCase(hideProgram.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-      })
+      });
   },
 });
 const {

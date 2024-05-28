@@ -1,26 +1,24 @@
-import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import React, { useEffect, useState } from "react";
+import { Button, Dropdown, Modal, Row } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
+import { getAllMajor } from "../../../redux/slice/majorSlice";
 import {
+  createProgram,
   getAllProgram,
   getProgramTypes,
-  getProgramById,
-  updateProgram,
-  createProgram,
   hideProgram,
+  updateProgram,
 } from "../../../redux/slice/programSlice";
-import { getAllMajor, getMajorById } from "../../../redux/slice/majorSlice";
 import { getAllSemester } from "../../../redux/slice/semesterSlice";
 import { getAllUniversity } from "../../../redux/slice/universitySlice";
-import "./program.css";
-import { Row, Dropdown, Modal, Button, Form, Col } from "react-bootstrap";
-import Swal from "sweetalert2";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { imageDb } from "../../FirebaseImage/Config";
 import CreateProgramModal from "./create-program";
 import "./program.css";
-import { Link } from "react-router-dom";
 import { Backdrop, CircularProgress } from "@mui/material";
 
 const AllPrograms = () => {
@@ -80,7 +78,89 @@ const AllPrograms = () => {
     programTypeId: "",
     img: "",
   });
-
+  const [certificates, setCertificates] = useState([
+    {
+      id: 1,
+      programCertificateId: "",
+      averageLevel: "",
+      minLevel: "",
+      certificateTypeId: "",
+    },
+  ]);
+  const [programFee, setProgramFee] = useState([
+    {
+      id: 1,
+      amount: "",
+      feeTypeId: "",
+    },
+  ]);
+  const handleProgramFeeChange = (id, field, value) => {
+    setProgramFee((preProgramFee) =>
+      preProgramFee.map((fee) =>
+        fee.id === id ? { ...fee, [field]: value } : fee
+      )
+    );
+  };
+  const addProgramFee = () => {
+    setProgramFee([
+      ...programFee,
+      {
+        id: Date.now(),
+        amount: "",
+        feeTypeId: "",
+      },
+    ]);
+  };
+  const [programDocument, setProgramDocument] = useState([
+    {
+      id: 1,
+      description: "",
+      documentTypeId: "",
+    },
+  ]);
+  const handleProgramDocumentChange = (id, field, value) => {
+    setProgramDocument((preProgramDocument) =>
+      preProgramDocument.map((doc) =>
+        doc.id === id ? { ...doc, [field]: value } : doc
+      )
+    );
+  };
+  const addProgramDocument = () => {
+    setProgramDocument([
+      ...programDocument,
+      {
+        id: Date.now(),
+        description: "",
+        documentTypeId: "",
+      },
+    ]);
+  };
+  const [programStage, setProgramStage] = useState([
+    {
+      id: 1,
+      stageName: "",
+      isPayment: false,
+      programFeeId: "",
+    },
+  ]);
+  const handleProgramStageChange = (id, field, value) => {
+    setProgramStage((preProgramStage) =>
+      preProgramStage.map((stage) =>
+        stage.id === id ? { ...stage, [field]: value } : stage
+      )
+    );
+  };
+  const addProgramStage = () => {
+    setProgramStage([
+      ...programStage,
+      {
+        id: Date.now(),
+        stageName: "",
+        isPayment: false,
+        programFeeId: "",
+      },
+    ]);
+  };
   const handleImageUpload = async (file) => {
     // Check if file exists
     console.log("Selected File:", file);
@@ -126,7 +206,15 @@ const AllPrograms = () => {
       // Upload ảnh lên Firebase
       await handleImageUpload(formData.img);
     }
-    dispatch(createProgram(formData)).then(() => {
+    dispatch(
+      createProgram({
+        programStage,
+        programDocument,
+        formData,
+        certificates,
+        programFee,
+      })
+    ).then(() => {
       Swal.fire({
         icon: "success",
         title: "Tạo chương trình thành công!",
@@ -261,6 +349,25 @@ const AllPrograms = () => {
       setFeeData([...updatedData]);
       setShowAllPrograms(false);
     }
+  };
+  const handleCertificateChange = (id, field, value) => {
+    setCertificates((prevCertificates) =>
+      prevCertificates.map((cert) =>
+        cert.id === id ? { ...cert, [field]: value } : cert
+      )
+    );
+  };
+  const addCertificate = () => {
+    setCertificates([
+      ...certificates,
+      {
+        id: Date.now(),
+        programCertificateId: "",
+        averageLevel: "",
+        minLevel: "",
+        certificateTypeId: "",
+      },
+    ]);
   };
 
   const handleShowEditModal = (programId) => {
@@ -618,6 +725,18 @@ const AllPrograms = () => {
                 formData={formData}
                 setFormData={setFormData}
                 imgURL={imgURL}
+                certificates={certificates}
+                addCertificate={addCertificate}
+                handleCertificateChange={handleCertificateChange}
+                programFee={programFee}
+                handleProgramFeeChange={handleProgramFeeChange}
+                addProgramFee={addProgramFee}
+                programDocument={programDocument}
+                handleProgramDocumentChange={handleProgramDocumentChange}
+                addProgramDocument={addProgramDocument}
+                programStage={programStage}
+                handleProgramStageChange={handleProgramStageChange}
+                addProgramStage={addProgramStage}
               />
             </div>
           </div>
