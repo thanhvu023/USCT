@@ -1,21 +1,33 @@
-import { Row, Dropdown, Modal, Button, Form, Col } from "react-bootstrap";
-import React, { useState, useEffect } from "react";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { imageDb } from "../../FirebaseImage/Config";
-import { getAllSemester } from "../../../redux/slice/semesterSlice";
-import { getAllUniversity } from "../../../redux/slice/universitySlice";
+import Select from "react-select";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import React, { useEffect, useState } from "react";
+import { Button, Modal } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
 import { getAllMajor } from "../../../redux/slice/majorSlice";
 import { getProgramTypes } from "../../../redux/slice/programSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { getAllSemester } from "../../../redux/slice/semesterSlice";
+import { getAllUniversity } from "../../../redux/slice/universitySlice";
+import { imageDb } from "../../FirebaseImage/Config";
 const CreateProgramModal = ({
   show,
   onClose,
   onSubmit,
   formData,
   setFormData,
+  certificates,
+  addCertificate,
+  handleCertificateChange,
+  programFee,
+  handleProgramFeeChange,
+  addProgramFee,
+  programDocument,
+  handleProgramDocumentChange,
+  addProgramDocument,
+  programStage,
+  handleProgramStageChange,
+  addProgramStage,
 }) => {
   const dispatch = useDispatch();
-
   const [selectedFile, setSelectedFile] = useState(null);
   const [img, setImg] = useState(null);
   const universities = useSelector((state) => state.university.universities);
@@ -24,9 +36,49 @@ const CreateProgramModal = ({
   const allSemester = useSelector((state) => state.semester.allSemester);
   const [active, setActive] = useState(false);
   const [inactive, setInactive] = useState(false);
-
-  console.log("active:", active);
-  console.log("inactive:", inactive);
+  const programStagesOption = [
+    { value: "Kết quả", label: "Kết quả" },
+    { value: "Xét duyệt hồ sơ", label: "Xét duyệt hồ sơ" },
+    { value: "Nộp hồ sơ", label: "Nộp hồ sơ" },
+    { value: "Thư mời nhập học", label: "Thư mời nhập học" },
+    { value: "Trả phí hồ sơ", label: "Trả phí hồ sơ" },
+  ];
+  const certificateOptions = [
+    { value: 1, label: "IELTS" },
+    { value: 2, label: "TOEFL" },
+    { value: 3, label: "SAT" },
+    { value: 4, label: "ACT" },
+    { value: 6, label: "Học bạ" },
+  ];
+  const feeOptions = [
+    {
+      value: 1,
+      label: "Phí nộp hồ sơ",
+    },
+    {
+      value: 2,
+      label: "Phí xin visa",
+    },
+    {
+      value: 3,
+      label: "Các phí thủ tục khác",
+    },
+  ];
+  const documentOptions = [
+    {
+      value: 1,
+      label: "Thư giới thiệu",
+    },
+    {
+      value: 2,
+      label: "Bài tiểu luận",
+    },
+  ];
+  const stageFeeOptions = [
+    { value: false, label: "Không" },
+    { value: true, label: "Có" },
+  ];
+  console.log(programStage);
   useEffect(() => {
     if (setSelectedFile) {
       let OBJ = { ...formData, img: selectedFile };
@@ -41,17 +93,19 @@ const CreateProgramModal = ({
       [name]: value,
     });
   };
-
+  const handleInputChange = (id, e) => {
+    const { name, value, type, checked } = e.target;
+    const fieldValue = type === "checkbox" ? checked : value;
+    handleProgramStageChange(id, name, fieldValue);
+  };
   const handleUpload = async () => {
     if (!img) return;
-    const imageName = img.name; 
-    let imgRef = ref(imageDb, "Image/Program/" + imageName); 
+    const imageName = img.name;
+    let imgRef = ref(imageDb, "Image/Program/" + imageName);
 
     uploadBytes(imgRef, img).then(() => {
       getDownloadURL(imgRef).then((downloadURL) => {
         setSelectedFile(downloadURL);
-        console.log(downloadURL);
-        // console.log(`File available at ${downloadURL}`);
       });
     });
   };
@@ -75,7 +129,7 @@ const CreateProgramModal = ({
     dispatch(getAllMajor());
     dispatch(getProgramTypes());
   }, []);
-
+  console.log(programDocument);
   return (
     <Modal show={show} onHide={onClose} centered>
       <Modal.Header closeButton>
@@ -257,6 +311,139 @@ const CreateProgramModal = ({
                     ))}
                 </select>
               </div>
+              <div>
+                <label
+                  htmlFor="programTypeId"
+                  className="font-weight-bold fs-5"
+                >
+                  Chọn các chứng chỉ tiếng anh:
+                </label>
+                <div className="row col-lg-12 ml-1">
+                  {certificates?.map((cert) => (
+                    <div className="col-lg-6 mb-3" key={cert.id}>
+                      <div className="mb-3">
+                        <Select
+                          placeholder="Chứng chỉ chương trình"
+                          name={`certificateTypeId-${cert.id}`}
+                          value={certificateOptions.find(
+                            (option) => option.value === cert.certificateTypeId
+                          )}
+                          onChange={(e) =>
+                            handleCertificateChange(
+                              cert.id,
+                              "certificateTypeId",
+                              e.value
+                            )
+                          }
+                          options={certificateOptions}
+                        />
+                        <input
+                          type="number"
+                          placeholder="Điểm trung bình"
+                          name={`averageLevel-${cert.id}`}
+                          value={cert.averageLevel}
+                          onChange={(e) =>
+                            handleCertificateChange(
+                              cert.id,
+                              "averageLevel",
+                              e.target.value
+                            )
+                          }
+                          className="form-control mt-2"
+                        />
+                        <input
+                          type="number"
+                          placeholder="Điểm tối thiểu"
+                          name={`minLevel-${cert.id}`}
+                          value={cert.minLevel}
+                          onChange={(e) =>
+                            handleCertificateChange(
+                              cert.id,
+                              "minLevel",
+                              e.target.value
+                            )
+                          }
+                          className="form-control mt-2"
+                        />
+                      </div>
+                    </div>
+                  ))}
+
+                  <div className="col-lg-12 mb-3">
+                    <button
+                      type="button"
+                      onClick={addCertificate}
+                      className="btn btn-primary"
+                    >
+                      Thêm chứng chỉ tiếng anh khác
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <label className="font-weight-bold fs-5">
+                  Các bước nộp hồ sơ của chương trình:
+                </label>
+                <div className="row col-lg-12 ml-1">
+                  {programStage?.map((stage) => (
+                    <div className="col-lg-6 mb-3" key={stage.id}>
+                      <div className="mb-3">
+                        <Select
+                          placeholder="Các bước nộp hồ sơ"
+                          name={`stageName-${stage.id}`}
+                          value={programStage.find(
+                            (option) => option.value === stage.stageName
+                          )}
+                          onChange={(e) =>
+                            handleProgramStageChange(
+                              stage.id,
+                              "stageName",
+                              e.value
+                            )
+                          }
+                          options={programStagesOption}
+                        />
+
+                        <Select
+                          placeholder="Loại phí"
+                          className="mt-2"
+                          name={`programFeeId-${stage.id}`}
+                          value={programStage.find(
+                            (option) => option.value === stage.programFeeId
+                          )}
+                          onChange={(e) =>
+                            handleProgramStageChange(
+                              stage.id,
+                              "programFeeId",
+                              e.value
+                            )
+                          }
+                          options={feeOptions}
+                        />
+                        <div className="d-flex mt-2">
+                          <p className="pt-2 mr-2">Có trả phí</p>
+                          <input
+                            type="checkbox"
+                            name="isPayment"
+                            checked={stage.isPayment}
+                            onChange={(e) => handleInputChange(stage.id, e)}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+
+                  <div className="col-lg-12 mb-3">
+                    <button
+                      type="button"
+                      onClick={addProgramStage}
+                      className="btn btn-primary"
+                    >
+                      Thêm các bước khác
+                    </button>
+                  </div>
+                </div>
+              </div>
             </form>
           </div>
           <div className="col">
@@ -338,7 +525,10 @@ const CreateProgramModal = ({
                   onChange={handleChange}
                 />
               </div>
-              <div className="form-group">
+              <div
+                className="form-group"
+                style={{ paddingLeft: "0px !important" }}
+              >
                 <label htmlFor="requirement" className="font-weight-bold fs-5">
                   Yêu cầu:
                 </label>
@@ -351,6 +541,104 @@ const CreateProgramModal = ({
                 />
               </div>
             </form>
+            <div>
+              <label className="font-weight-bold fs-5">Các loại phí:</label>
+              <div className="row col-lg-12 ml-1">
+                {programFee?.map((fee) => (
+                  <div className="col-lg-6 mb-3" key={fee.id}>
+                    <div className="mb-3">
+                      <Select
+                        placeholder="Các phí chương trình"
+                        name={`feeTypeId-${fee.id}`}
+                        value={programFee.find(
+                          (option) => option.value === fee.feeTypeId
+                        )}
+                        onChange={(e) =>
+                          handleProgramFeeChange(fee.id, "feeTypeId", e.value)
+                        }
+                        options={feeOptions}
+                      />
+                      <input
+                        type="number"
+                        placeholder="Số tiền"
+                        name={`amount-${fee.id}`}
+                        value={fee.amount}
+                        onChange={(e) =>
+                          handleProgramFeeChange(
+                            fee.id,
+                            "amount",
+                            e.target.value
+                          )
+                        }
+                        className="form-control mt-2"
+                      />
+                    </div>
+                  </div>
+                ))}
+
+                <div className="col-lg-12 mb-3">
+                  <button
+                    type="button"
+                    onClick={addProgramFee}
+                    className="btn btn-primary"
+                  >
+                    Thêm các phí khác
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div>
+              <label className="font-weight-bold fs-5">
+                Các loại tài liệu của chương trình:
+              </label>
+              <div className="row col-lg-12 ml-1">
+                {programDocument?.map((document) => (
+                  <div className="col-lg-6 mb-3" key={document.id}>
+                    <div className="mb-3">
+                      <Select
+                        placeholder="Các tài liệu chương trình"
+                        name={`documentTypeId-${document.id}`}
+                        value={programDocument.find(
+                          (option) => option.value === document.documentTypeId
+                        )}
+                        onChange={(e) =>
+                          handleProgramDocumentChange(
+                            document.id,
+                            "documentTypeId",
+                            e.value
+                          )
+                        }
+                        options={documentOptions}
+                      />
+                      <input
+                        type="text"
+                        placeholder="Mô tả"
+                        name={`description-${document.id}`}
+                        value={document.description}
+                        onChange={(e) =>
+                          handleProgramDocumentChange(
+                            document.id,
+                            "description",
+                            e.target.value
+                          )
+                        }
+                        className="form-control mt-2"
+                      />
+                    </div>
+                  </div>
+                ))}
+
+                <div className="col-lg-12 mb-3">
+                  <button
+                    type="button"
+                    onClick={addProgramDocument}
+                    className="btn btn-primary"
+                  >
+                    Thêm các tài liệu khác
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </Modal.Body>
