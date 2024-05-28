@@ -77,6 +77,22 @@ function ProgramsPage() {
   }, [dispatch, selectedUniversityId]);
 
   useEffect(() => {
+    if (programName) {
+      dispatch(getAllProgram()).then(() => {
+        // Filtering the programs based on the name
+        const filteredPrograms = programs.filter(program =>
+          program.nameProgram.toLowerCase().includes(programName.toLowerCase())
+        );
+        // Update the programs state with the filtered programs
+        // This assumes you have a setPrograms function to update the programs state
+        // setPrograms(filteredPrograms);
+      });
+    } else {
+      dispatch(getAllProgram());
+    }
+  }, [dispatch, programName]);
+
+  useEffect(() => {
     dispatch(getAllMajor()).then((response) => {
       const majorMap = {};
       response.payload.forEach(major => {
@@ -103,11 +119,12 @@ function ProgramsPage() {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const filteredPrograms = currentPrograms
-  .filter(program => program.status === "Active")
-  .filter(program => selectedUniversityId.length === 0 || selectedUniversityId.includes(program.universityId))
-  .filter(program => selectedCertificates.length === 0 || selectedCertificates.every(cert =>
-    programCertificates.some(c => c.programId === program.programId && c.certificateType.certificateName === cert && c.minLevel > 0)
-  ));
+    .filter(program => program.status === "Active")
+    .filter(program => selectedUniversityId.length === 0 || selectedUniversityId.includes(program.universityId))
+    .filter(program => selectedCertificates.length === 0 || selectedCertificates.every(cert =>
+      programCertificates.some(c => c.programId === program.programId && c.certificateType.certificateName === cert && c.minLevel > 0)
+    ))
+    .filter(program => program.nameProgram.toLowerCase().includes(programName.toLowerCase()));
 
 
   const handleCheckboxChange = (event, universityId) => {
@@ -220,17 +237,18 @@ function ProgramsPage() {
             <div className="td-sidebar mt-5 mt-lg-0">
               <div className="widget widget_search_course">
                 <h4 className="widget-title">Tìm kiếm chương trình</h4>
-                <form className="search-form single-input-inner">
-                  <input
-                    type="text"
-                    value={programName}
-                    onChange={handleInputChangeName}
-                    placeholder="Nhập chương trình cần tìm"
-                  />
-                  <button className="btn btn-base w-100 mt-3" type="submit">
-                    <i className="fa fa-search" /> Tìm kiếm
-                  </button>
-                </form>
+                <div className="search-form single-input-inner">
+  <input
+    type="text"
+    value={programName}
+    onChange={handleInputChangeName}
+    placeholder="Nhập chương trình cần tìm"
+  />
+  <button className="btn btn-base w-100 mt-3" type="submit">
+    <i className="fa fa-search" /> Tìm kiếm
+  </button>
+</div>
+
               </div>
               <div className="widget widget_catagory">
                 <h4 className="widget-title">Thông tin du học</h4>
