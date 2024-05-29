@@ -286,7 +286,7 @@ const StudentProfileDetails = () => {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {studentDetail.certificateDtos.map((item, index) => (
+                        {studentDetail.certificateDtos?.map((item, index) => (
                           <TableRow key={index}>
                             <TableCell>{item.certificateTypeDto.certificateName}</TableCell>
                             <TableCell>{item.certificateValue}</TableCell>
@@ -313,7 +313,7 @@ const StudentProfileDetails = () => {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {studentDetail.schoolProfileDtos.map((item, index) => (
+                        {studentDetail.schoolProfileDtos?.map((item, index) => (
                           <TableRow key={index}>
                             <TableCell>Lớp {item.schoolGrade}</TableCell>
                             <TableCell>{item.gpa}</TableCell>
