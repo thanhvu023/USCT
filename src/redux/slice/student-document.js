@@ -65,6 +65,23 @@ export const getDocumentsByProgramApplicationId = createAsyncThunk(
     }
   }
 );
+export const updateDocument = createAsyncThunk(
+  "studentDocument/updateDocument",
+  async (documentData, thunkAPI) => {
+    const { documentId, ...data } = documentData;
+    try {
+      const res = await instance.put(`/documents/${documentId}`, data, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response);
+    }
+  }
+);
+
 
 const initialState = {
   msg: "",
@@ -126,6 +143,18 @@ export const studentDocumentSlice = createSlice({
         state.error = null;
       })
       .addCase(getDocumentsByProgramApplicationId.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(updateDocument.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updateDocument.fulfilled, (state, action) => {
+        state.loading = false;
+        state.updatedDocument = action.payload;
+        state.error = null;
+      })
+      .addCase(updateDocument.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       });

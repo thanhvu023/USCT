@@ -55,7 +55,7 @@ import {
 import { getFile } from "../../../redux/slice/authSlice";
 import { useLocation, useParams } from "react-router-dom";
 import { getProgramApplicationById } from "../../../redux/slice/programApplicationSlice";
-import { getDocumentsByProgramApplicationId } from "../../../redux/slice/student-document"; 
+import { getDocumentsByProgramApplicationId, updateDocument } from "../../../redux/slice/student-document"; 
 import { getAllDocumentTypes } from "../../../redux/slice/documentTypesSlice";
 import { getProgramCertificateByProgramId } from "../../../redux/slice/program-document";
 import { getSchoolProfilesByStudentProfileId } from "../../../redux/slice/schoolProfileSlice";
@@ -429,6 +429,18 @@ const PaymentDetailsPage = () => {
         return 'Trạng thái đang bị lỗi';
     }
   };
+  const getStatusDoc = (status) => {
+    switch (status) {
+      case 0:
+        return 'Đợi kiểm tra';
+      case 1:
+        return 'Cần bổ sung';
+      case 2:
+        return 'Tài liêu không hợp lệ';
+      default:
+        return 'Tài liêu hợp lệ';
+    }
+  };
   const formatDescription1 = (description) => {
     if (!description) return "";
     const paragraphs = description.split(/\\r\\n/);
@@ -457,6 +469,36 @@ const PaymentDetailsPage = () => {
     const stageFee = fees.find((fee) => fee.programFeeId === programFeeId);
     return stageFee ? stageFee.amount.toLocaleString()  : "0";
   };
+  const handleDocumentStatusChange = (documentId, newStatus) => {
+    const document = documents.find((doc) => doc.documentId === documentId);
+    if (document) {
+      const updatedDocument = {
+        ...document,
+        status: newStatus,
+      };
+      dispatch(updateDocument(updatedDocument))
+        .then(() => {
+          setRefresh(true);
+          Swal.fire({
+            icon: "success",
+            title: "Cập nhật thành công!",
+            text: "Trạng thái tài liệu đã được cập nhật.",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        })
+        .catch((error) => {
+          Swal.fire({
+            icon: "error",
+            title: "Lỗi cập nhật!",
+            text: "Không thể cập nhật trạng thái tài liệu",
+            confirmButtonText: "OK",
+          });
+          console.error("Failed to update the document status:", error);
+        });
+    }
+  };
+
   return (
     <Container>
       <div className="card-header">
@@ -982,9 +1024,10 @@ const PaymentDetailsPage = () => {
                   <TableHead>
                     <TableRow>
                       <TableCell>ID</TableCell>
-                      {/* <TableCell align="right">Tên tài liệu</TableCell> */}
                       <TableCell align="right">Loại tài liệu</TableCell>
                       <TableCell align="right">Thời gian tải lên</TableCell>
+                      <TableCell align="right">Trạng thái</TableCell>
+                      <TableCell align="right">Cập nhật trạng thái</TableCell>
                       <TableCell align="right">Hành động</TableCell>
                     </TableRow>
                   </TableHead>
@@ -995,7 +1038,6 @@ const PaymentDetailsPage = () => {
                           {document.documentId}
                         </TableCell>
                         <TableCell align="right">{document?.documentTypeDto?.typeName}</TableCell>
-                        {/* <TableCell align="right">{document.documentType}</TableCell> */}
                         <TableCell align="right">
   {new Date(document.updateDate).toLocaleString('en-GB', { 
     year: 'numeric', 
@@ -1006,6 +1048,28 @@ const PaymentDetailsPage = () => {
     second: '2-digit' 
   })}
 </TableCell>
+                        <TableCell align="right">
+                          {getStatusDoc(document.status)}
+                        </TableCell>
+                        <TableCell align="right">
+                          <Form.Control
+                            as="select"
+                            value={document.status}
+                            onChange={(e) =>
+                              handleDocumentStatusChange(
+                                document.documentId,
+                                Number(e.target.value)
+                              )
+                            }
+                          >
+                            <option value={0}>Chưa xử lý</option>
+                            <option value={1}>Cần bổ sung</option>
+                            <option value={2}>Tài liệu không hợp lệ</option>
+                          
+                            <option value={3}>Tài liệu hợp lệ</option>
+
+</Form.Control>
+                        </TableCell>
                         <TableCell align="right">
                         <Button
                             variant="contained"

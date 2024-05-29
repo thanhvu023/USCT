@@ -58,7 +58,7 @@ import Swal from "sweetalert2";
 import { getProgramById } from "../../redux/slice/programSlice";
 import { getProgramCertificateByProgramId } from "../../redux/slice/program-document";
 import { getAllStudentCertificatesByProfile } from "../../redux/slice/studentCertificateSlice";
-import { createDocument, getDocumentsByProgramApplicationId } from "../../redux/slice/student-document";
+import { createDocument, getDocumentsByProgramApplicationId, updateDocument } from "../../redux/slice/student-document";
 import { getAllDocumentTypes } from "../../redux/slice/documentTypesSlice";
 import { getFile } from "../../redux/slice/authSlice";
 import { getSchoolProfilesByStudentProfileId } from "../../redux/slice/schoolProfileSlice";
@@ -559,6 +559,16 @@ const handleCreateVnPayLink = async () => {
   };
   const handleDSubmit = async (e) => {
     e.preventDefault();
+  
+    // Kiểm tra giai đoạn hiện tại
+    const activeStage = programStages.find(stage => stage.programStageId === details.applyStage.find(applyStage => applyStage.status === 1)?.programStageId);
+    const selectedDocumentType = documentTypes.find(type => type.documentTypeId.toString() === documentData.documentTypeId.toString());
+  
+    if (activeStage && selectedDocumentType && activeStage.stageName !== selectedDocumentType.typeName) {
+      Swal.fire('Cảnh báo', 'Không thể tải tài liệu này vào giai đoạn hiện tại', 'warning');
+      return;
+    }
+  
     if (documentData.file) {
       const imgRef = ref(imageDb, `Image/StudentDocument/${documentData.file.name}`);
       try {
@@ -578,6 +588,12 @@ const handleCreateVnPayLink = async () => {
       Swal.fire('Cảnh báo', 'Vui lòng chọn tệp để tải lên', 'warning');
     }
   };
+  
+  const filteredDocumentTypes = useMemo(() => {
+    const activeStage = programStages.find(stage => stage.programStageId === details.applyStage.find(applyStage => applyStage.status === 1)?.programStageId);
+    if (!activeStage) return [];
+    return documentTypes.filter(type => activeStage.stageName === type.typeName);
+  }, [programStages, details.applyStage, documentTypes]);
   
   const handleDownloadFile = () => {
     details?.studentProfile.fileUploads.forEach((file) => {
@@ -603,7 +619,63 @@ const handleCreateVnPayLink = async () => {
     const overallGPA = (year10 + year11 + year12) / 3;
     return overallGPA.toFixed(2);
   };
-
+  const [selectedDocument, setSelectedDocument] = useState(null);
+  const [editFile, setEditFile] = useState(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  
+  const handleEditFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setEditFile(file);
+    }
+  };
+  
+  const openEditModal = (document) => {
+    setSelectedDocument(document);
+    setIsEditModalOpen(true);
+  };
+  
+  
+  const handleEditClose = () => {
+    setIsEditModalOpen(false);
+    setSelectedDocument(null);
+    setEditFile(null);
+  };
+  const handleEditSubmit = async () => {
+    if (editFile && selectedDocument) {
+      const imgRef = ref(imageDb, `Image/StudentDocument/${editFile.name}`);
+      try {
+        await uploadBytes(imgRef, editFile);
+        const imgUrl = await getDownloadURL(imgRef);
+  
+        const updatedDocumentData = {
+          documentId: selectedDocument.documentId,
+          file: imgUrl,
+          programApplicationId: selectedDocument.programApplicationId,
+          documentTypeId: selectedDocument.documentTypeId,
+          status: selectedDocument.status,
+        };
+  
+        dispatch(updateDocument(updatedDocumentData))
+          .then(() => {
+            Swal.fire('Thành công', 'Tài liệu đã được cập nhật thành công', 'success');
+            setIsEditModalOpen(false);
+            setEditFile(null);
+            dispatch(getDocumentsByProgramApplicationId(programApplicationId));
+          })
+          .catch((error) => {
+            console.error("Error updating document:", error);
+            Swal.fire('Lỗi', 'Không thể cập nhật tài liệu', 'error');
+          });
+      } catch (error) {
+        console.error("Error uploading file:", error);
+        Swal.fire('Lỗi', 'Không thể tải lên tài liệu', 'error');
+      }
+    } else {
+      Swal.fire('Cảnh báo', 'Vui lòng chọn tệp để cập nhật', 'warning');
+    }
+  };
+  
   return (
 <div style={{ maxHeight: "100vh",backgroundColor:'#F0F4F9'  }}> 
       <Backdrop
@@ -929,82 +1001,84 @@ const handleCreateVnPayLink = async () => {
          
           <div className="price-wrap text-center">
           <Card raised>
-      <CardContent>
-        <Typography variant="h6" gutterBottom>
-          Tài liệu chương trình yêu cầu
-        </Typography>
-        {programDocuments?.map((document) => (
-          <div key={document.programDocumentId} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            
-            <Accordion
-              expanded={expanded === document.programDocumentId}
-              onChange={handleChange(document.programDocumentId)}
-              style={{ flex: 1 }}
-            >
-              
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls={`${document.programDocumentId}-content`}
-                id={`${document.programDocumentId}-header`}
-              >
-                <Typography style={{display:'flex', justifyContent:'center', alignItems:'center'}}>{document?.documentTypeDto?.typeName}</Typography>
-                <IconButton
+  <CardContent>
+    <Typography variant="h6" gutterBottom>
+      Tài liệu chương trình yêu cầu
+    </Typography>
+    {programDocuments?.map((document) => (
+      <div key={document.programDocumentId} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        
+        <Accordion
+          expanded={expanded === document.programDocumentId}
+          onChange={handleChange(document.programDocumentId)}
+          style={{ flex: 1 }}
+        >
+          
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls={`${document.programDocumentId}-content`}
+            id={`${document.programDocumentId}-header`}
+          >
+            <Typography style={{display:'flex', justifyContent:'center', alignItems:'center'}}>{document?.documentTypeDto?.typeName}</Typography>
+            <IconButton
               color="primary"
               // onClick={() => handleFileUpload(document.programDocumentId)}
+              disabled={activeStage?.stageName !== document.documentTypeDto?.typeName} // Disable upload button if stage does not match document type
             >
               <CloudUploadIcon />
             </IconButton>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Typography variant="subtitle2">Mô tả:</Typography>
-                <Typography
-                style={{textAlign:'left'}}
-                  dangerouslySetInnerHTML={{ __html: formatDescription1(document.description) }}
-                />
-              </AccordionDetails>
-            </Accordion>
-           
-          </div>
-        ))}
-      </CardContent>
-    </Card>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography variant="subtitle2">Mô tả:</Typography>
+            <Typography
+              style={{textAlign:'left'}}
+              dangerouslySetInnerHTML={{ __html: formatDescription1(document.description) }}
+            />
+          </AccordionDetails>
+        </Accordion>
+       
+      </div>
+    ))}
+  </CardContent>
+</Card>
+
     <div className="price-wrap text-center" style={{marginTop:'24px'}}>
     <Card raised>
-    <CardContent>
-                          <Typography variant="h6" gutterBottom>Tải tệp</Typography>
-                          <form onSubmit={handleDSubmit}>
-                            <Form.Group as={Row} className="mb-3">
-                              <Form.Label column sm="4">Loại tài liệu:</Form.Label>
-                              <Col sm="8">
-                                <Form.Control
-                                  as="select"
-                                  name="documentTypeId"
-                                  value={documentData.documentTypeId}
-                                  onChange={handleDChange}
-                                >
-                                  <option value="">Chọn loại tài liệu</option>
-                                  {documentTypes.map((type) => (
-                                    <option key={type.documentTypeId} value={type.documentTypeId}>
-                                      {type.typeName}
-                                    </option>
-                                  ))}
-                                </Form.Control>
-                              </Col>
-                            </Form.Group>
-                            <Form.Group as={Row} className="mb-3">
-                              <Form.Label column sm="4">Tệp tin:</Form.Label>
-                              <Col sm="8">
-                                <Form.Control
-                                  type="file"
-                                  name="file"
-                                  onChange={handleDFileChange}
-                                />
-                              </Col>
-                            </Form.Group>
-                            <Button variant="contained" type="submit" endIcon={<SendIcon />}>Tải lên</Button>
-                          </form>
-                          </CardContent>
-                          </Card>
+      <CardContent>
+        <Typography variant="h6" gutterBottom>Tải tệp</Typography>
+        <form onSubmit={handleDSubmit}>
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm="4">Loại tài liệu:</Form.Label>
+            <Col sm="8">
+              <Form.Control
+                as="select"
+                name="documentTypeId"
+                value={documentData.documentTypeId}
+                onChange={handleDChange}
+              >
+                <option value="">Chọn loại tài liệu</option>
+                {filteredDocumentTypes.map((type) => (
+                  <option key={type.documentTypeId} value={type.documentTypeId}>
+                    {type.typeName}
+                  </option>
+                ))}
+              </Form.Control>
+            </Col>
+          </Form.Group>
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm="4">Tệp tin:</Form.Label>
+            <Col sm="8">
+              <Form.Control
+                type="file"
+                name="file"
+                onChange={handleDFileChange}
+              />
+            </Col>
+          </Form.Group>
+          <Button variant="contained" type="submit" endIcon={<SendIcon />}>Tải lên</Button>
+        </form>
+      </CardContent>
+    </Card>
                         </div>
           </div>
         </div>
@@ -1362,15 +1436,24 @@ Hoặc có thể đóng toàn bộ phí cho tiến trình (cập nhật tự đ�
                 })}
               </TableCell>
               <TableCell align="right">
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => handleDocumentDownload(document)}
-                  style={{ textTransform: "none" }}
-                >
-                  Tải xuống
-                </Button>
-              </TableCell>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => handleDocumentDownload(document)}
+                      style={{ textTransform: "none", marginRight: '8px' }}
+                    >
+                      Tải xuống
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => openEditModal(document)}
+                      style={{ textTransform: "none" }}
+                    >
+                      Chỉnh sửa 
+                    </Button>
+                  </TableCell>
+            
             </TableRow>
           ))}
         </TableBody>
@@ -1386,6 +1469,29 @@ Hoặc có thể đóng toàn bộ phí cho tiến trình (cập nhật tự đ�
     <Button variant="contained" onClick={nextPage} disabled={page + 1 === pageCount}>Kế tiếp</Button>
 
   </Box>
+  <Dialog open={isEditModalOpen} onClose={handleEditClose} maxWidth="md" fullWidth>
+  <DialogTitle>Cập nhật Tài liệu</DialogTitle>
+  <DialogContent>
+    <Form.Group as={Row} className="mb-3">
+      <Form.Label column sm="4">Tệp tin:</Form.Label>
+      <Col sm="8">
+        <Form.Control
+          type="file"
+          name="file"
+          onChange={handleEditFileChange}
+        />
+      </Col>
+    </Form.Group>
+  </DialogContent>
+  <DialogActions>
+    <Button onClick={handleEditClose} color="primary">
+      Hủy
+    </Button>
+    <Button onClick={handleEditSubmit} color="primary">
+      Cập nhật
+    </Button>
+  </DialogActions>
+</Dialog>
 </TabPanel>
 
 
