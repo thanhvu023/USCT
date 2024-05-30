@@ -179,9 +179,9 @@ const ProgramApplicationPage = ({ setMain }) => {
     setSortedApplications(filteredData);
   };
 
-  const handleSort = (sortingVale) => {
-    sortData(sortingVale);
-  };
+  // const handleSort = (sortingVale) => {
+  //   sortData(sortingVale);
+  // };
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
@@ -206,24 +206,7 @@ const ProgramApplicationPage = ({ setMain }) => {
     searchData(searchTerm);
   }, [searchTerm]);
 
-  const handleCloseCheckModal = () => setShowCheckModal(false);
-
-  const handleShowDeleteModal = () => {
-    Swal.fire({
-      title: "Bạn có chắc muốn xóa không?",
-      text: "Once deleted, you will not be able to recover this imaginary file!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#dd6b55",
-      cancelButtonColor: "#aaa",
-      confirmButtonText: "Đồng ý",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire("Deleted!", "Your file has been deleted.", "success");
-      }
-    });
-  };
-
+ 
   const handleOpenModal = async (studentProfileId) => {
     setSelectedProfileId(studentProfileId);
     setShowProfileModal(true);
@@ -414,7 +397,7 @@ return (
                     <tr key={index}>
                       <td>{item.programApplicationId}</td>
                       <td>{item.studentProfile?.fullName}</td>
-                      <td>{item.studentProfile?.createDate}</td>
+                      <td>{item.updateDate}</td>
                       <td>{item.program?.nameProgram}</td>
                       <td>{findActiveStageName(item)}</td>
                       <td>
@@ -425,9 +408,14 @@ return (
                             onChange={(e) => handleStatusChange(item.programApplicationId, parseInt(e.target.value))}
                           >
                              <option value={0}>Đang xử lí</option>
-                            <option value={1}>Bổ sung tài liệu</option>
-                            <option value={2}>Đăng ký thành công</option>
-                            <option value={3}>Hủy bỏ đăng ký</option>
+                            <option value={1}>Đã xét duyệt hồ sơ</option>
+                            <option value={2}>Xét duyệt thành công</option>
+                            <option value={3}>Xét duyệt thất bại</option>
+                            <option value={4}>Đóng hồ sơ</option>
+                            <option value={5}>Hồ sơ đã hoàn tất</option>
+                            <option value={6}>Hồ sơ đã hủy</option>
+               
+
                           </Form.Control>
                       </td>
                       <td>

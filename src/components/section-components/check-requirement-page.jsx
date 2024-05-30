@@ -17,7 +17,7 @@ import { css, keyframes } from '@emotion/react';
 import Confetti from 'react-confetti';
 import jwtDecode from "jwt-decode";
 
-const steps = ['Chọn hồ sơ học sinh', 'Điều kiện chứng chỉ', ' Hoàn tất '];
+const steps = ['Chọn hồ sơ học sinh', 'Điều kiện chứng chỉ'];
 
 const getBadgeProps = (isEligible) => {
   if (isEligible) {
@@ -120,9 +120,8 @@ const SATCertificates = ({ certificates, studentCertificates, getBadgeProps }) =
     </>
   );
 };
-
-const GPACertificates = ({ schoolProfiles, programCertificates }) => {
-  const totalGPA = (schoolProfiles.reduce((acc, profile) => acc + profile.gpa, 0) / schoolProfiles.length).toFixed(2);
+const GPACertificates = ({ schoolProfiles, programCertificates, getBadgeProps }) => {
+  const totalGPA = (schoolProfiles?.reduce((acc, profile) => acc + profile.gpa, 0) / schoolProfiles.length).toFixed(2);
   const lastGpaCertificate = programCertificates.filter(certificate => certificate.certificateType.certificateName === 'Học bạ').slice(-1)[0];
 
   return (
@@ -134,6 +133,7 @@ const GPACertificates = ({ schoolProfiles, programCertificates }) => {
             <TableCell>Năm học</TableCell>
             <TableCell>GPA</TableCell>
             <TableCell>GPA đầu vào</TableCell>
+            <TableCell>Đánh giá</TableCell> {/* Add the header for the evaluation column */}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -142,25 +142,22 @@ const GPACertificates = ({ schoolProfiles, programCertificates }) => {
               <TableCell>Lớp {profile.schoolGrade}</TableCell>
               <TableCell>{profile.gpa}</TableCell>
               <TableCell></TableCell>
+              <TableCell></TableCell>
             </TableRow>
           ))}
           <TableRow>
             <TableCell>GPA tổng</TableCell>
             <TableCell>{totalGPA}</TableCell>
             <TableCell>{lastGpaCertificate.minLevel}</TableCell>
+            <TableCell>{getBadgeProps(totalGPA >= lastGpaCertificate.minLevel)}</TableCell> {/* Add the badge for the overall GPA evaluation */}
           </TableRow>
-          {lastGpaCertificate && (
-            <TableRow>
-              <TableCell>Đánh giá</TableCell>
-              <TableCell>{totalGPA >= lastGpaCertificate.minLevel ? "Đạt" : "Không đạt"}</TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-          )}
+         
         </TableBody>
       </Table>
     </>
   );
 };
+
 
 const CheckRequirementPage = () => {
   const { programById } = useParams();
@@ -334,33 +331,29 @@ const CheckRequirementPage = () => {
   };
 
   const eligibility = checkEligibility();
-
   const handleNext1 = (event) => {
     if (event) {
       event.preventDefault();
     }
 
-    if (eligibility) {
-      Swal.fire({
-        title: 'Xác nhận',
-        text: "Bạn có muốn nộp hồ sơ vào chương trình này không?",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Nộp hồ sơ',
-        cancelButtonText: 'Hủy'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          handleSubmitProgramApplication();
-          dispatch(resetProgramById());
-          dispatch(resetSchoolProfiles());
-        }
-      });
-    } else {
-      navigate(`/program-details/${programById}`);
-    }
+    Swal.fire({
+      title: 'Xác nhận',
+      text: "Bạn có muốn nộp hồ sơ vào chương trình này không?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Nộp hồ sơ',
+      cancelButtonText: 'Hủy'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleSubmitProgramApplication();
+        dispatch(resetProgramById());
+        dispatch(resetSchoolProfiles());
+      }
+    });
   };
+
 
   const handleBack1 = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
@@ -403,6 +396,7 @@ const CheckRequirementPage = () => {
         ))}
       </Stepper>
       {activeStep === 0 && (
+
         <Box style={{ marginBottom: '24px' }}>
           <div className="form-group">
             <Typography variant="h4" align="center" marginBottom={2} marginTop={4}>
@@ -536,18 +530,24 @@ const CheckRequirementPage = () => {
         </Box>
       )}
       {activeStep === 1 && (
+                        <form onSubmit={handleSubmitProgramApplication}>
+
         <Box style={{ marginBottom: '24px' }}>
           <Typography variant="h4" align="center" marginBottom={2} marginTop={4}>
             Các chứng chỉ yêu cầu
           </Typography>
           <EnglishCertificates certificates={certificatesByProgramId} studentCertificates={studentCertificates} getBadgeProps={getBadgeProps} />
           <SATCertificates certificates={certificatesByProgramId} studentCertificates={studentCertificates} getBadgeProps={getBadgeProps} />
-          <GPACertificates schoolProfiles={schoolProfiles} programCertificates={certificatesByProgramId} />
+          <GPACertificates schoolProfiles={schoolProfiles} programCertificates={certificatesByProgramId} getBadgeProps={getBadgeProps} />
           <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
             <Button variant="contained" color="primary" onClick={handleBack} style={{ marginRight: '10px', marginTop: '20px' }}>Quay lại</Button>
-            <Button variant="contained" color="primary" onClick={handleNext} style={{ marginTop: '20px' }}>Kế tiếp</Button>
+            {/* <Button variant="contained" color="primary" onClick={handleNext} style={{ marginTop: '20px' }}>Kế tiếp</Button> */}
+            <Button variant="contained" color="primary" onClick={(event) => handleNext1(event)} style={{ marginTop: '20px' }}>Nộp hồ sơ</Button>
+
           </div>
         </Box>
+
+        </form>
       )}
       {activeStep === 2 && (
         <form onSubmit={handleSubmitProgramApplication}>

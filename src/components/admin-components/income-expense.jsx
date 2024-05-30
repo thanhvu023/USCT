@@ -33,7 +33,7 @@ const IncomeExpense = () => {
   }, [dispatch, startDate, endDate]);
 
   // Calculate payment counts by status
-  const paymentCounts = allPayments.reduce((acc, payment) => {
+  const paymentCounts = allPayments?.reduce((acc, payment) => {
     switch (payment.status) {
       case 0:
         acc.pending++;
@@ -62,7 +62,7 @@ const IncomeExpense = () => {
       backgroundColor: ['rgba(54, 162, 235, 0.6)', 'rgba(54, 162, 235, 0.6)', 'rgba(75, 192, 192, 0.6)', 'rgba(255, 99, 132, 0.6)', 'rgba(255, 159, 64, 0.6)'],
       borderColor: ['rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 1)', 'rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 1)', 'rgba(255, 159, 64, 1)'],
       borderWidth: 1,
-      data: [paymentCounts.total, paymentCounts.pending, paymentCounts.success, paymentCounts.failed, paymentCounts.cancelled],
+      data: [paymentCounts?.total, paymentCounts?.pending, paymentCounts?.success, paymentCounts?.failed, paymentCounts?.cancelled],
     }],
   };
 

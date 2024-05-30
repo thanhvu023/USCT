@@ -36,6 +36,7 @@ export const createDocument = createAsyncThunk(
           'Content-Type': 'application/json'
         }
       });
+      console.log('doc response:', res.data); 
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response);

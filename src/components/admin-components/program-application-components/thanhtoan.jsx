@@ -69,6 +69,8 @@ const PaymentDetailsPage = () => {
   const [application, setApplication] = useState(location.state || null);
   const program = application?.program;
   const studentProfile = application?.studentProfile;
+  
+console.log("studentProfile",studentProfile)
   const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
@@ -437,8 +439,10 @@ const PaymentDetailsPage = () => {
         return 'Cần bổ sung';
       case 2:
         return 'Tài liêu không hợp lệ';
+        case 3:
+          return 'Tài liêu hợp lệ';
       default:
-        return 'Tài liêu hợp lệ';
+        return 'Lỗi';
     }
   };
   const formatDescription1 = (description) => {
@@ -447,11 +451,16 @@ const PaymentDetailsPage = () => {
     return paragraphs.map((para, index) => `<strong>${index + 1}.</strong> ${para}`).join("<br />");
   };
   const calculateOverallGPA = () => {
+    if (!Array.isArray(schoolProfiles)) {
+      return "0.00"; // or any default value you prefer
+    }
+
     const year10 = schoolProfiles.find(profile => profile.schoolGrade === 10)?.gpa || 0;
     const year11 = schoolProfiles.find(profile => profile.schoolGrade === 11)?.gpa || 0;
     const year12 = schoolProfiles.find(profile => profile.schoolGrade === 12)?.gpa || 0;
+
     const overallGPA = (year10 + year11 + year12) / 3;
-    return overallGPA.toFixed(2); 
+    return overallGPA.toFixed(2);
   };
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -543,13 +552,14 @@ const PaymentDetailsPage = () => {
             <p>
               <strong>Học vấn:</strong>
             </p>
+            
             <ul>
               {studentProfile?.studyProcess?.split("|").map((item, index) => {
                 const [label, ...rest] = item.split(":");
                 const value = rest.join(":");
                 return (
                   <li key={index}>
-                    <strong>{label}:</strong> {value}
+                    <span>{label}:</span> {value}
                     {label.startsWith('ThưGiớiThiệu') && (
                       <ul>
                         {value.split(",").map((subItem, subIndex) => (
@@ -563,6 +573,56 @@ const PaymentDetailsPage = () => {
                 );
               })}
             </ul>
+            <p>
+                <strong>Chứng chỉ:</strong>
+              </p>
+              <ul>
+                {studentCertificates.map((certificate, index) => (
+                  <li key={index}>
+                    <strong>{certificate.certificateTypeDto.certificateName}:</strong> {certificate.certificateValue}
+                  </li>
+                ))}
+              </ul>
+            <p>
+                <strong>GPA tổng:</strong> {calculateOverallGPA()}
+              </p>
+              <Grid container spacing={2} style={{ marginTop: '24px' }}>
+                {schoolProfiles.map((profile, index) => (
+                  <Grid item xs={8} sm={4} key={index}>
+                    <Card>
+                      <CardContent>
+                        <Typography variant="h6" align="center">
+                          Lớp {profile.schoolGrade}
+                        </Typography>
+                        <Button
+                          variant="outlined"
+                          onClick={() => handleOpenDialog(profile.img)}
+                          fullWidth
+                        >
+                          Xem ảnh
+                        </Button>
+                        <Dialog
+                          open={openDialog}
+                          onClose={handleCloseDialog}
+                          maxWidth="md"
+                          fullWidth
+                        >
+                          <DialogContent>
+                            <img
+                              src={selectedImage}
+                              alt={`Lớp ${profile.schoolGrade}`}
+                              style={{ width: '100%' }}
+                            />
+                          </DialogContent>
+                        </Dialog>
+                        <Typography variant="body1" align="center" style={{ marginTop: '10px' }}>
+                          <strong>GPA:</strong> {profile.gpa}
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                ))}
+              </Grid>
             <p>
               {/* <strong>GPA tổng:</strong> {overallGPA} */}
             </p>
@@ -1015,7 +1075,7 @@ const PaymentDetailsPage = () => {
               <Typography variant="h6" gutterBottom>
                 Tài liệu đã nộp
               </Typography>
-              <TableContainer component={Paper}>
+              <TableContainer component={Paper} sx={{ maxWidth: 1400, maxHeight: 400, overflowY: 'auto' }}>
                 <Table
                   sx={{ minWidth: 600 }}
                   style={{ maxWidth: 1400, margin: "auto" }}
@@ -1062,7 +1122,7 @@ const PaymentDetailsPage = () => {
                               )
                             }
                           >
-                            <option value={0}>Chưa xử lý</option>
+                            <option value={0}>Đợi kiểm tra</option>
                             <option value={1}>Cần bổ sung</option>
                             <option value={2}>Tài liệu không hợp lệ</option>
                           

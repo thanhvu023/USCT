@@ -29,11 +29,17 @@ const getChipColor = (status) => {
     case 0:
       return 'primary'; // Đang xử lí
     case 1:
-      return 'warning'; // Bổ sung tài liệu
+      return 'info'; // Đã xét duyệt hồ sơ
     case 2:
-      return 'success'; // Đăng ký thành công
+      return 'success'; // Xét duyệt thành công
     case 3:
-      return 'error'; // Hủy bỏ đăng ký
+      return 'error'; // Xét duyệt thất bại
+    case 4:
+      return 'warning'; // Đóng hồ sơ
+    case 5:
+      return 'success'; // Hồ sơ đã hoàn tất
+    case 6:
+      return 'default'; // Hồ sơ đã hủy
     default:
       return 'default'; // Không xác định
   }
@@ -41,9 +47,12 @@ const getChipColor = (status) => {
 
 const statusMap = {
   0: 'Đang xử lí',
-  1: 'Bổ sung tài liệu',
-  2: 'Đăng ký thành công',
-  3: 'Hủy bỏ đăng ký',
+  1: 'Đã xét duyệt hồ sơ',
+  2: 'Xét duyệt thành công',
+  3: 'Xét duyệt thất bại',
+  4: 'Đóng hồ sơ',
+  5: 'Hồ sơ đã hoàn tất',
+  6: 'Hồ sơ đã hủy',
 };
 
 export const COLUMNS = [

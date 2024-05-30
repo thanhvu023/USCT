@@ -60,8 +60,9 @@ import { getProgramCertificateByProgramId } from "../../redux/slice/program-docu
 import { getAllStudentCertificatesByProfile } from "../../redux/slice/studentCertificateSlice";
 import { createDocument, getDocumentsByProgramApplicationId, updateDocument } from "../../redux/slice/student-document";
 import { getAllDocumentTypes } from "../../redux/slice/documentTypesSlice";
-import { getFile } from "../../redux/slice/authSlice";
+import { createNotification, getFile } from "../../redux/slice/authSlice";
 import { getSchoolProfilesByStudentProfileId } from "../../redux/slice/schoolProfileSlice";
+import jwtDecode from "jwt-decode";
 const StyledCard = styled(Card)(({ theme }) => ({
   border: `1px solid ${theme.palette.divider || '#e0e0e0'}`,
   boxShadow: theme.shadows ? theme.shadows[3] : '0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12)',
@@ -161,7 +162,10 @@ const handleTabChange = (event, newValue) => {
   };
 
   const navigate = useNavigate();
+  const token = useSelector((state) => state.auth.token);
 
+  const customerId = jwtDecode(token).UserId;
+  console.log("customerId",customerId)
   const [note, setNote] = useState('');
   const [selectedFee, setSelectedFee] = useState(null);
   const [method, setMethod] = useState('order');
@@ -355,7 +359,12 @@ const handleImageUpload = async () => {
       };
 
       await dispatch(updatePayment({ id: paymentId, data: updatedPaymentData }));
-
+      await dispatch(createNotification({
+        programApplicationId: currentPaymentDetails.programApplicationId,
+        customerId: customerId,
+        paymentId: currentPaymentDetails.paymentId,
+       
+      }));
       Swal.fire({
         title: 'Tải lên thành công',
         text: 'Ảnh xác thực thanh toán đã được tải lên thành công.',
@@ -559,8 +568,7 @@ const handleCreateVnPayLink = async () => {
   };
   const handleDSubmit = async (e) => {
     e.preventDefault();
-  
-    // Kiểm tra giai đoạn hiện tại
+    
     const activeStage = programStages.find(stage => stage.programStageId === details.applyStage.find(applyStage => applyStage.status === 1)?.programStageId);
     const selectedDocumentType = documentTypes.find(type => type.documentTypeId.toString() === documentData.documentTypeId.toString());
   
@@ -578,7 +586,11 @@ const handleCreateVnPayLink = async () => {
           ...documentData,
           file: imgUrl,
         };
-        dispatch(createDocument(updatedDocumentData));
+        const response = await dispatch(createDocument(updatedDocumentData)).unwrap();
+        const documentTypeId = response.documentTypeDto?.documentTypeId;
+        console.log('Response documentTypeId:', documentTypeId);
+        dispatch(createNotification({ programApplicationId, customerId, documentTypeId }));
+        dispatch(getDocumentsByProgramApplicationId(programApplicationId));
         Swal.fire('Thành công', 'Tài liệu đã được tải lên thành công', 'success');
       } catch (error) {
         console.error("Error uploading file:", error);
@@ -589,8 +601,9 @@ const handleCreateVnPayLink = async () => {
     }
   };
   
+  
   const filteredDocumentTypes = useMemo(() => {
-    const activeStage = programStages.find(stage => stage.programStageId === details.applyStage.find(applyStage => applyStage.status === 1)?.programStageId);
+    const activeStage = programStages?.find(stage => stage.programStageId === details.applyStage.find(applyStage => applyStage.status === 1)?.programStageId);
     if (!activeStage) return [];
     return documentTypes.filter(type => activeStage.stageName === type.typeName);
   }, [programStages, details.applyStage, documentTypes]);
@@ -613,12 +626,18 @@ const handleCreateVnPayLink = async () => {
   };
 
   const calculateOverallGPA = () => {
+    if (!Array.isArray(schoolProfiles)) {
+      return "0.00"; // or any default value you prefer
+    }
+  
     const year10 = schoolProfiles.find(profile => profile.schoolGrade === 10)?.gpa || 0;
     const year11 = schoolProfiles.find(profile => profile.schoolGrade === 11)?.gpa || 0;
     const year12 = schoolProfiles.find(profile => profile.schoolGrade === 12)?.gpa || 0;
+    
     const overallGPA = (year10 + year11 + year12) / 3;
-    return overallGPA.toFixed(2);
+    return overallGPA.toFixed(2); 
   };
+  
   const [selectedDocument, setSelectedDocument] = useState(null);
   const [editFile, setEditFile] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -656,17 +675,12 @@ const handleCreateVnPayLink = async () => {
           status: selectedDocument.status,
         };
   
-        dispatch(updateDocument(updatedDocumentData))
-          .then(() => {
-            Swal.fire('Thành công', 'Tài liệu đã được cập nhật thành công', 'success');
-            setIsEditModalOpen(false);
-            setEditFile(null);
-            dispatch(getDocumentsByProgramApplicationId(programApplicationId));
-          })
-          .catch((error) => {
-            console.error("Error updating document:", error);
-            Swal.fire('Lỗi', 'Không thể cập nhật tài liệu', 'error');
-          });
+        await dispatch(updateDocument(updatedDocumentData));
+        dispatch(getDocumentsByProgramApplicationId(programApplicationId)); // Add this line to update the document list
+  
+        Swal.fire('Thành công', 'Tài liệu đã được cập nhật thành công', 'success');
+        setIsEditModalOpen(false);
+        setEditFile(null);
       } catch (error) {
         console.error("Error uploading file:", error);
         Swal.fire('Lỗi', 'Không thể tải lên tài liệu', 'error');
@@ -806,61 +820,68 @@ const handleCreateVnPayLink = async () => {
                     <Typography variant="body1" align="center" style={{ marginTop: '10px' }}>
                       <strong>GPA tổng:</strong> {calculateOverallGPA()}
                     </Typography>
-                                        <Grid container spacing={2}>
-                      {schoolProfiles.map((profile, index) => (
-                        <Grid item xs={12} sm={4} key={index} mt={4}>
-                          <Card>
-                            <CardContent>
-                              <Typography variant="h6" align="center">
-                                Lớp {profile.schoolGrade}
-                              </Typography>
-                              <Button
-                                variant="outlined"
-                                onClick={() => handleClickOpen(profile.img)}
-                                fullWidth
-                              >
-                                Xem ảnh
-                              </Button>
-                              <Dialog
-                                open={open}
-                                onClose={handleClose}
-                                maxWidth="md"
-                                fullWidth
-                              >
-                                <DialogContent>
-                                  <img
-                                    src={selectedFile}
-                                    alt={`Lớp ${profile.schoolGrade}`}
-                                    style={{ width: '100%' }}
-                                  />
-                                </DialogContent>
-                              </Dialog>
-                              <TableContainer component={Paper} style={{ marginTop: '10px' }}>
-                                <Table aria-label="simple table">
-                                  <TableHead>
-                                    <TableRow>
-                                      <TableCell>Môn học</TableCell>
-                                      <TableCell>Điểm</TableCell>
-                                    </TableRow>
-                                  </TableHead>
-                                  <TableBody>
-                                    {profile.profileScoreDtos.map((score) => (
-                                      <TableRow key={score.profileScoreId}>
-                                        <TableCell>{score.subjectDto.subjectName}</TableCell>
-                                        <TableCell>{score.score}</TableCell>
-                                      </TableRow>
-                                    ))}
-                                  </TableBody>
-                                </Table>
-                              </TableContainer>
-                              <Typography variant="body1" align="center" style={{ marginTop: '10px' }}>
-                                <strong>GPA:</strong> {profile.gpa}
-                              </Typography>
-                            </CardContent>
-                          </Card>
-                        </Grid>
-                      ))}
-                    </Grid>
+                    <Grid container spacing={2}>
+  {Array.isArray(schoolProfiles) && schoolProfiles.length > 0 ? (
+    schoolProfiles.map((profile, index) => (
+      <Grid item xs={12} sm={4} key={index} mt={4}>
+        <Card>
+          <CardContent>
+            <Typography variant="h6" align="center">
+              Lớp {profile.schoolGrade}
+            </Typography>
+            <Button
+              variant="outlined"
+              onClick={() => handleClickOpen(profile.img)}
+              fullWidth
+            >
+              Xem ảnh
+            </Button>
+            <Dialog
+              open={open}
+              onClose={handleClose}
+              maxWidth="md"
+              fullWidth
+            >
+              <DialogContent>
+                <img
+                  src={selectedFile}
+                  alt={`Lớp ${profile.schoolGrade}`}
+                  style={{ width: '100%' }}
+                />
+              </DialogContent>
+            </Dialog>
+            <TableContainer component={Paper} style={{ marginTop: '10px' }}>
+              <Table aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Môn học</TableCell>
+                    <TableCell>Điểm</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {profile.profileScoreDtos.map((score) => (
+                    <TableRow key={score.profileScoreId}>
+                      <TableCell>{score.subjectDto.subjectName}</TableCell>
+                      <TableCell>{score.score}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <Typography variant="body1" align="center" style={{ marginTop: '10px' }}>
+              <strong>GPA:</strong> {profile.gpa}
+            </Typography>
+          </CardContent>
+        </Card>
+      </Grid>
+    ))
+  ) : (
+    <Typography variant="body1" align="center" style={{ marginTop: '10px' }}>
+      Không có hồ sơ nào.
+    </Typography>
+  )}
+</Grid>
+
                     
                   </CardContent>
                 </Card>
@@ -999,88 +1020,7 @@ const handleCreateVnPayLink = async () => {
           </Grid>
           </Grid>
          
-          <div className="price-wrap text-center">
-          <Card raised>
-  <CardContent>
-    <Typography variant="h6" gutterBottom>
-      Tài liệu chương trình yêu cầu
-    </Typography>
-    {programDocuments?.map((document) => (
-      <div key={document.programDocumentId} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        
-        <Accordion
-          expanded={expanded === document.programDocumentId}
-          onChange={handleChange(document.programDocumentId)}
-          style={{ flex: 1 }}
-        >
-          
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls={`${document.programDocumentId}-content`}
-            id={`${document.programDocumentId}-header`}
-          >
-            <Typography style={{display:'flex', justifyContent:'center', alignItems:'center'}}>{document?.documentTypeDto?.typeName}</Typography>
-            <IconButton
-              color="primary"
-              // onClick={() => handleFileUpload(document.programDocumentId)}
-              disabled={activeStage?.stageName !== document.documentTypeDto?.typeName} // Disable upload button if stage does not match document type
-            >
-              <CloudUploadIcon />
-            </IconButton>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography variant="subtitle2">Mô tả:</Typography>
-            <Typography
-              style={{textAlign:'left'}}
-              dangerouslySetInnerHTML={{ __html: formatDescription1(document.description) }}
-            />
-          </AccordionDetails>
-        </Accordion>
        
-      </div>
-    ))}
-  </CardContent>
-</Card>
-
-    <div className="price-wrap text-center" style={{marginTop:'24px'}}>
-    <Card raised>
-      <CardContent>
-        <Typography variant="h6" gutterBottom>Tải tệp</Typography>
-        <form onSubmit={handleDSubmit}>
-          <Form.Group as={Row} className="mb-3">
-            <Form.Label column sm="4">Loại tài liệu:</Form.Label>
-            <Col sm="8">
-              <Form.Control
-                as="select"
-                name="documentTypeId"
-                value={documentData.documentTypeId}
-                onChange={handleDChange}
-              >
-                <option value="">Chọn loại tài liệu</option>
-                {filteredDocumentTypes.map((type) => (
-                  <option key={type.documentTypeId} value={type.documentTypeId}>
-                    {type.typeName}
-                  </option>
-                ))}
-              </Form.Control>
-            </Col>
-          </Form.Group>
-          <Form.Group as={Row} className="mb-3">
-            <Form.Label column sm="4">Tệp tin:</Form.Label>
-            <Col sm="8">
-              <Form.Control
-                type="file"
-                name="file"
-                onChange={handleDFileChange}
-              />
-            </Col>
-          </Form.Group>
-          <Button variant="contained" type="submit" endIcon={<SendIcon />}>Tải lên</Button>
-        </form>
-      </CardContent>
-    </Card>
-                        </div>
-          </div>
         </div>
       </div>
      
@@ -1398,72 +1338,163 @@ Hoặc có thể đóng toàn bộ phí cho tiến trình (cập nhật tự đ�
 </TabPanel>
 
 <TabPanel value={tabIndex} index={2}> {/* Add new TabPanel */}
-<Card raised>
-<CardContent>
-<Typography variant="h6" gutterBottom style={{textAlign:'center'}}>
-    Danh sách tài liệu đã nộp
-  </Typography>
-  <div style={{ display: 'flex', justifyContent: 'center' }}>
-    
-    <TableContainer component={Paper} sx={{ width: '80%', maxWidth: 1400 }}>
-      <Table
-        sx={{ minWidth: 600 }}
-        aria-label="document table"
-      >
-        <TableHead>
-          <TableRow>
-            <TableCell>ID</TableCell>
-            <TableCell align="right">Loại tài liệu</TableCell>
-            <TableCell align="right">Thời gian tải lên</TableCell>
-            <TableCell align="right">Hành động</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {documents?.map((document) => (
-            <TableRow key={document.documentId}>
-              <TableCell component="th" scope="row">
-                {document.documentId}
-              </TableCell>
-              <TableCell align="right">{document?.documentTypeDto?.typeName}</TableCell>
-              <TableCell align="right">
-                {new Date(document.updateDate).toLocaleString('en-GB', {
-                  year: 'numeric',
-                  month: '2-digit',
-                  day: '2-digit',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  second: '2-digit'
-                })}
-              </TableCell>
-              <TableCell align="right">
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={() => handleDocumentDownload(document)}
-                      style={{ textTransform: "none", marginRight: '8px' }}
-                    >
-                      Tải xuống
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      onClick={() => openEditModal(document)}
-                      style={{ textTransform: "none" }}
-                    >
-                      Chỉnh sửa 
-                    </Button>
-                  </TableCell>
-            
+<div className="price-wrap text-center">
+<Grid container spacing={2}>
+      <Grid item xs={12} md={6}>
+
+      <Card raised>
+  <CardContent>
+    <Typography variant="h6" gutterBottom style={{ textAlign: 'center' }}>
+      Danh sách tài liệu đã nộp
+    </Typography>
+    <div style={{ display: 'flex', justifyContent: 'center' }}>
+      <TableContainer component={Paper} sx={{ maxWidth: 1400, maxHeight: 400, overflowY: 'auto' }}>
+        <Table
+          sx={{ minWidth: 600 }}
+          aria-label="document table"
+        >
+          <TableHead>
+            <TableRow>
+              <TableCell>ID</TableCell>
+              <TableCell align="right">Loại tài liệu</TableCell>
+              <TableCell align="right">Thời gian tải lên</TableCell>
+              <TableCell align="right">Hành động</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  </div>
-</CardContent>
+          </TableHead>
+          <TableBody>
+            {documents?.map((document) => (
+              <TableRow key={document.documentId}>
+                <TableCell component="th" scope="row">
+                  {document.documentId}
+                </TableCell>
+                <TableCell align="right">{document?.documentTypeDto?.typeName}</TableCell>
+                <TableCell align="right">
+                  {new Date(document.updateDate).toLocaleString('en-GB', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                  })}
+                </TableCell>
+                <TableCell align="right">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleDocumentDownload(document)}
+                    style={{ textTransform: "none", marginRight: '8px' }}
+                  >
+                    Tải xuống
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => openEditModal(document)}
+                    style={{ textTransform: "none" }}
+                  >
+                    Chỉnh sửa
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </div>
+  </CardContent>
 </Card>
 
 
+          
+</Grid>
+<Grid item xs={12} md={6}>
+
+    <div className="price-wrap text-center" >
+    <Card raised>
+  <CardContent>
+    <Typography variant="h6" gutterBottom>
+      Tài liệu chương trình yêu cầu
+    </Typography>
+    {programDocuments?.map((document) => (
+      <div key={document.programDocumentId} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        
+        <Accordion
+          expanded={expanded === document.programDocumentId}
+          onChange={handleChange(document.programDocumentId)}
+          style={{ flex: 1 }}
+        >
+          
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls={`${document.programDocumentId}-content`}
+            id={`${document.programDocumentId}-header`}
+          >
+            <Typography style={{display:'flex', justifyContent:'center', alignItems:'center'}}>{document?.documentTypeDto?.typeName}</Typography>
+            <IconButton
+              color="primary"
+              // onClick={() => handleFileUpload(document.programDocumentId)}
+              disabled={activeStage?.stageName !== document.documentTypeDto?.typeName} // Disable upload button if stage does not match document type
+            >
+              <CloudUploadIcon />
+            </IconButton>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography variant="subtitle2">Mô tả:</Typography>
+            <Typography
+              style={{textAlign:'left'}}
+              dangerouslySetInnerHTML={{ __html: formatDescription1(document.description) }}
+            />
+          </AccordionDetails>
+        </Accordion>
+       
+      </div>
+    ))}
+  </CardContent>
+</Card>
+              </div>
+                        </Grid>
+                        </Grid>
+          </div>
+          <Grid item xs={12} md={6} mt={4}>
+
+          <Card raised>
+      <CardContent>
+        <Typography variant="h6" gutterBottom>Tải tệp</Typography>
+        <form onSubmit={handleDSubmit}>
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm="4">Loại tài liệu:</Form.Label>
+            <Col sm="8">
+              <Form.Control
+                as="select"
+                name="documentTypeId"
+                value={documentData.documentTypeId}
+                onChange={handleDChange}
+              >
+                <option value="">Chọn loại tài liệu</option>
+                {filteredDocumentTypes.map((type) => (
+                  <option key={type.documentTypeId} value={type.documentTypeId}>
+                    {type.typeName}
+                  </option>
+                ))}
+              </Form.Control>
+            </Col>
+          </Form.Group>
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm="4">Tệp tin:</Form.Label>
+            <Col sm="8">
+              <Form.Control
+                type="file"
+                name="file"
+                onChange={handleDFileChange}
+              />
+            </Col>
+          </Form.Group>
+          <Button variant="contained" type="submit"   endIcon={<CloudUploadIcon />}>Tải lên</Button>
+        </form>
+      </CardContent>
+    </Card>
+</Grid>
   <Box sx={{ display: 'flex', justifyContent: 'space-between', margin: '20px' }}>
     <Button variant="contained" onClick={prevPage} disabled={page === 0}>Trước</Button>
     <Button variant="contained" onClick={nextPage} disabled={page + 1 === pageCount}>Kế tiếp</Button>
@@ -1484,10 +1515,10 @@ Hoặc có thể đóng toàn bộ phí cho tiến trình (cập nhật tự đ�
     </Form.Group>
   </DialogContent>
   <DialogActions>
-    <Button onClick={handleEditClose} color="primary">
+    <Button onClick={handleEditClose} variant="contained" >
       Hủy
     </Button>
-    <Button onClick={handleEditSubmit} color="primary">
+    <Button onClick={handleEditSubmit} variant="contained">
       Cập nhật
     </Button>
   </DialogActions>
