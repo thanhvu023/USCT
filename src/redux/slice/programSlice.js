@@ -136,7 +136,14 @@ export const createProgram = createAsyncThunk(
   "/program/createProgram",
   async (params, thunkAPI) => {
     // console.log("programData",programData)
-    const { programStage,formData, certificates, programFee, programDocument } = params;
+    const {
+      programStage,
+      formData,
+      certificates,
+      programFee,
+      programDocument,
+      programStageFee,
+    } = params;
     try {
       const res = await instance.post(`/programs`, formData, {
         headers: {
@@ -150,21 +157,19 @@ export const createProgram = createAsyncThunk(
         ...cert,
         programId,
       }));
-      const programFeeData = programFee.map((fee) => ({
-        ...fee,
-        programId,
-      }));
-      const programStageData =programStage.map((stage)=>({
-        ...stage,programId
-      }))
+      // const programFeeData = programFee.map((fee) => ({
+      //   ...fee,
+      //   programId,
+      // }));
+
       const programCer = await instance.post(
         `/program-certificates`,
         certificatesData
       );
-      const programFeeRes = await instance.post(
-        `/program-fees`,
-        programFeeData
-      );
+      // const programFeeRes = await instance.post(
+      //   `/program-fees`,
+      //   programFeeData
+      // );
       const programDocumentData = programDocument.map((doc) => ({
         ...doc,
         programId,
@@ -173,11 +178,22 @@ export const createProgram = createAsyncThunk(
         `/program-documents`,
         programDocumentData
       );
-     const programStageRes = await instance.post(
-      `/program-stages`,
-      programStageData
-     )
-     console.log(programStageRes)
+      const programStageFeeData = programStageFee.map((item) => ({
+        programStageRequest: {
+          ...item.programStageRequest,
+          programId: programId,
+        },
+        programFeeRequest: {
+          ...item.programFeeRequest,
+          programId: programId,
+        },
+      }));
+      console.log(programStageFeeData);
+       const programStageRes = await instance.post(
+        `/program-stages/fee`,
+        programStageFeeData
+       )
+       console.log(programStageRes)
       return;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -278,7 +294,7 @@ export const programSlice = createSlice({
     },
     resetProgramById: (state) => {
       state.programById = {};
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -389,6 +405,6 @@ export const programSlice = createSlice({
 });
 const {
   reducer: programReducer,
-  actions: { logoutProgram,resetProgramById  },
+  actions: { logoutProgram, resetProgramById },
 } = programSlice;
-export { programReducer as default, logoutProgram,resetProgramById  };
+export { programReducer as default, logoutProgram, resetProgramById };
