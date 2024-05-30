@@ -9,7 +9,7 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 const ApplicationStatusChart = () => {
   const dispatch = useDispatch();
   const programApplications = useSelector(state => state.programApplication.programApplications);
-  const [applicationStats, setApplicationStats] = useState({ total: 0, completed: 0, processing: 0 });
+  const [applicationStats, setApplicationStats] = useState({ processing: 0, supplementary: 0, success: 0, cancelled: 0 });
 
   useEffect(() => {
     dispatch(getAllProgramApplication());
@@ -17,27 +17,34 @@ const ApplicationStatusChart = () => {
 
   useEffect(() => {
     const stats = programApplications.reduce((acc, app) => {
-      acc.total++;
-      // Check if all applyStage entries have status 2 to be considered completed
-      const isCompleted = app.applyStage.every(stage => stage.status === 2);
-      if (isCompleted) {
-        acc.completed++;
-      } else {
-        acc.processing++;
+      switch (app.status) {
+        case 0:
+          acc.processing++;
+          break;
+        case 1:
+          acc.supplementary++;
+          break;
+        case 2:
+          acc.success++;
+          break;
+        case 3:
+          acc.cancelled++;
+          break;
+        default:
+          break;
       }
       return acc;
-    }, { total: 0, completed: 0, processing: 0 });
+    }, { processing: 0, supplementary: 0, success: 0, cancelled: 0 });
 
     setApplicationStats(stats);
   }, [programApplications]);
 
   const data = {
-    labels: ['Tổng số hồ sơ ứng tuyển', 'Hồ sơ hoàn thành', 'Hồ sơ đang còn trong tiến trình'],
+    labels: ['Đang xử lí', 'Bổ sung tài liệu', 'Đăng ký thành công', 'Hủy bỏ đăng ký'],
     datasets: [{
       label: 'Số lượng hồ sơ ứng tuyển',
-      backgroundColor: ['#42A5F5', '#66BB6A', '#FFA726'],
-      data: [applicationStats.total, applicationStats.completed, applicationStats.processing],
-      
+      backgroundColor: ['#42A5F5', '#66BB6A', '#FFA726', '#EF5350'],
+      data: [applicationStats.processing, applicationStats.supplementary, applicationStats.success, applicationStats.cancelled],
     }],
   };
 

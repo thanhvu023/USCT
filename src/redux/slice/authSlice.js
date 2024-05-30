@@ -134,6 +134,7 @@ export const createNotification = createAsyncThunk(
           "Content-Type": "application/json",
         },
       });
+      console.log('createNotification response:', res.data); 
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);

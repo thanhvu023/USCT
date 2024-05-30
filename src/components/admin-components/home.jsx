@@ -390,25 +390,27 @@ const AdminHome = ({ handleAllConsultantClick }) => {
         <Col xl={8} style={{ marginTop: "48px" }}>
         <div className="card mt-4">
               <div className="card-header" style={{ backgroundColor: "white" }}>
-                <h3 className="card-title">Tổng quan doanh thu thanh toán</h3>
+              <h3 className="card-title">Trạng thái hồ sơ ứng tuyển</h3>
               </div>
               <div className="card-body">
-                <PaymentRevenueChart />
+                <ApplicationStatusChart />
               </div>
             </div>
           </Col>
-        </Row>
-        <Row>
-        <Col xl={8} style={{ marginTop: "48px" }}>
+          <Col xl={4} style={{ marginTop: "48px" }}>
     <div className="card mt-4">
       <div className="card-header" style={{ backgroundColor: "white" }}>
         <h3 className="card-title">Tổng quan doanh thu thanh toán</h3>
+
       </div>
       <div className="card-body">
-        <ApplicationStatusChart />
+        <PaymentRevenueChart />
       </div>
     </div>
   </Col>
+        </Row>
+        <Row>
+      
   {/* <RegistrationStatusChart /> */}
 </Row>
 

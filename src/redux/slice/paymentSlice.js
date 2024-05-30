@@ -87,7 +87,7 @@ export const updatePayment = createAsyncThunk(
   async ({ id, data }, thunkAPI) => {
     try {
       const response = await instance.put(`/payment/${id}`, data);
-      console.log("Update Response:", response.data);
+      console.log("paymentupdate Response:", response.data);
       return response.data;
     } catch (error) {
       console.error("API error on update:", error);
