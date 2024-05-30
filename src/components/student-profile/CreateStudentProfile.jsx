@@ -701,12 +701,12 @@ const CreateStudentProfile = () => {
                           )}
                         </div>
                       </div>
-                      <div className="row col-lg-12 ml-1">
+                      <div className="row col-lg-12 ">
                         {certificates.map((cert) => (
                           <div className="col-lg-6 mb-3" key={cert.id}>
                             <div className="mb-3">
                               <Select
-                                placeholder="Chứng chỉ tiếng anh"
+                                placeholder="Các loại chứng chỉ"
                                 name={`certificateTypeId-${cert.id}`}
                                 value={certificateOptions.slice(0, -1).find(
                                   (option) =>

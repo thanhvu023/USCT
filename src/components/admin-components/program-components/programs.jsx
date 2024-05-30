@@ -34,7 +34,19 @@ const AllPrograms = () => {
   const semesters = useSelector((state) => state.semester.allSemester);
   const universities = useSelector((state) => state.university.universities);
   const [imgURL, setImgURL] = useState(null);
-
+  const [programStageFee, setProgramStageFee] = useState([
+    {
+      programStageRequest: {
+        programStageId: 0,
+        isPayment: false,
+        stageName: "",
+      },
+      programFeeRequest: {
+        amount: 0,
+        feeTypeId: 0,
+      },
+    },
+  ]);
   // console.log("semesters:",programs)
   const [selectedProgramId, setSelectedProgramId] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -87,6 +99,39 @@ const AllPrograms = () => {
       certificateTypeId: "",
     },
   ]);
+  const handleProgramStageFeeChange = (id, section, field, value) => {
+    setProgramStageFee((prevProgramStageFee) =>
+      prevProgramStageFee.map((item) =>
+        item.programStageRequest.programStageId === id
+          ? {
+              ...item,
+              [section]: {
+                ...item[section],
+                [field]: value,
+              },
+            }
+          : item
+      )
+    );
+  };
+  const addProgramStageFee = () => {
+    setProgramStageFee([
+      ...programStageFee,
+      {
+        programStageRequest: {
+          programStageId: Math.random(),
+          isPayment: false,
+          programFeeId: 0,
+          stageName: "",
+        },
+        programFeeRequest: {
+          programFeeId: Math.random(),
+          amount: 0,
+          feeTypeId: 0,
+        },
+      },
+    ]);
+  };
   const [programFee, setProgramFee] = useState([
     {
       id: 1,
@@ -213,6 +258,7 @@ const AllPrograms = () => {
         formData,
         certificates,
         programFee,
+        programStageFee
       })
     ).then(() => {
       Swal.fire({
@@ -440,7 +486,7 @@ const AllPrograms = () => {
     return (
       <div className="row">
         {loading ? (
-            <Backdrop
+          <Backdrop
             sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
             open={loading}
           >
@@ -737,6 +783,9 @@ const AllPrograms = () => {
                 programStage={programStage}
                 handleProgramStageChange={handleProgramStageChange}
                 addProgramStage={addProgramStage}
+                programStageFee={programStageFee}
+                handleProgramStageFeeChange={handleProgramStageFeeChange}
+                addProgramStageFee={addProgramStageFee}
               />
             </div>
           </div>

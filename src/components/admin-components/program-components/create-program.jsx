@@ -17,15 +17,13 @@ const CreateProgramModal = ({
   certificates,
   addCertificate,
   handleCertificateChange,
-  programFee,
-  handleProgramFeeChange,
-  addProgramFee,
   programDocument,
   handleProgramDocumentChange,
   addProgramDocument,
-  programStage,
   handleProgramStageChange,
-  addProgramStage,
+  programStageFee,
+  handleProgramStageFeeChange,
+  addProgramStageFee,
 }) => {
   const dispatch = useDispatch();
   const [selectedFile, setSelectedFile] = useState(null);
@@ -36,12 +34,13 @@ const CreateProgramModal = ({
   const allSemester = useSelector((state) => state.semester.allSemester);
   const [active, setActive] = useState(false);
   const [inactive, setInactive] = useState(false);
+  const [isPayment, setIsPayment] = useState(false);
   const programStagesOption = [
-    { value: "Kết quả", label: "Kết quả" },
-    { value: "Xét duyệt hồ sơ", label: "Xét duyệt hồ sơ" },
     { value: "Nộp hồ sơ", label: "Nộp hồ sơ" },
+    { value: "Xét duyệt hồ sơ", label: "Xét duyệt hồ sơ" },
     { value: "Thư mời nhập học", label: "Thư mời nhập học" },
     { value: "Trả phí hồ sơ", label: "Trả phí hồ sơ" },
+    { value: "Kết quả", label: "Kết quả" },
   ];
   const certificateOptions = [
     { value: 1, label: "IELTS" },
@@ -74,11 +73,6 @@ const CreateProgramModal = ({
       label: "Bài tiểu luận",
     },
   ];
-  const stageFeeOptions = [
-    { value: false, label: "Không" },
-    { value: true, label: "Có" },
-  ];
-  console.log(programStage);
   useEffect(() => {
     if (setSelectedFile) {
       let OBJ = { ...formData, img: selectedFile };
@@ -97,7 +91,9 @@ const CreateProgramModal = ({
     const { name, value, type, checked } = e.target;
     const fieldValue = type === "checkbox" ? checked : value;
     handleProgramStageChange(id, name, fieldValue);
+    setIsPayment(!isPayment); // Update overall isPayment state
   };
+  console.log(programStageFee)
   const handleUpload = async () => {
     if (!img) return;
     const imageName = img.name;
@@ -129,7 +125,6 @@ const CreateProgramModal = ({
     dispatch(getAllMajor());
     dispatch(getProgramTypes());
   }, []);
-  console.log(programDocument);
   return (
     <Modal show={show} onHide={onClose} centered>
       <Modal.Header closeButton>
@@ -380,70 +375,6 @@ const CreateProgramModal = ({
                   </div>
                 </div>
               </div>
-              <div>
-                <label className="font-weight-bold fs-5">
-                  Các bước nộp hồ sơ của chương trình:
-                </label>
-                <div className="row col-lg-12 ml-1">
-                  {programStage?.map((stage) => (
-                    <div className="col-lg-6 mb-3" key={stage.id}>
-                      <div className="mb-3">
-                        <Select
-                          placeholder="Các bước nộp hồ sơ"
-                          name={`stageName-${stage.id}`}
-                          value={programStage.find(
-                            (option) => option.value === stage.stageName
-                          )}
-                          onChange={(e) =>
-                            handleProgramStageChange(
-                              stage.id,
-                              "stageName",
-                              e.value
-                            )
-                          }
-                          options={programStagesOption}
-                        />
-
-                        <Select
-                          placeholder="Loại phí"
-                          className="mt-2"
-                          name={`programFeeId-${stage.id}`}
-                          value={programStage.find(
-                            (option) => option.value === stage.programFeeId
-                          )}
-                          onChange={(e) =>
-                            handleProgramStageChange(
-                              stage.id,
-                              "programFeeId",
-                              e.value
-                            )
-                          }
-                          options={feeOptions}
-                        />
-                        <div className="d-flex mt-2">
-                          <p className="pt-2 mr-2">Có trả phí</p>
-                          <input
-                            type="checkbox"
-                            name="isPayment"
-                            checked={stage.isPayment}
-                            onChange={(e) => handleInputChange(stage.id, e)}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-
-                  <div className="col-lg-12 mb-3">
-                    <button
-                      type="button"
-                      onClick={addProgramStage}
-                      className="btn btn-primary"
-                    >
-                      Thêm các bước khác
-                    </button>
-                  </div>
-                </div>
-              </div>
             </form>
           </div>
           <div className="col">
@@ -542,52 +473,6 @@ const CreateProgramModal = ({
               </div>
             </form>
             <div>
-              <label className="font-weight-bold fs-5">Các loại phí:</label>
-              <div className="row col-lg-12 ml-1">
-                {programFee?.map((fee) => (
-                  <div className="col-lg-6 mb-3" key={fee.id}>
-                    <div className="mb-3">
-                      <Select
-                        placeholder="Các phí chương trình"
-                        name={`feeTypeId-${fee.id}`}
-                        value={programFee.find(
-                          (option) => option.value === fee.feeTypeId
-                        )}
-                        onChange={(e) =>
-                          handleProgramFeeChange(fee.id, "feeTypeId", e.value)
-                        }
-                        options={feeOptions}
-                      />
-                      <input
-                        type="number"
-                        placeholder="Số tiền"
-                        name={`amount-${fee.id}`}
-                        value={fee.amount}
-                        onChange={(e) =>
-                          handleProgramFeeChange(
-                            fee.id,
-                            "amount",
-                            e.target.value
-                          )
-                        }
-                        className="form-control mt-2"
-                      />
-                    </div>
-                  </div>
-                ))}
-
-                <div className="col-lg-12 mb-3">
-                  <button
-                    type="button"
-                    onClick={addProgramFee}
-                    className="btn btn-primary"
-                  >
-                    Thêm các phí khác
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div>
               <label className="font-weight-bold fs-5">
                 Các loại tài liệu của chương trình:
               </label>
@@ -636,6 +521,118 @@ const CreateProgramModal = ({
                   >
                     Thêm các tài liệu khác
                   </button>
+                </div>
+              </div>
+            </div>
+            <div className="col-lg-12">
+              <div className="row">
+                <div className="col-lg-6">
+                  <label className="font-weight-bold fs-5">
+                    Các bước nộp hồ sơ:
+                  </label>
+                  {programStageFee?.map((item) => (
+                    <div
+                      className="col-lg-12 mb-3"
+                      key={item.programStageRequest.programStageId}
+                    >
+                      <div className="mb-3">
+                        <Select
+                          placeholder="Các bước nộp hồ sơ"
+                          name={`stageName-${item.programStageRequest.programStageId}`}
+                          value={{
+                            value: item.programStageRequest.stageName, // Assuming `stageName` is the value property
+                            label: item.programStageRequest.stageName, // Assuming `stageName` is also the label property
+                          }}
+                          onChange={(e) =>
+                            handleProgramStageFeeChange(
+                              item.programStageRequest.programStageId,
+                              "programStageRequest",
+                              "stageName",
+                              e.value
+                            )
+                          }
+                          options={programStagesOption}
+                        />                      
+                        <div className="d-flex mt-2">
+                          <p className="pt-2 mr-2">Có trả phí</p>
+                          <input
+                            type="checkbox"
+                            name="isPayment"
+                            checked={item.programStageRequest.isPayment}
+                            onChange={(e) =>
+                              handleProgramStageFeeChange(
+                                item.programStageRequest.programStageId,
+                                "programStageRequest",
+                                "isPayment",
+                                e.target.checked
+                              )
+                            }
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  <div className="col-lg-12 mb-3">
+                    <button
+                      type="button"
+                      onClick={addProgramStageFee}
+                      className="btn btn-primary"
+                    >
+                      Thêm các bước khác
+                    </button>
+                  </div>
+                </div>
+                <div className="col-lg-6">
+                  {programStageFee.map(
+                    (item) =>
+                      item.programStageRequest.isPayment && (
+                        <div key={item.programFeeRequest.programFeeId}>
+                          <label className="font-weight-bold fs-5">
+                            Loại phí:
+                          </label>
+                          <div className="row col-lg-12 ml-1">
+                            <div className="col-lg-12 mb-3">
+                              <div className="mb-3">
+                                <Select
+                                  placeholder="Các phí chương trình"
+                                  name={`feeTypeId-${item.programFeeRequest.programFeeId}`}
+                                  value={feeOptions.find(
+                                    (option) =>
+                                      option.value ===
+                                      item.programFeeRequest.feeTypeId
+                                  )} // Find the matching option object
+                                  onChange={(e) =>
+                                    handleProgramStageFeeChange(
+                                      item.programStageRequest.programStageId,
+                                      "programFeeRequest",
+                                      "feeTypeId",
+                                      e.value
+                                    )
+                                  }
+                                  options={feeOptions}
+                                />
+
+                                <input
+                                  type="number"
+                                  placeholder="Số tiền"
+                                  name={`amount-${item.programFeeRequest.programFeeId}`}
+                                  value={item.programFeeRequest.amount}
+                                  onChange={(e) =>
+                                    handleProgramStageFeeChange(
+                                      item.programStageRequest.programStageId,
+                                      "programFeeRequest",
+                                      "amount",
+                                      e.target.value
+                                    )
+                                  }
+                                  className="form-control mt-2"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )
+                  )}
                 </div>
               </div>
             </div>

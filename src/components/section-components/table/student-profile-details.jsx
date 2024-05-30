@@ -15,7 +15,7 @@ const StudentProfileDetails = () => {
   useEffect(() => {
     dispatch(getStudentProfileById(studentProfileId));
   }, []);
-  const studentDetail = useSelector((state) => state.student.profileById);
+  const studentDetail = useSelector((state) => state?.student?.profileById);
   console.log(studentDetail);
   const [editMode, setEditMode] = useState(false);
   const handleEditClick = () => {
@@ -24,7 +24,6 @@ const StudentProfileDetails = () => {
   const handleCancelClick = () => {
     setEditMode(false);
   };
-  console.log(studentDetail);
   const handleSubmit = (e) => {
     e.preventDefault();
     // Add your submit logic here
@@ -192,168 +191,156 @@ const StudentProfileDetails = () => {
   }
   return (
     <div className="col-xl-8 mx-auto mt-5">
-      <div className="card">
-        <div className="inner-content">
-          <div className="card-body">
-            {editMode ? (
-              <SettingProfile handleSubmit={handleSubmit} />
-            ) : (
-              <div className="profile-tab">
-                <div className="custom-tab-1">
-                  <div className="profile-personal-info mt-3">
-                    <h3 className="text-primary mb-4"  style={{textAlign:'center'}}>Thông Tin Học Sinh</h3>
-                    <div className="col-lg-12">
-                      <div
-                        className="card overflow-hidden"
-                        id="student-avatar-card"
-                      >
-                        <div className="row">
-                          <div className="col-lg-5">
-                            <div className="text-center p-3 overlay-box">
-                              <div className="profile-photo" style={{ display:'flex',justifyContent:'center',alignItems:'center' }}> 
-                                <Avatar
-                                  src={studentDetail.img}
-                                  alt="img"
-                                  style={{ width: "80px", height: "80px" }}
-                                />
-                              </div>
-                              <h3 className="mt-3 mb-1 text-black">
-                                {studentDetail.fullName}
-                              </h3>
+    <div className="card">
+      <div className="inner-content">
+        <div className="card-body">
+          {editMode ? (
+            <SettingProfile handleSubmit={handleSubmit} />
+          ) : (
+            <div className="profile-tab">
+              <div className="custom-tab-1">
+                <div className="profile-personal-info mt-3">
+                  <h3 className="text-primary mb-4" style={{ textAlign: 'center' }}>Thông Tin Học Sinh</h3>
+                  <div className="col-lg-12">
+                    <div className="card overflow-hidden" id="student-avatar-card">
+                      <div className="row">
+                        <div className="col-lg-5">
+                          <div className="text-center p-3 overlay-box">
+                            <div className="profile-photo" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                              <Avatar
+                                src={studentDetail?.img}
+                                alt="img"
+                                style={{ width: "80px", height: "80px" }}
+                              />
+                            </div>
+                            <h3 className="mt-3 mb-1 text-black">
+                              {studentDetail?.fullName}
+                            </h3>
+                          </div>
+                        </div>
+                        <div className="col-lg-7 align-self-center">
+                          <div className="row mb-2 align-items-center">
+                            <div className="col-6">
+                              <h5 className="f-w-500">
+                                Nơi Sinh<span className="pull-right">:</span>
+                              </h5>
+                            </div>
+                            <div className="col-6">
+                              <span>{studentDetail?.placeOfBirth}</span>
                             </div>
                           </div>
-                          <div className="col-lg-7 align-self-center">
-                            <div className="row mb-2 align-items-center">
-                              <div className="col-6">
-                                <h5 className="f-w-500">
-                                  Nơi Sinh<span className="pull-right">:</span>
-                                </h5>
-                              </div>
-                              <div className="col-6">
-                                <span>{studentDetail.placeOfBirth}</span>
-                              </div>
+                          <div className="row mb-2 align-items-center">
+                            <div className="col-6">
+                              <h5 className="f-w-500">
+                                Email<span className="pull-right">:</span>
+                              </h5>
                             </div>
-                            <div className="row mb-2 align-items-center">
-                              <div className="col-6">
-                                <h5 className="f-w-500">
-                                  Email<span className="pull-right">:</span>
-                                </h5>
-                              </div>
-                              <div className="col-6">
-                                <span>{studentDetail.email}</span>
-                              </div>
+                            <div className="col-6">
+                              <span>{studentDetail?.email}</span>
                             </div>
-                            <div className="row mb-2 align-items-center">
-                              <div className="col-6">
-                                <h5 className="f-w-500">
-                                  Số điện thoại
-                                  <span className="pull-right">:</span>
-                                </h5>
-                              </div>
-                              <div className="col-6">
-                                <span>{studentDetail.phone}</span>
-                              </div>
+                          </div>
+                          <div className="row mb-2 align-items-center">
+                            <div className="col-6">
+                              <h5 className="f-w-500">
+                                Số điện thoại
+                                <span className="pull-right">:</span>
+                              </h5>
                             </div>
-                            <div className="row mb-2 align-items-center">
-                              <div className="col-6">
-                                <h5 className="f-w-500">
-                                  Căn cước công dân
-                                  <span className="pull-right">:</span>
-                                </h5>
-                              </div>
-                              <div className="col-6">
-                                <span>{studentDetail.nationalId}</span>
-                              </div>
+                            <div className="col-6">
+                              <span>{studentDetail?.phone}</span>
+                            </div>
+                          </div>
+                          <div className="row mb-2 align-items-center">
+                            <div className="col-6">
+                              <h5 className="f-w-500">
+                                Căn cước công dân
+                                <span className="pull-right">:</span>
+                              </h5>
+                            </div>
+                            <div className="col-6">
+                              <span>{studentDetail?.nationalId}</span>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div className="profile-about-me">
-                    <div className="pt-4 border-bottom-1 ">
+                </div>
+                <div className="profile-about-me">
+                  <div className="pt-4 border-bottom-1 ">
                     <Typography variant="h5" color="primary">1. Quá trình học tập</Typography>
-                      {studentDetail.studyProcess}
-                      <Box mt={4}>
-                  <Typography variant="h5" color="primary"style={{marginBottom:'10px'}}>2. Văn bằng tiếng Anh</Typography>
-                  <TableContainer component={Paper}>
-                    <Table>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Chứng chỉ</TableCell>
-                          <TableCell>Trình độ</TableCell>
-                          <TableCell>Tải về</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {studentDetail.certificateDtos.map((item, index) => (
-                          <TableRow key={index}>
-                            <TableCell>{item.certificateTypeDto.certificateName}</TableCell>
-                            <TableCell>{item.certificateValue}</TableCell>
-                            <TableCell>
-                              <Button onClick={() => handleDownloadFile(item.file, `${item.certificateTypeDto.certificateName}.jpg`)} variant="contained" color="primary">
-                                Tải về
-                              </Button>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </Box>
-                <Box mt={4}>
-                  <Typography variant="h5" color="primary" style={{marginBottom:'10px'}}>3. Điểm học bạ</Typography>
-                  <TableContainer component={Paper}>
-                    <Table>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Năm học</TableCell>
-                          <TableCell>GPA</TableCell>
-                          <TableCell>Tải về</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {studentDetail.schoolProfileDtos.map((item, index) => (
-                          <TableRow key={index}>
-                            <TableCell>Lớp {item.schoolGrade}</TableCell>
-                            <TableCell>{item.gpa}</TableCell>
-                            <TableCell>
-                              <Button onClick={() => handleDownloadFile(item.img, `Diem_nam_lop_${item.schoolGrade}.jpg`)} variant="contained" color="primary">
-                                Tải về
-                              </Button>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </Box>
-                    </div>
+                    <p>{studentDetail?.studyProcess}</p>
+                    <Box mt={4}>
+                      <Typography variant="h5" color="primary" style={{ marginBottom: '10px' }}>2. Văn bằng tiếng Anh</Typography>
+                      <TableContainer component={Paper}>
+                        <Table>
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Chứng chỉ</TableCell>
+                              <TableCell>Trình độ</TableCell>
+                              <TableCell>Tải về</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {studentDetail?.certificateDtos?.map((item, index) => (
+                              <TableRow key={index}>
+                                <TableCell>{item.certificateTypeDto.certificateName}</TableCell>
+                                <TableCell>{item.certificateValue}</TableCell>
+                                <TableCell>
+                                  <Button onClick={() => handleDownloadFile(item.file, `${item.certificateTypeDto.certificateName}.jpg`)} variant="contained" color="primary">
+                                    Tải về
+                                  </Button>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </Box>
+                    <Box mt={4}>
+                      <Typography variant="h5" color="primary" style={{ marginBottom: '10px' }}>3. Điểm học bạ</Typography>
+                      <TableContainer component={Paper}>
+                        <Table>
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Năm học</TableCell>
+                              <TableCell>GPA</TableCell>
+                              <TableCell>Tải về</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {studentDetail?.schoolProfileDtos?.map((item, index) => (
+                              <TableRow key={index}>
+                                <TableCell>Lớp {item.schoolGrade}</TableCell>
+                                <TableCell>{item.gpa}</TableCell>
+                                <TableCell>
+                                  <Button onClick={() => handleDownloadFile(item.img, `Diem_nam_lop_${item.schoolGrade}.jpg`)} variant="contained" color="primary">
+                                    Tải về
+                                  </Button>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </Box>
                   </div>
-                  
                 </div>
               </div>
-            )}
-            <div className="d-flex justify-content-between mt-4">
-              {/* <div>
-                <button
-                  onClick={handleDownloadFile}
-                  className="btn btn-secondary ml-3"
-                >
-                  Tải file
-                </button>
-              </div> */}
-              <div className="text-right mb-3">
-                <Link to="/students-profile" className="btn btn-secondary">
-                  Quay lại
-                </Link>
-              </div>
+            </div>
+          )}
+          <div className="d-flex justify-content-between mt-4">
+            <div className="text-right mb-3">
+              <Link to="/students-profile" className="btn btn-secondary">
+                Quay lại
+              </Link>
             </div>
           </div>
         </div>
       </div>
     </div>
-  );
+  </div>
+);
 };
 
 export default StudentProfileDetails;
