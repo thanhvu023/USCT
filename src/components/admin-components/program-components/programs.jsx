@@ -1,7 +1,7 @@
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Button, Dropdown, Modal, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -20,6 +20,7 @@ import { imageDb } from "../../FirebaseImage/Config";
 import CreateProgramModal from "./create-program";
 import "./program.css";
 import { Backdrop, CircularProgress } from "@mui/material";
+import debounce from "lodash.debounce";
 
 const AllPrograms = () => {
   const dispatch = useDispatch();
@@ -47,33 +48,28 @@ const AllPrograms = () => {
       },
     },
   ]);
-  // console.log("semesters:",programs)
   const [selectedProgramId, setSelectedProgramId] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState(null);
   const loading = useSelector((state) => state.program.loading);
-
   const [currentPage, setCurrentPage] = useState(1);
   const [showAllPrograms, setShowAllPrograms] = useState(true);
-
-  const [editedProgram, setEditedProgram] = useState(
-    {
-      programId: "",
-      nameProgram: "",
-      status: "",
-      duration: "",
-      description: "",
-      tuition: "",
-      level: "",
-      responsibilities: "",
-      requirement: "",
-      universityId: "",
-      majorId: "",
-      semesterId: "",
-      programTypeId: "",
-      img: "",
-    } ?? {}
-  );
+  const [editedProgram, setEditedProgram] = useState({
+    programId: "",
+    nameProgram: "",
+    status: "",
+    duration: "",
+    description: "",
+    tuition: "",
+    level: "",
+    responsibilities: "",
+    requirement: "",
+    universityId: "",
+    majorId: "",
+    semesterId: "",
+    programTypeId: "",
+    img: "",
+  });
 
   const [formData, setFormData] = useState({
     nameProgram: "",
@@ -90,6 +86,7 @@ const AllPrograms = () => {
     programTypeId: "",
     img: "",
   });
+
   const [certificates, setCertificates] = useState([
     {
       id: 1,
@@ -99,6 +96,7 @@ const AllPrograms = () => {
       certificateTypeId: "",
     },
   ]);
+
   const handleProgramStageFeeChange = (id, section, field, value) => {
     setProgramStageFee((prevProgramStageFee) =>
       prevProgramStageFee.map((item) =>
@@ -114,6 +112,7 @@ const AllPrograms = () => {
       )
     );
   };
+
   const addProgramStageFee = () => {
     setProgramStageFee([
       ...programStageFee,
@@ -132,6 +131,7 @@ const AllPrograms = () => {
       },
     ]);
   };
+
   const [programFee, setProgramFee] = useState([
     {
       id: 1,
@@ -139,6 +139,7 @@ const AllPrograms = () => {
       feeTypeId: "",
     },
   ]);
+
   const handleProgramFeeChange = (id, field, value) => {
     setProgramFee((preProgramFee) =>
       preProgramFee.map((fee) =>
@@ -146,6 +147,7 @@ const AllPrograms = () => {
       )
     );
   };
+
   const addProgramFee = () => {
     setProgramFee([
       ...programFee,
@@ -156,6 +158,7 @@ const AllPrograms = () => {
       },
     ]);
   };
+
   const [programDocument, setProgramDocument] = useState([
     {
       id: 1,
@@ -163,6 +166,7 @@ const AllPrograms = () => {
       documentTypeId: "",
     },
   ]);
+
   const handleProgramDocumentChange = (id, field, value) => {
     setProgramDocument((preProgramDocument) =>
       preProgramDocument.map((doc) =>
@@ -170,6 +174,7 @@ const AllPrograms = () => {
       )
     );
   };
+
   const addProgramDocument = () => {
     setProgramDocument([
       ...programDocument,
@@ -180,6 +185,7 @@ const AllPrograms = () => {
       },
     ]);
   };
+
   const [programStage, setProgramStage] = useState([
     {
       id: 1,
@@ -188,6 +194,7 @@ const AllPrograms = () => {
       programFeeId: "",
     },
   ]);
+
   const handleProgramStageChange = (id, field, value) => {
     setProgramStage((preProgramStage) =>
       preProgramStage.map((stage) =>
@@ -195,6 +202,7 @@ const AllPrograms = () => {
       )
     );
   };
+
   const addProgramStage = () => {
     setProgramStage([
       ...programStage,
@@ -206,6 +214,7 @@ const AllPrograms = () => {
       },
     ]);
   };
+
   const handleImageUpload = async (file) => {
     // Check if file exists
     console.log("Selected File:", file);
@@ -215,7 +224,6 @@ const AllPrograms = () => {
       try {
         await uploadBytes(imgRef, file);
         const imageUrl = await getDownloadURL(imgRef);
-        // console.log("imageUrl là:", imageUrl);
         const editedProgramCopy = {
           ...selectedProgramForEdit,
           img: imageUrl,
@@ -223,10 +231,8 @@ const AllPrograms = () => {
             majorId: selectedProgramForEdit.majorId,
           },
         };
-        // console.log("editedProgramCopy:",editedProgramCopy)
         setEditedProgram(editedProgramCopy);
         setSelectedProgramForEdit(editedProgramCopy);
-        // setImgURL(imgURL);
       } catch (error) {
         console.error(`Error uploading ${file.name}:`, error);
       }
@@ -238,6 +244,7 @@ const AllPrograms = () => {
   const handleDelete = (programId) => {
     dispatch(hideProgram(programId));
   };
+
   const handleShowCreateModal = () => {
     setShowCreateModal(true);
   };
@@ -248,7 +255,6 @@ const AllPrograms = () => {
 
   const handleSubmitCreateProgram = async () => {
     if (formData.img) {
-      // Upload ảnh lên Firebase
       await handleImageUpload(formData.img);
     }
     dispatch(
@@ -258,7 +264,7 @@ const AllPrograms = () => {
         formData,
         certificates,
         programFee,
-        programStageFee
+        programStageFee,
       })
     ).then(() => {
       Swal.fire({
@@ -274,12 +280,23 @@ const AllPrograms = () => {
   };
 
   useEffect(() => {
-    dispatch(getAllProgram());
-    dispatch(getAllSemester());
-    dispatch(getAllMajor());
-    dispatch(getAllUniversity());
-    dispatch(getProgramTypes());
-  }, [dispatch]);
+    // Kiểm tra nếu dữ liệu đã tồn tại trong store thì không gọi API
+    if (programs?.length === 0) {
+      dispatch(getAllProgram());
+    }
+    if (semesters?.length === 0) {
+      dispatch(getAllSemester());
+    }
+    if (majors?.length === 0) {
+      dispatch(getAllMajor());
+    }
+    if (universities?.length === 0) {
+      dispatch(getAllUniversity());
+    }
+    if (programTypes?.length === 0) {
+      dispatch(getProgramTypes());
+    }
+  }, [dispatch, programs?.length, semesters?.length, majors?.length, universities?.length, programTypes?.length]);
 
   const handleShowDetailModal = (programId) => {
     setSelectedProgramId(programId);
@@ -302,17 +319,12 @@ const AllPrograms = () => {
   };
 
   useEffect(() => {
-    console.log("programs", programs);
     if (selectedProgramId && programs) {
       const program = programs.find((p) => p.programId === selectedProgramId);
-
       setSelectedProgram(program);
     }
-  }, [selectedProgramId]);
+  }, [selectedProgramId, programs]);
 
-  // console.log("edit:",selectedProgramForEdit)
-
-  // confirm delete
   const handleStatusChange = () => {
     if (selectedProgramForEdit && selectedProgramForEdit.status) {
       const newStatus =
@@ -335,16 +347,11 @@ const AllPrograms = () => {
       confirmButtonText: "Đồng ý",
     }).then((result) => {
       if (result.isConfirmed) {
-        const newStatus =
-          selectedProgramForEdit.status === "Active" ? "Inactive" : "Active";
-        handleStatusChange(newStatus);
+        handleStatusChange();
         Swal.fire("Thành công!", "Trạng thái đã được thay đổi.", "success");
       }
     });
   };
-  // const handleToggleCreateModal = () => {
-  //   setShowCreateModal(!showCreateModal);
-  // };
 
   const getTypeName = (programTypeId) => {
     if (!programTypes) return "";
@@ -354,26 +361,31 @@ const AllPrograms = () => {
     );
     return programType ? programType.typeName : "";
   };
+
   const getMajorName = (majorId) => {
     const major = majors.find((major) => major.majorId === majorId);
     return major ? major.majorName : "Unknown";
   };
+
   const getSemesterStartDate = (semesterId) => {
     const semester = semesters.find(
       (semester) => semester.semesterId === semesterId
     );
     return semester ? semester.startDate : "Unknown";
   };
+
   const getSemesterEndDate = (semesterId) => {
     const semester = semesters.find(
       (semester) => semester.semesterId === semesterId
     );
     return semester ? semester.endDate : "Unknown";
   };
+
   const getProgramName = (programId) => {
     const program = programs.find((program) => program.id === programId);
-    return program ? program.programName : "Unknownprogram";
+    return program ? program.programName : "Unknown program";
   };
+
   const getUniversityName = (universityId) => {
     const university = universities.find(
       (university) => university.id === universityId
@@ -381,21 +393,28 @@ const AllPrograms = () => {
     return university ? university.universityName : "Unknown";
   };
 
-  const dataSearch = (e) => {
-    const searchValue = e.target.value.toLowerCase();
-    if (searchValue === "") {
-      setFeeData([...programs]);
-      setShowAllPrograms(true);
-    } else {
-      const updatedData = programs.filter((item) => {
-        let searchData =
-          `${item.nameProgram} ${item.programTypeId} ${item.majorId} ${item.createDate}`.toLowerCase();
-        return searchData.includes(searchValue);
-      });
-      setFeeData([...updatedData]);
-      setShowAllPrograms(false);
-    }
+  const dataSearch = useCallback(
+    debounce((searchValue) => {
+      searchValue = searchValue.toLowerCase();
+      if (searchValue === "") {
+        setFeeData([...programs]);
+        setShowAllPrograms(true);
+      } else {
+        const updatedData = programs.filter((item) => {
+          let searchData = `${item.nameProgram} ${item.programTypeId} ${item.majorId} ${item.createDate}`.toLowerCase();
+          return searchData.includes(searchValue);
+        });
+        setFeeData([...updatedData]);
+        setShowAllPrograms(false);
+      }
+    }, 300),
+    [programs]
+  );
+
+  const handleSearchChange = (e) => {
+    dataSearch(e.target.value);
   };
+
   const handleCertificateChange = (id, field, value) => {
     setCertificates((prevCertificates) =>
       prevCertificates.map((cert) =>
@@ -403,6 +422,7 @@ const AllPrograms = () => {
       )
     );
   };
+
   const addCertificate = () => {
     setCertificates([
       ...certificates,
@@ -417,18 +437,8 @@ const AllPrograms = () => {
   };
 
   const handleShowEditModal = (programId) => {
-    // find program
     const program = programs.find((p) => p.programId === programId);
-    // det init data
     setSelectedProgramForEdit(program);
-    console.log({ program });
-    console.log({ selectedProgramForEdit });
-    // setEditedProgram({
-    //   ...editedProgram,
-    //   programId: programId,
-    //   nameProgram: program.nameProgram,
-    //   semesterId: program.semesterId,
-    // });
     setShowEditModal(true);
   };
 
@@ -436,7 +446,7 @@ const AllPrograms = () => {
     e.preventDefault();
     dispatch(updateProgram(editedProgram))
       .unwrap()
-      .then((data) => {
+      .then(() => {
         Swal.fire({
           icon: "success",
           title: "Chỉnh sửa chương trình thành công!",
@@ -458,9 +468,6 @@ const AllPrograms = () => {
     }
   }, [programUpdated, dispatch]);
 
-  const isProgramSelected = (programId) => {
-    return programId === selectedProgramId;
-  };
   const RenderPrograms = () => {
     const itemsPerPage = 6;
     const [currentPage, setCurrentPage] = useState(1);
@@ -507,7 +514,7 @@ const AllPrograms = () => {
                     <Dropdown>
                       <Dropdown.Toggle
                         as="button"
-                        className="btn  "
+                        className="btn"
                         type="button"
                       >
                         <span className="fs--1">...</span>
@@ -539,14 +546,6 @@ const AllPrograms = () => {
                   </div>
 
                   <div className="">
-                    {/* <div>
-                      <img
-                        src={program.img}
-                        style={{ height: "200px", width: "250px" }}
-                        alt="img"
-                        className="img-fluid"
-                      />
-                    </div> */}
                     <Link
                       className="mt-4 mb-1"
                       onClick={() => handleShowDetailModal(program.programId)}
@@ -586,12 +585,6 @@ const AllPrograms = () => {
                         </strong>
                       </li>
                     </ul>
-                    {/* <button
-                      className="btn btn-primary btn-rounded mt-3 px-4"
-                      onClick={() => handleShowDetailModal(program.programId)}
-                    >
-                      Xem thêm
-                    </button> */}
                   </div>
                 </div>
               </div>
@@ -605,7 +598,6 @@ const AllPrograms = () => {
               onClick={() => handleShowDetailModal(program.programId)}
               style={{ cursor: "pointer" }}
             >
-              {" "}
               <div
                 className="card mx-4 mt-4"
                 style={{
@@ -618,7 +610,7 @@ const AllPrograms = () => {
                     <Dropdown>
                       <Dropdown.Toggle
                         as="button"
-                        className="btn  "
+                        className="btn"
                         type="button"
                       >
                         <span className="fs--1">...</span>
@@ -687,12 +679,6 @@ const AllPrograms = () => {
                         </strong>
                       </li>
                     </ul>
-                    {/* <button
-                      className="btn btn-primary btn-rounded mt-3 px-4"
-                      onClick={() => handleShowDetailModal(program.programId)}
-                    >
-                      Xem thêm
-                    </button> */}
                   </div>
                 </div>
               </div>

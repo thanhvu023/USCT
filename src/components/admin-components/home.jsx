@@ -12,7 +12,7 @@ import {
 } from "../../redux/slice/studentSlice";
 import { getAllPayments } from "../../redux/slice/paymentSlice";
 import { Col, Row } from "react-bootstrap";
-import { Link } from "react-router-dom"; // Import Link và useNavigate từ react-router-dom
+import { Link, useNavigate } from "react-router-dom"; // Import Link và useNavigate từ react-router-dom
 
 import { ProgressCard } from "./card-design";
 import IncomeExpense from "./income-expense";
@@ -257,8 +257,9 @@ const AdminHome = ({ handleAllConsultantClick }) => {
     };
   };
   
-  
-  
+  const navigate = useNavigate();
+
+
   return (
     <>
       <div

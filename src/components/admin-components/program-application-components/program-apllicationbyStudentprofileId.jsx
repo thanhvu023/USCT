@@ -1,9 +1,11 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import jwtDecode from "jwt-decode";
 import {
-  getAllProgramApplication,
+  getProgramApplicationsByStaffId,
   getProgramApplicationById,
   updateProgramApplication,
+  getAllProgramApplication,
 } from "../../../redux/slice/programApplicationSlice";
 import { getStudentProfileById } from "../../../redux/slice/studentSlice";
 import { getProgramById } from "../../../redux/slice/programSlice";
@@ -12,39 +14,31 @@ import {
   Modal,
   Button,
   Row,
-  Dropdown,
   Form,
   Col,
-  Image,
   Card,
   Table,
 } from "react-bootstrap";
 import { getAllUsers } from "../../../redux/slice/authSlice";
 import PaymentContext from "./context/payment-context";
 import { Pagination } from 'react-bootstrap';
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { getAllProgramStages } from "../../../redux/slice/programStageSlice";
-import {
-  getAllStage,
-  selectApplyStageById,
-} from "../../../redux/slice/applyStageSlice";
-import ApplicationDetails from "./application-details";
+import { getAllStage } from "../../../redux/slice/applyStageSlice";
 import Swal from "sweetalert2";
-import { Typography } from "@mui/material";
-import { Backdrop, CircularProgress } from "@mui/material";
-import { VerticalAlignTop } from "@mui/icons-material";
-import './program-applicationbyStudentprofile.css'
+import { Typography, Backdrop, CircularProgress, Chip } from "@mui/material";
+import './program-applicationbyStudentprofile.css';
+
 const theadData = [
   { heading: "Mã hồ sơ", sortingVale: "id" },
   { heading: "Hồ sơ sinh viên", sortingVale: "name" },
-  // { heading: "Tư vấn viên phụ trách", sortingVale: "advisor" },
   { heading: "Ngày tạo", sortingVale: "date" },
   { heading: "Chương trình ứng tuyển", sortingVale: "program" },
   { heading: "Tiến trình hồ sơ", sortingVale: "stages" },
   { heading: "Trạng thái hồ sơ", sortingVale: "status" },
-
   { heading: "Thao tác", sortingVale: "action" },
 ];
+
 const style = {
   button: {
     border: "none",
@@ -63,52 +57,46 @@ const style = {
     marginRight: "10px",
   },
 };
+
 const ProgramApplicationPage = ({ setMain }) => {
   const { setSelectedApp } = useContext(PaymentContext);
-
   const navigate = useNavigate();
-
- 
-  const handleCreateFee = (application) => {
-
-    setSelectedApp(application);
-    setMain("Thanh toán");
-  };
-  const handleDetailClick = (application) => {
-    setSelectedApp(application);
-    navigate(`/staff-programApplication-operation/${application.programApplicationId}`, {
-      state: application,
-    });
-  }
   const dispatch = useDispatch();
-  const [sort, setSortData] = useState(10);
-  const { programApplications, loading, error } = useSelector(
+
+  const { staffId } = useParams();
+
+  const { programApplicationsByStaffId, loading, error } = useSelector(
     (state) => state.programApplication
   );
 
-  console.log("chuong trnh", programApplications);
+  const [sort, setSortData] = useState(10);
   const [selectedProfileId, setSelectedProfileId] = useState(false);
   const [studentProfile, setStudentProfile] = useState(null);
   const [isPaymentRequired, setIsPaymentRequired] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState(null);
   const [selectedApplicationProgram, setSelectedApplicationProgram] =
     useState(null);
-  console.log("seldfasfsafa:", selectedApplicationProgram);
   const [programs, setPrograms] = useState({});
   const [studentProfiles, setStudentProfiles] = useState({});
-  // console.log("isPaymentRequired",isPaymentRequired)
   const [showCheckModal, setShowCheckModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showCheckSuccess, setShowCheckSuccess] = useState(false);
+  const [sortedApplications, setSortedApplications] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const customers = useSelector((state) => state.auth.user);
   const programStages = useSelector((state) => state.programStages.stages);
-  const activeStage = programApplications?.applyStage?.find(
-    (stage) => stage.status === 1
-  );
-  const findActiveStageName = (application) => {
-    const activeStage = application.applyStage?.find(stage => stage.status === 1);
-    return activeStage ? activeStage.programStage.stageName : 'Hồ sơ đã hoàn thành';
+
+  const handleCreateFee = (application) => {
+    setSelectedApp(application);
+    setMain("Thanh toán");
+  };
+
+  const handleDetailClick = (application) => {
+    setSelectedApp(application);
+    navigate(`/staff-programApplication-operation/${application.programApplicationId}`, {
+      state: application,
+    });
   };
 
   const getCustomerName = (customerId) => {
@@ -122,17 +110,10 @@ const ProgramApplicationPage = ({ setMain }) => {
 
     return customer ? customer.fullName : "Không tìm thấy ảnh";
   };
-  // update ApplyStage
 
   const handleShowDetailsModal = (application) => {
     setSelectedApplication(application);
     setShowCheckModal(true);
-  };
-
-  const [selectedProgramStageId, setSelectedProgramStageId] = useState(null);
-
-  const handleProgramStageChange = (e) => {
-    setSelectedProgramStageId(parseInt(e.target.value));
   };
 
   const getProgramStagesByProgramId = (programId) => {
@@ -146,13 +127,8 @@ const ProgramApplicationPage = ({ setMain }) => {
     }));
   };
 
-  // sort and search data
-  const [sortedApplications, setSortedApplications] = useState([]);
-
-  const [searchTerm, setSearchTerm] = useState("");
-  // console.log("seatch là", searchTerm);
   const sortData = (sortBy) => {
-    const sortedData = [...programApplications];
+    const sortedData = [...programApplicationsByStaffId];
     sortedData.sort((a, b) => {
       if (a[sortBy] < b[sortBy]) return -1;
       if (a[sortBy] > b[sortBy]) return 1;
@@ -162,51 +138,37 @@ const ProgramApplicationPage = ({ setMain }) => {
   };
 
   const searchData = (searchTerm) => {
-    console.log("Searching for:", searchTerm);
-    console.log("Current studentProfiles:", studentProfiles);
-
-    const filteredData = programApplications.filter((application) => {
+    const filteredData = programApplicationsByStaffId.filter((application) => {
       const studentName =
         studentProfiles[application.studentProfileId]?.fullName || "";
-      console.log(
-        `Student Name: ${studentName}, Application ID: ${application.studentProfileId}`
-      );
-
       return studentName.toLowerCase().includes(searchTerm.toLowerCase());
     });
-
-    console.log("Filtered Data:", filteredData);
     setSortedApplications(filteredData);
   };
-
-  // const handleSort = (sortingVale) => {
-  //   sortData(sortingVale);
-  // };
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };
 
   useEffect(() => {
+    dispatch(getProgramApplicationsByStaffId(staffId));
     dispatch(getAllProgramApplication());
     dispatch(getProgramById());
-  }, [dispatch]);
+  }, [dispatch, staffId]);
 
   useEffect(() => {
     dispatch(getAllProgramStages());
     dispatch(getAllStage());
-    dispatch(getAllStage());
   }, [dispatch]);
 
   useEffect(() => {
-    setSortedApplications(programApplications);
-  }, [programApplications]);
+    setSortedApplications(programApplicationsByStaffId);
+  }, [programApplicationsByStaffId]);
 
   useEffect(() => {
     searchData(searchTerm);
   }, [searchTerm]);
 
- 
   const handleOpenModal = async (studentProfileId) => {
     setSelectedProfileId(studentProfileId);
     setShowProfileModal(true);
@@ -232,66 +194,66 @@ const ProgramApplicationPage = ({ setMain }) => {
   };
 
   useEffect(() => {
-    dispatch(getAllProgramApplication());
-    dispatch(getProgramById());
-  }, [dispatch]);
-
-  useEffect(() => {
     const fetchPrograms = async () => {
-      const programIds = programApplications.map(
+      const programIds = programApplicationsByStaffId.map(
         (application) => application.programId
       );
       for (const programId of programIds) {
-        try {
-          const response = await dispatch(getProgramById(programId));
-          if (response.payload) {
-            const { nameProgram, createDate } = response.payload;
-            setPrograms((prevState) => ({
-              ...prevState,
-              [programId]: { nameProgram, createDate },
-            }));
+        if (!programs[programId]) {
+          try {
+            const response = await dispatch(getProgramById(programId));
+            if (response.payload) {
+              const { nameProgram, createDate } = response.payload;
+              setPrograms((prevState) => ({
+                ...prevState,
+                [programId]: { nameProgram, createDate },
+              }));
+            }
+          } catch (error) {
+            console.error(`Error fetching program with ID ${programId}:`, error);
           }
-        } catch (error) {
-          console.error(`Error fetching program with ID ${programId}:`, error);
         }
       }
     };
 
-    if (programApplications.length > 0) {
+    if (programApplicationsByStaffId.length > 0) {
       fetchPrograms();
     }
-  }, [dispatch, programApplications]);
+  }, [dispatch, programApplicationsByStaffId, programs]);
 
   useEffect(() => {
     const fetchStudentProfiles = async () => {
-      for (const application of programApplications) {
+      for (const application of programApplicationsByStaffId) {
         const studentProfileId = application.studentProfileId;
-        try {
-          const response = await dispatch(
-            getStudentProfileById(studentProfileId)
-          );
-          if (response.payload) {
-            const studentProfile = response.payload;
-            setStudentProfiles((prevState) => ({
-              ...prevState,
-              [studentProfileId]: studentProfile,
-            }));
+        if (!studentProfiles[studentProfileId]) {
+          try {
+            const response = await dispatch(
+              getStudentProfileById(studentProfileId)
+            );
+            if (response.payload) {
+              const studentProfile = response.payload;
+              setStudentProfiles((prevState) => ({
+                ...prevState,
+                [studentProfileId]: studentProfile,
+              }));
+            }
+          } catch (error) {
+            console.error(
+              `Error fetching student profile with ID ${studentProfileId}:`,
+              error
+            );
           }
-        } catch (error) {
-          console.error(
-            `Error fetching student profile with ID ${studentProfileId}:`,
-            error
-          );
         }
       }
     };
 
     fetchStudentProfiles();
-  }, [dispatch, programApplications]);
+  }, [dispatch, programApplicationsByStaffId, studentProfiles]);
 
   useEffect(() => {
     dispatch(getAllUsers());
   }, [dispatch]);
+
   const handleDownloadFile = (fileAttach) => {
     const link = document.createElement("a");
     link.href = fileAttach;
@@ -300,192 +262,185 @@ const ProgramApplicationPage = ({ setMain }) => {
   };
 
   const [activePage, setActivePage] = useState(0);
-const [itemsPerPage, setItemsPerPage] = useState(7); // Default items per page
-const [filteredData, setFilteredData] = useState([]);
+  const [itemsPerPage, setItemsPerPage] = useState(7); // Default items per page
+  const [filteredData, setFilteredData] = useState([]);
 
-useEffect(() => {
-  const search = searchTerm.toLowerCase();
-  const filtered = programApplications.filter(application => {
-    return (
-      application.programApplicationId.toString().includes(search) ||
-      application.studentProfile?.fullName.toLowerCase().includes(search) ||
-      application.studentProfile?.createDate.includes(search) ||
-      application.program?.nameProgram.toLowerCase().includes(search)
-    );
-  });
-  setFilteredData(filtered);
-  setActivePage(0); // Reset to the first page upon search change
-}, [programApplications, searchTerm]);
+  useEffect(() => {
+    const search = searchTerm.toLowerCase();
+    const filtered = programApplicationsByStaffId.filter(application => {
+      return (
+        application.programApplicationId.toString().includes(search) ||
+        application.studentProfile?.fullName.toLowerCase().includes(search) ||
+        application.studentProfile?.createDate.includes(search) ||
+        application.program?.nameProgram.toLowerCase().includes(search)
+      );
+    });
+    setFilteredData(filtered);
+    setActivePage(0); // Reset to the first page upon search change
+  }, [programApplicationsByStaffId, searchTerm]);
 
-const displayedData = filteredData.slice(activePage * itemsPerPage, (activePage + 1) * itemsPerPage);
-const paginationLength = Math.ceil(filteredData.length / itemsPerPage);
-const handlePageChange = (newPage) => {
-  setActivePage(newPage);
-};
-const getStatusText = (status) => {
-  switch (status) {
-    case 0:
-      return "Đang xử lí";
-    case 1:
-      return "Bổ sung tài liệu";
-    case 2:
-      return "Đăng ký thành công";
-    case 3:
-      return "Hủy bỏ đăng ký";
-    default:
-      return "Không xác định";
-  }
-};
-const handleStatusChange = (applicationId, newStatus) => {
-  const application = programApplications.find(app => app.programApplicationId === applicationId);
-  dispatch(updateProgramApplication({
-    ...application,
-    status: newStatus,
-  })).then(() => {
-    dispatch(getAllProgramApplication());
-  });
-};
+  const displayedData = filteredData.slice(activePage * itemsPerPage, (activePage + 1) * itemsPerPage);
+  const paginationLength = Math.ceil(filteredData.length / itemsPerPage);
 
+  const handlePageChange = (newPage) => {
+    setActivePage(newPage);
+  };
 
-return (
-  <div style={{ maxHeight: "100vh" }}>
-    <Backdrop
-      sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-      open={loading}
-    >
-      <CircularProgress color="inherit" />
-    </Backdrop>
-    <Row>
-      <div className="col-lg-12">
-        <Card className="mb-4">
-          <Card.Header as="h4">
-            Danh sách hồ sơ đăng ký chương trình
-          </Card.Header>
-          <Card.Body>
-            <Form>
-              <Row className="mb-3">
-                {/* <Col sm={3}>
-                  <Form.Control type="search"  onChange={searchData} placeholder="Search" />
-                </Col> */}
-                {/* <Col sm={3}>
-                  <div className="d-flex">
-                    <Typography>hiển thị </Typography>
-                    <Form.Select
-                      value={sort}
-                      onChange={(e) => setSortData(e.target.value)}
-                    >
-                      <option value="10">10</option>
-                      <option value="20">20</option>
-                      <option value="30">30</option>
-                    </Form.Select>
-                    <Typography> hàng</Typography>
-                  </div>
-                </Col> */}
-              </Row>
-            </Form>
-            <div className="table-responsive">
-              <Table striped bordered hover responsive>
-                <thead>
-                  <tr>
-                    {theadData.map((item, index) => (
-                      <th key={index}>{item.heading}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {displayedData.map((item, index) => (
-                    <tr key={index}>
-                      <td>{item.programApplicationId}</td>
-                      <td>{item.studentProfile?.fullName}</td>
-                      <td>{item.updateDate}</td>
-                      <td>{item.program?.nameProgram}</td>
-                      <td>{findActiveStageName(item)}</td>
-                      <td>
-                  
+  const getStatusText = (status) => {
+    switch (status) {
+      case 0:
+        return <Chip label="Đang xử lí" color="default" />;
+      case 1:
+        return <Chip label="Bổ sung tài liệu" color="warning" />;
+      case 2:
+        return <Chip label="Đăng ký thành công" color="success" />;
+      case 3:
+        return <Chip label="Đăng ký thất bại" color="error" />;
+        case 4:
+          return <Chip label="Hủy bỏ đăng ký" color="error" />;
+          case 5:
+            return <Chip label="Hồ sơ hoàn tất" color="primary" />;
+            case 6:
+              return <Chip label="Hủy bỏ đăng ký giữa chừng" color="error" />;
+      default:
+        return <Chip label="Hồ sơ hoàn tất" color="primary" />;
+    }
+  };
+  const handleStatusChange = (applicationId, newStatus) => {
+    const application = programApplicationsByStaffId.find(app => app.programApplicationId === applicationId);
+    dispatch(updateProgramApplication({
+      ...application,
+      status: newStatus,
+    })).then(() => {
+      dispatch(getProgramApplicationsByStaffId(staffId));
+    });
+  };
+
+  return (
+    <div style={{ maxHeight: "100vh" }}>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      <Row>
+        <div className="col-lg-12">
+          <Card className="mb-4">
+            <Card.Header as="h4">
+            {`Danh sách hồ sơ đăng khú chương trình - Staff ID: ${staffId}`}
+            </Card.Header>
+            <Card.Body>
+              <Form>
+                <Row className="mb-3">
+                  <Col sm={3}>
+                    <Form.Control
+                      type="search"
+                      placeholder="Search"
+                      onChange={handleSearch}
+                    />
+                  </Col>
+                </Row>
+              </Form>
+              <div className="table-responsive">
+                <Table striped bordered hover responsive>
+                  <thead>
+                    <tr>
+                      {theadData.map((item, index) => (
+                        <th key={index}>{item.heading}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {displayedData.map((item, index) => (
+                      <tr key={index}>
+                        <td >{item.programApplicationId}</td>
+                        <td>{item.studentProfile?.fullName}</td>
+                        <td>{item.updateDate}</td>
+                        <td>{item.program?.nameProgram}</td>
+                        <td  style={{textAlign:'center'}}>{getStatusText(item.status)}</td>
+                        <td>
                           <Form.Control
                             as="select"
                             value={item.status}
                             onChange={(e) => handleStatusChange(item.programApplicationId, parseInt(e.target.value))}
                           >
-                             <option value={0}>Đang xử lí</option>
+                            <option value={0}>Đang xử lí</option>
                             <option value={1}>Đã xét duyệt hồ sơ</option>
                             <option value={2}>Xét duyệt thành công</option>
                             <option value={3}>Xét duyệt thất bại</option>
                             <option value={4}>Đóng hồ sơ</option>
                             <option value={5}>Hồ sơ đã hoàn tất</option>
                             <option value={6}>Hồ sơ đã hủy</option>
-               
-
                           </Form.Control>
-                      </td>
-                      <td>
-                        <Button onClick={() => handleDetailClick(item)}>Chi tiết   <i className="fa fa-info-circle" /></Button>
-                        {/* <Button onClick={() => handleDetailClick(item)}>Thanh toán</Button> */}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </Table>
-              <div className="pagination-wrapper">
-                <div className="pagination justify-content-center mt-4">
-                  <button
-                    className={`btn ${activePage === 0 ? "disabled" : ""}`}
-                    onClick={() => setActivePage(Math.max(0, activePage - 1))}
-                  >
-                    Trước
-                  </button>
-                  {[...Array(paginationLength).keys()].map(page => (
+                        </td>
+                        <td>
+                          <Button onClick={() => handleDetailClick(item)}>Chi tiết <i className="fa fa-info-circle" /></Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+                <div className="pagination-wrapper">
+                  <div className="pagination justify-content-center mt-4">
                     <button
-                      key={page}
-                      className={`btn ${activePage === page ? "btn-primary" : "btn-light"}`}
-                      onClick={() => setActivePage(page)}
+                      className={`btn ${activePage === 0 ? "disabled" : ""}`}
+                      onClick={() => setActivePage(Math.max(0, activePage - 1))}
                     >
-                      {page + 1}
+                      Trước
                     </button>
-                  ))}
-                  <button
-                    className={`btn ${activePage === paginationLength - 1 ? "disabled" : ""}`}
-                    onClick={() => setActivePage(Math.min(paginationLength - 1, activePage + 1))}
-                  >
-                    Sau
-                  </button>
+                    {[...Array(paginationLength).keys()].map(page => (
+                      <button
+                        key={page}
+                        className={`btn ${activePage === page ? "btn-primary" : "btn-light"}`}
+                        onClick={() => setActivePage(page)}
+                      >
+                        {page + 1}
+                      </button>
+                    ))}
+                    <button
+                      className={`btn ${activePage === paginationLength - 1 ? "disabled" : ""}`}
+                      onClick={() => setActivePage(Math.min(paginationLength - 1, activePage + 1))}
+                    >
+                      Sau
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-            <Modal
-              show={selectedProfileId}
-              onHide={handleCloseModal}
-              centered
-            >
-              <Modal.Header closeButton>
-                <Modal.Title>Hồ sơ học sinh</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                {studentProfile && (
-                  <div>
-                    <p>
-                      <strong>Name:</strong> {studentProfile.fullName}
-                    </p>
-                    <p>
-                      <strong>Email:</strong> {studentProfile.email}
-                    </p>
-                    <p>
-                      <strong>Date of Birth:</strong>{" "}
-                      {studentProfile.dateOfBirth}
-                    </p>
-                    <p>
-                      <strong>Gender:</strong> {studentProfile.gender}
-                    </p>
-                  </div>
-                )}
-              </Modal.Body>
-            </Modal>
-          </Card.Body>
-        </Card>
-      </div>
-    </Row>
-  </div>
-);
+              <Modal
+                show={selectedProfileId}
+                onHide={handleCloseModal}
+                centered
+              >
+                <Modal.Header closeButton>
+                  <Modal.Title>Hồ sơ học sinh</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  {studentProfile && (
+                    <div>
+                      <p>
+                        <strong>Name:</strong> {studentProfile.fullName}
+                      </p>
+                      <p>
+                        <strong>Email:</strong> {studentProfile.email}
+                      </p>
+                      <p>
+                        <strong>Date of Birth:</strong>{" "}
+                        {studentProfile.dateOfBirth}
+                      </p>
+                      <p>
+                        <strong>Gender:</strong> {studentProfile.gender}
+                      </p>
+                    </div>
+                  )}
+                </Modal.Body>
+              </Modal>
+            </Card.Body>
+          </Card>
+        </div>
+      </Row>
+    </div>
+  );
 };
 
 export default ProgramApplicationPage;

@@ -47,7 +47,7 @@ const EnglishCertificates = ({ certificates, studentCertificates, getBadgeProps 
             <TableCell>Loại chứng chỉ</TableCell>
             <TableCell>Điểm chứng chỉ</TableCell>
             <TableCell>Điểm tối thiểu yêu cầu</TableCell>
-            <TableCell>Đánh giá</TableCell>
+            {/* <TableCell>Đánh giá</TableCell> */}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -60,7 +60,7 @@ const EnglishCertificates = ({ certificates, studentCertificates, getBadgeProps 
                   <TableCell>{certificate.certificateTypeDto.certificateName}</TableCell>
                   <TableCell>{certificate.certificateValue}</TableCell>
                   <TableCell>{programCertificate.minLevel}</TableCell>
-                  <TableCell>{getBadgeProps(isEligible)}</TableCell>
+                  {/* <TableCell>{getBadgeProps(isEligible)}</TableCell> */}
                 </TableRow>
               );
             }
@@ -95,7 +95,7 @@ const SATCertificates = ({ certificates, studentCertificates, getBadgeProps }) =
               <TableCell>Loại chứng chỉ</TableCell>
               <TableCell>Điểm chứng chỉ</TableCell>
               <TableCell>Điểm tối thiểu yêu cầu</TableCell>
-              <TableCell>Đánh giá</TableCell>
+              {/* <TableCell>Đánh giá</TableCell> */}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -108,7 +108,7 @@ const SATCertificates = ({ certificates, studentCertificates, getBadgeProps }) =
                     <TableCell>{certificate.certificateTypeDto.certificateName}</TableCell>
                     <TableCell>{certificate.certificateValue}</TableCell>
                     <TableCell>{programCertificate.minLevel}</TableCell>
-                    <TableCell>{getBadgeProps(isEligible)}</TableCell>
+                    {/* <TableCell>{getBadgeProps(isEligible)}</TableCell> */}
                   </TableRow>
                 );
               }
@@ -133,7 +133,7 @@ const GPACertificates = ({ schoolProfiles, programCertificates, getBadgeProps })
             <TableCell>Năm học</TableCell>
             <TableCell>GPA</TableCell>
             <TableCell>GPA đầu vào</TableCell>
-            <TableCell>Đánh giá</TableCell> {/* Add the header for the evaluation column */}
+            {/* <TableCell>Đánh giá</TableCell> Add the header for the evaluation column */}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -142,14 +142,14 @@ const GPACertificates = ({ schoolProfiles, programCertificates, getBadgeProps })
               <TableCell>Lớp {profile.schoolGrade}</TableCell>
               <TableCell>{profile.gpa}</TableCell>
               <TableCell></TableCell>
-              <TableCell></TableCell>
+              {/* <TableCell></TableCell> */}
             </TableRow>
           ))}
           <TableRow>
             <TableCell>GPA tổng</TableCell>
             <TableCell>{totalGPA}</TableCell>
             <TableCell>{lastGpaCertificate.minLevel}</TableCell>
-            <TableCell>{getBadgeProps(totalGPA >= lastGpaCertificate.minLevel)}</TableCell> {/* Add the badge for the overall GPA evaluation */}
+            {/* <TableCell>{getBadgeProps(totalGPA >= lastGpaCertificate.minLevel)}</TableCell> Add the badge for the overall GPA evaluation */}
           </TableRow>
          
         </TableBody>
@@ -190,7 +190,7 @@ const CheckRequirementPage = () => {
   const programTypeId = useSelector((state) => state?.program?.programById?.programTypeId);
   const studentCertificates = useSelector((state) => state.studentCertificate.studentCertificates);
   const studentProfileDetail = useSelector((state) => state?.student?.profileById);
-
+console.log('12131231',certificatesByProgramId)
   useEffect(() => {
     dispatch(resetSchoolProfiles()); // Reset schoolProfiles when the component mounts
   }, [dispatch]);

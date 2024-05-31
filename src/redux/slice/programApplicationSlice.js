@@ -49,13 +49,28 @@ export const getProgramApplicationsByCustomerId = createAsyncThunk(
       const res = await instance.get(
         `/program-applications/customer/${customerId}`
       );
-      console.log("customer này có : ",res.data)
+      console.log("customer này có : ", res.data);
       return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response);
     }
   }
 );
+
+export const getProgramApplicationsByStaffId = createAsyncThunk(
+  "/programApplication/getProgramApplicationsByStaffId",
+  async (staffId, thunkAPI) => {
+    try {
+      const res = await instance.get(
+        `/program-applications/staff/${staffId}`
+      );
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response);
+    }
+  }
+);
+
 export const updateProgramApplication = createAsyncThunk(
   "/programApplication/updateProgramApplication",
   async (data, thunkAPI) => {
@@ -67,11 +82,13 @@ export const updateProgramApplication = createAsyncThunk(
     }
   }
 );
+
 const initialState = {
   programApplications: [],
   programApplicationById: {},
   programApplicationsByStudentProfileId: [],
   programApplicationsByCustomerId: [],
+  programApplicationsByStaffId: [],
   loading: false,
   error: null,
   token: null,
@@ -86,6 +103,7 @@ export const programApplicationSlice = createSlice({
       state.programApplications = [];
       state.programApplicationsByCustomerId = [];
       state.programApplicationsByStudentProfileId = [];
+      state.programApplicationsByStaffId = [];
     },
   },
   extraReducers: (builder) => {
@@ -142,13 +160,27 @@ export const programApplicationSlice = createSlice({
       .addCase(getProgramApplicationsByCustomerId.rejected, (state, action) => {
         state.loading = false;
       })
+      .addCase(getProgramApplicationsByStaffId.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(
+        getProgramApplicationsByStaffId.fulfilled,
+        (state, action) => {
+          state.loading = false;
+          state.programApplicationsByStaffId = action.payload;
+        }
+      )
+      .addCase(getProgramApplicationsByStaffId.rejected, (state, action) => {
+        state.loading = false;
+      })
       .addCase(updateProgramApplication.pending, (state) => {
         state.loading = true;
       })
       .addCase(updateProgramApplication.fulfilled, (state, action) => {
         state.loading = false;
         const index = state.programApplications.findIndex(
-          (application) => application.programApplicationId === action.payload.programApplicationId
+          (application) =>
+            application.programApplicationId === action.payload.programApplicationId
         );
         if (index !== -1) {
           state.programApplications[index] = action.payload;

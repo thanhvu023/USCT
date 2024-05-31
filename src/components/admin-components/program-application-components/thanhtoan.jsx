@@ -9,7 +9,8 @@ import {
   Form,
   ListGroup,
   ListGroupItem,
-  Accordion
+  Accordion,
+  Badge
 } from "react-bootstrap";
 import {
   Box,
@@ -29,6 +30,8 @@ import {
   DialogContent,
   CardContent,
   Dialog,
+  Backdrop,
+  CircularProgress,
 } from "@mui/material";
 import Swal from "sweetalert2";
 import {
@@ -59,8 +62,169 @@ import { getDocumentsByProgramApplicationId, updateDocument } from "../../../red
 import { getAllDocumentTypes } from "../../../redux/slice/documentTypesSlice";
 import { getProgramCertificateByProgramId } from "../../../redux/slice/program-document";
 import { getSchoolProfilesByStudentProfileId } from "../../../redux/slice/schoolProfileSlice";
-import { getAllStudentCertificatesByProfile } from "../../../redux/slice/studentCertificateSlice";
+import { getAllStudentCertificates, getAllStudentCertificatesByProfile } from "../../../redux/slice/studentCertificateSlice";
 import { Grid } from "rsuite";
+import { filterCertificatesByProgramId, getCertificatesByProgramId } from "../../../redux/slice/programCertificateSlice";
+const getBadgeProps = (isEligible) => {
+  if (isEligible) {
+    return (
+      <Badge bg=" badge-lg " className="badge-success " style={{ width: '60px', height: '30px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        Đạt
+      </Badge>
+    );
+  } else {
+    return (
+      <Badge bg="  " className="badge-danger " style={{ width: '60px', height: '30px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        Không đạt
+      </Badge>
+    );
+  }
+};
+
+const EnglishCertificates = ({ certificates, studentCertificates, getBadgeProps ,handleDownloadFile }) => (
+  <>
+    <Box mt={4}>
+      <Typography variant="h6" align="center" style={{ color: '#489DF9', marginBottom: '20px' }}>
+        Điểm chứng chỉ Tiếng Anh của học sinh
+      </Typography>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Loại chứng chỉ</TableCell>
+            <TableCell>Điểm chứng chỉ</TableCell>
+            <TableCell>Điểm tối thiểu yêu cầu</TableCell>
+            <TableCell>Đánh giá</TableCell>
+            <TableCell>Xác thực</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {studentCertificates.filter(certificate => certificate.certificateTypeDto.certificateName === 'IELTS' || certificate.certificateTypeDto.certificateName === 'TOEFL').map((certificate) => {
+            const programCertificate = certificates.find(pc => pc.certificateTypeId === certificate.certificateTypeDto.certificateTypeId);
+            if (programCertificate) {
+              const isEligible = certificate?.certificateValue >= programCertificate?.minLevel;
+              return (
+                <TableRow key={certificate.certificateId}>
+                  <TableCell>{certificate.certificateTypeDto.certificateName}</TableCell>
+                  <TableCell>{certificate.certificateValue}</TableCell>
+                  <TableCell>{programCertificate?.minLevel}</TableCell>
+                  <TableCell>{getBadgeProps(isEligible)}</TableCell>
+                  <TableCell> 
+                    <Button variant="contained" color="primary" onClick={() => handleDownloadFile(certificate.file, `${certificate.certificateTypeDto.certificateName}.jpg`)} >
+                    Tải xuống
+                    </Button>
+                    </TableCell>
+                </TableRow>
+              );
+            }
+            return null;
+          })}
+        </TableBody>
+      </Table>
+    </Box>
+  </>
+);
+
+const SATCertificates = ({ certificates, studentCertificates, getBadgeProps, handleDownloadFile  }) => {
+  const hasEligibleCertificates = certificates.some(
+    (certificate) =>
+      (certificate.certificateType.certificateName === 'SAT' ||
+        certificate.certificateType.certificateName === 'ACT') &&
+      certificate?.minLevel > 0
+  );
+
+  if (!hasEligibleCertificates) {
+    return null;
+  }
+
+  return (
+    <>
+      <Box mt={4}>
+        <Typography variant="h6" align="center" style={{ color: '#489DF9', marginBottom: '20px' }}>Điểm chứng chỉ SAT/ACT của học sinh
+        </Typography>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Loại chứng chỉ</TableCell>
+              <TableCell>Điểm chứng chỉ</TableCell>
+              <TableCell>Điểm tối thiểu yêu cầu</TableCell>
+              <TableCell>Đánh giá</TableCell>
+              <TableCell>Xác thực</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {studentCertificates.filter(certificate => certificate.certificateTypeDto.certificateName === 'SAT' || certificate.certificateTypeDto.certificateName === 'ACT').map((certificate) => {
+              const programCertificate = certificates.find(pc => pc.certificateTypeId === certificate.certificateTypeDto.certificateTypeId);
+              if (programCertificate) {
+                const isEligible = certificate.certificateValue >= programCertificate?.minLevel;
+                return (
+                  <TableRow key={certificate.certificateId}>
+                    <TableCell>{certificate.certificateTypeDto.certificateName}</TableCell>
+                    <TableCell>{certificate.certificateValue}</TableCell>
+                    <TableCell>{programCertificate?.minLevel}</TableCell>
+                    <TableCell>{getBadgeProps(isEligible)}</TableCell>
+                    <TableCell>  
+                    <Button  variant="contained" color="primary" onClick={() => handleDownloadFile(certificate.file, `${certificate.certificateTypeDto.certificateName}.jpg`)} >
+                        Tải xuống
+                      </Button>
+                      </TableCell>
+                  </TableRow>
+                );
+              }
+              return null;
+            })}
+          </TableBody>
+        </Table>
+      </Box>
+    </>
+  );
+};
+const GPACertificates = ({ schoolProfiles, programCertificates, getBadgeProps,handleDownloadFile  }) => {
+  const totalGPA = (schoolProfiles?.reduce((acc, profile) => acc + profile.gpa, 0) / schoolProfiles.length).toFixed(2);
+  const lastGpaCertificate = programCertificates.filter(certificate => certificate.certificateType.certificateName === 'Học bạ').slice(-1)[0];
+
+  return (
+    <>
+      <Typography variant="h6" align="center" style={{ color: '#489DF9', marginBottom: '20px', marginTop: '20px' }}>Yêu cầu GPA</Typography>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Năm học</TableCell>
+            <TableCell>GPA</TableCell>
+            <TableCell>GPA đầu vào</TableCell>
+            <TableCell>Đánh giá</TableCell> {/* Add the header for the evaluation column */}
+            <TableCell>Xác minh</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {schoolProfiles.map((profile) => (
+            <TableRow key={profile.schoolProfileId}>
+              <TableCell>Lớp {profile.schoolGrade}</TableCell>
+              <TableCell>{profile.gpa}</TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+              <TableCell>         
+                 <Button
+                      variant="contained" color="primary"
+                      onClick={() => handleDownloadFile(profile.img, `Diem_nam_lop_${profile.schoolGrade}.jpg`)}                      fullWidth
+                    >
+                     Tải xuống
+                    </Button>
+                    </TableCell>
+            </TableRow>
+          ))}
+          <TableRow>
+            <TableCell>GPA tổng</TableCell>
+            <TableCell>{totalGPA}</TableCell>
+            <TableCell>{lastGpaCertificate?.minLevel}</TableCell>
+            <TableCell>{getBadgeProps(totalGPA >= lastGpaCertificate?.minLevel)}</TableCell> {/* Add the badge for the overall GPA evaluation */}
+          
+         </TableRow>
+         
+        </TableBody>
+      </Table>
+    </>
+  );
+};
 
 const PaymentDetailsPage = () => {
   const { programApplicationId } = useParams();
@@ -69,8 +233,9 @@ const PaymentDetailsPage = () => {
   const [application, setApplication] = useState(location.state || null);
   const program = application?.program;
   const studentProfile = application?.studentProfile;
-  
-console.log("studentProfile",studentProfile)
+  const { loading, error } = useSelector(
+    (state) => state.programApplication
+  );
   const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
@@ -102,19 +267,26 @@ console.log("studentProfile",studentProfile)
   const documents = useSelector(state => state.studentDocument.documentsByProgramApplicationId); 
   const schoolProfiles = useSelector((state) => state.schoolProfile.schoolProfilesByStudentProfileId);
   const studentCertificates = useSelector((state) => state.studentCertificate.studentCertificates);
+  const certificatesByProgramId = useSelector((state) => state.certificate.certificatesByProgramId);
 
-  console.log("tài liệu:",program)
+  console.log("tài liệu:",certificatesByProgramId)
   useEffect(() => {
     dispatch(getAllStage());
   }, [dispatch]);
   
   useEffect(()=>{
     if(program && program.programId){
-      dispatch(getProgramCertificateByProgramId(program.programId)); 
+      dispatch(getCertificatesByProgramId(program.programId)); 
+      dispatch(filterCertificatesByProgramId(Number(program.programId)));
 
     }
   },[dispatch, program]);
 
+  useEffect(() => {
+    dispatch(getAllStudentCertificates());
+  }, [dispatch]);
+
+  
   useEffect(() => {
     if (application && application.programApplicationId) {
 
@@ -320,22 +492,22 @@ console.log("studentProfile",studentProfile)
     setPage((prevPage) => (prevPage > 0 ? prevPage - 1 : prevPage));
   };
 
-  const handleDownloadFile = () => {
-    studentProfile.fileUploads.forEach((file) => {
-      dispatch(getFile(file.fileAttach))
-        .then((fileUrl) => {
-          const link = document.createElement("a");
-          link.href = fileUrl.payload;
-          link.setAttribute("download", file.fileName);
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-        })
-        .catch((error) => {
-          console.error("Error downloading file:", error);
-        });
-    });
-  };
+  // const handleDownloadFile = () => {
+  //   studentProfile.fileUploads.forEach((file) => {
+  //     dispatch(getFile(file.fileAttach))
+  //       .then((fileUrl) => {
+  //         const link = document.createElement("a");
+  //         link.href = fileUrl.payload;
+  //         link.setAttribute("download", file.fileName);
+  //         document.body.appendChild(link);
+  //         link.click();
+  //         document.body.removeChild(link);
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error downloading file:", error);
+  //       });
+  //   });
+  // };
 
   const handleTabChange = (event, newValue) => {
     setTabIndex(newValue);
@@ -455,13 +627,42 @@ console.log("studentProfile",studentProfile)
       return "0.00"; // or any default value you prefer
     }
 
-    const year10 = schoolProfiles.find(profile => profile.schoolGrade === 10)?.gpa || 0;
-    const year11 = schoolProfiles.find(profile => profile.schoolGrade === 11)?.gpa || 0;
-    const year12 = schoolProfiles.find(profile => profile.schoolGrade === 12)?.gpa || 0;
+    const year10 = schoolProfiles?.find(profile => profile.schoolGrade === 10)?.gpa || 0;
+    const year11 = schoolProfiles?.find(profile => profile.schoolGrade === 11)?.gpa || 0;
+    const year12 = schoolProfiles?.find(profile => profile.schoolGrade === 12)?.gpa || 0;
 
     const overallGPA = (year10 + year11 + year12) / 3;
     return overallGPA.toFixed(2);
   };
+  const lastProgramCertificate = certificatesByProgramId[certificatesByProgramId.length - 1];
+
+  const englishCertificates = studentCertificates.filter(
+    (certificate) =>
+      (certificate.certificateTypeDto.certificateName === 'IELTS' ||
+        certificate.certificateTypeDto.certificateName === 'TOEFL') &&
+      certificate.certificateValue >=
+      certificatesByProgramId.find(
+        (pc) => pc.certificateTypeId === certificate.certificateTypeDto.certificateTypeId
+      )?.minLevel
+  );
+
+  const satActCertificates = studentCertificates.filter(
+    (certificate) =>
+      (certificate.certificateTypeDto.certificateName === 'SAT' ||
+        certificate.certificateTypeDto.certificateName === 'ACT') &&
+      certificate.certificateValue >=
+      certificatesByProgramId.find(
+        (pc) => pc.certificateTypeId === certificate.certificateTypeDto.certificateTypeId
+      )?.minLevel
+  );
+
+  const overallGPA = calculateOverallGPA();
+  const minGpaRequired = lastProgramCertificate?.minLevel;
+  const gpaEligible = overallGPA >= minGpaRequired;
+  const isEnglishEligible = englishCertificates.length > 0;
+  const isSatActEligible = satActCertificates.length > 0;
+  const isEligible = (isEnglishEligible || isSatActEligible) && gpaEligible;
+
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const handleOpenDialog = (imgSrc) => {
@@ -507,9 +708,36 @@ console.log("studentProfile",studentProfile)
         });
     }
   };
-
+  const handleDownloadFile = (fileUrl, fileName) => {
+    // Fetch the file using getFile action
+    dispatch(getFile(fileUrl))
+      .then((response) => {
+        const url = response.payload;
+        // Create a temporary link element
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", fileName); // Set the file name
+        // Trigger the download
+        document.body.appendChild(link);
+        link.click();
+        // Clean up
+        document.body.removeChild(link);
+      })
+      .catch((error) => {
+        // Handle error
+        console.error("Error downloading file:", error);
+      });
+  };
   return (
+    <div style={{ maxHeight: "100vh" }}>
+  <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     <Container>
+    
       <div className="card-header">
         <div>
           <Box sx={{ mx: "auto", width: "100%", maxWidth: "1460px" }}>
@@ -550,79 +778,18 @@ console.log("studentProfile",studentProfile)
               <strong>Mã số căn cước công dân:</strong> {studentProfile.nationalId}
             </p>
             <p>
-              <strong>Học vấn:</strong>
+              <strong>Học vấn:</strong>{studentProfile.studyProcess}
             </p>
-            
-            <ul>
-              {studentProfile?.studyProcess?.split("|").map((item, index) => {
-                const [label, ...rest] = item.split(":");
-                const value = rest.join(":");
-                return (
-                  <li key={index}>
-                    <span>{label}:</span> {value}
-                    {label.startsWith('ThưGiớiThiệu') && (
-                      <ul>
-                        {value.split(",").map((subItem, subIndex) => (
-                          <li key={subIndex}>
-                            {subItem}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
-            <p>
-                <strong>Chứng chỉ:</strong>
-              </p>
-              <ul>
-                {studentCertificates.map((certificate, index) => (
-                  <li key={index}>
-                    <strong>{certificate.certificateTypeDto.certificateName}:</strong> {certificate.certificateValue}
-                  </li>
-                ))}
-              </ul>
-            <p>
-                <strong>GPA tổng:</strong> {calculateOverallGPA()}
-              </p>
-              <Grid container spacing={2} style={{ marginTop: '24px' }}>
-                {schoolProfiles.map((profile, index) => (
-                  <Grid item xs={8} sm={4} key={index}>
-                    <Card>
-                      <CardContent>
-                        <Typography variant="h6" align="center">
-                          Lớp {profile.schoolGrade}
-                        </Typography>
-                        <Button
-                          variant="outlined"
-                          onClick={() => handleOpenDialog(profile.img)}
-                          fullWidth
-                        >
-                          Xem ảnh
-                        </Button>
-                        <Dialog
-                          open={openDialog}
-                          onClose={handleCloseDialog}
-                          maxWidth="md"
-                          fullWidth
-                        >
-                          <DialogContent>
-                            <img
-                              src={selectedImage}
-                              alt={`Lớp ${profile.schoolGrade}`}
-                              style={{ width: '100%' }}
-                            />
-                          </DialogContent>
-                        </Dialog>
-                        <Typography variant="body1" align="center" style={{ marginTop: '10px' }}>
-                          <strong>GPA:</strong> {profile.gpa}
-                        </Typography>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                ))}
-              </Grid>
+      
+           
+              <Box style={{ marginBottom: '24px' }}>
+          <Typography variant="h4" align="center" marginBottom={2} marginTop={4}>
+            Các chứng chỉ yêu cầu
+          </Typography>
+          <EnglishCertificates certificates={certificatesByProgramId} studentCertificates={studentCertificates} getBadgeProps={getBadgeProps} handleDownloadFile={handleDownloadFile} />
+                            <SATCertificates certificates={certificatesByProgramId} studentCertificates={studentCertificates} getBadgeProps={getBadgeProps} handleDownloadFile={handleDownloadFile} />
+                            <GPACertificates schoolProfiles={schoolProfiles} programCertificates={certificatesByProgramId} getBadgeProps={getBadgeProps} handleDownloadFile={handleDownloadFile} />
+        </Box>
             <p>
               {/* <strong>GPA tổng:</strong> {overallGPA} */}
             </p>
@@ -664,9 +831,9 @@ console.log("studentProfile",studentProfile)
               ))}
             </Grid> */}
           </Col>
-          <Col md={3} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+          {/* <Col md={3} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
             <Button variant="secondary" onClick={handleDownloadFile}>File Hồ Sơ</Button>
-          </Col>
+          </Col> */}
         </Row>
       </Card.Body>
     </Card>
@@ -1150,6 +1317,7 @@ console.log("studentProfile",studentProfile)
         </div>
       </div>
     </Container>
+    </div>
   );
 };
 

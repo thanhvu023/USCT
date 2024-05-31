@@ -15,13 +15,17 @@ export const login = createAsyncThunk(
       });
       const token = res.data;
       setUserAuthToken(token);
+      const decodedToken = jwtDecode(token);
+
       const role = jwtDecode(token).Role;
+      const staffId = decodedToken.UserId;
+
       if (role === "ROLE_ADMIN") {
         navigate("/admin");
       } else if (role === "ROLE_CONSULTANT") {
         navigate("/consultant");
       } else if (role === "ROLE_STAFF") {
-        navigate("/staff");
+        navigate(`/staff/${staffId}`);
       } else {
         navigate("/");
       }

@@ -216,7 +216,7 @@ const Routers = () => {
         />
         <Route path="*" element={<p>There is nothing here: 404!</p>} />
         <Route
-          path="/staff"
+          path="/staff/:staffId"
           element={
             <StaffRoute userRole={userRole}>
               <StaffPage />
