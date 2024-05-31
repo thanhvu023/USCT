@@ -190,7 +190,7 @@ const handleTabChange = (event, newValue) => {
 
 const getStageNameByProgramStageId = () =>{
 
-  const stageName = programStages.find(
+  const stageName = programStages?.find(
     (stageName) => stageName?.programStageId === programStages.programStageId
   );
   return stageName ? stageName.stageName : "Không biết stageName";
@@ -238,7 +238,7 @@ useEffect(() => {
     }
   };
   const getFeeTypeNameById = (feeTypeId) => {
-    const feeType = feeTypes.find(type => type.feeTypeId === feeTypeId);
+    const feeType = feeTypes?.find(type => type.feeTypeId === feeTypeId);
     return feeType ? feeType.typeName : 'Unknown';
   };
 
@@ -508,7 +508,7 @@ const handleCreateVnPayLink = async () => {
   };
   const displayApplicationStages = () => {
     const steps = Array.isArray(details.applyStage) ? details.applyStage.map((stage) => {
-      const currentStage = programStages.find(ps => ps.programStageId === stage.programStageId);
+      const currentStage = programStages?.find(ps => ps.programStageId === stage.programStageId);
       return {
         label: currentStage?.stageName || 'Unknown Stage',
         description: getStatusText(stage.status),
@@ -569,8 +569,8 @@ const handleCreateVnPayLink = async () => {
   const handleDSubmit = async (e) => {
     e.preventDefault();
     
-    const activeStage = programStages.find(stage => stage.programStageId === details.applyStage.find(applyStage => applyStage.status === 1)?.programStageId);
-    const selectedDocumentType = documentTypes.find(type => type.documentTypeId.toString() === documentData.documentTypeId.toString());
+    const activeStage = programStages?.find(stage => stage.programStageId === details.applyStage.find(applyStage => applyStage.status === 1)?.programStageId);
+    const selectedDocumentType = documentTypes?.find(type => type.documentTypeId.toString() === documentData.documentTypeId.toString());
   
     if (activeStage && selectedDocumentType && activeStage.stageName !== selectedDocumentType.typeName) {
       Swal.fire('Cảnh báo', 'Không thể tải tài liệu này vào giai đoạn hiện tại', 'warning');
@@ -603,7 +603,7 @@ const handleCreateVnPayLink = async () => {
   
   
   const filteredDocumentTypes = useMemo(() => {
-    const activeStage = programStages?.find(stage => stage.programStageId === details.applyStage.find(applyStage => applyStage.status === 1)?.programStageId);
+    const activeStage = programStages?.find(stage => stage.programStageId === details.applyStage?.find(applyStage => applyStage.status === 1)?.programStageId);
     if (!activeStage) return [];
     return documentTypes.filter(type => activeStage.stageName === type.typeName);
   }, [programStages, details.applyStage, documentTypes]);
@@ -630,8 +630,8 @@ const handleCreateVnPayLink = async () => {
       return "0.00"; // or any default value you prefer
     }
   
-    const year10 = schoolProfiles.find(profile => profile.schoolGrade === 10)?.gpa || 0;
-    const year11 = schoolProfiles.find(profile => profile.schoolGrade === 11)?.gpa || 0;
+    const year10 = schoolProfiles?.find(profile => profile.schoolGrade === 10)?.gpa || 0;
+    const year11 = schoolProfiles?.find(profile => profile.schoolGrade === 11)?.gpa || 0;
     const year12 = schoolProfiles.find(profile => profile.schoolGrade === 12)?.gpa || 0;
     
     const overallGPA = (year10 + year11 + year12) / 3;
@@ -672,7 +672,7 @@ const handleCreateVnPayLink = async () => {
           file: imgUrl,
           programApplicationId: selectedDocument.programApplicationId,
           documentTypeId: selectedDocument.documentTypeId,
-          status: selectedDocument.status,
+          status: 0,
         };
   
         await dispatch(updateDocument(updatedDocumentData));
@@ -689,7 +689,20 @@ const handleCreateVnPayLink = async () => {
       Swal.fire('Cảnh báo', 'Vui lòng chọn tệp để cập nhật', 'warning');
     }
   };
-  
+  const getStatusDoc = (status) => {
+    switch (status) {
+      case 0:
+        return 'Đợi kiểm tra';
+      case 1:
+        return 'Cần bổ sung';
+      case 2:
+        return 'Tài liêu không hợp lệ';
+        case 3:
+          return 'Tài liêu hợp lệ';
+      default:
+        return 'Lỗi';
+    }
+  };
   return (
 <div style={{ maxHeight: "100vh",backgroundColor:'#F0F4F9'  }}> 
       <Backdrop
@@ -1115,8 +1128,8 @@ const handleCreateVnPayLink = async () => {
               </TableHead>
               <TableBody>
               {programStages.filter(stage => stage?.programId === details.program?.programId).map((stage) => {
-                  const fee = fees.find(f => f.programFeeId === stage.programFeeId);
-                  const feeType = feeTypes.find(ft => ft.feeTypeId === fee?.feeTypeId);
+                  const fee = fees?.find(f => f.programFeeId === stage.programFeeId);
+                  const feeType = feeTypes?.find(ft => ft.feeTypeId === fee?.feeTypeId);
                   const isActive = stage.programStageId === activeStage?.programStageId;
                   return (
                     <TableRow key={stage.programStageId} sx={{ bgcolor: isActive ? '#e0f7fa' : 'inherit' }}>
@@ -1158,10 +1171,10 @@ const handleCreateVnPayLink = async () => {
       value={selectedFee?.programFeeId || ''}
       onChange={e => {
         const feeId = e.target.value;
-        const fee = fees.find(f => f.programFeeId.toString() === feeId);
+        const fee = fees?.find(f => f.programFeeId.toString() === feeId);
         setSelectedFee(fee);
         if (fee) {
-          const feeType = feeTypes.find(ft => ft.feeTypeId === fee.feeTypeId);
+          const feeType = feeTypes?.find(ft => ft.feeTypeId === fee.feeTypeId);
           setNote(` (${feeType ? feeType.typeName : 'Unknown'})`);
         } else {
           setNote('');
@@ -1358,6 +1371,7 @@ Hoặc có thể đóng toàn bộ phí cho tiến trình (cập nhật tự đ�
               <TableCell>ID</TableCell>
               <TableCell align="right">Loại tài liệu</TableCell>
               <TableCell align="right">Thời gian tải lên</TableCell>
+              <TableCell>Trạng thái</TableCell>
               <TableCell align="right">Hành động</TableCell>
             </TableRow>
           </TableHead>
@@ -1378,6 +1392,9 @@ Hoặc có thể đóng toàn bộ phí cho tiến trình (cập nhật tự đ�
                     second: '2-digit'
                   })}
                 </TableCell>
+                <TableCell align="right">
+                          {getStatusDoc(document.status)}
+                        </TableCell>
                 <TableCell align="right">
                   <Button
                     variant="contained"
