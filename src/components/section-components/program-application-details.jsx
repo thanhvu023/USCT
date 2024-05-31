@@ -692,17 +692,18 @@ const handleCreateVnPayLink = async () => {
   const getStatusDoc = (status) => {
     switch (status) {
       case 0:
-        return 'Đợi kiểm tra';
+        return <Chip label="Đợi kiểm tra" color="default" />;
       case 1:
-        return 'Cần bổ sung';
+        return <Chip label="Cần bổ sung" color="warning" />;
       case 2:
-        return 'Tài liêu không hợp lệ';
-        case 3:
-          return 'Tài liêu hợp lệ';
+        return <Chip label="Tài liệu không hợp lệ" color="error" />;
+      case 3:
+        return <Chip label="Tài liệu hợp lệ" color="success" />;
       default:
-        return 'Lỗi';
+        return <Chip label="Lỗi" color="error" />;
     }
   };
+  
   return (
 <div style={{ maxHeight: "100vh",backgroundColor:'#F0F4F9'  }}> 
       <Backdrop

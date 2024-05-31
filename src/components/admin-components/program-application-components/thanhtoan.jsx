@@ -65,6 +65,29 @@ import { getSchoolProfilesByStudentProfileId } from "../../../redux/slice/school
 import { getAllStudentCertificates, getAllStudentCertificatesByProfile } from "../../../redux/slice/studentCertificateSlice";
 import { Grid } from "rsuite";
 import { filterCertificatesByProgramId, getCertificatesByProgramId } from "../../../redux/slice/programCertificateSlice";
+const useAppSelector = () => ({
+  applyStages: useSelector((state) => state.applyStage.applyStages || []),
+  payments: useSelector((state) => state.payment.paymentsByApplicationId),
+  customers: useSelector((state) => state.auth.user),
+  fees: useSelector((state) => state.programFee.fees),
+  feeTypes: useSelector((state) => state.feeType.feeTypes),
+  programDocuments: useSelector(
+    (state) => state.programDocument.programCertificateByProgramId
+  ),
+  documents: useSelector(
+    (state) => state.studentDocument.documentsByProgramApplicationId
+  ),
+  schoolProfiles: useSelector(
+    (state) => state.schoolProfile.schoolProfilesByStudentProfileId
+  ),
+  studentCertificates: useSelector(
+    (state) => state.studentCertificate.studentCertificates
+  ),
+  certificatesByProgramId: useSelector(
+    (state) => state.certificate.certificatesByProgramId
+  ),
+});
+
 const getBadgeProps = (isEligible) => {
   if (isEligible) {
     return (
@@ -237,7 +260,19 @@ const PaymentDetailsPage = () => {
     (state) => state.programApplication
   );
   const [refresh, setRefresh] = useState(false);
-
+  const {
+    applyStages,
+    payments,
+    customers,
+    fees,
+    feeTypes,
+    programDocuments,
+    documents,
+    schoolProfiles,
+    studentCertificates,
+    certificatesByProgramId,
+  } = useAppSelector();
+// console.log("first",programDocuments)
   useEffect(() => {
     if (!application || refresh) {
       const fetchApplication = async () => {
@@ -255,21 +290,21 @@ const PaymentDetailsPage = () => {
     return <div>Loading...</div>;
   }
 
-  const applyStages = useSelector((state) => state.applyStage.applyStages || []);
+  // const applyStages = useSelector((state) => state.applyStage.applyStages || []);
   const activeStage = application?.applyStage?.find((stage) => stage?.status === 1);
   const [tabIndex, setTabIndex] = useState(0);
-  console.log("activeStage",activeStage)
-  const payments = useSelector((state) => state.payment.paymentsByApplicationId);
-  const customers = useSelector((state) => state.auth.user);
-  const fees = useSelector((state) => state.programFee.fees);
-  const feeTypes = useSelector((state) => state.feeType.feeTypes);
-  const programDocuments = useSelector((state) => state.programDocument.programCertificateByProgramId);
-  const documents = useSelector(state => state.studentDocument.documentsByProgramApplicationId); 
-  const schoolProfiles = useSelector((state) => state.schoolProfile.schoolProfilesByStudentProfileId);
-  const studentCertificates = useSelector((state) => state.studentCertificate.studentCertificates);
-  const certificatesByProgramId = useSelector((state) => state.certificate.certificatesByProgramId);
+  // console.log("activeStage",activeStage)
+  // const payments = useSelector((state) => state.payment.paymentsByApplicationId);
+  // const customers = useSelector((state) => state.auth.user);
+  // const fees = useSelector((state) => state.programFee.fees);
+  // const feeTypes = useSelector((state) => state.feeType.feeTypes);
+  // const programDocuments = useSelector((state) => state.programDocument.programCertificateByProgramId);
+  // const documents = useSelector(state => state.studentDocument.documentsByProgramApplicationId); 
+  // const schoolProfiles = useSelector((state) => state.schoolProfile.schoolProfilesByStudentProfileId);
+  // const studentCertificates = useSelector((state) => state.studentCertificate.studentCertificates);
+  // const certificatesByProgramId = useSelector((state) => state.certificate.certificatesByProgramId);
 
-  console.log("tài liệu:",certificatesByProgramId)
+  // console.log("tài liệu:",certificatesByProgramId)
   useEffect(() => {
     dispatch(getAllStage());
   }, [dispatch]);
@@ -278,6 +313,7 @@ const PaymentDetailsPage = () => {
     if(program && program.programId){
       dispatch(getCertificatesByProgramId(program.programId)); 
       dispatch(filterCertificatesByProgramId(Number(program.programId)));
+      dispatch(getProgramCertificateByProgramId(program.programId)); // Thêm dòng này
 
     }
   },[dispatch, program]);
@@ -614,7 +650,7 @@ const PaymentDetailsPage = () => {
         case 3:
           return 'Tài liêu hợp lệ';
       default:
-        return 'Lỗi';
+        return 'Lỗi hiển thị';
     }
   };
   const formatDescription1 = (description) => {
