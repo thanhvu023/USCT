@@ -118,11 +118,11 @@ const Registration = () => {
   };
   const getFullNameByConsultantId = (consultantId) => {
     const consultant = consultants.find((c) => c.consultantId === consultantId);
-    return consultant ? consultant.userName : "Unknown";
+    return consultant ? consultant.userName : "Chưa có tư vấn viên";
   };
   const getSpecializeByConsultantId = (consultantId) => {
     const consultant = consultants.find((c) => c.consultantId === consultantId);
-    return consultant ? consultant.specialize : "Unknown";
+    return consultant ? consultant.specialize : "Chưa hiển thị";
   };
   const consultants = useSelector((state) => state.auth.consultants);
 

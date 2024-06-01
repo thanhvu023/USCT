@@ -32,6 +32,7 @@ import {
   Dialog,
   Backdrop,
   CircularProgress,
+  Avatar,
 } from "@mui/material";
 import Swal from "sweetalert2";
 import {
@@ -789,7 +790,7 @@ const PaymentDetailsPage = () => {
       <Card.Body>
         <Row>
           <Col md={3} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <img
+            <Avatar
               src={studentProfile.img || 'https://via.placeholder.com/150'}
               alt="Profile"
               style={{ width: '100px', height: '100px', borderRadius: '50%' }}

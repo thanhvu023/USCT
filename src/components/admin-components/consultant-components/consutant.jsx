@@ -7,6 +7,7 @@ import {
   setFilteredConsultants,
   selectFilteredConsultants
 } from "../../../redux/slice/consultantSlice";
+import { Avatar } from "@mui/material";
 
 const theadData = [
   { heading: "ID", sortingValue: "consultantId" },
@@ -88,7 +89,7 @@ const AllConsultant = () => {
                       {displayedConsultants.slice(startEntry, endEntry).map((consultant, index) => (
                         <tr key={index}>
                                                     <td>{consultant.consultantId}</td>
-                          <td><img className="rounded-circle" src={consultant.img} alt="" width="40" height="40" /></td>
+                          <td><Avatar className="rounded-circle" src={consultant.img} alt="" width="40" height="40" /></td>
                           <td>{consultant.userName}</td>
                           <td><Link to="#">{consultant.email}</Link></td>
                           <td>{consultant.education}</td>

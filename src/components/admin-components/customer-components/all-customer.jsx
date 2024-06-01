@@ -4,6 +4,7 @@ import { Row, Dropdown, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllUsers } from "../../../redux/slice/authSlice";
 import unidecode from "unidecode";  
+import { Avatar } from "@mui/material";
 // import './customer.css'
 const theadData = [
   { heading: "ID", sortingValue: "customerId" },
@@ -98,7 +99,7 @@ const AllCustomer = () => {
                       {displayedData.map((item, index) => (
                         <tr key={index}>
                           <td>{item.customerId}</td>
-                          <td><img className="rounded-circle" src={item.img} alt="" width="40" height="40" /></td>
+                          <td><Avatar className="rounded-circle" src={item.img} alt="" width="40" height="40" /></td>
                           <td>{item.fullName}</td>
                           <td>{item.phone}</td>
                           <td>{item.email}</td>

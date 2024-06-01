@@ -401,7 +401,7 @@ const AllPrograms = () => {
         setShowAllPrograms(true);
       } else {
         const updatedData = programs.filter((item) => {
-          let searchData = `${item.nameProgram} ${item.programTypeId} ${item.majorId} ${item.createDate}`.toLowerCase();
+          let searchData = `${item.nameProgram} ${item.majorId} `.toLowerCase();
           return searchData.includes(searchValue);
         });
         setFeeData([...updatedData]);
