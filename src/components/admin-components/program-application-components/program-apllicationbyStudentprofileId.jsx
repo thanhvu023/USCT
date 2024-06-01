@@ -328,7 +328,7 @@ const ProgramApplicationPage = ({ setMain }) => {
         <div className="col-lg-12">
           <Card className="mb-4">
             <Card.Header as="h4">
-            {`Danh sách hồ sơ đăng khú chương trình - Staff ID: ${staffId}`}
+            {`Danh sách hồ sơ đăng ký chương trình - Staff ID: ${staffId}`}
             </Card.Header>
             <Card.Body>
               <Form>
