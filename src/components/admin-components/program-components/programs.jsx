@@ -403,7 +403,7 @@ const AllPrograms = () => {
         const updatedData = programs.filter((item) => {
           let searchData = `${item.nameProgram} ${item.majorId} `.toLowerCase();
           return searchData.includes(searchValue);
-        });
+    });
         setFeeData([...updatedData]);
         setShowAllPrograms(false);
       }

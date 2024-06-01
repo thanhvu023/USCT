@@ -511,14 +511,14 @@ const selectedStudentCertificate = studentCertificates?.find(c => c?.certificate
                           <CustomToggle eventKey={`${index}`} expanded={stage.expanded}>
                             <h5>{index + 1}. {stage.stageName} <FaChevronDown className="float-right" style={{ margin: '0 auto' }} /></h5>
                           </CustomToggle>
-                          <Accordion.Collapse eventKey={`${index}`}>
+                          {/* <Accordion.Collapse eventKey={`${index}`}>
                             <div>
                               <div>Fee ID: {stage.programFeeId || "N/A"}</div>
                               <Badge bg={stage.isPayment ? "success" : "danger"}>
                                 {stage.isPayment ? "Yêu cầu thanh toán" : "Không yêu cầu thanh toán"}
                               </Badge>
                             </div>
-                          </Accordion.Collapse>
+                          </Accordion.Collapse> */}
                         </ListGroup.Item>
                       ))}
                     </Accordion>
