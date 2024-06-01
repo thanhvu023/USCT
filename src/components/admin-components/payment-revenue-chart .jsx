@@ -61,7 +61,7 @@ const PaymentRevenueChart = () => {
   };
 
   return (
-    <div style={{ height: '400px' }}>
+    <div style={{ height: '500px' }}>
       <Pie data={data} options={options} />
     </div>
   );
