@@ -14,6 +14,8 @@ import {
   hideProgram,
   updateProgram,
 } from "../../../redux/slice/programSlice";
+import { v4 as uuidv4 } from 'uuid';
+
 import { getAllSemester } from "../../../redux/slice/semesterSlice";
 import { getAllUniversity } from "../../../redux/slice/universitySlice";
 import { imageDb } from "../../FirebaseImage/Config";
@@ -73,7 +75,7 @@ const AllPrograms = () => {
 
   const [formData, setFormData] = useState({
     nameProgram: "",
-    status: "",
+    status: "Active",
     duration: "",
     description: "",
     tuition: "",
@@ -112,19 +114,30 @@ const AllPrograms = () => {
       )
     );
   };
+  const generateUniqueId = (existingIds, min = 1, max = 1000000) => {
+    let id;
+    do {
+      id = Math.floor(Math.random() * (max - min + 1)) + min;
+    } while (existingIds.has(id));
+    existingIds.add(id);
+    return id;
+  };
+  const [existingIds, setExistingIds] = useState(new Set());
+  const newProgramStageId = generateUniqueId(existingIds);
+  const newProgramFeeId = generateUniqueId(existingIds);
 
   const addProgramStageFee = () => {
     setProgramStageFee([
       ...programStageFee,
       {
         programStageRequest: {
-          programStageId: Math.random(),
+          programStageId: newProgramStageId,
           isPayment: false,
           programFeeId: 0,
           stageName: "",
         },
         programFeeRequest: {
-          programFeeId: Math.random(),
+          programFeeId: newProgramFeeId,
           amount: 0,
           feeTypeId: 0,
         },
@@ -493,12 +506,13 @@ const AllPrograms = () => {
     return (
       <div className="row">
         {loading ? (
-          <Backdrop
-            sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-            open={loading}
-          >
-            <CircularProgress color="inherit" />
-          </Backdrop>
+          // <Backdrop
+          //   sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          //   open={loading}
+          // >
+          //   <CircularProgress color="inherit" />
+          // </Backdrop>
+          <div></div>
         ) : showAllPrograms ? (
           currentPrograms.map((program, index) => (
             <div className="col-lg-4 col-md-6 col-sm-6 col-12 mb-4" key={index}>
@@ -1094,8 +1108,7 @@ const AllPrograms = () => {
             </form>
           )}
         </Modal.Body>
-      </Modal>
-      )
+      </Modal>      
     </div>
   );
 };

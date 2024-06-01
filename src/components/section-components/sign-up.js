@@ -248,8 +248,8 @@ function SignUp() {
                       type="radio"
                       id="genderMale" // Unique id for male option
                       name="gender"
-                      value="Male"
-                      checked={formData.gender === "Male"}
+                      value="Nam"
+                      checked={formData.gender === "Nam"}
                       onChange={handleInputChange}
                       label="Nam"
                     />
@@ -257,8 +257,8 @@ function SignUp() {
                       type="radio"
                       id="genderFemale" // Unique id for female option
                       name="gender"
-                      value="Female"
-                      checked={formData.gender === "Female"}
+                      value="Nữ"
+                      checked={formData.gender === "Nữ"}
                       onChange={handleInputChange}
                       label="Nữ"
                     />

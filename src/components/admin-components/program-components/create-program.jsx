@@ -94,7 +94,7 @@ const CreateProgramModal = ({
       [name]: val,
     });
   };
-
+console.log(formData)
   const handleInputChange = (id, e) => {
     const { name, value, type, checked } = e.target;
     const fieldValue = type === "checkbox" ? checked : value;
@@ -230,9 +230,9 @@ const CreateProgramModal = ({
                 <div className="d-flex">
                   <div className="flex-fill mr-2">
                     <select
-                      value={formData.startSemesterId}
+                      value={formData.semesterId}
                       onChange={handleChange}
-                      name="startSemesterId"
+                      name="semesterId"
                       className="form-control"
                     >
                       <option value="">Chọn Học kỳ bắt đầu</option>
@@ -245,9 +245,9 @@ const CreateProgramModal = ({
                   </div>
                   <div className="flex-fill">
                     <select
-                      value={formData.endSemesterId}
+                      value={formData.semesterId}
                       onChange={handleChange}
-                      name="endSemesterId"
+                      name="semesterId"
                       className="form-control"
                     >
                       <option value="">Chọn Học kỳ kết thúc</option>
