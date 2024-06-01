@@ -136,14 +136,7 @@ export const createProgram = createAsyncThunk(
   "/program/createProgram",
   async (params, thunkAPI) => {
     // console.log("programData",programData)
-    const {
-      programStage,
-      formData,
-      certificates,
-      programFee,
-      programDocument,
-      programStageFee,
-    } = params;
+    const { formData, certificates, programDocument, programStageFee } = params;
     try {
       const res = await instance.post(`/programs`, formData, {
         headers: {
@@ -183,17 +176,19 @@ export const createProgram = createAsyncThunk(
           ...item.programStageRequest,
           programId: programId,
         },
-        programFeeRequest: {
-          ...item.programFeeRequest,
-          programId: programId,
-        },
+        programFeeRequest: item.programStageRequest.isPayment
+          ? {
+              ...item.programFeeRequest,
+              programId: programId,
+            }
+          : null,
       }));
       console.log(programStageFeeData);
-       const programStageRes = await instance.post(
+      const programStageRes = await instance.post(
         `/program-stages/fee`,
         programStageFeeData
-       )
-       console.log(programStageRes)
+      );
+      console.log(programStageRes);
       return;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
