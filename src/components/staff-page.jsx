@@ -30,8 +30,8 @@ const StaffPage = () => {
         return <Test1 />;
       case "Trường đại học":
         return <AllUniversitiesStaffPage />;
-      case "Chương trình":
-        return <AllPrograms />;
+      // case "Chương trình":
+      //   return <AllPrograms />;
       case "Hồ sơ đăng ký":
         return <ProgramApplicationPage setMain={setMain} setSelectedApp={handleSetSelectedApp} />;
       case "Thanh toán":

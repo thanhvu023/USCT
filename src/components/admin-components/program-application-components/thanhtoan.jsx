@@ -12,6 +12,7 @@ import {
   Accordion,
   Badge
 } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Tab,
@@ -254,6 +255,7 @@ const PaymentDetailsPage = () => {
   const { programApplicationId } = useParams();
   const location = useLocation();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [application, setApplication] = useState(location.state || null);
   const program = application?.program;
   const studentProfile = application?.studentProfile;
@@ -789,12 +791,18 @@ const PaymentDetailsPage = () => {
     >
       <Card.Body>
         <Row>
-          <Col md={3} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <Col md={3} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center',flexDirection:'column' }}>
             <Avatar
               src={studentProfile.img || 'https://via.placeholder.com/150'}
               alt="Profile"
               style={{ width: '100px', height: '100px', borderRadius: '50%' }}
             />
+            <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => navigate(-1)} // Navigate to the previous page
+                            style={{ marginTop: '10px' }}
+                          >Trở về</Button>
           </Col>
           <Col md={6}>
             <h3>{studentProfile.fullName}</h3>

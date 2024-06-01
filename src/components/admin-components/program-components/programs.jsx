@@ -2,7 +2,7 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import React, { useEffect, useState, useCallback } from "react";
-import { Button, Dropdown, Modal, Row } from "react-bootstrap";
+import { Button, Dropdown, Modal, Row, Table  } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -23,7 +23,59 @@ import CreateProgramModal from "./create-program";
 import "./program.css";
 import { Backdrop, CircularProgress } from "@mui/material";
 import debounce from "lodash.debounce";
+import { filterCertificatesByProgramId, getCertificatesByProgramId } from "../../../redux/slice/programCertificateSlice";
+import { getProgramFeeById } from "../../../redux/slice/programFeeSlice";
+const renderCertificates = (certificates) => {
+  if (!certificates || certificates.length === 0) return <p>No certificates available.</p>;
+  
+  return (
+    <Table striped bordered hover>
+      <thead>
+        <tr>
+          <th>Tên chứng chỉ</th>
+          <th>Điểm tối thiểu</th>
+          <th>Điểm trung bình</th>
+        </tr>
+      </thead>
+      <tbody>
+        {certificates.map((certificate) => (
+          <tr key={certificate.programCertificateId}>
+            <td>{certificate.certificateType.certificateName}</td>
+            <td>{certificate.minLevel}</td>
+            <td>{certificate.averageLevel}</td>
+          </tr>
+        ))}
+      </tbody>
+    </Table>
+  );
+};
+const renderProgramStages = (programStages, fees) => {
+  if (!programStages || programStages.length === 0) return <p>Không có tiến trình nào.</p>;
 
+  return (
+    <Table striped bordered hover>
+      <thead>
+        <tr>
+          <th>Tên tiến trình</th>
+          <th>Trả phí</th>
+          {/* <th>Số tiền</th> */}
+        </tr>
+      </thead>
+      <tbody>
+      {programStages.map((stage) => {
+          const fee = fees?.find(f => f.programFeeId === stage.programFeeId);
+          return (
+            <tr key={stage.programStageId}>
+              <td>{stage.stageName}</td>
+              <td>{stage.isPayment ? "Có trả phí" : "Không trả phí"}</td>
+              {/* <td>{fee ? fee.amount : "N/A"}</td> */}
+            </tr>
+          );
+        })}
+      </tbody>
+    </Table>
+  );
+};
 const AllPrograms = () => {
   const dispatch = useDispatch();
   const [feeData, setFeeData] = useState([]);
@@ -37,6 +89,15 @@ const AllPrograms = () => {
   const semesters = useSelector((state) => state.semester.allSemester);
   const universities = useSelector((state) => state.university.universities);
   const [imgURL, setImgURL] = useState(null);
+  const [fees, setFees] = useState({});
+
+
+
+  const certificatesByProgramId = useSelector((state) =>
+    state.certificate.certificatesByProgramId.filter((certificate) => certificate.minLevel !== 0)
+  );
+
+
   const [programStageFee, setProgramStageFee] = useState([
     {
       programStageRequest: {
@@ -114,6 +175,7 @@ const AllPrograms = () => {
       )
     );
   };
+
   const generateUniqueId = (existingIds, min = 1, max = 1000000) => {
     let id;
     do {
@@ -310,12 +372,17 @@ const AllPrograms = () => {
       dispatch(getProgramTypes());
     }
   }, [dispatch, programs?.length, semesters?.length, majors?.length, universities?.length, programTypes?.length]);
-
+  useEffect(() => {
+    if (selectedProgram) {
+      dispatch(getCertificatesByProgramId(selectedProgram.programId));
+    }
+  }, [dispatch, selectedProgram]);
   const handleShowDetailModal = (programId) => {
     setSelectedProgramId(programId);
     setShowModal(true);
     setCurrentPage(1);
   };
+
 
   const handleCloseDetailModal = () => {
     setShowModal(false);
@@ -408,21 +475,27 @@ const AllPrograms = () => {
 
   const dataSearch = useCallback(
     debounce((searchValue) => {
-      searchValue = searchValue.toLowerCase();
-      if (searchValue === "") {
-        setFeeData([...programs]);
-        setShowAllPrograms(true);
+      if (typeof searchValue === "string") {
+        searchValue = searchValue.toLowerCase();
+        if (searchValue === "") {
+          setFeeData([...programs]);
+          setShowAllPrograms(true);
+        } else {
+          const updatedData = programs.filter((item) => {
+            let searchData = `${item.nameProgram} ${item.majorId} `.toLowerCase();
+            return searchData.includes(searchValue);
+          });
+          setFeeData([...updatedData]);
+          setShowAllPrograms(false);
+        }
       } else {
-        const updatedData = programs.filter((item) => {
-          let searchData = `${item.nameProgram} ${item.majorId} `.toLowerCase();
-          return searchData.includes(searchValue);
-    });
-        setFeeData([...updatedData]);
-        setShowAllPrograms(false);
+        // Handle the case where searchValue is not a string
+        console.error("Search value is not a string:", searchValue);
       }
     }, 300),
     [programs]
   );
+  
 
   const handleSearchChange = (e) => {
     dataSearch(e.target.value);
@@ -480,7 +553,13 @@ const AllPrograms = () => {
       setProgramUpdated(false);
     }
   }, [programUpdated, dispatch]);
-
+  const programFee1 = useSelector((state) => state.programFee.fees.find(fee => fee.programFeeId === selectedProgramId.programStageDtos.programFee));
+console.log("programFee1",programFee1)
+  useEffect(() => {
+    if (selectedProgramId) {
+      dispatch(getProgramFeeById(selectedProgramId));
+    }
+  }, [dispatch, selectedProgramId]);
   const RenderPrograms = () => {
     const itemsPerPage = 6;
     const [currentPage, setCurrentPage] = useState(1);
@@ -502,7 +581,7 @@ const AllPrograms = () => {
         setCurrentPage(parseInt(storedPage));
       }
     }, []);
-
+  
     return (
       <div className="row">
         {loading ? (
@@ -793,117 +872,125 @@ const AllPrograms = () => {
           <RenderPrograms />
         </div>
       </Row>
-      <Modal show={showModal} onHide={handleCloseDetailModal} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Chi tiết chương trình </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {selectedProgram && (
-            <div className="row">
-              <div className="col-md-5">
-                <div className="img-container">
-                  <img
-                    src={selectedProgram?.img}
-                    alt="Uploaded Image"
-                    style={{ maxWidth: "100%", height: "auto" }}
-                  />
-                </div>
-                <div className="col-md-12">
-                  <div className="row d-flex ">
-                    <div className="col-md-6">
-                      <p>
-                        <strong>Học kỳ bắt đầu:</strong>{" "}
-                        {getSemesterStartDate(selectedProgram.semesterId)}
-                      </p>
-                      <p>
-                        <strong>Kết thúc học kỳ:</strong>{" "}
-                        {getSemesterEndDate(selectedProgram.semesterId)}
-                      </p>
-                      <p>
-                        <strong>Thời gian:</strong> {selectedProgram.duration}
-                      </p>
-                      <p>
-                        <strong>Trình độ:</strong> {selectedProgram.level}
-                      </p>
-                    </div>
-                    <div className="col-md-6">
-                      <p>
-                        <strong>Trường:</strong>{" "}
-                        {getUniversityName(selectedProgram.universityName)}
-                      </p>
-                      <p>
-                        <strong>Chuyên ngành:</strong>{" "}
-                        {getMajorName(selectedProgram.majorId)}
-                      </p>
-                      <p>
-                        <strong>Loại chương trình :</strong>{" "}
-                        {getTypeName(selectedProgram.programTypeId)}
-                      </p>
-                    </div>
-                  </div>
-                </div>
+      <Modal show={showModal} onHide={handleCloseDetailModal} centered  style={{ maxHeight: "840px", overflowY: "scroll" }}>
+  <Modal.Header closeButton>
+    <Modal.Title>Chi tiết chương trình</Modal.Title>
+  </Modal.Header>
+  <Modal.Body>
+    {selectedProgram && (
+      <div className="row">
+        <div className="col-md-5">
+          <div className="img-container">
+            <img
+              src={selectedProgram?.img}
+              alt="Uploaded Image"
+              style={{ maxWidth: "100%", height: "auto" }}
+            />
+          </div>
+          <div className="col-md-12">
+            <div className="row d-flex">
+              <div className="col-md-6">
+                <p>
+                  <strong>Học kỳ bắt đầu:</strong>{" "}
+                  {getSemesterStartDate(selectedProgram.semesterId)}
+                </p>
+                <p>
+                  <strong>Kết thúc học kỳ:</strong>{" "}
+                  {getSemesterEndDate(selectedProgram.semesterId)}
+                </p>
+                <p>
+                  <strong>Thời gian:</strong> {selectedProgram.duration}
+                </p>
+                <p>
+                  <strong>Trình độ:</strong> {selectedProgram.level}
+                </p>
               </div>
-              <div className="col-md-7">
-                <h4>{selectedProgram.nameProgram}</h4>
-
-                <div>
-                  <p>
-                    <strong>Trạng thái :</strong> {selectedProgram.status}
-                  </p>
-                  <p>
-                    <strong>Mô tả:</strong> {selectedProgram.description}
-                  </p>
-                  <p>
-                    <strong>
-                      Học phí:
-                      <br />
-                    </strong>
-                    <span
-                      dangerouslySetInnerHTML={{
-                        __html:
-                          selectedProgram?.tuition?.replace(
-                            /\\r\\n/g,
-                            "<br/>• "
-                          ) || "",
-                      }}
-                    />
-                  </p>
-                  <p>
-                    <strong>Yêu cầu:</strong>
-                    <span
-                      dangerouslySetInnerHTML={{
-                        __html:
-                          selectedProgram?.requirement?.replace(
-                            /\\r\\n/g,
-                            "<br/>• "
-                          ) || "",
-                      }}
-                    />
-                  </p>
-                  <p>
-                    <strong>Trách nhiệm:</strong>{" "}
-                    <span
-                      dangerouslySetInnerHTML={{
-                        __html:
-                          selectedProgram?.responsibilities?.replace(
-                            /\\r\\n/g,
-                            "<br/>• "
-                          ) || "",
-                      }}
-                    />
-                  </p>
-                </div>
+              <div className="col-md-6">
+                <p>
+                  <strong>Trường:</strong>{" "}
+                  {getUniversityName(selectedProgram.universityName)}
+                </p>
+                <p>
+                  <strong>Chuyên ngành:</strong>{" "}
+                  {getMajorName(selectedProgram.majorId)}
+                </p>
+                <p>
+                  <strong>Loại chương trình :</strong>{" "}
+                  {getTypeName(selectedProgram.programTypeId)}
+                </p>
+             
               </div>
             </div>
-          )}
-        </Modal.Body>
+          </div>
+          <p>
+                <strong>Tiến trình :</strong>{" "}
+                {renderProgramStages(selectedProgram.programStageDtos)}
 
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseDetailModal}>
-            Đóng
-          </Button>
-        </Modal.Footer>
-      </Modal>
+                </p>
+        </div>
+        <div className="col-md-7">
+          <h4>{selectedProgram.nameProgram}</h4>
+          <div>
+            <p>
+              <strong>Trạng thái :</strong> {selectedProgram.status}
+            </p>
+            <p>
+              <strong>Mô tả:</strong> {selectedProgram.description}
+            </p>
+            <p>
+              <strong>
+                Học phí:
+                <br />
+              </strong>
+              <span
+                dangerouslySetInnerHTML={{
+                  __html:
+                    selectedProgram?.tuition?.replace(
+                      /\\r\\n/g,
+                      "<br/>• "
+                    ) || "",
+                }}
+              />
+            </p>
+            <p>
+              <strong>Yêu cầu:</strong>
+              <span
+                dangerouslySetInnerHTML={{
+                  __html:
+                    selectedProgram?.requirement?.replace(
+                      /\\r\\n/g,
+                      "<br/>• "
+                    ) || "",
+                }}
+              />
+            </p>
+            <p>
+              <strong>Trách nhiệm:</strong>{" "}
+              <span
+                dangerouslySetInnerHTML={{
+                  __html:
+                    selectedProgram?.responsibilities?.replace(
+                      /\\r\\n/g,
+                      "<br/>• "
+                    ) || "",
+                }}
+              />
+            </p>
+            <p>
+              <strong>Chứng chỉ yêu cầu:</strong>
+              {renderCertificates(certificatesByProgramId)} {/* Render certificates */}
+            </p>
+          </div>
+        </div>
+      </div>
+    )}
+  </Modal.Body>
+  <Modal.Footer>
+    <Button variant="secondary" onClick={handleCloseDetailModal}>
+      Đóng
+    </Button>
+  </Modal.Footer>
+</Modal>
       {/* Edit */}
       <Modal show={showEditModal} onHide={handleCloseEditModal} centered>
         <Modal.Header>

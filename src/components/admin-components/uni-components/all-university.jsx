@@ -143,7 +143,7 @@ const AllUniversitiesPage = () => {
           ) : (
             currentUniversities.map((university, index) => (
               <div className="col-lg-4 col-md-6 col-sm-6 col-12 mb-4" key={index}>
-                <div className="card mx-4 mt-4" style={{ width: '450px', height: '551px',boxShadow: "0 4px 8px rgba(0,0,0,0.1)", borderRadius: "10px" }}>
+                <div className="card mx-4 mt-4" style={{ width: '450px', height: '600px',boxShadow: "0 4px 8px rgba(0,0,0,0.1)", borderRadius: "10px" }}>
                   <div className="card-body">
                     {/* <div className="d-flex justify-content-end mb-2">
                       <Dropdown>
@@ -176,7 +176,7 @@ const AllUniversitiesPage = () => {
                         className="university-img"
                         alt={university.universityName}
                       />
-                      <h3 className="mt-4 mb-1">{university.universityName}</h3>
+                      <h3 className="mt-4 mb-1" style={{height:'83px'}}>{university.universityName}</h3>
                       <p className="text-muted">{university.slogan}</p>
                       <button
                         className="btn btn-primary btn-rounded mt-3 px-4"

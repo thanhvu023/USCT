@@ -47,12 +47,12 @@ export const MenuList = [
   },
 
   //Programs
-  {
-    title: "Chương trình",
-    classChange: "mm-collapse",
-    iconStyle: <i className="la la-graduation-cap" />,
-    filterName: "program",
-  },
+  // {
+  //   title: "Chương trình",
+  //   classChange: "mm-collapse",
+  //   iconStyle: <i className="la la-graduation-cap" />,
+  //   filterName: "program",
+  // },
   /// Student Profile
   {
     title: "Hồ sơ đăng ký",

@@ -346,7 +346,7 @@ const StudentProfileAppliedList = () => {
                       <ListGroup.Item>
                         <Row>
                           <Col sm={4}>
-                            <strong>Chi phí cần đóng:</strong>
+                            <strong>Chi phí cần đóng2:</strong>
                           </Col>
                           <Col sm={8}>
                             {selectedProgramApplication?.applyStage

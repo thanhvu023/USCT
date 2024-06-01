@@ -184,7 +184,7 @@ const handleTabChange = (event, newValue) => {
   const stages = useSelector(state=>state.applyStage.stages)
   const programStages = useSelector(state=>state.programStages.stages)
   const studentCertificates = useSelector((state) => state.studentCertificate.studentCertificates);
-  console.log("studentCertificates",studentCertificates)
+  console.log("programStages",programStages)
   const documents = useSelector(state => state.studentDocument.documentsByProgramApplicationId); 
   const schoolProfiles = useSelector((state) => state.schoolProfile.schoolProfilesByStudentProfileId);
 
@@ -510,7 +510,7 @@ const handleCreateVnPayLink = async () => {
     const steps = Array.isArray(details.applyStage) ? details.applyStage.map((stage) => {
       const currentStage = programStages?.find(ps => ps.programStageId === stage.programStageId);
       return {
-        label: currentStage?.stageName || 'Unknown Stage',
+        label: currentStage?.stageName || 'Lỗi',
         description: getStatusText(stage.status),
         payment : getPaymentStatusText(stage.programStage.isPayment),
         date: stage.updateDate
@@ -1115,7 +1115,7 @@ const handleCreateVnPayLink = async () => {
 <TabPanel value={tabIndex} index={1}>
   <Grid container spacing={2} justifyContent="center">
     <Grid item xs={12} md={6}>
-      <Card raised>
+    <Card raised>
         <CardContent>
           <Typography variant="h6" gutterBottom>Chi phí cần đóng</Typography>
           <TableContainer component={Paper}>
@@ -1124,11 +1124,11 @@ const handleCreateVnPayLink = async () => {
                 <TableRow>
                   <TableCell>Giai đoạn</TableCell>
                   <TableCell align="right">Loại phí</TableCell>
-                  <TableCell align="right">Đơn vị (VND)</TableCell>
+                  <TableCell align="right">Số tiền (VND)</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-              {programStages.filter(stage => stage?.programId === details.program?.programId).map((stage) => {
+                {programStages.filter(stage => stage?.programId === details.program?.programId).map((stage) => {
                   const fee = fees?.find(f => f.programFeeId === stage.programFeeId);
                   const feeType = feeTypes?.find(ft => ft.feeTypeId === fee?.feeTypeId);
                   const isActive = stage.programStageId === activeStage?.programStageId;
@@ -1144,8 +1144,8 @@ const handleCreateVnPayLink = async () => {
                   <TableCell colSpan={2} align="right"><strong>Tổng cộng</strong></TableCell>
                   <TableCell align="right">
                     {fees.filter(f => f?.programId === details.program?.programId)
-                        .reduce((sum, current) => sum + current.amount, 0)
-                        .toLocaleString()} VND
+                      .reduce((sum, current) => sum + (current.amount || 0), 0)
+                      .toLocaleString()} VND
                   </TableCell>
                 </TableRow>
               </TableBody>

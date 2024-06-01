@@ -281,7 +281,7 @@ const ProgramApplicationPage = ({ setMain }) => {
 
   const displayedData = filteredData.slice(activePage * itemsPerPage, (activePage + 1) * itemsPerPage);
   const paginationLength = Math.ceil(filteredData.length / itemsPerPage);
-
+console.log("displayedData",programApplicationsByStaffId)
   const handlePageChange = (newPage) => {
     setActivePage(newPage);
   };
@@ -328,7 +328,7 @@ const ProgramApplicationPage = ({ setMain }) => {
         <div className="col-lg-12">
           <Card className="mb-4">
             <Card.Header as="h4">
-            {`Danh sách hồ sơ đăng ký chương trình - Staff ID: ${staffId}`}
+            {`Danh sách hồ sơ đăng ký chương trình `}
             </Card.Header>
             <Card.Body>
               <Form>
