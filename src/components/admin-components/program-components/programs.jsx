@@ -553,7 +553,7 @@ const AllPrograms = () => {
       setProgramUpdated(false);
     }
   }, [programUpdated, dispatch]);
-  const programFee1 = useSelector((state) => state.programFee.fees.find(fee => fee.programFeeId === selectedProgramId.programStageDtos.programFee));
+  const programFee1 = useSelector((state) => state.programFee.fees.find(fee => fee.programFeeId === selectedProgramId?.programStageDtos.programFee));
 console.log("programFee1",programFee1)
   useEffect(() => {
     if (selectedProgramId) {
@@ -924,7 +924,7 @@ console.log("programFee1",programFee1)
           </div>
           <p>
                 <strong>Tiến trình :</strong>{" "}
-                {renderProgramStages(selectedProgram.programStageDtos)}
+                {renderProgramStages(selectedProgram?.programStageDtos)}
 
                 </p>
         </div>
