@@ -802,7 +802,7 @@ const handleCreateVnPayLink = async () => {
                       Quá trình học tập và Chứng chỉ
                     </Typography>
                     <Typography variant="body1">
-                      <Typography variant="h6" style={{ color: '#6A73FA' }}>Quá trình học tập</Typography>
+                      <Typography variant="h6" style={{ color: '#6A73FA' }}>Học vấn</Typography>
                       <ul>
                         {details?.studentProfile?.studyProcess?.split("|").map((item, index) => {
                           const [label, value] = item.split(":");

@@ -50,9 +50,8 @@ const PdfProfileContent = ({ programDetail, universityIdDetail, studentProfileDe
         <Grid item xs={12} sm={6}>
           <div className="form-group">
             <label htmlFor="studyProcess" style={{ fontWeight: "bold", fontSize: "16px" }}>
-              Quá trình học tập
-            </label>
-            <textarea id="studyProcess" className="form-control" defaultValue={studentProfileDetail.studyProcess} disabled />
+Học vấn            </label>
+            <textarea id="studyProcess" className="form-control" defaultValue={studentProfileDetail.grade} disabled />
           </div>
         </Grid>
         <Grid item xs={12} sm={3}>
