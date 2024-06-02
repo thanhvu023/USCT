@@ -222,9 +222,10 @@ const ProgramApplicationPageAdmin = ({ setMain }) => {
         return <Chip label="Đang xử lí" color="default" />;
       case 1:
         return <Chip label="Bổ sung tài liệu" color="warning" />;
-      case 2:
-        return <Chip label="Đăng ký thành công" color="success" />;
+    
       case 3:
+        return <Chip label="Đăng ký thành công" color="success" />;
+      case 4:
         return <Chip label="Hủy bỏ đăng ký" color="error" />;
       default:
         return <Chip label="Hồ sơ hoàn tất" color="primary" />;

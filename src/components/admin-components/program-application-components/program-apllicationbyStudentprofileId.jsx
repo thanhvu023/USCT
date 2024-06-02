@@ -292,15 +292,17 @@ console.log("displayedData",programApplicationsByStaffId)
         return <Chip label="Đang xử lí" color="default" />;
       case 1:
         return <Chip label="Bổ sung tài liệu" color="warning" />;
-      case 2:
-        return <Chip label="Đăng ký thành công" color="success" />;
+        case 2:
+          return <Chip label="Làm lại hồ sơ" color="warning" />;
       case 3:
+        return <Chip label="Đăng ký thành công" color="success" />;
+      case 4:
         return <Chip label="Đăng ký thất bại" color="error" />;
-        case 4:
+        case 5:
           return <Chip label="Hủy bỏ đăng ký" color="error" />;
-          case 5:
+          case 6:
             return <Chip label="Hồ sơ hoàn tất" color="primary" />;
-            case 6:
+            case 7:
               return <Chip label="Hủy bỏ đăng ký giữa chừng" color="error" />;
       default:
         return <Chip label="Hồ sơ hoàn tất" color="primary" />;
@@ -367,11 +369,13 @@ console.log("displayedData",programApplicationsByStaffId)
                           >
                             <option value={0}>Đang xử lí</option>
                             <option value={1}>Đã xét duyệt hồ sơ</option>
-                            <option value={2}>Xét duyệt thành công</option>
-                            <option value={3}>Xét duyệt thất bại</option>
-                            <option value={4}>Đóng hồ sơ</option>
-                            <option value={5}>Hồ sơ đã hoàn tất</option>
-                            <option value={6}>Hồ sơ đã hủy</option>
+                            <option value={2}>Làm lại hồ sơ</option>
+                            <option value={3}>Xét duyệt thành công</option>
+
+                            <option value={4}>Xét duyệt thất bại</option>
+                            <option value={5}>Đóng hồ sơ</option>
+                            <option value={6}>Hồ sơ đã hoàn tất</option>
+                            <option value={7}>Hồ sơ đã hủy</option>
                           </Form.Control>
                         </td>
                         <td>

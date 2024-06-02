@@ -48,11 +48,12 @@ const getChipColor = (status) => {
 const statusMap = {
   0: 'Đang xử lí',
   1: 'Đã xét duyệt hồ sơ',
-  2: 'Xét duyệt thành công',
-  3: 'Xét duyệt thất bại',
-  4: 'Đóng hồ sơ',
-  5: 'Hồ sơ đã hoàn tất',
-  6: 'Hồ sơ đã hủy',
+  2: 'Làm lại hồ sơ',
+  3: 'Xét duyệt thành công',
+  4: 'Xét duyệt thất bại',
+  5: 'Đóng hồ sơ',
+  6: 'Hồ sơ đã hoàn tất',
+  7: 'Hồ sơ đã hủy',
 };
 
 export const COLUMNS = [

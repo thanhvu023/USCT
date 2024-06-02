@@ -269,7 +269,7 @@ const StudentProfileDetails = () => {
                 <div className="profile-about-me">
                   <div className="pt-4 border-bottom-1 ">
                     <Typography variant="h5" color="primary">1. Quá trình học tập</Typography>
-                    <p>{studentDetail?.studyProcess}</p>
+                    <p>{studentDetail?.grade}</p>
                     <Box mt={4}>
                       <Typography variant="h5" color="primary" style={{ marginBottom: '10px' }}>2. Văn bằng tiếng Anh</Typography>
                       <TableContainer component={Paper}>
